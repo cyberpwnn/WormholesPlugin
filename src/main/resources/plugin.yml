@@ -1,0 +1,7 @@
+name: ${project.name}
+version: ${project.version}
+main: org.cyberpwn.vortex.VP
+depend: [ProtocolLib]
+commands: 
+  vortex: 
+    aliases: [vtx, vx, vor, portal, portals, port, vp, vportals, vportal]
