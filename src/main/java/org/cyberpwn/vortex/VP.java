@@ -11,6 +11,7 @@ import org.cyberpwn.vortex.service.ProjectionService;
 import org.cyberpwn.vortex.service.TimingsService;
 import wraith.ControllablePlugin;
 import wraith.Direction;
+import wraith.TICK;
 import wraith.TickHandle;
 import wraith.TickHandler;
 import wraith.Ticked;
@@ -60,6 +61,12 @@ public class VP extends ControllablePlugin
 			host.flush();
 			provider.flush();
 			projector.flush();
+			
+			if(TICK.tick % 2 == 0)
+			{
+				aperture.flush();
+				entity.flush();
+			}
 		}
 		
 		catch(Throwable e)
