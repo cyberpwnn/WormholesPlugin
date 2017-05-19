@@ -26,6 +26,16 @@ public class EntityService
 	{
 		Timer t = new Timer();
 		t.start();
+		
+		for(Player i : aentities.k())
+		{
+			if(!i.isOnline())
+			{
+				aentities.remove(i);
+				continue;
+			}
+		}
+		
 		for(Player i : entities.k())
 		{
 			if(!i.isOnline())
@@ -44,6 +54,11 @@ public class EntityService
 						{
 							k.despawn();
 							entities.get(i).get(j).remove(k);
+						}
+						
+						else
+						{
+							k.flush();
 						}
 					}
 				}
