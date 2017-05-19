@@ -30,4 +30,42 @@ public class RemoteEntity implements RemoteInstance
 	{
 		return remoteType.name();
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((remoteType == null) ? 0 : remoteType.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this == obj)
+		{
+			return true;
+		}
+		if(obj == null)
+		{
+			return false;
+		}
+		if(getClass() != obj.getClass())
+		{
+			return false;
+		}
+		RemoteEntity other = (RemoteEntity) obj;
+		if(id != other.id)
+		{
+			return false;
+		}
+		if(remoteType != other.remoteType)
+		{
+			return false;
+		}
+		return true;
+	}
+	
 }
