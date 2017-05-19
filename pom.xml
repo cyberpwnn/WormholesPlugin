@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cyberpwn</groupId>
-	<artifactId>VortexPortals</artifactId>
+	<artifactId>Wormholes</artifactId>
 	<version>1.0</version>
-	<name>VortexPortals</name>
+	<name>Wormholes</name>
 	<description>See what's on the other side.</description>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -36,7 +36,7 @@
 						<version>2.3.1</version>
 						<configuration>
 							<outputDirectory>${development.folder}</outputDirectory>
-							<finalName>Vortex</finalName>
+							<finalName>${project.name}</finalName>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -52,7 +52,7 @@
 						<version>2.3.1</version>
 						<configuration>
 							<outputDirectory>${production.folder}</outputDirectory>
-							<finalName>Vortex-${project.version}</finalName>
+							<finalName>${project.name}-${project.version}</finalName>
 						</configuration>
 					</plugin>
 				</plugins>
