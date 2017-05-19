@@ -7,16 +7,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.aperture.BlacklistAperture;
+import org.cyberpwn.vortex.aperture.RemoteInstance;
 import org.cyberpwn.vortex.network.CL;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.portal.PortalKey;
+import org.cyberpwn.vortex.projection.Viewport;
 import wraith.CustomGZIPOutputStream;
 import wraith.ForwardedPluginMessage;
 import wraith.GList;
@@ -128,6 +132,39 @@ public class ApertureService
 						catch(IOException e)
 						{
 							e.printStackTrace();
+						}
+					}
+				}
+				
+				GMap<Portal, GMap<Player, Viewport>> lastPort = VP.projector.getLastPort();
+				
+				if(lastPort.containsKey(i) && i.hasWormhole())
+				{
+					for(Player j : lastPort.get(i).k())
+					{
+						for(Entity k : lastPort.get(i).get(j).getEntities())
+						{
+							VP.aperture.hideEntity(j, k);
+						}
+						
+						AperturePlane ap = i.getWormhole().getDestination().getApature();
+						
+						if(ap != null)
+						{
+							GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+							GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+							
+							for(Vector k : r.k())
+							{
+								Location l = i.getPosition().getCenter().clone().add(k);
+								RemoteInstance ri = r.get(k);
+								
+								if(lastPort.get(i).get(j).contains(l))
+								{
+									l.setDirection(rl.get(k));
+									VP.entity.set(j, i, ri, l);
+								}
+							}
 						}
 					}
 				}
