@@ -12,8 +12,6 @@ import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.Status;
 import org.cyberpwn.vortex.VP;
-import org.cyberpwn.vortex.aperture.AperturePlane;
-import org.cyberpwn.vortex.aperture.RemoteInstance;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.portal.PortalIdentity;
@@ -29,7 +27,6 @@ import wraith.GMap;
 import wraith.M;
 import wraith.MaterialBlock;
 import wraith.TICK;
-import wraith.TaskLater;
 import wraith.Timer;
 import wraith.Wraith;
 
@@ -72,52 +69,11 @@ public class ProjectionService implements Listener
 								if(i.getPosition().getArea().hasPlayers())
 								{
 									project((LocalPortal) i);
-									
-									if(lastPort.containsKey(i) && i.hasWormhole())
-									{
-										for(Player j : lastPort.get(i).k())
-										{
-											for(Entity k : lastPort.get(i).get(j).getEntities())
-											{
-												VP.aperture.hideEntity(j, k);
-											}
-											
-											AperturePlane ap = i.getWormhole().getDestination().getApature();
-											
-											if(ap != null)
-											{
-												GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
-												GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
-												
-												for(Vector k : r.k())
-												{
-													Location l = i.getPosition().getCenter().clone().add(k);
-													RemoteInstance ri = r.get(k);
-													
-													if(lastPort.get(i).get(j).contains(l))
-													{
-														l.setDirection(rl.get(k));
-														VP.entity.set(j, i, ri, l);
-													}
-												}
-											}
-										}
-									}
 								}
 							}
 							
 							VP.provider.getRasterer().flush();
 							projecting = false;
-							
-							new TaskLater()
-							{
-								@Override
-								public void run()
-								{
-									VP.aperture.flush();
-									VP.entity.flush();
-								}
-							};
 							
 							t.stop();
 							TimingsService.asyn.get("mutex-handle").hit("projection-service", t.getTime());
@@ -232,5 +188,20 @@ public class ProjectionService implements Listener
 	public GMap<PortalKey, ProjectionPlane> getRemotePlanes()
 	{
 		return remotePlanes;
+	}
+	
+	public Boolean getProjecting()
+	{
+		return projecting;
+	}
+	
+	public Long getTpl()
+	{
+		return tpl;
+	}
+	
+	public GMap<Portal, GMap<Player, Viewport>> getLastPort()
+	{
+		return lastPort;
 	}
 }
