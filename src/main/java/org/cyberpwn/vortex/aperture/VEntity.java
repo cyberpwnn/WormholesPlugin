@@ -15,6 +15,7 @@ import org.cyberpwn.vortex.wrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import wraith.AbstractPacket;
+import wraith.VectorMath;
 
 public class VEntity
 {
@@ -168,9 +169,15 @@ public class VEntity
 	{
 		double distance = last.distance(location);
 		
-		if(distance > 0)
+		if(distance > 7)
 		{
 			pteleport(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		}
+		
+		else
+		{
+			Vector dir = VectorMath.directionNoNormal(last, location);
+			prelativeMoveLook(dir.getX(), dir.getY(), dir.getZ(), location.getYaw(), location.getPitch());
 		}
 		
 		if(location.getYaw() != last.getYaw() || location.getPitch() != last.getPitch())
