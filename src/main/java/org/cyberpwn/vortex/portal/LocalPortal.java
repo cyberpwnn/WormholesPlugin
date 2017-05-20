@@ -1,6 +1,7 @@
 package org.cyberpwn.vortex.portal;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
@@ -17,11 +18,13 @@ public class LocalPortal implements Portal
 	private ProjectionPlane plane;
 	private String server;
 	private Boolean hasBeenValid;
+	private Boolean hasHadWormhole;
 	private AperturePlane apature;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
 		hasBeenValid = true;
+		hasHadWormhole = false;
 		this.identity = identity;
 		this.position = position;
 		plane = new ProjectionPlane();
@@ -34,17 +37,32 @@ public class LocalPortal implements Portal
 	{
 		if(hasWormhole())
 		{
-			GList<Entity> entities = getPosition().getPane().getEntities();
+			if(!hasHadWormhole)
+			{
+				hasHadWormhole = true;
+				VP.provider.save(this);
+			}
+			
+			GList<Entity> entities = getPosition().getOPane().getEntities();
 			Wormhole w = getWormhole();
 			
 			for(Entity i : entities)
 			{
 				if(!getService().isThrottled(i))
 				{
-					getService().addThrottle(i);
-					w.push(i);
+					if((i instanceof Player && getPosition().getPane().contains(i.getLocation())) || getPosition().intersects(i.getLocation(), i.getVelocity()))
+					{
+						getService().addThrottle(i);
+						w.push(i);
+					}
 				}
 			}
+		}
+		
+		else if(hasHadWormhole)
+		{
+			hasHadWormhole = false;
+			VP.provider.wipe(this);
 		}
 		
 		if(!plane.hasContent())
@@ -258,6 +276,7 @@ public class LocalPortal implements Portal
 		return hasBeenValid;
 	}
 	
+	@Override
 	public AperturePlane getApature()
 	{
 		return apature;
