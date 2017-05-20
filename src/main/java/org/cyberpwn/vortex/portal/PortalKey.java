@@ -27,6 +27,21 @@ public class PortalKey
 		this.r = r;
 	}
 	
+	public String getSName()
+	{
+		return (int) toData()[0] + "" + (int) toData()[1] + "" + (int) toData()[2] + "" + (int) toData()[3] + "KV";
+	}
+	
+	public static PortalKey fromSName(String s)
+	{
+		if(s.length() == 6)
+		{
+			return new PortalKey(new byte[] {Integer.valueOf(s.charAt(0) + "").byteValue(), Integer.valueOf(s.charAt(1) + "").byteValue(), Integer.valueOf(s.charAt(2) + "").byteValue(), Integer.valueOf(s.charAt(3) + "").byteValue()});
+		}
+		
+		return null;
+	}
+	
 	public DyeColor getU()
 	{
 		return u;
