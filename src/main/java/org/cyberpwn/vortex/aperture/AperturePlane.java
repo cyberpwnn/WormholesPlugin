@@ -50,6 +50,7 @@ public class AperturePlane
 			dos.writeDouble(i.getZ());
 			dos.writeUTF(re.getName());
 			dos.writeInt(re.getRemoteId());
+			dos.writeInt(re.getActualId());
 			dos.writeUTF(re instanceof RemotePlayer ? ((RemotePlayer) re).getUuid().toString() : "?");
 			dos.writeDouble(instanceVa.get(i).getX());
 			dos.writeDouble(instanceVa.get(i).getY());
@@ -73,6 +74,7 @@ public class AperturePlane
 			Vector v = new Vector(dis.readDouble(), dis.readDouble(), dis.readDouble());
 			String name = dis.readUTF();
 			int id = dis.readInt();
+			int aid = dis.readInt();
 			String uiv = dis.readUTF();
 			Vector d = new Vector(dis.readDouble(), dis.readDouble(), dis.readDouble());
 			RemoteInstance ri = null;
@@ -83,7 +85,7 @@ public class AperturePlane
 				{
 					if(j.name().equals(name))
 					{
-						ri = new RemoteEntity(id, j);
+						ri = new RemoteEntity(id, j, aid);
 						break;
 					}
 				}
@@ -91,7 +93,7 @@ public class AperturePlane
 			
 			else
 			{
-				ri = new RemotePlayer(id, name, UUID.fromString(uiv));
+				ri = new RemotePlayer(id, name, UUID.fromString(uiv), aid);
 			}
 			
 			if(ri == null)
@@ -137,10 +139,13 @@ public class AperturePlane
 		
 		for(Entity i : p.getPosition().getBoundingBox().getInside())
 		{
-			Vector f = VectorMath.directionNoNormal(p.getPosition().getCenter(), i.getLocation());
-			RemoteInstance r = RemoteInstance.create(i);
-			instanceMap.put(f, r);
-			instanceVa.put(f, i.getLocation().getDirection());
+			if(i.getLocation().getWorld().equals(p.getPosition().getCenter().getWorld()))
+			{
+				Vector f = VectorMath.directionNoNormal(p.getPosition().getCenter(), i.getLocation());
+				RemoteInstance r = RemoteInstance.create(i);
+				instanceMap.put(f, r);
+				instanceVa.put(f, i.getLocation().getDirection());
+			}
 		}
 	}
 }
