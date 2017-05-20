@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
@@ -55,7 +57,6 @@ public class MutexService implements Listener
 		insideThrottle = new GList<Entity>();
 		pendingPulls = new GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>>();
 		broadcastInterval = 20;
-		
 	}
 	
 	public void setPending(UUID id, Portal portal, Vector velocity, Vector direction, Vector placement)
@@ -84,6 +85,11 @@ public class MutexService implements Listener
 	public void addLocalPortal(Portal portal)
 	{
 		VP.registry.localPortals.add(portal);
+		
+		for(Chunk i : portal.getPosition().getArea().getChunks())
+		{
+			i.load();
+		}
 	}
 	
 	public void removeLocalPortal(Portal portal)
@@ -117,6 +123,18 @@ public class MutexService implements Listener
 		}
 		
 		return null;
+	}
+	
+	@EventHandler
+	public void on(ChunkUnloadEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().getChunks().contains(e.getChunk()))
+			{
+				e.setCancelled(true);
+			}
+		}
 	}
 	
 	@EventHandler
