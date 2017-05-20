@@ -2,12 +2,14 @@ package org.cyberpwn.vortex.portal;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.projection.BoundingBox;
 import wraith.Axis;
 import wraith.Cuboid;
 import wraith.Direction;
 import wraith.GList;
+import wraith.RayTrace;
 import wraith.VectorMath;
 
 public class PortalPosition
@@ -51,6 +53,43 @@ public class PortalPosition
 		centerRight = frameRight.getCenter().clone();
 		area = new Cuboid(center).e(Axis.X, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Y, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Z, Settings.PROJECTION_SAMPLE_RADIUS);
 		boundingBox = new BoundingBox(area);
+	}
+	
+	public boolean intersects(Location a, Location b)
+	{
+		if(getPane().contains(a))
+		{
+			return true;
+		}
+		
+		double distance = a.distance(b);
+		boolean[] traces = {false};
+		Vector direction = VectorMath.direction(a, b);
+		
+		new RayTrace(a, direction, distance + 0.5, 0.9)
+		{
+			@Override
+			public void onTrace(Location location)
+			{
+				if(isInsidePortal(location))
+				{
+					stop();
+					traces[0] = true;
+				}
+			}
+		}.trace();
+		
+		return traces[0];
+	}
+	
+	public boolean intersects(Location l, Vector next)
+	{
+		return intersects(l, l.clone().add(next));
+	}
+	
+	public boolean isInsidePortal(Location l)
+	{
+		return getPane().contains(l);
 	}
 	
 	public Cuboid getSideArea(Location l)
@@ -134,6 +173,11 @@ public class PortalPosition
 		}
 		
 		return null;
+	}
+	
+	public Cuboid getOPane()
+	{
+		return pane.e(getIdentity().getAxis(), 5);
 	}
 	
 	public Cuboid getPane()
