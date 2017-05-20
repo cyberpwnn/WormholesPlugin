@@ -1,6 +1,10 @@
 package org.cyberpwn.vortex;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.network.VortexBus;
+import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.provider.AutomagicalProvider;
 import org.cyberpwn.vortex.provider.PortalProvider;
 import org.cyberpwn.vortex.service.ApertureService;
@@ -10,8 +14,11 @@ import org.cyberpwn.vortex.service.MutexService;
 import org.cyberpwn.vortex.service.PortalRegistry;
 import org.cyberpwn.vortex.service.ProjectionService;
 import org.cyberpwn.vortex.service.TimingsService;
+import wraith.C;
 import wraith.ControllablePlugin;
 import wraith.Direction;
+import wraith.SubCommand;
+import wraith.SubGroup;
 import wraith.TICK;
 import wraith.TickHandle;
 import wraith.TickHandler;
@@ -31,6 +38,7 @@ public class VP extends ControllablePlugin
 	public static TimingsService timings;
 	public static EntityService entity;
 	public static IOService io;
+	private SubGroup sub;
 	
 	@Override
 	public void onStart()
@@ -48,6 +56,8 @@ public class VP extends ControllablePlugin
 		entity = new EntityService();
 		io = new IOService();
 		provider.loadAllPortals();
+		sub = new SubGroup("w");
+		buildSubs();
 	}
 	
 	@Override
@@ -79,9 +89,50 @@ public class VP extends ControllablePlugin
 		}
 	}
 	
+	private void buildSubs()
+	{
+		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
+		{
+			private void list(CommandSender p)
+			{
+				p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
+				
+				for(Portal i : host.getLocalPortals())
+				{
+					String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
+					p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
+				}
+			}
+			
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				list(p);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				list(p);
+			}
+		});
+	}
+	
 	@Override
 	public void onConstruct()
 	{
 		
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		if(cmd.getName().equalsIgnoreCase("wormhole"))
+		{
+			sub.hit(sender, args);
+			return true;
+		}
+		
+		return false;
 	}
 }
