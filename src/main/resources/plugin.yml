@@ -3,5 +3,5 @@ version: ${project.version}
 main: org.cyberpwn.vortex.VP
 depend: [ProtocolLib]
 commands: 
-  vortex: 
-    aliases: [vtx, vx, vor, portal, portals, port, vp, vportals, vportal]
+  wormhole: 
+    aliases: [w, worm, whole, wormh, wormholes, portal, portals, wh]
