@@ -1,6 +1,11 @@
 package org.cyberpwn.vortex.provider;
 
+import java.io.File;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.VP;
@@ -17,6 +22,9 @@ import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.RasteredSystem;
 import org.cyberpwn.vortex.projection.Viewport;
 import wraith.C;
+import wraith.Cuboid;
+import wraith.DataCluster;
+import wraith.Direction;
 import wraith.GList;
 import wraith.GMap;
 import wraith.NMSX;
@@ -102,6 +110,79 @@ public abstract class BaseProvider implements PortalProvider
 		{
 			throw new InvalidPortalKeyException("Invalid portal key");
 		}
+	}
+	
+	@Override
+	public void wipe(LocalPortal p)
+	{
+		if(VP.host.isKeyValidAlready(p.getKey()))
+		{
+			new File(new File(VP.instance.getDataFolder(), "data"), p.getKey().getSName() + ".k").delete();
+		}
+	}
+	
+	@Override
+	public void save(LocalPortal p)
+	{
+		if(VP.host.isKeyValidAlready(p.getKey()))
+		{
+			DataCluster cc = new DataCluster();
+			PortalKey key = p.getKey();
+			PortalPosition pos = p.getPosition();
+			Cuboid c = pos.getPane();
+			Direction d = pos.getIdentity().getBack();
+			cc.set("a", c.getLowerX());
+			cc.set("b", c.getLowerY());
+			cc.set("c", c.getLowerZ());
+			cc.set("d", c.getUpperX());
+			cc.set("e", c.getUpperY());
+			cc.set("f", c.getUpperZ());
+			cc.set("g", c.getWorld().getName());
+			cc.set("h", d.ordinal());
+			cc.set("i", key.getSName());
+			VP.io.save(cc, new File(new File(VP.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
+		}
+	}
+	
+	@Override
+	public void loadAllPortals()
+	{
+		File f = new File(VP.instance.getDataFolder(), "data");
+		f.mkdirs();
+		
+		for(File i : f.listFiles())
+		{
+			if(i.getName().endsWith(".k"))
+			{
+				try
+				{
+					DataCluster cc = VP.io.load(i);
+					World w = Bukkit.getWorld(cc.getString("g"));
+					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
+					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
+					Direction d = Direction.values()[cc.getInt("h")];
+					PortalKey k = PortalKey.fromSName(cc.getString("i"));
+					createPortal(d, new Cuboid(a, b));
+					System.out.println("Loading Portal: " + k.getSName().toUpperCase());
+					i.delete();
+				}
+				
+				catch(Exception e)
+				{
+					System.out.println("Failed to load data file: " + i.getPath() + ". Deleting");
+					i.delete();
+				}
+			}
+		}
+	}
+	
+	public LocalPortal createPortal(Direction d, Cuboid c) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException
+	{
+		PortalIdentity id = new PortalIdentity(d, null);
+		PortalPosition pp = new PortalPosition(id, c);
+		id.setKey(buildKey(pp));
+		
+		return createPortal(id, pp);
 	}
 	
 	@Override
