@@ -1,10 +1,11 @@
 package org.cyberpwn.vortex;
 
 import org.cyberpwn.vortex.network.VortexBus;
+import org.cyberpwn.vortex.provider.AutomagicalProvider;
 import org.cyberpwn.vortex.provider.PortalProvider;
-import org.cyberpwn.vortex.provider.WandProvider;
 import org.cyberpwn.vortex.service.ApertureService;
 import org.cyberpwn.vortex.service.EntityService;
+import org.cyberpwn.vortex.service.IOService;
 import org.cyberpwn.vortex.service.MutexService;
 import org.cyberpwn.vortex.service.PortalRegistry;
 import org.cyberpwn.vortex.service.ProjectionService;
@@ -29,6 +30,7 @@ public class VP extends ControllablePlugin
 	public static ProjectionService projector;
 	public static TimingsService timings;
 	public static EntityService entity;
+	public static IOService io;
 	
 	@Override
 	public void onStart()
@@ -42,8 +44,10 @@ public class VP extends ControllablePlugin
 		host = new MutexService();
 		aperture = new ApertureService();
 		projector = new ProjectionService();
-		provider = new WandProvider();
+		provider = new AutomagicalProvider();
 		entity = new EntityService();
+		io = new IOService();
+		provider.loadAllPortals();
 	}
 	
 	@Override
