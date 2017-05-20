@@ -8,9 +8,9 @@ public class RemotePlayer extends RemoteEntity
 	private String name;
 	private UUID uuid;
 	
-	public RemotePlayer(int id, String name, UUID uuid)
+	public RemotePlayer(int id, String name, UUID uuid, int aid)
 	{
-		super(id, EntityType.PLAYER);
+		super(id, EntityType.PLAYER, aid);
 		
 		this.name = name;
 	}

@@ -5,11 +5,13 @@ import org.bukkit.entity.EntityType;
 public class RemoteEntity implements RemoteInstance
 {
 	private int id;
+	private int aid;
 	private EntityType remoteType;
 	
-	public RemoteEntity(int id, EntityType remoteType)
+	public RemoteEntity(int id, EntityType remoteType, int aid)
 	{
 		this.id = id;
+		this.aid = aid;
 		this.remoteType = remoteType;
 	}
 	
@@ -68,4 +70,9 @@ public class RemoteEntity implements RemoteInstance
 		return true;
 	}
 	
+	@Override
+	public int getActualId()
+	{
+		return aid;
+	}
 }

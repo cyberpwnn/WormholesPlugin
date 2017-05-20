@@ -13,16 +13,18 @@ public interface RemoteInstance
 	
 	public String getName();
 	
+	public int getActualId();
+	
 	public static RemoteInstance create(Entity i)
 	{
 		if(i != null)
 		{
 			if(i.getType().equals(EntityType.PLAYER))
 			{
-				return new RemotePlayer(40978 - i.getEntityId(), ((Player) i).getName(), UUID.nameUUIDFromBytes(i.getUniqueId().toString().getBytes()));
+				return new RemotePlayer(40978 - i.getEntityId(), ((Player) i).getName(), UUID.nameUUIDFromBytes(i.getUniqueId().toString().getBytes()), i.getEntityId());
 			}
 			
-			return new RemoteEntity((int) (4097800 - i.getEntityId()), i.getType());
+			return new RemoteEntity((int) (4097800 - i.getEntityId()), i.getType(), i.getEntityId());
 		}
 		
 		return null;
