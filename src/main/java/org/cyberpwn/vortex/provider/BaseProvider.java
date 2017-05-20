@@ -21,26 +21,22 @@ import org.cyberpwn.vortex.projection.BoundingBox;
 import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.RasteredSystem;
 import org.cyberpwn.vortex.projection.Viewport;
-import wraith.C;
 import wraith.Cuboid;
 import wraith.DataCluster;
 import wraith.Direction;
 import wraith.GList;
 import wraith.GMap;
-import wraith.NMSX;
 import wraith.VectorMath;
 import wraith.W;
 
 public abstract class BaseProvider implements PortalProvider
 {
-	private GList<Player> debuggers;
 	private RasteredSystem rasterer;
 	private GList<Player> moved;
 	
 	public BaseProvider()
 	{
 		rasterer = new RasteredSystem();
-		debuggers = new GList<Player>();
 		moved = new GList<Player>();
 	}
 	
@@ -48,50 +44,9 @@ public abstract class BaseProvider implements PortalProvider
 	public void flush()
 	{
 		onFlush();
-		
-		for(Player i : debuggers)
-		{
-			NMSX.sendActionBar(i, C.LIGHT_PURPLE + getDebugMessage());
-		}
 	}
 	
 	public abstract void onFlush();
-	
-	public abstract String getDebugMessage();
-	
-	public void toggleDebugging(Player p)
-	{
-		if(isDebugging(p))
-		{
-			stopDebugging(p);
-		}
-		
-		else
-		{
-			startDebugging(p);
-		}
-	}
-	
-	public void stopDebugging(Player p)
-	{
-		if(isDebugging(p))
-		{
-			debuggers.remove(p);
-		}
-	}
-	
-	public void startDebugging(Player p)
-	{
-		if(!isDebugging(p))
-		{
-			debuggers.add(p);
-		}
-	}
-	
-	public boolean isDebugging(Player p)
-	{
-		return debuggers.contains(p);
-	}
 	
 	@Override
 	public PortalKey buildKey(PortalPosition p) throws InvalidPortalKeyException
