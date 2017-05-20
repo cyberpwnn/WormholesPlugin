@@ -272,4 +272,24 @@ public class VEntity
 		}
 		return true;
 	}
+	
+	public Location getLocation()
+	{
+		return location;
+	}
+	
+	public Location getLast()
+	{
+		return last;
+	}
+	
+	public Player getViewer()
+	{
+		return viewer;
+	}
+	
+	public UUID getUuid()
+	{
+		return uuid;
+	}
 }
