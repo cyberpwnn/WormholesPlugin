@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -52,15 +51,6 @@ public class WandProvider extends BaseProvider implements Listener
 	public void onFlush()
 	{
 		
-	}
-	
-	@EventHandler
-	public void on(PlayerMoveEvent e)
-	{
-		if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
-		{
-			movePlayer(e.getPlayer());
-		}
 	}
 	
 	@EventHandler
