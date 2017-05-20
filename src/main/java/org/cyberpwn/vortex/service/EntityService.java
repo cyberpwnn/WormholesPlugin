@@ -27,15 +27,6 @@ public class EntityService
 		Timer t = new Timer();
 		t.start();
 		
-		for(Player i : aentities.k())
-		{
-			if(!i.isOnline())
-			{
-				aentities.remove(i);
-				continue;
-			}
-		}
-		
 		for(Player i : entities.k())
 		{
 			if(!i.isOnline())
@@ -59,13 +50,13 @@ public class EntityService
 						else
 						{
 							k.flush();
+							aentities.get(i).get(j).remove(k.getId());
 						}
 					}
 				}
 			}
 		}
 		
-		aentities.clear();
 		t.stop();
 		TimingsService.root.get("capture-manager").get("aperture-service").hit("entity-service", t.getTime());
 	}
