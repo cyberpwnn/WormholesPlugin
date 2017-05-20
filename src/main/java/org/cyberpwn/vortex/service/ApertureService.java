@@ -144,7 +144,10 @@ public class ApertureService
 					{
 						for(Entity k : lastPort.get(i).get(j).getEntities())
 						{
-							VP.aperture.hideEntity(j, k);
+							if(!i.getPosition().isInsidePortal(k.getLocation()))
+							{
+								VP.aperture.hideEntity(j, k);
+							}
 						}
 						
 						AperturePlane ap = i.getWormhole().getDestination().getApature();
@@ -159,7 +162,7 @@ public class ApertureService
 								Location l = i.getPosition().getCenter().clone().add(k);
 								RemoteInstance ri = r.get(k);
 								
-								if(lastPort.get(i).get(j).contains(l))
+								if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
 								{
 									l.setDirection(rl.get(k));
 									VP.entity.set(j, i, ri, l);
