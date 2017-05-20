@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
@@ -116,6 +117,15 @@ public class MutexService implements Listener
 		}
 		
 		return null;
+	}
+	
+	@EventHandler
+	public void on(PlayerMoveEvent e)
+	{
+		if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
+		{
+			VP.provider.movePlayer(e.getPlayer());
+		}
 	}
 	
 	public boolean hasLink(LocalPortal p)
