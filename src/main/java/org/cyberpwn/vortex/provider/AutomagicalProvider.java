@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.cyberpwn.vortex.Status;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalPositionException;
@@ -16,7 +15,6 @@ import org.cyberpwn.vortex.portal.LocalPortal;
 import wraith.C;
 import wraith.Cuboid;
 import wraith.Direction;
-import wraith.F;
 import wraith.GList;
 import wraith.GSound;
 import wraith.TaskLater;
@@ -34,14 +32,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	@Override
 	public void onFlush()
 	{
-		// TODO Auto-generated method stub
 		
-	}
-	
-	@Override
-	public String getDebugMessage()
-	{
-		return "proj: " + C.GRAY + F.f(Status.projectionTime, 2) + "ms";
 	}
 	
 	@EventHandler
@@ -151,14 +142,6 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 									@Override
 									public void run()
 									{
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
-										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
 										j.getWorld().playEffect(j.getLocation(), Effect.TILE_BREAK, j.getTypeId());
 										j.breakNaturally();
 									}
