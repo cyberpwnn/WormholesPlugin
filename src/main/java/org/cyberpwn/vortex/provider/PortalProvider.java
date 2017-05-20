@@ -17,6 +17,10 @@ public interface PortalProvider
 {
 	public void flush();
 	
+	public void loadAllPortals();
+	
+	public void save(LocalPortal p);
+	
 	public LocalPortal createPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException;
 	
 	public void movePlayer(Player p);
@@ -34,4 +38,6 @@ public interface PortalProvider
 	public GMap<Player, Viewport> getViewport(Portal portal);
 	
 	public PortalKey buildKey(PortalPosition p) throws InvalidPortalKeyException;
+	
+	public void wipe(LocalPortal localPortal);
 }
