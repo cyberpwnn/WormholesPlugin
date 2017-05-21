@@ -3,10 +3,12 @@ package org.cyberpwn.vortex.wormhole;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.cyberpwn.vortex.event.WormholePushEntityEvent;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import wraith.Direction;
 import wraith.VectorMath;
+import wraith.Wraith;
 
 public class LocalWormhole extends BaseWormhole
 {
@@ -33,6 +35,8 @@ public class LocalWormhole extends BaseWormhole
 		{
 			destination.setDirection(velocity.clone());
 		}
+		
+		Wraith.callEvent(new WormholePushEntityEvent(getDestination(), e));
 		
 		e.teleport(destination);
 		e.setVelocity(velocity);
