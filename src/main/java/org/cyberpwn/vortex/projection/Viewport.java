@@ -1,10 +1,12 @@
 package org.cyberpwn.vortex.projection;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
+import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.portal.Portal;
 import wraith.Cuboid;
 import wraith.GList;
@@ -21,6 +23,14 @@ public class Viewport
 		this.p = p;
 		this.portal = portal;
 		set = new ProjectionSet();
+	}
+	
+	public void wipe()
+	{
+		for(Block i : set.getBlocks())
+		{
+			VP.provider.getRasterer().dequeue(p, i.getLocation());
+		}
 	}
 	
 	public void rebuild()
