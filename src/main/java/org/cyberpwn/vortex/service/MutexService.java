@@ -261,7 +261,7 @@ public class MutexService implements Listener
 			e.printStackTrace();
 		}
 		
-		if(TICK.tick % Settings.NETWORK_POPULATE_MAPPING_INTERVAL == 0 && Settings.PROJECTION_ENABLE)
+		if(TICK.tick % Settings.NETWORK_POPULATE_MAPPING_INTERVAL == 0 && Settings.ENABLE_PROJECTIONS)
 		{
 			for(Portal i : getPortals())
 			{
@@ -379,7 +379,7 @@ public class MutexService implements Listener
 					}
 				}
 				
-				else if(i.getType().equals("mreq") && Settings.PROJECTION_ENABLE)
+				else if(i.getType().equals("mreq") && Settings.ENABLE_PROJECTIONS)
 				{
 					VP.bus.read(i);
 					
@@ -401,7 +401,7 @@ public class MutexService implements Listener
 	
 	public void beginStream(String from, String to, String as, LocalPortal lp)
 	{
-		if(!Settings.PROJECTION_ENABLE)
+		if(!Settings.ENABLE_PROJECTIONS)
 		{
 			return;
 		}
@@ -459,7 +459,7 @@ public class MutexService implements Listener
 	
 	public void layer2StreamRequest(Portal remotePortalReference)
 	{
-		if(!Settings.PROJECTION_ENABLE)
+		if(!Settings.ENABLE_PROJECTIONS)
 		{
 			return;
 		}
@@ -471,7 +471,7 @@ public class MutexService implements Listener
 	
 	public void layer2Stream(byte[] msgbytes)
 	{
-		if(!Settings.PROJECTION_ENABLE)
+		if(!Settings.ENABLE_PROJECTIONS)
 		{
 			return;
 		}
@@ -611,5 +611,13 @@ public class MutexService implements Listener
 	public GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> getPendingPulls()
 	{
 		return pendingPulls;
+	}
+	
+	public void dequeueAll()
+	{
+		for(Portal i : getLocalPortals())
+		{
+			VP.projector.deproject((LocalPortal) i);
+		}
 	}
 }
