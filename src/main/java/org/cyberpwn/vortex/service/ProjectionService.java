@@ -48,7 +48,7 @@ public class ProjectionService implements Listener
 	
 	public void flush()
 	{
-		if(!projecting && Settings.PROJECTION_ENABLE && TICK.tick % Settings.PROJECTION_MAX_SPEED == 0)
+		if(!projecting && Settings.ENABLE_PROJECTIONS && TICK.tick % Settings.PROJECTION_MAX_SPEED == 0)
 		{
 			projecting = true;
 			
