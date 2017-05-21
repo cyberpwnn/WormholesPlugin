@@ -5,12 +5,14 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.event.WormholePushEntityEvent;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import wraith.Direction;
 import wraith.PluginMessage;
 import wraith.TaskLater;
 import wraith.VectorMath;
+import wraith.Wraith;
 
 public class MutexWormhole extends BaseWormhole
 {
@@ -42,6 +44,7 @@ public class MutexWormhole extends BaseWormhole
 				direction = velocity.clone();
 			}
 			
+			Wraith.callEvent(new WormholePushEntityEvent(getDestination(), e));
 			getSource().getService().sendPlayerThrough(p.getUniqueId(), getSource(), getDestination(), velocity, direction, entry);
 			
 			new TaskLater(3)
