@@ -116,6 +116,32 @@ public class VP extends ControllablePlugin
 				list(p);
 			}
 		});
+		
+		sub.add(new SubCommand("Destroys the portal looked at", "delte", "destroy", "wipe")
+		{
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				p.sendMessage(C.RED + "Player only command");
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				Portal portal = VP.registry.getPortalLookingAt(p);
+				
+				if(portal != null)
+				{
+					p.sendMessage(C.GREEN + "Destroyed Portal");
+					VP.host.removeLocalPortal(portal);
+				}
+				
+				else
+				{
+					p.sendMessage(C.RED + "Must be looking at a portal");
+				}
+			}
+		});
 	}
 	
 	@Override
