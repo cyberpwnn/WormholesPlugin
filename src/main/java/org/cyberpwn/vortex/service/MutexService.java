@@ -94,7 +94,10 @@ public class MutexService implements Listener
 	
 	public void removeLocalPortal(Portal portal)
 	{
+		((LocalPortal) portal).destroy();
+		VP.projector.deproject((LocalPortal) portal);
 		VP.registry.localPortals.remove(portal);
+		VP.provider.wipe((LocalPortal) portal);
 	}
 	
 	public Portal[] getPortals(PortalKey k)
