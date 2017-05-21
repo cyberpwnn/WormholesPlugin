@@ -134,18 +134,31 @@ public class AperturePlane
 	
 	public void sample(LocalPortal p)
 	{
-		instanceMap.clear();
-		instanceVa.clear();
-		
-		for(Entity i : p.getPosition().getBoundingBox().getInside())
+		try
 		{
-			if(i.getLocation().getWorld().equals(p.getPosition().getCenter().getWorld()))
+			if(!Settings.ENABLE_APERTURE)
 			{
-				Vector f = VectorMath.directionNoNormal(p.getPosition().getCenter(), i.getLocation());
-				RemoteInstance r = RemoteInstance.create(i);
-				instanceMap.put(f, r);
-				instanceVa.put(f, i.getLocation().getDirection());
+				return;
 			}
+			
+			instanceMap.clear();
+			instanceVa.clear();
+			
+			for(Entity i : p.getPosition().getBoundingBox().getInside())
+			{
+				if(i.getLocation().getWorld().equals(p.getPosition().getCenter().getWorld()))
+				{
+					Vector f = VectorMath.directionNoNormal(p.getPosition().getCenter(), i.getLocation());
+					RemoteInstance r = RemoteInstance.create(i);
+					instanceMap.put(f, r);
+					instanceVa.put(f, i.getLocation().getDirection());
+				}
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
 		}
 	}
 }

@@ -35,27 +35,17 @@ public class Viewport
 	
 	public void rebuild()
 	{
-		if(Settings.PROJECTION_ACCURACY < 1)
-		{
-			Settings.PROJECTION_ACCURACY = 1;
-		}
-		
-		if(Settings.PROJECTION_ACCURACY > 24)
-		{
-			Settings.PROJECTION_ACCURACY = 24;
-		}
-		
 		set = new ProjectionSet();
 		Location la = portal.getPosition().getCornerDL();
 		Location lb = portal.getPosition().getCornerUR();
 		Vector va = VectorMath.direction(getIris(), la);
 		Vector vb = VectorMath.direction(getIris(), lb);
 		
-		for(int i = 0; i < (Settings.PROJECTION_SAMPLE_RADIUS * 2) / Settings.PROJECTION_ACCURACY; i++)
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS; i++)
 		{
-			Location ma = getIris().clone().add(va.clone().multiply(i * Settings.PROJECTION_ACCURACY));
-			Location mb = getIris().clone().add(vb.clone().multiply(i * Settings.PROJECTION_ACCURACY));
-			set.add(new Cuboid(ma, mb).expand(portal.getIdentity().getBack().f(), Settings.PROJECTION_ACCURACY));
+			Location ma = getIris().clone().add(va.clone().multiply(i));
+			Location mb = getIris().clone().add(vb.clone().multiply(i));
+			set.add(new Cuboid(ma, mb));
 			
 			if(set.contains(portal.getPosition().getCenter()))
 			{

@@ -50,6 +50,20 @@ public abstract class BaseProvider implements PortalProvider
 	
 	public abstract void onFlush();
 	
+	public GList<Integer> getBase(int max)
+	{
+		GList<Integer> base = new GList<Integer>();
+		max = max % 2 == 0 ? max + 1 : max;
+		
+		while(max >= 3)
+		{
+			base.add(max * max);
+			max -= 2;
+		}
+		
+		return base;
+	}
+	
 	@Override
 	public PortalKey buildKey(PortalPosition p) throws InvalidPortalKeyException
 	{

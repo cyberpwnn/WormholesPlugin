@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalPositionException;
@@ -69,13 +70,13 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 							running = false;
 						}
 						
-						if(gblock.size() > 9)
+						if(gblock.size() > Settings.MAX_PORTAL_SIZE * Settings.MAX_PORTAL_SIZE)
 						{
 							running = false;
 						}
 					}
 					
-					if(gblock.size() == 9)
+					if(getBase(Settings.MAX_PORTAL_SIZE).contains(gblock.size()))
 					{
 						e.setCancelled(true);
 						double d = 0.0;

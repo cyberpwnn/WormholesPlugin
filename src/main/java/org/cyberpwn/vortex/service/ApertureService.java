@@ -106,32 +106,35 @@ public class ApertureService
 		{
 			if(i.hasWormhole())
 			{
-				i.getApature().sample((LocalPortal) i);
-				
-				if(i.isWormholeMutex())
+				if(Settings.ENABLE_APERTURE)
 				{
-					String server = i.getWormhole().getDestination().getServer();
+					i.getApature().sample((LocalPortal) i);
 					
-					if(server != null)
+					if(i.isWormholeMutex())
 					{
-						try
-						{
-							byte[] data = i.getApature().compress();
-							ByteArrayOutputStream boas = new ByteArrayOutputStream();
-							CustomGZIPOutputStream gzo = new CustomGZIPOutputStream(boas);
-							gzo.setLevel(Settings.NETWORK_COMPRESSION_LEVEL);
-							DataOutputStream dos = new DataOutputStream(gzo);
-							String js = i.getWormhole().getDestination().toData().toJSON().toString();
-							dos.writeUTF(js);
-							dos.write(data);
-							dos.close();
-							byte[] main = boas.toByteArray();
-							new ForwardedPluginMessage(VP.instance, CL.L3.get(), server, main).send();
-						}
+						String server = i.getWormhole().getDestination().getServer();
 						
-						catch(IOException e)
+						if(server != null)
 						{
-							e.printStackTrace();
+							try
+							{
+								byte[] data = i.getApature().compress();
+								ByteArrayOutputStream boas = new ByteArrayOutputStream();
+								CustomGZIPOutputStream gzo = new CustomGZIPOutputStream(boas);
+								gzo.setLevel(Settings.NETWORK_COMPRESSION_LEVEL);
+								DataOutputStream dos = new DataOutputStream(gzo);
+								String js = i.getWormhole().getDestination().toData().toJSON().toString();
+								dos.writeUTF(js);
+								dos.write(data);
+								dos.close();
+								byte[] main = boas.toByteArray();
+								new ForwardedPluginMessage(VP.instance, CL.L3.get(), server, main).send();
+							}
+							
+							catch(IOException e)
+							{
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -150,22 +153,25 @@ public class ApertureService
 							}
 						}
 						
-						AperturePlane ap = i.getWormhole().getDestination().getApature();
-						
-						if(ap != null)
+						if(Settings.ENABLE_APERTURE)
 						{
-							GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
-							GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+							AperturePlane ap = i.getWormhole().getDestination().getApature();
 							
-							for(Vector k : r.k())
+							if(ap != null)
 							{
-								Location l = i.getPosition().getCenter().clone().add(k);
-								RemoteInstance ri = r.get(k);
+								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
 								
-								if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
+								for(Vector k : r.k())
 								{
-									l.setDirection(rl.get(k));
-									VP.entity.set(j, i, ri, l);
+									Location l = i.getPosition().getCenter().clone().add(k);
+									RemoteInstance ri = r.get(k);
+									
+									if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
+									{
+										l.setDirection(rl.get(k));
+										VP.entity.set(j, i, ri, l);
+									}
 								}
 							}
 						}
@@ -180,6 +186,11 @@ public class ApertureService
 	
 	public void layer3Stream(byte[] data)
 	{
+		if(!Settings.ENABLE_APERTURE)
+		{
+			return;
+		}
+		
 		try
 		{
 			ByteArrayInputStream bois = new ByteArrayInputStream(data);
