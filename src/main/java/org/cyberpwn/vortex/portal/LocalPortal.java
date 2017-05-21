@@ -1,15 +1,22 @@
 package org.cyberpwn.vortex.portal;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.aperture.AperturePlane;
+import org.cyberpwn.vortex.event.WormholeLinkEvent;
+import org.cyberpwn.vortex.event.WormholeUnlinkEvent;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.projection.ProjectionPlane;
 import org.cyberpwn.vortex.service.MutexService;
 import org.cyberpwn.vortex.wormhole.Wormhole;
 import wraith.DataCluster;
 import wraith.GList;
+import wraith.RayTrace;
+import wraith.Wraith;
 
 public class LocalPortal implements Portal
 {
@@ -20,9 +27,11 @@ public class LocalPortal implements Portal
 	private Boolean hasBeenValid;
 	private Boolean hasHadWormhole;
 	private AperturePlane apature;
+	private Boolean saved;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
+		saved = false;
 		hasBeenValid = true;
 		hasHadWormhole = false;
 		this.identity = identity;
@@ -35,12 +44,27 @@ public class LocalPortal implements Portal
 	@Override
 	public void update()
 	{
+		if(!hasValidKey())
+		{
+			VP.host.removeLocalPortal(this);
+			return;
+		}
+		
+		if(!saved)
+		{
+			if(hasValidKey())
+			{
+				VP.provider.save(this);
+				saved = true;
+			}
+		}
+		
 		if(hasWormhole())
 		{
 			if(!hasHadWormhole)
 			{
 				hasHadWormhole = true;
-				VP.provider.save(this);
+				Wraith.callEvent(new WormholeLinkEvent(this, getWormhole().getDestination()));
 			}
 			
 			GList<Entity> entities = getPosition().getOPane().getEntities();
@@ -62,13 +86,67 @@ public class LocalPortal implements Portal
 		else if(hasHadWormhole)
 		{
 			hasHadWormhole = false;
-			VP.provider.wipe(this);
+			Wraith.callEvent(new WormholeUnlinkEvent(this));
 		}
 		
 		if(!plane.hasContent())
 		{
 			plane.sample(getPosition().getCenter().clone(), 25);
 		}
+	}
+	
+	public boolean isPlayerLookingAt(Player i)
+	{
+		if(!getPosition().getCenter().getWorld().equals(i.getWorld()))
+		{
+			return false;
+		}
+		
+		double dis = i.getLocation().clone().add(0, 1.7, 0).distance(getPosition().getCenter()) + 7;
+		Vector dir = i.getLocation().getDirection();
+		
+		boolean[] b = {false};
+		
+		new RayTrace(i.getLocation().clone().add(0, 1.7, 0), dir, dis, 0.75)
+		{
+			@Override
+			public void onTrace(Location location)
+			{
+				if(getPosition().getPane().contains(location))
+				{
+					stop();
+					b[0] = true;
+				}
+			}
+		}.trace();
+		
+		return b[0];
+	}
+	
+	public GList<Player> getPlayersLookingAt()
+	{
+		GList<Player> players = new GList<Player>();
+		
+		for(Player i : getPosition().getArea().getPlayers())
+		{
+			double dis = i.getLocation().clone().add(0, 1.7, 0).distance(getPosition().getCenter()) + 7;
+			Vector dir = i.getLocation().getDirection();
+			
+			new RayTrace(i.getLocation().clone().add(0, 1.7, 0), dir, dis, 0.75)
+			{
+				@Override
+				public void onTrace(Location location)
+				{
+					if(getPosition().getPane().contains(location))
+					{
+						stop();
+						players.add(i);
+					}
+				}
+			}.trace();
+		}
+		
+		return players;
 	}
 	
 	@Override
@@ -280,5 +358,14 @@ public class LocalPortal implements Portal
 	public AperturePlane getApature()
 	{
 		return apature;
+	}
+	
+	public void destroy()
+	{
+		getPosition().getCenter().getWorld().createExplosion(getPosition().getCenter(), 0f);
+		getPosition().getCenterDown().getBlock().setType(Material.AIR);
+		getPosition().getCenterUp().getBlock().setType(Material.AIR);
+		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
+		getPosition().getCenterRight().getBlock().setType(Material.AIR);
 	}
 }
