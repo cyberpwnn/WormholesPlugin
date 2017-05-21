@@ -1,5 +1,8 @@
 package org.cyberpwn.vortex.service;
 
+import org.bukkit.entity.Player;
+import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.projection.ProjectionSet;
 import wraith.GList;
@@ -46,5 +49,23 @@ public class PortalRegistry
 		}
 		
 		return set;
+	}
+	
+	public boolean isLookingAt(Player p, Portal portal)
+	{
+		return portal instanceof LocalPortal && ((LocalPortal) portal).isPlayerLookingAt(p);
+	}
+	
+	public Portal getPortalLookingAt(Player p)
+	{
+		for(Portal i : VP.host.getLocalPortals())
+		{
+			if(((LocalPortal) i).isPlayerLookingAt(p))
+			{
+				return i;
+			}
+		}
+		
+		return null;
 	}
 }
