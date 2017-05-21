@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.event.WormholeLinkEvent;
@@ -86,12 +87,13 @@ public class LocalPortal implements Portal
 		else if(hasHadWormhole)
 		{
 			hasHadWormhole = false;
+			VP.projector.deproject(this);
 			Wraith.callEvent(new WormholeUnlinkEvent(this));
 		}
 		
 		if(!plane.hasContent())
 		{
-			plane.sample(getPosition().getCenter().clone(), 25);
+			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS);
 		}
 	}
 	
