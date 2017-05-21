@@ -63,7 +63,7 @@ public class VP extends ControllablePlugin
 	@Override
 	public void onStop()
 	{
-		
+		host.dequeueAll();
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class VP extends ControllablePlugin
 			provider.flush();
 			projector.flush();
 			
-			if(TICK.tick % 2 == 0)
+			if(TICK.tick % Settings.APERTURE_MAX_SPEED == 0)
 			{
 				aperture.flush();
 				entity.flush();
