@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.event.WormholeCreateEvent;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalPositionException;
@@ -28,6 +29,7 @@ import wraith.GList;
 import wraith.GMap;
 import wraith.VectorMath;
 import wraith.W;
+import wraith.Wraith;
 
 public abstract class BaseProvider implements PortalProvider
 {
@@ -72,7 +74,33 @@ public abstract class BaseProvider implements PortalProvider
 	{
 		if(VP.host.isKeyValidAlready(p.getKey()))
 		{
-			new File(new File(VP.instance.getDataFolder(), "data"), p.getKey().getSName() + ".k").delete();
+			File f = new File(VP.instance.getDataFolder(), "data");
+			f.mkdirs();
+			
+			for(File i : f.listFiles())
+			{
+				if(i.getName().endsWith(".k"))
+				{
+					try
+					{
+						DataCluster cc = VP.io.load(i);
+						World w = Bukkit.getWorld(cc.getString("g"));
+						Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
+						Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
+						PortalKey k = PortalKey.fromSName(cc.getString("i"));
+						
+						if(k.equals(p.getKey()) && new Cuboid(a, b).equals(p.getPosition().getPane()))
+						{
+							i.delete();
+						}
+					}
+					
+					catch(Exception e)
+					{
+						
+					}
+				}
+			}
 		}
 	}
 	
@@ -149,6 +177,7 @@ public abstract class BaseProvider implements PortalProvider
 			{
 				LocalPortal p = new LocalPortal(identity, position);
 				VP.host.addLocalPortal(p);
+				Wraith.callEvent(new WormholeCreateEvent(p));
 				return p;
 			}
 			
