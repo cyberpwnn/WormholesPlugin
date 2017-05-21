@@ -1,11 +1,11 @@
 package org.cyberpwn.vortex.event;
 
 import org.cyberpwn.vortex.portal.Portal;
-import wraith.PhantomEvent;
+import wraith.CancellablePhantomEvent;
 
-public class PortalEvent extends PhantomEvent
+public class PortalEvent extends CancellablePhantomEvent
 {
-	private Portal portal;
+	private final Portal portal;
 	
 	public PortalEvent(Portal portal)
 	{
