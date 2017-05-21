@@ -95,6 +95,20 @@ public class ProjectionService implements Listener
 		}
 	}
 	
+	public void deproject(LocalPortal p)
+	{
+		if(lastPort.containsKey(p))
+		{
+			for(Player i : lastPort.get(p).k())
+			{
+				Viewport v = lastPort.get(p).get(i);
+				v.wipe();
+			}
+			
+			lastPort.remove(p);
+		}
+	}
+	
 	public void project(LocalPortal p)
 	{
 		if(VP.registry.destroyQueue.contains(p))
