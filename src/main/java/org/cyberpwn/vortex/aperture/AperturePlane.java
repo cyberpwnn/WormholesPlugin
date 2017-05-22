@@ -51,7 +51,17 @@ public class AperturePlane
 			dos.writeUTF(re.getName());
 			dos.writeInt(re.getRemoteId());
 			dos.writeInt(re.getActualId());
-			dos.writeUTF(re instanceof RemotePlayer ? ((RemotePlayer) re).getUuid().toString() : "?");
+			
+			if(re instanceof RemotePlayer)
+			{
+				dos.writeUTF(((RemotePlayer) re).getUuid().toString());
+			}
+			
+			else
+			{
+				dos.writeUTF("?");
+			}
+			
 			dos.writeDouble(instanceVa.get(i).getX());
 			dos.writeDouble(instanceVa.get(i).getY());
 			dos.writeDouble(instanceVa.get(i).getZ());
@@ -79,7 +89,7 @@ public class AperturePlane
 			Vector d = new Vector(dis.readDouble(), dis.readDouble(), dis.readDouble());
 			RemoteInstance ri = null;
 			
-			if(uiv == "?")
+			if(uiv.equals("?"))
 			{
 				for(EntityType j : EntityType.values())
 				{
@@ -160,5 +170,10 @@ public class AperturePlane
 		{
 			
 		}
+	}
+	
+	public int size()
+	{
+		return instanceMap.size();
 	}
 }
