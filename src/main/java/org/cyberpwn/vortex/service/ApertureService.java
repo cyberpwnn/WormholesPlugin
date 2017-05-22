@@ -22,9 +22,11 @@ import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.portal.PortalKey;
 import org.cyberpwn.vortex.projection.Viewport;
 import wraith.CustomGZIPOutputStream;
+import wraith.DataCluster;
 import wraith.ForwardedPluginMessage;
 import wraith.GList;
 import wraith.GMap;
+import wraith.JSONObject;
 import wraith.Timer;
 
 public class ApertureService
@@ -201,9 +203,14 @@ public class ApertureService
 			
 			for(Portal i : VP.host.getLocalPortals())
 			{
-				if(i.toData().toJSON().equals(json))
+				if(i.hasWormhole() && i.isWormholeMutex())
 				{
-					if(i.hasWormhole() && i.isWormholeMutex())
+					DataCluster ks = new DataCluster(new JSONObject(json));
+					ks.remove("if");
+					DataCluster ls = i.toData().copy();
+					ls.remove("if");
+					
+					if(ls.toJSON().toString().equals(ks.toJSON().toString()))
 					{
 						if(!remoteApaturePlanes.containsKey(i.getKey()))
 						{
@@ -212,6 +219,7 @@ public class ApertureService
 						
 						remoteApaturePlanes.get(i.getKey()).clear();
 						remoteApaturePlanes.get(i.getKey()).addCompressed(d);
+						System.out.println("Portal ES: " + remoteApaturePlanes.get(i.getKey()).size());
 					}
 				}
 			}
