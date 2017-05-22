@@ -13,6 +13,7 @@ public class RemotePlayer extends RemoteEntity
 		super(id, EntityType.PLAYER, aid);
 		
 		this.name = name;
+		this.uuid = uuid;
 	}
 	
 	@Override
