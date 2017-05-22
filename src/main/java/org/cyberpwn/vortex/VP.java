@@ -1,5 +1,6 @@
 package org.cyberpwn.vortex;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,6 +46,7 @@ public class VP extends ControllablePlugin
 	{
 		Direction.calculatePermutations();
 		instance = this;
+		io = new IOService();
 		timings = new TimingsService();
 		VP.instance.getServer().getMessenger().registerOutgoingPluginChannel(VP.instance, "BungeeCord");
 		bus = new VortexBus();
@@ -54,7 +56,6 @@ public class VP extends ControllablePlugin
 		projector = new ProjectionService();
 		provider = new AutomagicalProvider();
 		entity = new EntityService();
-		io = new IOService();
 		provider.loadAllPortals();
 		sub = new SubGroup("w");
 		buildSubs();
@@ -117,7 +118,7 @@ public class VP extends ControllablePlugin
 			}
 		});
 		
-		sub.add(new SubCommand("Destroys the portal looked at", "delte", "destroy", "wipe")
+		sub.add(new SubCommand("Destroys the portal looked at", "destroy", "del", "wipe")
 		{
 			@Override
 			public void cs(CommandSender p, String[] args)
@@ -140,6 +141,28 @@ public class VP extends ControllablePlugin
 				{
 					p.sendMessage(C.RED + "Must be looking at a portal");
 				}
+			}
+		});
+		
+		sub.add(new SubCommand("Reloads Wormholes & Configs", "reload", "reset")
+		{
+			public void go(CommandSender p)
+			{
+				Bukkit.getPluginManager().disablePlugin(VP.instance);
+				Bukkit.getPluginManager().enablePlugin(VP.instance);
+				p.sendMessage(C.GREEN + "All Wormholes & Configs Reloaded");
+			}
+			
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				go(p);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				go(p);
 			}
 		});
 	}
