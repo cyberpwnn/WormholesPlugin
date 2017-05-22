@@ -1,16 +1,85 @@
 package org.cyberpwn.vortex.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
+import org.cyberpwn.vortex.Settings;
+import org.cyberpwn.vortex.VP;
 import wraith.DataCluster;
 import wraith.JSONObject;
+import wraith.YAMLDataInput;
+import wraith.YAMLDataOutput;
 
 public class IOService
 {
 	public IOService()
 	{
+		doConfig();
+	}
+	
+	public void doConfig()
+	{
+		try
+		{
+			doConfigBasic();
+			doConfigExperimental();
+		}
 		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void doConfigBasic() throws IOException
+	{
+		File f = new File(VP.instance.getDataFolder(), "config.yml");
+		DataCluster def = Settings.getConfig();
+		DataCluster lod = new DataCluster();
+		
+		if(!f.exists())
+		{
+			f.createNewFile();
+		}
+		
+		new YAMLDataInput().load(lod, f);
+		
+		for(String i : def.keys())
+		{
+			if(lod.contains(i))
+			{
+				def.trySet(i, lod.getAbstract(i), def.getComment(i));
+			}
+		}
+		
+		new YAMLDataOutput().save(def, f);
+		Settings.setConfig(def);
+	}
+	
+	public void doConfigExperimental() throws IOException
+	{
+		File f = new File(VP.instance.getDataFolder(), "config-experimental.yml");
+		DataCluster def = Settings.getExperimentalConfig();
+		DataCluster lod = new DataCluster();
+		
+		if(!f.exists())
+		{
+			f.createNewFile();
+		}
+		
+		new YAMLDataInput().load(lod, f);
+		
+		for(String i : def.keys())
+		{
+			if(lod.contains(i))
+			{
+				def.trySet(i, lod.getAbstract(i), def.getComment(i));
+			}
+		}
+		
+		new YAMLDataOutput().save(def, f);
+		Settings.setExperimentalConfig(def);
 	}
 	
 	public DataCluster load(File f)
