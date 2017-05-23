@@ -4,11 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.network.VortexBus;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.provider.AutomagicalProvider;
 import org.cyberpwn.vortex.provider.PortalProvider;
 import org.cyberpwn.vortex.service.ApertureService;
+import org.cyberpwn.vortex.service.EffectService;
 import org.cyberpwn.vortex.service.EntityService;
 import org.cyberpwn.vortex.service.IOService;
 import org.cyberpwn.vortex.service.MutexService;
@@ -39,6 +41,7 @@ public class VP extends ControllablePlugin
 	public static TimingsService timings;
 	public static EntityService entity;
 	public static IOService io;
+	public static EffectService fx;
 	private SubGroup sub;
 	
 	@Override
@@ -58,6 +61,7 @@ public class VP extends ControllablePlugin
 		entity = new EntityService();
 		provider.loadAllPortals();
 		sub = new SubGroup("w");
+		fx = new EffectService();
 		buildSubs();
 	}
 	
@@ -96,12 +100,20 @@ public class VP extends ControllablePlugin
 		{
 			private void list(CommandSender p)
 			{
-				p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
-				
-				for(Portal i : host.getLocalPortals())
+				if(new Permissable(p).canList())
 				{
-					String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
-					p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
+					p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
+					
+					for(Portal i : host.getLocalPortals())
+					{
+						String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
+						p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
+					}
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
 				}
 			}
 			
@@ -129,17 +141,25 @@ public class VP extends ControllablePlugin
 			@Override
 			public void cp(Player p, String[] args)
 			{
-				Portal portal = VP.registry.getPortalLookingAt(p);
-				
-				if(portal != null)
+				if(new Permissable(p).canDestroy())
 				{
-					p.sendMessage(C.GREEN + "Destroyed Portal");
-					VP.host.removeLocalPortal(portal);
+					Portal portal = VP.registry.getPortalLookingAt(p);
+					
+					if(portal != null)
+					{
+						p.sendMessage(C.GREEN + "Destroyed Portal");
+						VP.host.removeLocalPortal(portal);
+					}
+					
+					else
+					{
+						p.sendMessage(C.RED + "Must be looking at a portal");
+					}
 				}
 				
 				else
 				{
-					p.sendMessage(C.RED + "Must be looking at a portal");
+					p.sendMessage(Info.TAG + "No Permission");
 				}
 			}
 		});
@@ -148,9 +168,17 @@ public class VP extends ControllablePlugin
 		{
 			public void go(CommandSender p)
 			{
-				Bukkit.getPluginManager().disablePlugin(VP.instance);
-				Bukkit.getPluginManager().enablePlugin(VP.instance);
-				p.sendMessage(C.GREEN + "All Wormholes & Configs Reloaded");
+				if(new Permissable(p).canReload())
+				{
+					Bukkit.getPluginManager().disablePlugin(VP.instance);
+					Bukkit.getPluginManager().enablePlugin(VP.instance);
+					p.sendMessage(Info.TAG + "All Wormholes & Configs Reloaded");
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
 			}
 			
 			@Override
@@ -179,6 +207,7 @@ public class VP extends ControllablePlugin
 		if(cmd.getName().equalsIgnoreCase("wormhole"))
 		{
 			sub.hit(sender, args);
+			
 			return true;
 		}
 		
