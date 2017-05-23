@@ -10,6 +10,9 @@ public class Settings
 	@Comment("Should Wormholes project blocks from the other side?")
 	public static boolean ENABLE_PROJECTIONS = true;
 	
+	@Comment("Should Local Wormholes allow non-player entities to pass through?")
+	public static boolean ALLOW_ENTITIES = true;
+	
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;
 	
