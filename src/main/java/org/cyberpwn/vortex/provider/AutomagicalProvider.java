@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.cyberpwn.vortex.Settings;
+import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalPositionException;
@@ -41,6 +42,11 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	{
 		if(e.getCause().equals(TeleportCause.ENDER_PEARL))
 		{
+			if(!new Permissable(e.getPlayer()).canCreate())
+			{
+				return;
+			}
+			
 			for(Block i : W.blockFaces(e.getTo().getBlock()))
 			{
 				if(i.getType().equals(Material.GLASS))
