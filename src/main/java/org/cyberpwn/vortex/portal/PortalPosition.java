@@ -57,11 +57,6 @@ public class PortalPosition
 	
 	public boolean intersects(Location a, Location b)
 	{
-		if(getPane().contains(a))
-		{
-			return true;
-		}
-		
 		double distance = a.distance(b);
 		boolean[] traces = {false};
 		Vector direction = VectorMath.direction(a, b);
