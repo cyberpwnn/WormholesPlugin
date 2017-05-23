@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.aperture.AperturePlane;
+import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.event.WormholeLinkEvent;
 import org.cyberpwn.vortex.event.WormholeUnlinkEvent;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
@@ -17,6 +18,7 @@ import org.cyberpwn.vortex.wormhole.Wormhole;
 import wraith.DataCluster;
 import wraith.GList;
 import wraith.RayTrace;
+import wraith.VectorMath;
 import wraith.Wraith;
 
 public class LocalPortal implements Portal
@@ -75,10 +77,35 @@ public class LocalPortal implements Portal
 			{
 				if(!getService().isThrottled(i))
 				{
-					if((i instanceof Player && getPosition().getPane().contains(i.getLocation())) || getPosition().intersects(i.getLocation(), i.getVelocity()))
+					if(i instanceof Player)
 					{
-						getService().addThrottle(i);
-						w.push(i);
+						if(getPosition().getPane().contains(i.getLocation()))
+						{
+							if(new Permissable(((Player) i)).canUse())
+							{
+								getService().addThrottle(i);
+								w.push(i);
+							}
+							
+							else
+							{
+								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3), this);
+							}
+						}
+					}
+					
+					else if(getPosition().getPane().contains(i.getLocation()))
+					{
+						if(!Settings.ALLOW_ENTITIES)
+						{
+							VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3), this);
+						}
+						
+						else
+						{
+							getService().addThrottle(i);
+							w.push(i);
+						}
 					}
 				}
 			}
