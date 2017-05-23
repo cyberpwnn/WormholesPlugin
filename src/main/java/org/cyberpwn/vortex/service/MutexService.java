@@ -16,12 +16,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.network.CL;
 import org.cyberpwn.vortex.network.Transmission;
 import org.cyberpwn.vortex.portal.LocalPortal;
@@ -40,6 +43,7 @@ import wraith.GList;
 import wraith.GMap;
 import wraith.GQuadraset;
 import wraith.JSONObject;
+import wraith.ParticleEffect;
 import wraith.TICK;
 import wraith.TaskLater;
 import wraith.Timer;
@@ -619,5 +623,56 @@ public class MutexService implements Listener
 		{
 			VP.projector.deproject((LocalPortal) i);
 		}
+	}
+	
+	@EventHandler
+	public void on(BlockBreakEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
+			{
+				if(i.getPosition().getCenterDown().equals(e.getBlock().getLocation()) || i.getPosition().getCenterUp().equals(e.getBlock().getLocation()) || i.getPosition().getCenterLeft().equals(e.getBlock().getLocation()) || i.getPosition().getCenterRight().equals(e.getBlock().getLocation()))
+				{
+					if(!canDestroy(e.getPlayer()))
+					{
+						e.setCancelled(true);
+						ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+					}
+				}
+				
+				else if(!canBuild(e.getPlayer()))
+				{
+					e.setCancelled(true);
+					ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void on(BlockPlaceEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
+			{
+				if(!canBuild(e.getPlayer()))
+				{
+					e.setCancelled(true);
+					ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+				}
+			}
+		}
+	}
+	
+	public boolean canBuild(Player p)
+	{
+		return new Permissable(p).canBuild();
+	}
+	
+	public boolean canDestroy(Player p)
+	{
+		return new Permissable(p).canDestroy();
 	}
 }
