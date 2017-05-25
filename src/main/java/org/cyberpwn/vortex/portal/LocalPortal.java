@@ -17,6 +17,7 @@ import org.cyberpwn.vortex.service.MutexService;
 import org.cyberpwn.vortex.wormhole.Wormhole;
 import wraith.DataCluster;
 import wraith.GList;
+import wraith.M;
 import wraith.RayTrace;
 import wraith.VectorMath;
 import wraith.Wraith;
@@ -70,6 +71,16 @@ public class LocalPortal implements Portal
 				Wraith.callEvent(new WormholeLinkEvent(this, getWormhole().getDestination()));
 			}
 			
+			if(M.r(0.9))
+			{
+				VP.fx.rise(this);
+			}
+			
+			if(M.r(0.07))
+			{
+				VP.fx.ambient(this);
+			}
+			
 			GList<Entity> entities = getPosition().getOPane().getEntities();
 			Wormhole w = getWormhole();
 			
@@ -89,7 +100,7 @@ public class LocalPortal implements Portal
 							
 							else
 							{
-								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3), this);
+								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
 							}
 						}
 					}
@@ -98,7 +109,7 @@ public class LocalPortal implements Portal
 					{
 						if(!Settings.ALLOW_ENTITIES)
 						{
-							VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3), this);
+							VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
 						}
 						
 						else
