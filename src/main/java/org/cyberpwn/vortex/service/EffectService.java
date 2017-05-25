@@ -1,6 +1,7 @@
 package org.cyberpwn.vortex.service;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.portal.LocalPortal;
@@ -33,6 +34,74 @@ public class EffectService
 		new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getLocation());
 	}
 	
+	public void ambient(LocalPortal p)
+	{
+		new GSound(MSound.PORTAL.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		
+		if(M.r(0.08))
+		{
+			new GSound(MSound.PORTAL_TRAVEL.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		}
+	}
+	
+	public void rise(LocalPortal p)
+	{
+		Location l = new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation().clone().add(0.5, 1, 0.5);
+		
+		if(M.r(0.7))
+		{
+			l.add(p.getIdentity().getUp().toVector().clone().multiply(Math.random()));
+			l.add(p.getIdentity().getDown().toVector().clone().multiply(Math.random()));
+			l.add(p.getIdentity().getLeft().toVector().clone().multiply(Math.random()));
+			l.add(p.getIdentity().getRight().toVector().clone().multiply(Math.random()));
+		}
+		
+		GList<Vector> vxz = new GList<Vector>().qadd(p.getIdentity().getUp().toVector()).qadd(p.getIdentity().getDown().toVector()).qadd(p.getIdentity().getLeft().toVector()).qadd(p.getIdentity().getRight().toVector());
+		int k = 1;
+		
+		if(M.r(0.7))
+		{
+			k++;
+			
+			if(M.r(0.4))
+			{
+				k++;
+				
+				if(M.r(0.2))
+				{
+					k++;
+				}
+			}
+		}
+		
+		for(int i = 0; i < 4; i++)
+		{
+			Vector vx = new Vector(0, 0, 0);
+			
+			for(int j = 0; j < 18; j++)
+			{
+				vx.add(vxz.pickRandom());
+			}
+			
+			ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 1f, l, 32);
+			
+			if(k > 1)
+			{
+				ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 3f, l, 32);
+				
+				if(k > 2)
+				{
+					ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 5f, l, 32);
+					
+					if(k > 3)
+					{
+						ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 7f, l, 32);
+					}
+				}
+			}
+		}
+	}
+	
 	public void phaseDeny(LocalPortal p, Location l)
 	{
 		GList<Vector> vxz = new GList<Vector>().qadd(p.getIdentity().getUp().toVector()).qadd(p.getIdentity().getDown().toVector()).qadd(p.getIdentity().getLeft().toVector()).qadd(p.getIdentity().getRight().toVector());
@@ -52,7 +121,8 @@ public class EffectService
 				}
 			}
 		}
-		for(int i = 0; i < 128; i++)
+		
+		for(int i = 0; i < 64; i++)
 		{
 			Vector vx = new Vector(0, 0, 0);
 			
@@ -100,7 +170,7 @@ public class EffectService
 			}
 		}
 		
-		for(int i = 0; i < 128; i++)
+		for(int i = 0; i < 64; i++)
 		{
 			Vector vx = new Vector(0, 0, 0);
 			

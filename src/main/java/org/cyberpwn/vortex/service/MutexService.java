@@ -42,8 +42,9 @@ import wraith.ForwardedPluginMessage;
 import wraith.GList;
 import wraith.GMap;
 import wraith.GQuadraset;
+import wraith.GSound;
 import wraith.JSONObject;
-import wraith.ParticleEffect;
+import wraith.MSound;
 import wraith.TICK;
 import wraith.TaskLater;
 import wraith.Timer;
@@ -637,14 +638,16 @@ public class MutexService implements Listener
 					if(!canDestroy(e.getPlayer()))
 					{
 						e.setCancelled(true);
-						ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+						VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 					}
 				}
 				
 				else if(!canBuild(e.getPlayer()))
 				{
 					e.setCancelled(true);
-					ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+					VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 				}
 			}
 		}
@@ -660,7 +663,8 @@ public class MutexService implements Listener
 				if(!canBuild(e.getPlayer()))
 				{
 					e.setCancelled(true);
-					ParticleEffect.PORTAL.display(0.1f, 20, e.getBlock().getLocation().add(0.5, 0.5, 0.5), e.getPlayer());
+					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+					VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 				}
 			}
 		}
