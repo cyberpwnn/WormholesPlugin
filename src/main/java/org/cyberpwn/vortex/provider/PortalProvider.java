@@ -23,6 +23,8 @@ public interface PortalProvider
 	
 	public LocalPortal createPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException;
 	
+	public boolean hasMoved(Player p);
+	
 	public void movePlayer(Player p);
 	
 	public void destroyPortal(LocalPortal portal);

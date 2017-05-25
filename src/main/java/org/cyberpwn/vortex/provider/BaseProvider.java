@@ -249,6 +249,12 @@ public abstract class BaseProvider implements PortalProvider
 	}
 	
 	@Override
+	public boolean hasMoved(Player p)
+	{
+		return moved.contains(p);
+	}
+	
+	@Override
 	public GMap<Player, Viewport> getViewport(Portal portal)
 	{
 		GMap<Player, Viewport> views = new GMap<Player, Viewport>();
