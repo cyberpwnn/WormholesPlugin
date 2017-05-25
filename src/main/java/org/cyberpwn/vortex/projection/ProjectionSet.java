@@ -15,6 +15,44 @@ public class ProjectionSet
 		cuboids = new GList<Cuboid>();
 	}
 	
+	public ProjectionSet(GList<Cuboid> c)
+	{
+		this();
+		
+		add(c);
+	}
+	
+	public void remove(int amt)
+	{
+		for(int i = 0; i < amt; i++)
+		{
+			cuboids.remove(0);
+		}
+	}
+	
+	public void keep(int amt)
+	{
+		for(int i = 0; i < size() - amt; i++)
+		{
+			cuboids.remove(size() - 1);
+		}
+	}
+	
+	public Cuboid get(int ind)
+	{
+		return cuboids.get(ind);
+	}
+	
+	public int size()
+	{
+		return cuboids.size();
+	}
+	
+	public void add(GList<Cuboid> c)
+	{
+		cuboids.add(c);
+	}
+	
 	public void add(Cuboid c)
 	{
 		cuboids.add(c);
@@ -76,6 +114,11 @@ public class ProjectionSet
 		int result = 1;
 		result = prime * result + ((cuboids == null) ? 0 : cuboids.hashCode());
 		return result;
+	}
+	
+	public ProjectionSet copy()
+	{
+		return new ProjectionSet(cuboids.copy());
 	}
 	
 	@Override
