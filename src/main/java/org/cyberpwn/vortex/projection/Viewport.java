@@ -146,4 +146,9 @@ public class Viewport
 		}
 		return true;
 	}
+	
+	public ProjectionSet getProjectionSet()
+	{
+		return set;
+	}
 }
