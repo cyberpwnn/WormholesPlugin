@@ -57,7 +57,7 @@ public class W
 	{
 		if(b.getType().equals(Material.WOOL) || b.getType().equals(Material.STAINED_CLAY) || b.getType().equals(Material.STAINED_GLASS) || b.getType().equals(Material.STAINED_GLASS_PANE))
 		{
-			return DyeColor.getByData(b.getData());
+			return DyeColor.getByWoolData(b.getData());
 		}
 		
 		return null;
