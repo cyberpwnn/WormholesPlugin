@@ -263,7 +263,7 @@ public abstract class BaseProvider implements PortalProvider
 		
 		for(Entity i : box.getInside())
 		{
-			if(i instanceof Player && moved.contains((Player) i))
+			if(i instanceof Player)
 			{
 				if(portal instanceof LocalPortal)
 				{
@@ -271,14 +271,12 @@ public abstract class BaseProvider implements PortalProvider
 					{
 						Player p = (Player) i;
 						views.put(p, new NulledViewport(p, portal));
-						moved.remove((Player) i);
 					}
 					
 					else
 					{
 						Player p = (Player) i;
 						views.put(p, getViewport(p, portal));
-						moved.remove((Player) i);
 					}
 				}
 			}
