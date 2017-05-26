@@ -287,7 +287,7 @@ public class VectorMath
 	
 	public static Vector directionNoNormal(Location from, Location to)
 	{
-		return to.subtract(from).toVector();
+		return to.clone().subtract(from.clone()).toVector();
 	}
 	
 	/**
