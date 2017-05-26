@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import wraith.Cuboid;
@@ -17,17 +16,18 @@ import wraith.GList;
 import wraith.GMap;
 import wraith.MaterialBlock;
 import wraith.VectorMath;
-import wraith.W;
 
 public class ProjectionPlane
 {
 	private GMap<Vector, MaterialBlock> mapping;
 	private GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>> remapCache;
+	private GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> ormapCache;
 	
 	public ProjectionPlane()
 	{
 		mapping = new GMap<Vector, MaterialBlock>();
 		remapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>>();
+		ormapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>>();
 	}
 	
 	public GMap<Vector, MaterialBlock> getMapping()
@@ -40,6 +40,16 @@ public class ProjectionPlane
 		return !mapping.isEmpty();
 	}
 	
+	public Vector ovap(Direction from, Direction to, Vector init)
+	{
+		return omap(from, to).get(init);
+	}
+	
+	public GMap<Vector, Vector> omap(Direction from, Direction to)
+	{
+		return ormapCache.get(new GBiset<Direction, Direction>(from, to));
+	}
+	
 	public GMap<Vector, MaterialBlock> remap(Direction from, Direction to)
 	{
 		GBiset<Direction, Direction> c = new GBiset<Direction, Direction>(from, to);
@@ -47,14 +57,21 @@ public class ProjectionPlane
 		if(!remapCache.containsKey(c))
 		{
 			GMap<Vector, MaterialBlock> map = new GMap<Vector, MaterialBlock>();
+			GMap<Vector, Vector> mapv = new GMap<Vector, Vector>();
 			
 			for(Vector i : mapping.k())
 			{
 				Vector b = i.clone().add(new Vector(0.5, 0.5, 0.5));
-				map.put(from.angle(b, to), mapping.get(i));
+				Vector k = from.angle(b, to);
+				k.setX(k.getBlockX());
+				k.setY(k.getBlockY());
+				k.setZ(k.getBlockZ());
+				map.put(k, mapping.get(i));
+				mapv.put(i, k);
 			}
 			
 			remapCache.put(c, map);
+			ormapCache.put(c, mapv);
 		}
 		
 		return remapCache.get(c);
@@ -126,20 +143,8 @@ public class ProjectionPlane
 		
 		for(Block i : new GList<Block>(c.iterator()))
 		{
-			if(i.getType().isTransparent() && !i.getType().equals(Material.AIR))
-			{
-				mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
-				continue;
-			}
+			mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
 			
-			for(Block j : W.blockFaces(i))
-			{
-				if(j.getType().isTransparent())
-				{
-					mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
-					break;
-				}
-			}
 		}
 	}
 }
