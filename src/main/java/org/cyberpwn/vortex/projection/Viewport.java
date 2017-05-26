@@ -41,7 +41,7 @@ public class Viewport
 		Vector va = VectorMath.direction(getIris(), la);
 		Vector vb = VectorMath.direction(getIris(), lb);
 		
-		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS; i++)
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6; i++)
 		{
 			Location ma = getIris().clone().add(va.clone().multiply(i));
 			Location mb = getIris().clone().add(vb.clone().multiply(i));
@@ -50,6 +50,15 @@ public class Viewport
 			if(set.contains(portal.getPosition().getCenter()))
 			{
 				set.clear();
+			}
+		}
+		
+		for(Cuboid i : set.get().copy())
+		{
+			if(i.getCenter().distance(p.getLocation()) < portal.getPosition().getCenter().distance(p.getLocation()))
+			{
+				set.clear();
+				return;
 			}
 		}
 	}
