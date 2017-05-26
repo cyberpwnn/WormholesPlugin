@@ -23,6 +23,7 @@ import wraith.Direction;
 import wraith.SubCommand;
 import wraith.SubGroup;
 import wraith.TICK;
+import wraith.TXT;
 import wraith.TickHandle;
 import wraith.TickHandler;
 import wraith.Ticked;
@@ -109,6 +110,78 @@ public class VP extends ControllablePlugin
 						String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
 						p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
 					}
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
+			}
+			
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				list(p);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				list(p);
+			}
+		});
+		
+		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
+		{
+			private void list(CommandSender p)
+			{
+				if(new Permissable(p).canList())
+				{
+					p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
+					
+					for(Portal i : host.getLocalPortals())
+					{
+						String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
+						p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
+					}
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
+			}
+			
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				list(p);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				list(p);
+			}
+		});
+		
+		sub.add(new SubCommand("Pull internal timings data", "timings", "t", "perf")
+		{
+			private void list(CommandSender p)
+			{
+				if(new Permissable(p).canList())
+				{
+					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
+					for(String i : TimingsService.root.toLines(0, 2))
+					{
+						p.sendMessage(i);
+					}
+					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
+					for(String i : TimingsService.asyn.toLines(0, 2))
+					{
+						p.sendMessage(i);
+					}
+					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
 				}
 				
 				else
