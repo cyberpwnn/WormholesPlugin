@@ -1,6 +1,5 @@
 package org.cyberpwn.vortex.service;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -16,6 +15,7 @@ import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.portal.PortalIdentity;
 import org.cyberpwn.vortex.portal.PortalKey;
+import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.ProjectionPlane;
 import org.cyberpwn.vortex.projection.Viewport;
 import org.cyberpwn.vortex.wormhole.Wormhole;
@@ -28,6 +28,7 @@ import wraith.M;
 import wraith.MaterialBlock;
 import wraith.TICK;
 import wraith.Timer;
+import wraith.VectorMath;
 import wraith.Wraith;
 
 public class ProjectionService implements Listener
@@ -66,9 +67,17 @@ public class ProjectionService implements Listener
 							
 							for(Portal i : VP.host.getLocalPortals())
 							{
-								if(i.getPosition().getArea().hasPlayers())
+								try
 								{
-									project((LocalPortal) i);
+									if(i.getPosition().getArea().hasPlayers())
+									{
+										project((LocalPortal) i);
+									}
+								}
+								
+								catch(Exception e)
+								{
+									
 								}
 							}
 							
@@ -142,35 +151,59 @@ public class ProjectionService implements Listener
 					return;
 				}
 				
-				for(Vector i : map.k())
+				for(Player i : view.k())
 				{
-					Location l = p.getPosition().getCenter().clone().add(i);
-					MaterialBlock mb = map.get(i);
+					Viewport vIn = view.get(i);
+					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
+					int mv = 0;
 					
-					for(Player j : view.k())
+					for(Block j : vIn.getProjectionSet().getBlocks())
 					{
-						Viewport v = view.get(j);
-						
-						if(v.contains(l))
+						if(vIn.contains(j.getLocation()))
 						{
-							VP.provider.getRasterer().queue(j, l, mb);
-						}
-						
-						else if(lastPort.containsKey(p) && lastPort.get(p).containsKey(j) && lastPort.get(p).get(j).contains(l))
-						{
-							VP.provider.getRasterer().dequeue(j, l);
+							Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
+							Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+							p.getIdentity().getFront().angle(vec, identity.getFront());
+							MaterialBlock mb = map.get(vec);
+							
+							if(mb == null)
+							{
+								continue;
+							}
+							
+							VP.provider.getRasterer().queue(i, j.getLocation(), mb);
+							mv++;
+							
+							if(mv > 1024)
+							{
+								VP.provider.getRasterer().get(i).flush();
+								mv = 0;
+							}
 						}
 					}
-				}
-				
-				for(Player j : view.k())
-				{
+					
+					for(Block j : vOut.getProjectionSet().getBlocks())
+					{
+						if(vOut.contains(j.getLocation()) && !vIn.contains(j.getLocation()))
+						{
+							VP.provider.getRasterer().dequeue(i, j.getLocation());
+							
+							mv++;
+							
+							if(mv > 1024)
+							{
+								VP.provider.getRasterer().get(i).flush();
+								mv = 0;
+							}
+						}
+					}
+					
 					if(!lastPort.containsKey(p))
 					{
 						lastPort.put(p, new GMap<Player, Viewport>());
 					}
 					
-					lastPort.get(p).put(j, view.get(j));
+					lastPort.get(p).put(i, view.get(i));
 				}
 			}
 		}
