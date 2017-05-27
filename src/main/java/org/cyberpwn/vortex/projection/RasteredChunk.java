@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.cyberpwn.vortex.Status;
 import org.cyberpwn.vortex.wrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
@@ -65,6 +66,9 @@ public class RasteredChunk
 				}
 			}
 		}
+		
+		int size = 8 + (inf.size() * 12);
+		Status.packetBytesPerSecond += size;
 		
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
 		
