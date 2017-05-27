@@ -2,6 +2,7 @@ package org.cyberpwn.vortex.projection;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.cyberpwn.vortex.Status;
 import org.cyberpwn.vortex.service.TimingsService;
 import wraith.GMap;
 import wraith.MaterialBlock;
@@ -63,6 +64,9 @@ public class RasteredSystem
 	
 	public void flush()
 	{
+		Status.avgBPS.put(Status.packetBytesPerSecond);
+		Status.packetBytesPerSecond = 0;
+		
 		if(flushing)
 		{
 			return;
