@@ -3,6 +3,7 @@ package org.cyberpwn.vortex.portal;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
@@ -32,6 +33,7 @@ public class LocalPortal implements Portal
 	private Boolean hasHadWormhole;
 	private AperturePlane apature;
 	private Boolean saved;
+	private PortalSettings settings;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -43,6 +45,7 @@ public class LocalPortal implements Portal
 		plane = new ProjectionPlane();
 		server = "";
 		apature = new AperturePlane();
+		settings = new PortalSettings();
 	}
 	
 	@Override
@@ -107,6 +110,11 @@ public class LocalPortal implements Portal
 					
 					else if(getPosition().getPane().contains(i.getLocation()))
 					{
+						if(i.getType().equals(EntityType.ARMOR_STAND))
+						{
+							continue;
+						}
+						
 						if(!Settings.ALLOW_ENTITIES)
 						{
 							VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
@@ -114,8 +122,22 @@ public class LocalPortal implements Portal
 						
 						else
 						{
-							getService().addThrottle(i);
-							w.push(i);
+							if(!settings.isAllowEntities())
+							{
+								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+								continue;
+							}
+							
+							if(Settings.ALLOW_ENTITIY_TYPES.contains(i.getType().toString()))
+							{
+								getService().addThrottle(i);
+								w.push(i);
+							}
+							
+							else
+							{
+								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+							}
 						}
 					}
 				}
@@ -407,5 +429,20 @@ public class LocalPortal implements Portal
 		getPosition().getCenterUp().getBlock().setType(Material.AIR);
 		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
 		getPosition().getCenterRight().getBlock().setType(Material.AIR);
+	}
+	
+	public Boolean getHasHadWormhole()
+	{
+		return hasHadWormhole;
+	}
+	
+	public Boolean getSaved()
+	{
+		return saved;
+	}
+	
+	public PortalSettings getSettings()
+	{
+		return settings;
 	}
 }
