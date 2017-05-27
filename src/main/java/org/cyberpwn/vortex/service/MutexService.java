@@ -15,9 +15,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -45,6 +47,7 @@ import wraith.GQuadraset;
 import wraith.GSound;
 import wraith.JSONObject;
 import wraith.MSound;
+import wraith.PlayerScrollEvent;
 import wraith.TICK;
 import wraith.TaskLater;
 import wraith.Timer;
@@ -75,6 +78,12 @@ public class MutexService implements Listener
 		{
 			insideThrottle.add(e);
 		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void on(PlayerItemHeldEvent e)
+	{
+		Wraith.callEvent(new PlayerScrollEvent(e.getPlayer(), e.getPreviousSlot(), e.getNewSlot()));
 	}
 	
 	public void removeThrottle(Entity e)
