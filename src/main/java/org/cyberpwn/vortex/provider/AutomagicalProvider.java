@@ -6,14 +6,18 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.cyberpwn.vortex.Settings;
+import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalPositionException;
 import org.cyberpwn.vortex.portal.LocalPortal;
+import org.cyberpwn.vortex.portal.Portal;
 import wraith.C;
 import wraith.Cuboid;
 import wraith.Direction;
@@ -35,6 +39,29 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	public void onFlush()
 	{
 		
+	}
+	
+	@EventHandler
+	public void on(PlayerInteractEvent e)
+	{
+		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+		{
+			for(Portal i : VP.host.getLocalPortals())
+			{
+				for(Cuboid j : i.getPosition().getFrame())
+				{
+					if(j.contains(e.getClickedBlock().getLocation()) && !e.getPlayer().isSneaking())
+					{
+						if(configure((LocalPortal) i, e.getPlayer()))
+						{
+							e.setCancelled(true);
+						}
+						
+						return;
+					}
+				}
+			}
+		}
 	}
 	
 	@EventHandler
