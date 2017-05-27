@@ -21,7 +21,7 @@ public class LocalWormhole extends BaseWormhole
 		
 		if(!Settings.ALLOW_ENTITIES)
 		{
-			getFilters().add(new WormholeEntityFilter(FilterPolicy.MUTEX, FilterMode.WHITELIST, EntityType.PLAYER));
+			getFilters().add(new WormholeEntityFilter(FilterPolicy.LOCAL, FilterMode.WHITELIST, EntityType.PLAYER));
 		}
 	}
 	
