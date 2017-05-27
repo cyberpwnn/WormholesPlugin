@@ -108,7 +108,7 @@ public class ApertureService
 		{
 			if(i.hasWormhole())
 			{
-				if(Settings.ENABLE_APERTURE)
+				if(Settings.ENABLE_APERTURE && ((LocalPortal) i).getSettings().isAparture())
 				{
 					i.getApature().sample((LocalPortal) i);
 					
