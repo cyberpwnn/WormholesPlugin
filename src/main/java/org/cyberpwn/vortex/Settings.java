@@ -1,9 +1,12 @@
 package org.cyberpwn.vortex;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import org.bukkit.entity.EntityType;
 import org.cyberpwn.vortex.config.Experimental;
 import wraith.Comment;
 import wraith.DataCluster;
+import wraith.GList;
 
 public class Settings
 {
@@ -24,6 +27,10 @@ public class Settings
 	public static int APERTURE_MAX_SPEED = 2;
 	
 	@Experimental
+	@Comment("Max block changes per chunk projection packet")
+	public static int PROJECTION_CHANGE_THROTTLE = 16728;
+	
+	@Experimental
 	@Comment("Modify the distance blocks will be sampled\nEnsure this value matches across all servers.")
 	public static int PROJECTION_SAMPLE_RADIUS = 25;
 	
@@ -42,6 +49,9 @@ public class Settings
 	@Experimental
 	@Comment("This adds compression to projection packets through bungeecord.\nIncreasing this past 4 increases processing time and slightly reduces the size\nTesting shows comp 4 shows the best improvement in size for compression time\nMust be from 1-9")
 	public static int NETWORK_COMPRESSION_LEVEL = 4;
+	
+	@Comment("Allowed entity types. (bungeecord portals cannot support entities)")
+	public static ArrayList<String> ALLOW_ENTITIY_TYPES = new GList<String>();
 	
 	public static DataCluster getConfig()
 	{
@@ -90,6 +100,19 @@ public class Settings
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	static
+	{
+		for(EntityType i : EntityType.values())
+		{
+			if(i.equals(EntityType.PLAYER))
+			{
+				continue;
+			}
+			
+			ALLOW_ENTITIY_TYPES.add(i.toString());
 		}
 	}
 	
