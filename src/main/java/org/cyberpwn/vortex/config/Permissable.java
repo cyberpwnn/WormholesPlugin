@@ -11,6 +11,7 @@ public class Permissable
 	private boolean canList;
 	private boolean canUse;
 	private boolean canBuild;
+	private boolean canConfigure;
 	private CommandSender p;
 	
 	public Permissable(CommandSender p)
@@ -22,6 +23,7 @@ public class Permissable
 		canList = has(Info.PERM_LIST);
 		canUse = has(Info.PERM_USE);
 		canBuild = has(Info.PERM_BUILD);
+		canConfigure = has(Info.PERM_CONFIGURE);
 	}
 	
 	public boolean has(String... any)
@@ -65,6 +67,11 @@ public class Permissable
 	public boolean canBuild()
 	{
 		return canBuild;
+	}
+	
+	public boolean canConfigure()
+	{
+		return canConfigure;
 	}
 	
 	public CommandSender getP()
