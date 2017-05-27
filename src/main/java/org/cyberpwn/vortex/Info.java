@@ -12,5 +12,6 @@ public class Info
 	public static String PERM_CREATE = "wormholes.create";
 	public static String PERM_DESTROY = "wormholes.destroy";
 	public static String PERM_BUILD = "wormholes.build";
+	public static String PERM_CONFIGURE = "wormholes.configure";
 	public static String PERM_USE = "wormholes.use";
 }
