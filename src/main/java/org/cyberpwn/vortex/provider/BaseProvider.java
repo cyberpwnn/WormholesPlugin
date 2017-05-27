@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.event.WormholeCreateEvent;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
@@ -22,11 +23,19 @@ import org.cyberpwn.vortex.projection.BoundingBox;
 import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.RasteredSystem;
 import org.cyberpwn.vortex.projection.Viewport;
+import wraith.C;
+import wraith.Click;
 import wraith.Cuboid;
 import wraith.DataCluster;
 import wraith.Direction;
 import wraith.GList;
 import wraith.GMap;
+import wraith.GSound;
+import wraith.Hud;
+import wraith.M;
+import wraith.MSound;
+import wraith.PlayerHud;
+import wraith.TaskLater;
 import wraith.VectorMath;
 import wraith.W;
 import wraith.Wraith;
@@ -35,11 +44,14 @@ public abstract class BaseProvider implements PortalProvider
 {
 	private RasteredSystem rasterer;
 	private GList<Player> moved;
+	private GList<Portal> conf;
+	private long lastms = M.ms();
 	
 	public BaseProvider()
 	{
 		rasterer = new RasteredSystem();
 		moved = new GList<Player>();
+		conf = new GList<Portal>();
 	}
 	
 	@Override
@@ -137,6 +149,11 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("g", c.getWorld().getName());
 			cc.set("h", d.ordinal());
 			cc.set("i", key.getSName());
+			cc.set("j", p.getSettings().isAllowEntities());
+			cc.set("k", p.getSettings().isAparture());
+			cc.set("l", p.getSettings().isProject());
+			cc.set("m", p.getSettings().isHasCustomName());
+			cc.set("n", p.getSettings().getCustomName());
 			VP.io.save(cc, new File(new File(VP.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
 		}
 	}
@@ -159,7 +176,12 @@ public abstract class BaseProvider implements PortalProvider
 					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
 					Direction d = Direction.values()[cc.getInt("h")];
 					PortalKey k = PortalKey.fromSName(cc.getString("i"));
-					createPortal(d, new Cuboid(a, b));
+					LocalPortal lp = createPortal(d, new Cuboid(a, b));
+					lp.getSettings().setAllowEntities(cc.getBoolean("j"));
+					lp.getSettings().setAparture(cc.getBoolean("k"));
+					lp.getSettings().setProject(cc.getBoolean("l"));
+					lp.getSettings().setHasCustomName(cc.getBoolean("m"));
+					lp.getSettings().setCustomName(cc.getString("n"));
 					System.out.println("Loading Portal: " + k.getSName().toUpperCase());
 					i.delete();
 				}
@@ -171,6 +193,174 @@ public abstract class BaseProvider implements PortalProvider
 				}
 			}
 		}
+	}
+	
+	public boolean configure(LocalPortal l, Player p)
+	{
+		if(new Permissable(p).canConfigure() && !conf.contains(l))
+		{
+			if(M.ms() - lastms > 50)
+			{
+				lastms = M.ms();
+			}
+			
+			else
+			{
+				return false;
+			}
+			
+			new TaskLater(2)
+			{
+				@Override
+				public void run()
+				{
+					PlayerHud hud = new PlayerHud(p, true)
+					{
+						@Override
+						public void onUpdate()
+						{
+							
+						}
+						
+						@Override
+						public void onSelect(String selection, int slot)
+						{
+							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 1.6f).play(p);
+						}
+						
+						@Override
+						public void onOpen()
+						{
+							conf.add(l);
+							new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+						}
+						
+						@Override
+						public String onEnable(String s)
+						{
+							if(s.equalsIgnoreCase("Entities"))
+							{
+								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Aperture"))
+							{
+								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Projection"))
+							{
+								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Destroy"))
+							{
+								s = C.RED + s + " Portal";
+							}
+							
+							return C.LIGHT_PURPLE + "> " + C.GRAY + s + C.LIGHT_PURPLE + " <";
+						}
+						
+						@Override
+						public String onDisable(String s)
+						{
+							if(s.equalsIgnoreCase("Entities"))
+							{
+								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Aperture"))
+							{
+								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Projection"))
+							{
+								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
+							}
+							
+							else if(s.equalsIgnoreCase("Destroy"))
+							{
+								s = C.RED + s + " Portal";
+							}
+							
+							return C.GRAY + s;
+						}
+						
+						@Override
+						public void onClose()
+						{
+							conf.remove(l);
+							new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+						}
+						
+						@Override
+						public void onClick(Click c, Player p, String selection, int slot, Hud h)
+						{
+							if(M.ms() - lastms > 50)
+							{
+								lastms = M.ms();
+							}
+							
+							else
+							{
+								return;
+							}
+							
+							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
+							
+							if(selection.equalsIgnoreCase("Entities"))
+							{
+								l.getSettings().setAllowEntities(!l.getSettings().isAllowEntities());
+								update();
+							}
+							
+							if(selection.equalsIgnoreCase("Aperture"))
+							{
+								l.getSettings().setAparture(!l.getSettings().isAparture());
+								update();
+							}
+							
+							if(selection.equalsIgnoreCase("Projection"))
+							{
+								l.getSettings().setProject(!l.getSettings().isProject());
+								
+								if(!l.getSettings().isProject())
+								{
+									VP.projector.deproject(l);
+								}
+								
+								update();
+							}
+							
+							if(selection.equalsIgnoreCase("Destroy"))
+							{
+								close();
+								VP.host.removeLocalPortal(l);
+							}
+							
+							if(selection.equalsIgnoreCase("Exit"))
+							{
+								close();
+							}
+						}
+					};
+					
+					GList<String> op = new GList<String>();
+					op.add("Entities");
+					op.add("Aperture");
+					op.add("Projection");
+					op.add("Destroy");
+					op.add("Exit");
+					hud.setContent(op);
+					hud.open();
+				}
+			};
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public LocalPortal createPortal(Direction d, Cuboid c) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException
