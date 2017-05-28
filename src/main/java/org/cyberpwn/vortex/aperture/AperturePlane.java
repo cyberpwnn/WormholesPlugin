@@ -156,6 +156,11 @@ public class AperturePlane
 			
 			for(Entity i : p.getPosition().getBoundingBox().getInside())
 			{
+				if(i.getType().equals(EntityType.ARMOR_STAND) || !Settings.APERTURE_ENTITIY_TYPES.contains(i.getType().toString()))
+				{
+					continue;
+				}
+				
 				if(i.getLocation().getWorld().equals(p.getPosition().getCenter().getWorld()))
 				{
 					Vector f = VectorMath.directionNoNormal(p.getPosition().getCenter(), i.getLocation());
