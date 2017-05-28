@@ -155,7 +155,6 @@ public class ProjectionService implements Listener
 				{
 					Viewport vIn = view.get(i);
 					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
-					int mv = 0;
 					boolean br = false;
 					
 					for(Block j : vIn.getProjectionSet().getBlocks())
@@ -173,13 +172,6 @@ public class ProjectionService implements Listener
 							}
 							
 							VP.provider.getRasterer().queue(i, j.getLocation(), mb);
-							mv++;
-							
-							if(mv > Settings.PROJECTION_CHANGE_THROTTLE)
-							{
-								VP.provider.getRasterer().get(i).flush();
-								mv = 0;
-							}
 						}
 					}
 					
@@ -188,14 +180,6 @@ public class ProjectionService implements Listener
 						if(vOut.contains(j.getLocation()) && !vIn.contains(j.getLocation()))
 						{
 							VP.provider.getRasterer().dequeue(i, j.getLocation());
-							
-							mv++;
-							
-							if(mv > Settings.PROJECTION_CHANGE_THROTTLE)
-							{
-								VP.provider.getRasterer().get(i).flush();
-								mv = 0;
-							}
 						}
 					}
 					
