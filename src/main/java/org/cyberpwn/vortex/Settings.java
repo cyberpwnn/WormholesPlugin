@@ -10,6 +10,7 @@ import wraith.GList;
 
 public class Settings
 {
+	
 	@Comment("Should Wormholes project blocks from the other side?")
 	public static boolean ENABLE_PROJECTIONS = true;
 	
@@ -39,6 +40,14 @@ public class Settings
 	public static int PROJECTION_MAX_SPEED = 5;
 	
 	@Experimental
+	@Comment("The interval in which wormholes will send a chunk packet to players. Must be higher than 0.\nInterval in ticks")
+	public static int CHUNK_SEND_RATE = 1;
+	
+	@Experimental
+	@Comment("The maximum partial chunks which can be sent in one interval")
+	public static int CHUNK_SEND_MAX = 6;
+	
+	@Experimental
 	@Comment("The interval in which portals are checked to ensure they are populated with projection maps\nThis is only called one time when the portal is created.")
 	public static int NETWORK_POPULATE_MAPPING_INTERVAL = 20;
 	
@@ -52,6 +61,9 @@ public class Settings
 	
 	@Comment("Allowed entity types. (bungeecord portals cannot support entities)")
 	public static ArrayList<String> ALLOW_ENTITIY_TYPES = new GList<String>();
+	
+	@Comment("Allowed entity types for the aperture (entity capture)")
+	public static ArrayList<String> APERTURE_ENTITIY_TYPES = new GList<String>();
 	
 	public static DataCluster getConfig()
 	{
@@ -113,6 +125,7 @@ public class Settings
 			}
 			
 			ALLOW_ENTITIY_TYPES.add(i.toString());
+			APERTURE_ENTITIY_TYPES.add(i.toString());
 		}
 	}
 	
