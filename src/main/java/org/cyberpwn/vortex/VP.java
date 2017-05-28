@@ -87,6 +87,11 @@ public class VP extends ControllablePlugin
 				aperture.flush();
 				entity.flush();
 			}
+			
+			if(TICK.tick % Settings.CHUNK_SEND_RATE == 0)
+			{
+				provider.getRasterer().flushRasterQueue();
+			}
 		}
 		
 		catch(Throwable e)
