@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.cyberpwn.vortex.Status;
+import org.cyberpwn.vortex.VP;
 import org.cyberpwn.vortex.wrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
@@ -72,15 +73,22 @@ public class RasteredChunk
 		
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
 		
-		try
+		VP.provider.getRasterer().queueRaster(p, new Runnable()
 		{
-			ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
-		}
-		
-		catch(InvocationTargetException e)
-		{
-			System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
-			e.printStackTrace();
-		}
+			@Override
+			public void run()
+			{
+				try
+				{
+					ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
+				}
+				
+				catch(InvocationTargetException e)
+				{
+					System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
