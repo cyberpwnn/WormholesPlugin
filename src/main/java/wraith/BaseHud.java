@@ -20,9 +20,11 @@ public abstract class BaseHud implements Hud, Listener
 	protected boolean listening;
 	protected GMap<String, Runnable> preListeners;
 	protected int index;
+	protected boolean hasTitle;
 	
 	public BaseHud(Player player)
 	{
+		hasTitle = false;
 		this.player = player;
 		content = new GList<String>();
 		open = false;
@@ -46,6 +48,12 @@ public abstract class BaseHud implements Hud, Listener
 			holo = new PhantomHologram(getBaseLocation());
 			holo.setDisplay(content.toString("\n"));
 			holo.setExclusive(player);
+			
+			if(isHasTitle())
+			{
+				selection.set(1);
+			}
+			
 			update();
 			
 			new Task(0)
@@ -97,6 +105,12 @@ public abstract class BaseHud implements Hud, Listener
 		if(open && player.equals(e.getPlayer()) && listening)
 		{
 			selection.set(selection.get() - e.getMovement());
+			
+			if(hasTitle && selection.get() == 0)
+			{
+				selection.add(1);
+			}
+			
 			onSelect(getSelection(), getSelectionRow());
 			update();
 		}
@@ -284,5 +298,45 @@ public abstract class BaseHud implements Hud, Listener
 	public GMap<String, Runnable> getPreListeners()
 	{
 		return preListeners;
+	}
+	
+	public boolean isHasTitle()
+	{
+		return hasTitle;
+	}
+	
+	public void setHasTitle(boolean hasTitle)
+	{
+		this.hasTitle = hasTitle;
+	}
+	
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
+	
+	public void setOpen(boolean open)
+	{
+		this.open = open;
+	}
+	
+	public void setHolo(Hologram holo)
+	{
+		this.holo = holo;
+	}
+	
+	public void setSelection(CNum selection)
+	{
+		this.selection = selection;
+	}
+	
+	public void setStartRange(int startRange)
+	{
+		this.startRange = startRange;
+	}
+	
+	public void setPreListeners(GMap<String, Runnable> preListeners)
+	{
+		this.preListeners = preListeners;
 	}
 }
