@@ -52,6 +52,21 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
 	}
 	
+	public int depth(Axis a)
+	{
+		switch(a)
+		{
+			case X:
+				return x2 - x1;
+			case Y:
+				return y2 - y1;
+			case Z:
+				return z2 - z1;
+		}
+		
+		return -1;
+	}
+	
 	/**
 	 * Set the locations
 	 * 

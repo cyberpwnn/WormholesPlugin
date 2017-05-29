@@ -13,6 +13,58 @@ import org.bukkit.util.Vector;
  */
 public class VectorMath
 {
+	public static void test()
+	{
+		Vector v = new Vector(1, 2, 3);
+		System.out.println("Scale " + v + " with y > 2");
+		System.out.println(scaleStatic(Axis.X, v, -1));
+	}
+	
+	public static Vector scaleStatic(Axis x, Vector v, double amt)
+	{
+		switch(x)
+		{
+			case X:
+				return scaleX(v, amt);
+			case Y:
+				return scaleY(v, amt);
+			case Z:
+				return scaleZ(v, amt);
+		}
+		
+		return null;
+	}
+	
+	public static Vector scaleX(Vector v, double amt)
+	{
+		double x = v.getX();
+		double y = v.getY();
+		double z = v.getZ();
+		double rx = x == 0 ? 1 : amt / x;
+		
+		return new Vector(x * rx, y * rx, z * rx);
+	}
+	
+	public static Vector scaleY(Vector v, double amt)
+	{
+		double x = v.getX();
+		double y = v.getY();
+		double z = v.getZ();
+		double rx = y == 0 ? 1 : amt / y;
+		
+		return new Vector(x * rx, y * rx, z * rx);
+	}
+	
+	public static Vector scaleZ(Vector v, double amt)
+	{
+		double x = v.getX();
+		double y = v.getY();
+		double z = v.getZ();
+		double rx = z == 0 ? 1 : amt / z;
+		
+		return new Vector(x * rx, y * rx, z * rx);
+	}
+	
 	public static Vector reverseXZ(Vector v)
 	{
 		v.setX(-v.getX());
@@ -282,7 +334,7 @@ public class VectorMath
 	 */
 	public static Vector direction(Location from, Location to)
 	{
-		return to.subtract(from).toVector().normalize();
+		return to.clone().subtract(from.clone()).toVector().normalize();
 	}
 	
 	public static Vector directionNoNormal(Location from, Location to)

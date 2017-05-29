@@ -376,4 +376,25 @@ public enum Direction
 			}
 		}
 	}
+	
+	public Axis getAxis()
+	{
+		switch(this)
+		{
+			case D:
+				return Axis.Y;
+			case E:
+				return Axis.X;
+			case N:
+				return Axis.Z;
+			case S:
+				return Axis.Z;
+			case U:
+				return Axis.Y;
+			case W:
+				return Axis.X;
+		}
+		
+		return null;
+	}
 }
