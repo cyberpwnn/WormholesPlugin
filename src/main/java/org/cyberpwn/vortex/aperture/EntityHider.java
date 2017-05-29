@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -307,6 +308,11 @@ public class EntityHider implements Listener
 	 */
 	public final boolean hideEntity(Player observer, Entity entity)
 	{
+		if(entity.getType().equals(EntityType.ARMOR_STAND))
+		{
+			return false;
+		}
+		
 		validate(observer, entity);
 		boolean visibleBefore = setVisibility(observer, entity.getEntityId(), false);
 		
