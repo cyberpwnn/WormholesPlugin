@@ -22,6 +22,13 @@ public class ProjectionSet
 		add(c);
 	}
 	
+	public Cuboid pop()
+	{
+		Cuboid c = cuboids.pop();
+		
+		return c;
+	}
+	
 	public void remove(int amt)
 	{
 		for(int i = 0; i < amt; i++)
