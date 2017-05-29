@@ -23,6 +23,7 @@ import org.cyberpwn.vortex.projection.BoundingBox;
 import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.RasteredSystem;
 import org.cyberpwn.vortex.projection.Viewport;
+import wraith.BaseHud;
 import wraith.C;
 import wraith.Click;
 import wraith.Cuboid;
@@ -34,6 +35,7 @@ import wraith.GSound;
 import wraith.Hud;
 import wraith.M;
 import wraith.MSound;
+import wraith.NMSX;
 import wraith.PlayerHud;
 import wraith.TaskLater;
 import wraith.VectorMath;
@@ -226,6 +228,38 @@ public abstract class BaseProvider implements PortalProvider
 						public void onSelect(String selection, int slot)
 						{
 							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 1.6f).play(p);
+							
+							String s = selection;
+							
+							if(s.equalsIgnoreCase("Allow Entities"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Toggle the permission for entities to use this portal");
+							}
+							
+							else if(s.equalsIgnoreCase("Project Entities"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Toggle entity projections");
+							}
+							
+							else if(s.equalsIgnoreCase("Project Blocks"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Toggle block projections");
+							}
+							
+							else if(s.equalsIgnoreCase("Visualize Direction"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Show the direction players enter and exit.");
+							}
+							
+							else if(s.equalsIgnoreCase("Destroy"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Destroy this portal?");
+							}
+							
+							else if(s.equalsIgnoreCase("Exit"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Exit this menu (or just walk away from it)");
+							}
 						}
 						
 						@Override
@@ -238,17 +272,17 @@ public abstract class BaseProvider implements PortalProvider
 						@Override
 						public String onEnable(String s)
 						{
-							if(s.equalsIgnoreCase("Entities"))
+							if(s.equalsIgnoreCase("Allow Entities"))
 							{
 								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
 							}
 							
-							else if(s.equalsIgnoreCase("Aperture"))
+							else if(s.equalsIgnoreCase("Project Entities"))
 							{
 								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
 							}
 							
-							else if(s.equalsIgnoreCase("Projection"))
+							else if(s.equalsIgnoreCase("Project Blocks"))
 							{
 								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
 							}
@@ -264,17 +298,17 @@ public abstract class BaseProvider implements PortalProvider
 						@Override
 						public String onDisable(String s)
 						{
-							if(s.equalsIgnoreCase("Entities"))
+							if(s.equalsIgnoreCase("Allow Entities"))
 							{
 								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
 							}
 							
-							else if(s.equalsIgnoreCase("Aperture"))
+							else if(s.equalsIgnoreCase("Project Entities"))
 							{
 								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
 							}
 							
-							else if(s.equalsIgnoreCase("Projection"))
+							else if(s.equalsIgnoreCase("Project Blocks"))
 							{
 								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
 							}
@@ -309,19 +343,19 @@ public abstract class BaseProvider implements PortalProvider
 							
 							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
 							
-							if(selection.equalsIgnoreCase("Entities"))
+							if(selection.equalsIgnoreCase("Allow Entities"))
 							{
 								l.getSettings().setAllowEntities(!l.getSettings().isAllowEntities());
 								update();
 							}
 							
-							if(selection.equalsIgnoreCase("Aperture"))
+							if(selection.equalsIgnoreCase("Project Entities"))
 							{
 								l.getSettings().setAparture(!l.getSettings().isAparture());
 								update();
 							}
 							
-							if(selection.equalsIgnoreCase("Projection"))
+							if(selection.equalsIgnoreCase("Project Blocks"))
 							{
 								l.getSettings().setProject(!l.getSettings().isProject());
 								
@@ -336,7 +370,70 @@ public abstract class BaseProvider implements PortalProvider
 							if(selection.equalsIgnoreCase("Destroy"))
 							{
 								close();
-								VP.host.removeLocalPortal(l);
+								
+								Hud confirm = new PlayerHud(p, true)
+								{
+									@Override
+									public void onUpdate()
+									{
+										
+									}
+									
+									@Override
+									public void onSelect(String selection, int slot)
+									{
+										new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 1.6f).play(p);
+									}
+									
+									@Override
+									public void onOpen()
+									{
+										new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+									}
+									
+									@Override
+									public String onEnable(String s)
+									{
+										return C.LIGHT_PURPLE + "> " + C.RED + s + C.LIGHT_PURPLE + " <";
+									}
+									
+									@Override
+									public String onDisable(String s)
+									{
+										return C.GRAY + s;
+									}
+									
+									@Override
+									public void onClose()
+									{
+										new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+									}
+									
+									@Override
+									public void onClick(Click c, Player p, String selection, int slot, Hud h)
+									{
+										new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
+										close();
+										
+										if(selection.equalsIgnoreCase("Yes"))
+										{
+											VP.host.removeLocalPortal(l);
+										}
+										
+										if(selection.equalsIgnoreCase("No"))
+										{
+											configure(l, p);
+										}
+									}
+								};
+								
+								GList<String> opv = new GList<String>();
+								opv.add("Are You Sure?");
+								opv.add("YES");
+								opv.add("NO");
+								confirm.setContents(opv);
+								((BaseHud) confirm).setHasTitle(true);
+								confirm.open();
 							}
 							
 							if(selection.equalsIgnoreCase("Exit"))
@@ -347,9 +444,9 @@ public abstract class BaseProvider implements PortalProvider
 					};
 					
 					GList<String> op = new GList<String>();
-					op.add("Entities");
-					op.add("Aperture");
-					op.add("Projection");
+					op.add("Allow Entities");
+					op.add("Project Entities");
+					op.add("Project Blocks");
 					op.add("Destroy");
 					op.add("Exit");
 					hud.setContent(op);
