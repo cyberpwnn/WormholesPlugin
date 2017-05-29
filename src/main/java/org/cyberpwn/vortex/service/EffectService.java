@@ -10,6 +10,7 @@ import wraith.GSound;
 import wraith.M;
 import wraith.MSound;
 import wraith.ParticleEffect;
+import wraith.TaskLater;
 
 public class EffectService
 {
@@ -195,6 +196,25 @@ public class EffectService
 					}
 				}
 			}
+		}
+	}
+	
+	public void visualize(LocalPortal p)
+	{
+		Location l = p.getPosition().getCenter().clone().add(p.getIdentity().getBack().toVector().clone().multiply(8));
+		
+		for(int i = 0; i < 15; i++)
+		{
+			Vector vx = p.getPosition().getIdentity().getFront().toVector();
+			
+			new TaskLater(i)
+			{
+				@Override
+				public void run()
+				{
+					ParticleEffect.FIREWORKS_SPARK.display(vx.clone().normalize(), 2.0f, l, 32);
+				}
+			};
 		}
 	}
 }
