@@ -177,7 +177,7 @@ public class VEntity
 		else
 		{
 			Vector dir = VectorMath.directionNoNormal(last, location);
-			prelativeMoveLook(dir.getX(), dir.getY(), dir.getZ(), location.getYaw(), location.getPitch());
+			prelativeMove(dir.getX(), dir.getY(), dir.getZ());
 		}
 		
 		if(location.getYaw() != last.getYaw() || location.getPitch() != last.getPitch())
