@@ -17,6 +17,7 @@ import org.cyberpwn.vortex.portal.PortalIdentity;
 import org.cyberpwn.vortex.portal.PortalKey;
 import org.cyberpwn.vortex.projection.NulledViewport;
 import org.cyberpwn.vortex.projection.ProjectionPlane;
+import org.cyberpwn.vortex.projection.RenderMesh;
 import org.cyberpwn.vortex.projection.Viewport;
 import org.cyberpwn.vortex.wormhole.Wormhole;
 import wraith.A;
@@ -37,6 +38,7 @@ public class ProjectionService implements Listener
 	private Boolean projecting;
 	private Long tpl;
 	private GMap<Portal, GMap<Player, Viewport>> lastPort;
+	private RenderMesh mesh;
 	
 	public ProjectionService()
 	{
@@ -44,6 +46,7 @@ public class ProjectionService implements Listener
 		projecting = false;
 		tpl = M.ms();
 		lastPort = new GMap<Portal, GMap<Player, Viewport>>();
+		mesh = new RenderMesh();
 		Wraith.registerListener(this);
 	}
 	
@@ -240,5 +243,10 @@ public class ProjectionService implements Listener
 	public GMap<Portal, GMap<Player, Viewport>> getLastPort()
 	{
 		return lastPort;
+	}
+	
+	public RenderMesh getMesh()
+	{
+		return mesh;
 	}
 }
