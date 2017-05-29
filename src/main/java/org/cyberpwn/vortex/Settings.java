@@ -10,7 +10,6 @@ import wraith.GList;
 
 public class Settings
 {
-	
 	@Comment("Should Wormholes project blocks from the other side?")
 	public static boolean ENABLE_PROJECTIONS = true;
 	
@@ -41,7 +40,7 @@ public class Settings
 	
 	@Experimental
 	@Comment("The interval in which wormholes will send a chunk packet to players. Must be higher than 0.\nInterval in ticks")
-	public static int CHUNK_SEND_RATE = 1;
+	public static int CHUNK_SEND_RATE = 2;
 	
 	@Experimental
 	@Comment("The maximum partial chunks which can be sent in one interval")
