@@ -3,7 +3,7 @@ package org.cyberpwn.vortex.network;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.service.TimingsService;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -29,7 +29,7 @@ public class VortexBus implements TransmissionBus, PluginMessageListener
 		online = false;
 		servers = new GList<String>();
 		throttle = M.ms();
-		VP.instance.getServer().getMessenger().registerIncomingPluginChannel(VP.instance, "BungeeCord", this);
+		Wormholes.instance.getServer().getMessenger().registerIncomingPluginChannel(Wormholes.instance, "BungeeCord", this);
 	}
 	
 	@Override
@@ -147,12 +147,12 @@ public class VortexBus implements TransmissionBus, PluginMessageListener
 	
 	private void requestName()
 	{
-		new PluginMessage(VP.instance, "GetServer").send();
+		new PluginMessage(Wormholes.instance, "GetServer").send();
 	}
 	
 	private void requestServers()
 	{
-		new PluginMessage(VP.instance, "GetServers").send();
+		new PluginMessage(Wormholes.instance, "GetServers").send();
 	}
 	
 	@Override

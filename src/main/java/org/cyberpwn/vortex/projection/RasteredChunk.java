@@ -5,8 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.cyberpwn.vortex.Status;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.wrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
@@ -14,6 +13,7 @@ import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import wraith.GList;
 import wraith.MaterialBlock;
+import wraith.W;
 
 public class RasteredChunk
 {
@@ -68,12 +68,11 @@ public class RasteredChunk
 			}
 		}
 		
+		int dist = W.chunkDistance(p.getLocation().getChunk(), p.getLocation().getWorld().getChunkAt(x, z));
 		int size = 8 + (inf.size() * 12);
-		Status.packetBytesPerSecond += size;
-		
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
 		
-		VP.provider.getRasterer().queueRaster(p, new Runnable()
+		Wormholes.provider.getRasterer().queueRaster(p, new QueuedChunk(size, dist)
 		{
 			@Override
 			public void run()

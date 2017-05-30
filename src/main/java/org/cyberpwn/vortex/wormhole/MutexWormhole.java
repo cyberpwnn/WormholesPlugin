@@ -4,7 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.event.WormholePushEntityEvent;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
@@ -26,7 +26,7 @@ public class MutexWormhole extends BaseWormhole
 	@Override
 	public void onPush(Entity e)
 	{
-		if(e instanceof Player && VP.bus.isOnline())
+		if(e instanceof Player && Wormholes.bus.isOnline())
 		{
 			Player p = (Player) e;
 			Vector direction = e.getLocation().getDirection();
@@ -52,7 +52,7 @@ public class MutexWormhole extends BaseWormhole
 				@Override
 				public void run()
 				{
-					new PluginMessage(VP.instance, "ConnectOther", p.getName(), getDestination().getServer()).send();
+					new PluginMessage(Wormholes.instance, "ConnectOther", p.getName(), getDestination().getServer()).send();
 				}
 			};
 		}

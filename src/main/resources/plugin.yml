@@ -1,6 +1,6 @@
 name: ${project.name}
 version: ${project.version}
-main: org.cyberpwn.vortex.VP
+main: org.cyberpwn.vortex.Wormholes
 depend: [ProtocolLib]
 commands: 
   wormhole: 

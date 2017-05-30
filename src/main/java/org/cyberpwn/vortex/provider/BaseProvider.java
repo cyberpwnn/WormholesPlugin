@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.event.WormholeCreateEvent;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
@@ -48,12 +48,35 @@ public abstract class BaseProvider implements PortalProvider
 	private GList<Player> moved;
 	private GList<Portal> conf;
 	private long lastms = M.ms();
+	protected GList<Player> debug;
 	
 	public BaseProvider()
 	{
 		rasterer = new RasteredSystem();
 		moved = new GList<Player>();
 		conf = new GList<Portal>();
+		debug = new GList<Player>();
+	}
+	
+	public void dedebug(Player p)
+	{
+		if(isDebugging(p))
+		{
+			debug.remove(p);
+		}
+	}
+	
+	public void debug(Player p)
+	{
+		if(!isDebugging(p))
+		{
+			debug.add(p);
+		}
+	}
+	
+	public boolean isDebugging(Player p)
+	{
+		return debug.contains(p);
 	}
 	
 	@Override
@@ -100,9 +123,9 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void wipe(LocalPortal p)
 	{
-		if(VP.host.isKeyValidAlready(p.getKey()))
+		if(Wormholes.host.isKeyValidAlready(p.getKey()))
 		{
-			File f = new File(VP.instance.getDataFolder(), "data");
+			File f = new File(Wormholes.instance.getDataFolder(), "data");
 			f.mkdirs();
 			
 			for(File i : f.listFiles())
@@ -111,7 +134,7 @@ public abstract class BaseProvider implements PortalProvider
 				{
 					try
 					{
-						DataCluster cc = VP.io.load(i);
+						DataCluster cc = Wormholes.io.load(i);
 						World w = Bukkit.getWorld(cc.getString("g"));
 						Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
 						Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
@@ -135,7 +158,7 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void save(LocalPortal p)
 	{
-		if(VP.host.isKeyValidAlready(p.getKey()))
+		if(Wormholes.host.isKeyValidAlready(p.getKey()))
 		{
 			DataCluster cc = new DataCluster();
 			PortalKey key = p.getKey();
@@ -156,14 +179,14 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("l", p.getSettings().isProject());
 			cc.set("m", p.getSettings().isHasCustomName());
 			cc.set("n", p.getSettings().getCustomName());
-			VP.io.save(cc, new File(new File(VP.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
+			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
 		}
 	}
 	
 	@Override
 	public void loadAllPortals()
 	{
-		File f = new File(VP.instance.getDataFolder(), "data");
+		File f = new File(Wormholes.instance.getDataFolder(), "data");
 		f.mkdirs();
 		
 		for(File i : f.listFiles())
@@ -172,7 +195,7 @@ public abstract class BaseProvider implements PortalProvider
 			{
 				try
 				{
-					DataCluster cc = VP.io.load(i);
+					DataCluster cc = Wormholes.io.load(i);
 					World w = Bukkit.getWorld(cc.getString("g"));
 					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
 					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
@@ -361,7 +384,7 @@ public abstract class BaseProvider implements PortalProvider
 								
 								if(!l.getSettings().isProject())
 								{
-									VP.projector.deproject(l);
+									Wormholes.projector.deproject(l);
 								}
 								
 								update();
@@ -417,7 +440,7 @@ public abstract class BaseProvider implements PortalProvider
 										
 										if(selection.equalsIgnoreCase("Yes"))
 										{
-											VP.host.removeLocalPortal(l);
+											Wormholes.host.removeLocalPortal(l);
 										}
 										
 										if(selection.equalsIgnoreCase("No"))
@@ -472,12 +495,12 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public LocalPortal createPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException
 	{
-		if(VP.host.isKeyValid(identity.getKey()))
+		if(Wormholes.host.isKeyValid(identity.getKey()))
 		{
-			if(VP.host.isPositionValid(position))
+			if(Wormholes.host.isPositionValid(position))
 			{
 				LocalPortal p = new LocalPortal(identity, position);
-				VP.host.addLocalPortal(p);
+				Wormholes.host.addLocalPortal(p);
 				Wraith.callEvent(new WormholeCreateEvent(p));
 				return p;
 			}
@@ -497,7 +520,7 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void destroyPortal(LocalPortal portal)
 	{
-		VP.host.removeLocalPortal(portal);
+		Wormholes.host.removeLocalPortal(portal);
 	}
 	
 	@Override

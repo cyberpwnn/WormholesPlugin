@@ -7,7 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.event.WormholeLinkEvent;
@@ -17,6 +17,7 @@ import org.cyberpwn.vortex.projection.ProjectionPlane;
 import org.cyberpwn.vortex.service.MutexService;
 import org.cyberpwn.vortex.wormhole.Wormhole;
 import wraith.DataCluster;
+import wraith.Direction;
 import wraith.GList;
 import wraith.M;
 import wraith.RayTrace;
@@ -53,7 +54,7 @@ public class LocalPortal implements Portal
 	{
 		if(!hasValidKey())
 		{
-			VP.host.removeLocalPortal(this);
+			Wormholes.host.removeLocalPortal(this);
 			return;
 		}
 		
@@ -61,7 +62,7 @@ public class LocalPortal implements Portal
 		{
 			if(hasValidKey())
 			{
-				VP.provider.save(this);
+				Wormholes.provider.save(this);
 				saved = true;
 			}
 		}
@@ -76,12 +77,12 @@ public class LocalPortal implements Portal
 			
 			if(M.r(0.9))
 			{
-				VP.fx.rise(this);
+				Wormholes.fx.rise(this);
 			}
 			
 			if(M.r(0.07))
 			{
-				VP.fx.ambient(this);
+				Wormholes.fx.ambient(this);
 			}
 			
 			GList<Entity> entities = getPosition().getOPane().getEntities();
@@ -103,7 +104,7 @@ public class LocalPortal implements Portal
 							
 							else
 							{
-								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 							}
 						}
 					}
@@ -117,14 +118,14 @@ public class LocalPortal implements Portal
 						
 						if(!Settings.ALLOW_ENTITIES)
 						{
-							VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+							Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 						}
 						
 						else
 						{
 							if(!settings.isAllowEntities())
 							{
-								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 								continue;
 							}
 							
@@ -136,7 +137,7 @@ public class LocalPortal implements Portal
 							
 							else
 							{
-								VP.fx.throwBack(i, VectorMath.reverse(i.getLocation().getDirection()).multiply(1.3).setY(0.6), this);
+								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 							}
 						}
 					}
@@ -147,7 +148,7 @@ public class LocalPortal implements Portal
 		else if(hasHadWormhole)
 		{
 			hasHadWormhole = false;
-			VP.projector.deproject(this);
+			Wormholes.projector.deproject(this);
 			Wraith.callEvent(new WormholeUnlinkEvent(this));
 		}
 		
@@ -155,6 +156,19 @@ public class LocalPortal implements Portal
 		{
 			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS);
 		}
+	}
+	
+	public Direction getThrowDirection(Location l)
+	{
+		if(!getIdentity().getFront().isVertical())
+		{
+			l.setY(getPosition().getCenter().getY());
+			Vector v = VectorMath.direction(getPosition().getCenter(), l);
+			return Direction.getDirection(v);
+		}
+		
+		Vector v = VectorMath.direction(getPosition().getCenter(), l);
+		return Direction.getDirection(v);
 	}
 	
 	public boolean isPlayerLookingAt(Player i)
@@ -265,7 +279,7 @@ public class LocalPortal implements Portal
 	@Override
 	public MutexService getService()
 	{
-		return VP.host;
+		return Wormholes.host;
 	}
 	
 	@Override
@@ -291,9 +305,9 @@ public class LocalPortal implements Portal
 	@Override
 	public String getServer()
 	{
-		if(server.equals("") && VP.bus.isOnline())
+		if(server.equals("") && Wormholes.bus.isOnline())
 		{
-			server = VP.bus.getServerName();
+			server = Wormholes.bus.getServerName();
 		}
 		
 		return server;
@@ -373,9 +387,9 @@ public class LocalPortal implements Portal
 	{
 		try
 		{
-			PortalKey k = VP.provider.buildKey(getPosition());
+			PortalKey k = Wormholes.provider.buildKey(getPosition());
 			
-			if(VP.host.isKeyValidAlready(k))
+			if(Wormholes.host.isKeyValidAlready(k))
 			{
 				identity.setKey(k);
 				hasBeenValid = true;

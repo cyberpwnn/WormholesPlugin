@@ -12,7 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.aperture.BlacklistAperture;
 import org.cyberpwn.vortex.aperture.RemoteInstance;
@@ -104,7 +104,7 @@ public class ApertureService
 		t = new Timer();
 		t.start();
 		
-		for(Portal i : VP.host.getLocalPortals())
+		for(Portal i : Wormholes.host.getLocalPortals())
 		{
 			if(i.hasWormhole())
 			{
@@ -130,7 +130,7 @@ public class ApertureService
 								dos.write(data);
 								dos.close();
 								byte[] main = boas.toByteArray();
-								new ForwardedPluginMessage(VP.instance, CL.L3.get(), server, main).send();
+								new ForwardedPluginMessage(Wormholes.instance, CL.L3.get(), server, main).send();
 							}
 							
 							catch(IOException e)
@@ -141,7 +141,7 @@ public class ApertureService
 					}
 				}
 				
-				GMap<Portal, GMap<Player, Viewport>> lastPort = VP.projector.getLastPort();
+				GMap<Portal, GMap<Player, Viewport>> lastPort = Wormholes.projector.getLastPort();
 				
 				if(lastPort.containsKey(i) && i.hasWormhole())
 				{
@@ -151,7 +151,7 @@ public class ApertureService
 						{
 							if(!i.getPosition().isInsidePortal(k.getLocation()))
 							{
-								VP.aperture.hideEntity(j, k);
+								Wormholes.aperture.hideEntity(j, k);
 							}
 						}
 						
@@ -172,7 +172,7 @@ public class ApertureService
 									if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
 									{
 										l.setDirection(rl.get(k));
-										VP.entity.set(j, i, ri, l);
+										Wormholes.entity.set(j, i, ri, l);
 									}
 								}
 							}
@@ -201,7 +201,7 @@ public class ApertureService
 			String json = dis.readUTF();
 			byte[] d = IOUtils.toByteArray(dis);
 			
-			for(Portal i : VP.host.getLocalPortals())
+			for(Portal i : Wormholes.host.getLocalPortals())
 			{
 				if(i.hasWormhole() && i.isWormholeMutex())
 				{

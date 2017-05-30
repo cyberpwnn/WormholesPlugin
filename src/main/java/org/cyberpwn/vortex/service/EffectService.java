@@ -11,6 +11,7 @@ import wraith.M;
 import wraith.MSound;
 import wraith.ParticleEffect;
 import wraith.TaskLater;
+import wraith.VectorMath;
 
 public class EffectService
 {
@@ -33,6 +34,11 @@ public class EffectService
 		e.teleport(e.getLocation().clone().add(v));
 		e.setVelocity(v);
 		new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getLocation());
+	}
+	
+	public Vector throwBackVector(Entity l, LocalPortal p)
+	{
+		return p.getThrowDirection(l.getLocation()).toVector().clone().add(VectorMath.reverse(l.getVelocity()));
 	}
 	
 	public void ambient(LocalPortal p)

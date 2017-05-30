@@ -1,7 +1,7 @@
 package org.cyberpwn.vortex.service;
 
 import org.bukkit.entity.Player;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.projection.ProjectionSet;
@@ -58,7 +58,7 @@ public class PortalRegistry
 	
 	public Portal getPortalLookingAt(Player p)
 	{
-		for(Portal i : VP.host.getLocalPortals())
+		for(Portal i : Wormholes.host.getLocalPortals())
 		{
 			if(((LocalPortal) i).isPlayerLookingAt(p))
 			{

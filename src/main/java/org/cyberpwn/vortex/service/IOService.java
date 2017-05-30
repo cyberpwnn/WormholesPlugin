@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import wraith.DataCluster;
 import wraith.JSONObject;
 import wraith.YAMLDataInput;
@@ -34,7 +34,7 @@ public class IOService
 	
 	public void doConfigBasic() throws IOException
 	{
-		File f = new File(VP.instance.getDataFolder(), "config.yml");
+		File f = new File(Wormholes.instance.getDataFolder(), "config.yml");
 		DataCluster def = Settings.getConfig();
 		DataCluster lod = new DataCluster();
 		
@@ -59,7 +59,7 @@ public class IOService
 	
 	public void doConfigExperimental() throws IOException
 	{
-		File f = new File(VP.instance.getDataFolder(), "config-experimental.yml");
+		File f = new File(Wormholes.instance.getDataFolder(), "config-experimental.yml");
 		DataCluster def = Settings.getExperimentalConfig();
 		DataCluster lod = new DataCluster();
 		

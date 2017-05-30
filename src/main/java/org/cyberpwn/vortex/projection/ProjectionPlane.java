@@ -144,7 +144,6 @@ public class ProjectionPlane
 		for(Block i : new GList<Block>(c.iterator()))
 		{
 			mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
-			
 		}
 	}
 }

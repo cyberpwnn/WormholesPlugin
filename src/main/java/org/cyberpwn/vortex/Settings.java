@@ -44,7 +44,7 @@ public class Settings
 	
 	@Experimental
 	@Comment("The maximum partial chunks which can be sent in one interval")
-	public static int CHUNK_SEND_MAX = 6;
+	public static int CHUNK_SEND_MAX = 2;
 	
 	@Experimental
 	@Comment("The interval in which portals are checked to ensure they are populated with projection maps\nThis is only called one time when the portal is created.")

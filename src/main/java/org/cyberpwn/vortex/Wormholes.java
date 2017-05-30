@@ -8,6 +8,7 @@ import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.network.VortexBus;
 import org.cyberpwn.vortex.portal.Portal;
 import org.cyberpwn.vortex.provider.AutomagicalProvider;
+import org.cyberpwn.vortex.provider.BaseProvider;
 import org.cyberpwn.vortex.provider.PortalProvider;
 import org.cyberpwn.vortex.service.ApertureService;
 import org.cyberpwn.vortex.service.EffectService;
@@ -30,9 +31,9 @@ import wraith.Ticked;
 
 @Ticked(0)
 @TickHandle(TickHandler.SYNCED)
-public class VP extends ControllablePlugin
+public class Wormholes extends ControllablePlugin
 {
-	public static VP instance;
+	public static Wormholes instance;
 	public static VortexBus bus;
 	public static MutexService host;
 	public static PortalProvider provider;
@@ -52,7 +53,7 @@ public class VP extends ControllablePlugin
 		instance = this;
 		io = new IOService();
 		timings = new TimingsService();
-		VP.instance.getServer().getMessenger().registerOutgoingPluginChannel(VP.instance, "BungeeCord");
+		Wormholes.instance.getServer().getMessenger().registerOutgoingPluginChannel(Wormholes.instance, "BungeeCord");
 		bus = new VortexBus();
 		registry = new PortalRegistry();
 		host = new MutexService();
@@ -92,6 +93,14 @@ public class VP extends ControllablePlugin
 			{
 				provider.getRasterer().flushRasterQueue();
 			}
+			
+			if(TICK.tick % 20 == 0)
+			{
+				Status.avgBPS.put(Status.packetBytesPerSecond);
+				Status.packetBytesPerSecond = 0;
+				Status.pps = Status.permutationsPerSecond;
+				Status.permutationsPerSecond = 0;
+			}
 		}
 		
 		catch(Throwable e)
@@ -102,40 +111,6 @@ public class VP extends ControllablePlugin
 	
 	private void buildSubs()
 	{
-		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
-		{
-			private void list(CommandSender p)
-			{
-				if(new Permissable(p).canList())
-				{
-					p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
-					
-					for(Portal i : host.getLocalPortals())
-					{
-						String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
-						p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
-					}
-				}
-				
-				else
-				{
-					p.sendMessage(Info.TAG + "No Permission");
-				}
-			}
-			
-			@Override
-			public void cs(CommandSender p, String[] args)
-			{
-				list(p);
-			}
-			
-			@Override
-			public void cp(Player p, String[] args)
-			{
-				list(p);
-			}
-		});
-		
 		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
 		{
 			private void list(CommandSender p)
@@ -208,6 +183,37 @@ public class VP extends ControllablePlugin
 			}
 		});
 		
+		sub.add(new SubCommand("Realtime sample information", "debug", "db", "vb")
+		{
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				p.sendMessage("Ingame Only");
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				if(new Permissable(p).canReload())
+				{
+					if(((BaseProvider) provider).isDebugging(p))
+					{
+						((BaseProvider) provider).dedebug(p);
+					}
+					
+					else
+					{
+						((BaseProvider) provider).debug(p);
+					}
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
+			}
+		});
+		
 		sub.add(new SubCommand("Destroys the portal looked at", "destroy", "del", "wipe")
 		{
 			@Override
@@ -221,12 +227,12 @@ public class VP extends ControllablePlugin
 			{
 				if(new Permissable(p).canDestroy())
 				{
-					Portal portal = VP.registry.getPortalLookingAt(p);
+					Portal portal = Wormholes.registry.getPortalLookingAt(p);
 					
 					if(portal != null)
 					{
 						p.sendMessage(C.GREEN + "Destroyed Portal");
-						VP.host.removeLocalPortal(portal);
+						Wormholes.host.removeLocalPortal(portal);
 					}
 					
 					else
@@ -248,8 +254,8 @@ public class VP extends ControllablePlugin
 			{
 				if(new Permissable(p).canReload())
 				{
-					Bukkit.getPluginManager().disablePlugin(VP.instance);
-					Bukkit.getPluginManager().enablePlugin(VP.instance);
+					Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
+					Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 					p.sendMessage(Info.TAG + "All Wormholes & Configs Reloaded");
 				}
 				

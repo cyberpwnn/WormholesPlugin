@@ -1,7 +1,7 @@
 package org.cyberpwn.vortex.network;
 
 import java.io.IOException;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import wraith.DataCluster;
 import wraith.M;
 
@@ -23,7 +23,7 @@ public class Transmission extends DataCluster
 	
 	public void send()
 	{
-		VP.bus.outbox(this);
+		Wormholes.bus.outbox(this);
 	}
 	
 	public void setId(long id)
@@ -76,6 +76,6 @@ public class Transmission extends DataCluster
 	
 	public void forceSend()
 	{
-		VP.bus.forceFlush(this);
+		Wormholes.bus.forceFlush(this);
 	}
 }

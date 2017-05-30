@@ -14,11 +14,11 @@ public class RasteredSystem
 {
 	private GMap<Player, RasteredPlayer> rasteredPlayers;
 	private boolean flushing;
-	private GMap<Player, GList<Runnable>> queueSend;
+	private GMap<Player, GList<QueuedChunk>> queueSend;
 	
 	public RasteredSystem()
 	{
-		queueSend = new GMap<Player, GList<Runnable>>();
+		queueSend = new GMap<Player, GList<QueuedChunk>>();
 		flushing = false;
 		rasteredPlayers = new GMap<Player, RasteredPlayer>();
 	}
@@ -95,26 +95,48 @@ public class RasteredSystem
 					break;
 				}
 				
-				queueSend.get(i).pop().run();
+				runNext(queueSend.get(i));
 			}
 		}
 	}
 	
-	public void queueRaster(Player p, Runnable r)
+	private void runNext(GList<QueuedChunk> gList)
+	{
+		int max = Integer.MAX_VALUE;
+		int ind = -1;
+		
+		for(int i = 0; i < gList.size(); i++)
+		{
+			QueuedChunk c = gList.get(i);
+			if(c.getDist() < max)
+			{
+				max = c.getDist();
+				ind = i;
+			}
+		}
+		
+		if(ind >= 0)
+		{
+			QueuedChunk c = gList.get(ind);
+			c.run();
+			Status.packetBytesPerSecond += c.getBytes();
+			gList.remove(ind);
+		}
+		
+	}
+	
+	public void queueRaster(Player p, QueuedChunk queuedChunk)
 	{
 		if(!queueSend.containsKey(p))
 		{
-			queueSend.put(p, new GList<Runnable>());
+			queueSend.put(p, new GList<QueuedChunk>());
 		}
 		
-		queueSend.get(p).add(r);
+		queueSend.get(p).add(queuedChunk);
 	}
 	
 	public void flush()
 	{
-		Status.avgBPS.put(Status.packetBytesPerSecond);
-		Status.packetBytesPerSecond = 0;
-		
 		if(flushing)
 		{
 			return;

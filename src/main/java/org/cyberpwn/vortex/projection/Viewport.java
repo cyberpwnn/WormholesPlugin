@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.portal.Portal;
 import wraith.Cuboid;
 import wraith.GList;
@@ -29,7 +29,7 @@ public class Viewport
 	{
 		for(Block i : set.getBlocks())
 		{
-			VP.provider.getRasterer().dequeue(p, i.getLocation());
+			Wormholes.provider.getRasterer().dequeue(p, i.getLocation());
 		}
 	}
 	

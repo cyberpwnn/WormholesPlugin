@@ -1,11 +1,10 @@
 package org.cyberpwn.vortex.wormhole;
 
 import org.bukkit.entity.Entity;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
 import wraith.GList;
-import wraith.VectorMath;
 
 public abstract class BaseWormhole implements Wormhole
 {
@@ -45,12 +44,12 @@ public abstract class BaseWormhole implements Wormhole
 		{
 			if(i.onFilter(this, e))
 			{
-				VP.fx.throwBack(e, VectorMath.reverse(e.getLocation().getDirection()).multiply(1.3).setY(0.6), getSource());
+				Wormholes.fx.throwBack(e, Wormholes.fx.throwBackVector(e, getSource()), getSource());
 				return;
 			}
 		}
 		
-		VP.fx.push(e, e.getVelocity(), getSource());
+		Wormholes.fx.push(e, e.getVelocity(), getSource());
 		onPush(e);
 	}
 	

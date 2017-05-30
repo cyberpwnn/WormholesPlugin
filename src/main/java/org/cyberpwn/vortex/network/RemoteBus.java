@@ -3,7 +3,7 @@ package org.cyberpwn.vortex.network;
 import java.io.IOException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import wraith.ForwardedPluginMessage;
@@ -14,7 +14,7 @@ public class RemoteBus extends BaseBus implements PluginMessageListener
 	{
 		super();
 		
-		VP.instance.getServer().getMessenger().registerIncomingPluginChannel(VP.instance, "BungeeCord", this);
+		Wormholes.instance.getServer().getMessenger().registerIncomingPluginChannel(Wormholes.instance, "BungeeCord", this);
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class RemoteBus extends BaseBus implements PluginMessageListener
 	
 	private void sendTransmission(Transmission t) throws IOException
 	{
-		new ForwardedPluginMessage(VP.instance, CL.L1.get(), t.getDestination(), t.compress()).send();
+		new ForwardedPluginMessage(Wormholes.instance, CL.L1.get(), t.getDestination(), t.compress()).send();
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public class RemoteBus extends BaseBus implements PluginMessageListener
 				short len = in.readShort();
 				byte[] msgbytes = new byte[len];
 				in.readFully(msgbytes);
-				VP.host.layer2Stream(msgbytes);
+				Wormholes.host.layer2Stream(msgbytes);
 			}
 			
 			if(subchannel.equals(CL.L3.get()))
@@ -76,7 +76,7 @@ public class RemoteBus extends BaseBus implements PluginMessageListener
 				short len = in.readShort();
 				byte[] msgbytes = new byte[len];
 				in.readFully(msgbytes);
-				VP.aperture.layer3Stream(msgbytes);
+				Wormholes.aperture.layer3Stream(msgbytes);
 			}
 		}
 		

@@ -4,6 +4,7 @@ import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -11,7 +12,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Status;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.config.Permissable;
 import org.cyberpwn.vortex.exception.DuplicatePortalKeyException;
 import org.cyberpwn.vortex.exception.InvalidPortalKeyException;
@@ -23,6 +25,7 @@ import wraith.Cuboid;
 import wraith.Direction;
 import wraith.GList;
 import wraith.GSound;
+import wraith.NMSX;
 import wraith.TaskLater;
 import wraith.VersionBukkit;
 import wraith.W;
@@ -38,7 +41,12 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	@Override
 	public void onFlush()
 	{
+		Status.sample();
 		
+		for(Player i : debug)
+		{
+			NMSX.sendActionBar(i, Status.inf);
+		}
 	}
 	
 	@EventHandler
@@ -46,7 +54,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	{
 		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		{
-			for(Portal i : VP.host.getLocalPortals())
+			for(Portal i : Wormholes.host.getLocalPortals())
 			{
 				for(Cuboid j : i.getPosition().getFrame())
 				{

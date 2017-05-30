@@ -788,4 +788,9 @@ public class W
 	{
 		return a.distanceSquared(b);
 	}
+	
+	public static int chunkDistance(Chunk chunk, Chunk chunkAt)
+	{
+		return (int) (100.0 * new Vector(chunk.getX(), 0, chunk.getZ()).distance(new Vector(chunkAt.getX(), 0, chunkAt.getZ())));
+	}
 }

@@ -1,6 +1,6 @@
 package org.cyberpwn.vortex.portal;
 
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.aperture.AperturePlane;
 import org.cyberpwn.vortex.projection.ProjectionPlane;
 import org.cyberpwn.vortex.service.MutexService;
@@ -64,7 +64,7 @@ public class RemotePortal implements Portal
 	@Override
 	public MutexService getService()
 	{
-		return VP.host;
+		return Wormholes.host;
 	}
 	
 	@Override
@@ -98,12 +98,12 @@ public class RemotePortal implements Portal
 	@Override
 	public ProjectionPlane getProjectionPlane()
 	{
-		if(!VP.projector.getRemotePlanes().containsKey(getKey()))
+		if(!Wormholes.projector.getRemotePlanes().containsKey(getKey()))
 		{
-			VP.projector.getRemotePlanes().put(getKey(), new ProjectionPlane());
+			Wormholes.projector.getRemotePlanes().put(getKey(), new ProjectionPlane());
 		}
 		
-		return VP.projector.getRemotePlanes().get(getKey());
+		return Wormholes.projector.getRemotePlanes().get(getKey());
 	}
 	
 	@Override
@@ -166,6 +166,6 @@ public class RemotePortal implements Portal
 	@Override
 	public AperturePlane getApature()
 	{
-		return VP.aperture.getRemoteApaturePlanes().get(getKey());
+		return Wormholes.aperture.getRemoteApaturePlanes().get(getKey());
 	}
 }

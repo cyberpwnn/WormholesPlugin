@@ -5,7 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import org.cyberpwn.vortex.Settings;
-import org.cyberpwn.vortex.VP;
+import org.cyberpwn.vortex.Wormholes;
 import org.cyberpwn.vortex.event.WormholePushEntityEvent;
 import org.cyberpwn.vortex.portal.LocalPortal;
 import org.cyberpwn.vortex.portal.Portal;
@@ -48,6 +48,6 @@ public class LocalWormhole extends BaseWormhole
 		
 		e.teleport(destination);
 		e.setVelocity(velocity);
-		VP.fx.push(e, e.getVelocity(), (LocalPortal) getDestination());
+		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getDestination());
 	}
 }
