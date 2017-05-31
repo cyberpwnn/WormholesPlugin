@@ -101,6 +101,20 @@ public abstract class BaseProvider implements PortalProvider
 		return base;
 	}
 	
+	public GList<Integer> getBaseSqrt(int max)
+	{
+		GList<Integer> base = new GList<Integer>();
+		max = max % 2 == 0 ? max + 1 : max;
+		
+		while(max >= 3)
+		{
+			base.add(max);
+			max -= 2;
+		}
+		
+		return base;
+	}
+	
 	@Override
 	public PortalKey buildKey(PortalPosition p) throws InvalidPortalKeyException
 	{

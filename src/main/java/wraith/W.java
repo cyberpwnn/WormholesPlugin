@@ -793,4 +793,9 @@ public class W
 	{
 		return (int) (100.0 * new Vector(chunk.getX(), 0, chunk.getZ()).distance(new Vector(chunkAt.getX(), 0, chunkAt.getZ())));
 	}
+	
+	public static boolean isColored(Block bCheck)
+	{
+		return getColor(bCheck) != null;
+	}
 }
