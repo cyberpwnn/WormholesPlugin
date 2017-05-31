@@ -1,7 +1,8 @@
 name: ${project.name}
 version: ${project.version}
-main: org.cyberpwn.vortex.Wormholes
+main: com.volmit.wormholes.Wormholes
 depend: [ProtocolLib]
+author: Volmit Software
 commands: 
   wormhole: 
     aliases: [w, worm, whole, wormh, wormholes, portal, portals, wh]

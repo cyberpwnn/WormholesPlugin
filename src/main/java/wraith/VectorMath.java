@@ -13,13 +13,6 @@ import org.bukkit.util.Vector;
  */
 public class VectorMath
 {
-	public static void test()
-	{
-		Vector v = new Vector(1, 2, 3);
-		System.out.println("Scale " + v + " with y > 2");
-		System.out.println(scaleStatic(Axis.X, v, -1));
-	}
-	
 	public static Vector scaleStatic(Axis x, Vector v, double amt)
 	{
 		switch(x)

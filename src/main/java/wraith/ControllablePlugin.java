@@ -7,12 +7,14 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 {
 	private Controller base;
 	
+	@Override
 	public void onLoad()
 	{
 		destroyOldThreads();
 		readCurrentTick();
 	}
 	
+	@Override
 	public void onEnable()
 	{
 		Wraith.instance = this;
@@ -45,17 +47,12 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	@SuppressWarnings("deprecation")
 	private void destroyOldThreads()
 	{
-		boolean k = false;
-		
 		for(Thread i : new GList<Thread>(Thread.getAllStackTraces().keySet()))
 		{
 			if(i.getName().startsWith("CT Parallel Tick Thread "))
 			{
-				k = true;
-				
 				try
 				{
-					System.out.println("WAITING FOR OLD THREAD TO DIE: " + i.getName());
 					i.interrupt();
 					i.join(100);
 				}
@@ -74,7 +71,6 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 				{
 					try
 					{
-						System.out.println("FORCE KILLING");
 						i.stop();
 					}
 					
@@ -84,11 +80,6 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 					}
 				}
 			}
-		}
-		
-		if(k)
-		{
-			System.out.println("Killed off stale threads from pre-reload");
 		}
 	}
 	
@@ -105,6 +96,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	{
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				TICK.tick++;
@@ -123,6 +115,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 		
 	}
 	
+	@Override
 	public void onDisable()
 	{
 		stop();

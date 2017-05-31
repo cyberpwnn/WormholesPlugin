@@ -116,7 +116,6 @@ public class ParallelPoolManager
 			ParallelThread p = new ParallelThread(i);
 			p.start();
 			threads.add(p);
-			System.out.println("Started Parallel CoreTick Thread: " + i);
 		}
 	}
 }
