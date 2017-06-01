@@ -37,6 +37,7 @@ import wraith.M;
 import wraith.MSound;
 import wraith.NMSX;
 import wraith.PlayerHud;
+import wraith.TXT;
 import wraith.TaskLater;
 import wraith.VectorMath;
 import wraith.W;
@@ -296,22 +297,22 @@ public abstract class BaseProvider implements PortalProvider
 							
 							String s = selection;
 							
-							if(s.equalsIgnoreCase("Allow Entities"))
+							if(s.startsWith("Entities"))
 							{
 								NMSX.sendActionBar(p, C.YELLOW + "Toggle the permission for entities to use this portal");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Entities"))
+							else if(s.startsWith("Project Entities"))
 							{
 								NMSX.sendActionBar(p, C.YELLOW + "Toggle entity projections");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Blocks"))
+							else if(s.startsWith("Project Blocks"))
 							{
 								NMSX.sendActionBar(p, C.YELLOW + "Toggle block projections");
 							}
 							
-							else if(s.equalsIgnoreCase("Reverse Polarity"))
+							else if(s.startsWith("Reverse Polarity"))
 							{
 								NMSX.sendActionBar(p, C.YELLOW + "Reverse the 'front facing' direction of this portal.");
 							}
@@ -337,24 +338,19 @@ public abstract class BaseProvider implements PortalProvider
 						@Override
 						public String onEnable(String s)
 						{
-							if(s.equalsIgnoreCase("Allow Entities"))
+							if(s.startsWith("Entities: "))
 							{
-								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
+								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Entities"))
+							else if(s.startsWith("Project Entities: "))
 							{
-								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
+								s = "Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Blocks"))
+							else if(s.startsWith("Project Blocks: "))
 							{
-								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
-							}
-							
-							else if(s.equalsIgnoreCase("Reverse Polarity"))
-							{
-								s = C.YELLOW + s;
+								s = "Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
 							else if(s.equalsIgnoreCase("Destroy"))
@@ -362,30 +358,30 @@ public abstract class BaseProvider implements PortalProvider
 								s = C.RED + s + " Portal";
 							}
 							
-							return C.LIGHT_PURPLE + "> " + C.GRAY + s + C.LIGHT_PURPLE + " <";
+							return C.LIGHT_PURPLE + "> " + C.WHITE + s + C.LIGHT_PURPLE + " <";
 						}
 						
 						@Override
 						public String onDisable(String s)
 						{
-							if(s.equalsIgnoreCase("Allow Entities"))
+							if(s.startsWith("Entities: "))
 							{
-								s = l.getSettings().isAllowEntities() ? C.GREEN + s : C.RED + s;
+								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Entities"))
+							else if(s.startsWith("Project Entities: "))
 							{
-								s = l.getSettings().isAparture() ? C.GREEN + s : C.RED + s;
+								s = "Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.equalsIgnoreCase("Project Blocks"))
+							else if(s.startsWith("Project Blocks: "))
 							{
-								s = l.getSettings().isProject() ? C.GREEN + s : C.RED + s;
+								s = "Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
 							else if(s.equalsIgnoreCase("Destroy"))
 							{
-								s = C.RED + s + " Portal";
+								s = s + " Portal";
 							}
 							
 							return C.GRAY + s;
@@ -413,19 +409,19 @@ public abstract class BaseProvider implements PortalProvider
 							
 							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
 							
-							if(selection.equalsIgnoreCase("Allow Entities"))
+							if(selection.startsWith("Entities"))
 							{
 								l.getSettings().setAllowEntities(!l.getSettings().isAllowEntities());
 								update();
 							}
 							
-							if(selection.equalsIgnoreCase("Project Entities"))
+							if(selection.startsWith("Project Entities"))
 							{
 								l.getSettings().setAparture(!l.getSettings().isAparture());
 								update();
 							}
 							
-							if(selection.equalsIgnoreCase("Reverse Polarity"))
+							if(selection.startsWith("Reverse Polarity"))
 							{
 								close();
 								Wormholes.projector.deproject(l);
@@ -440,7 +436,7 @@ public abstract class BaseProvider implements PortalProvider
 								};
 							}
 							
-							if(selection.equalsIgnoreCase("Project Blocks"))
+							if(selection.startsWith("Project Blocks"))
 							{
 								l.getSettings().setProject(!l.getSettings().isProject());
 								
@@ -452,7 +448,7 @@ public abstract class BaseProvider implements PortalProvider
 								update();
 							}
 							
-							if(selection.equalsIgnoreCase("Destroy"))
+							if(selection.startsWith("Destroy"))
 							{
 								close();
 								
@@ -529,11 +525,18 @@ public abstract class BaseProvider implements PortalProvider
 					};
 					
 					GList<String> op = new GList<String>();
-					op.add("Allow Entities");
-					op.add("Project Entities");
-					op.add("Project Blocks");
+					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Options " + TXT.line(C.LIGHT_PURPLE, 5));
+					op.add("Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
+					op.add("Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
+					op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
+					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Actions " + TXT.line(C.LIGHT_PURPLE, 5));
 					op.add("Reverse Polarity");
 					op.add("Destroy");
+					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Status " + TXT.line(C.LIGHT_PURPLE, 5));
+					op.add("Facing Direction: " + C.YELLOW + l.getIdentity().getFront());
+					op.add("Portal Link State: " + (l.hasWormhole() ? (l.isWormholeMutex() ? C.YELLOW + "Bungeecord" : C.YELLOW + "Local") : C.RED + "Unlinked"));
+					op.add("Portal Key: " + l.getKey());
+					op.add("Portal Bounds: " + C.YELLOW + l.getIdentity().getFront() + "" + l.getIdentity().getBack() + " <" + l.getIdentity().getUp() + "" + l.getIdentity().getDown() + "> " + l.getIdentity().getLeft() + "" + l.getIdentity().getRight());
 					op.add("Exit");
 					hud.setContent(op);
 					hud.open();
