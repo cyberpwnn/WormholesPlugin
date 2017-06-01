@@ -463,7 +463,7 @@ public class LocalPortal implements Portal
 	
 	public void destroy()
 	{
-		getPosition().getCenter().getWorld().createExplosion(getPosition().getCenter(), 0f);
+		Wormholes.fx.destroyed(this);
 		getPosition().getCenterDown().getBlock().setType(Material.AIR);
 		getPosition().getCenterUp().getBlock().setType(Material.AIR);
 		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
