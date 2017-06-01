@@ -21,6 +21,7 @@ public class PortalPosition
 	private Cuboid frameLeft;
 	private Cuboid frameRight;
 	private GList<Cuboid> frame;
+	private GList<Block> keyset;
 	private Location centerUp;
 	private Location centerDown;
 	private Location centerLeft;
@@ -53,6 +54,7 @@ public class PortalPosition
 		centerRight = frameRight.getCenter().clone();
 		area = new Cuboid(center).e(Axis.X, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Y, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Z, Settings.PROJECTION_SAMPLE_RADIUS);
 		boundingBox = new BoundingBox(area);
+		keyset = new GList<Block>().qadd(centerUp.getBlock()).qadd(centerDown.getBlock()).qadd(centerLeft.getBlock()).qadd(centerRight.getBlock());
 	}
 	
 	public boolean intersects(Location a, Location b)
@@ -75,6 +77,11 @@ public class PortalPosition
 		}.trace();
 		
 		return traces[0];
+	}
+	
+	public Block getRandomKeyBlock()
+	{
+		return keyset.pickRandom();
 	}
 	
 	public boolean intersects(Location l, Vector next)
@@ -263,5 +270,10 @@ public class PortalPosition
 	public BoundingBox getBoundingBox()
 	{
 		return boundingBox;
+	}
+	
+	public GList<Block> getKeyBlocks()
+	{
+		return keyset.copy();
 	}
 }
