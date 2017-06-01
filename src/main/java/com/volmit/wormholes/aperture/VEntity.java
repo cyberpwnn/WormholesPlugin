@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityLook;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityTeleport;
 import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
@@ -25,6 +26,10 @@ public class VEntity
 	private Location last;
 	private Player viewer;
 	private UUID uuid;
+	private float yaw;
+	private float pit;
+	private float lya;
+	private float lpi;
 	
 	public VEntity(Player viewer, EntityType type, int id, UUID uuid, Location location)
 	{
@@ -34,6 +39,10 @@ public class VEntity
 		this.location = location;
 		last = location.clone();
 		this.uuid = uuid;
+		yaw = location.getYaw();
+		pit = location.getPitch();
+		lya = yaw;
+		lpi = pit;
 	}
 	
 	public void prelativeMove(double x, double y, double z)
@@ -77,10 +86,14 @@ public class VEntity
 	{
 		WrapperPlayServerEntityLook w = new WrapperPlayServerEntityLook();
 		w.setEntityID(id);
-		w.setOnGround(location.clone().getBlock().getType().isSolid());
+		w.setOnGround(true);
 		w.setPitch(p);
 		w.setYaw(y);
 		send(w);
+		
+		WrapperPlayServerEntityHeadRotation ww = new WrapperPlayServerEntityHeadRotation();
+		ww.setHeadYaw((byte) ((yaw * 256.0F) / 360.0F));
+		send(ww);
 	}
 	
 	public void despawn()
@@ -127,6 +140,7 @@ public class VEntity
 	
 	public void send(AbstractPacket w)
 	{
+		
 		try
 		{
 			ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, w.getHandle());
@@ -148,15 +162,18 @@ public class VEntity
 		return id;
 	}
 	
-	public void move(double x, double y, double z)
+	public void move(double x, double y, double z, float ya, float pi)
 	{
 		location = location.clone().add(new Vector(x, y, z));
+		look(ya, pi);
 	}
 	
 	public void look(float y, float p)
 	{
 		location.setYaw(y);
 		location.setPitch(p);
+		yaw = location.getYaw();
+		pit = location.getPitch();
 	}
 	
 	public void teleport(double x, double y, double z, float ya, float pi)
@@ -180,9 +197,9 @@ public class VEntity
 			prelativeMove(dir.getX(), dir.getY(), dir.getZ());
 		}
 		
-		if(location.getYaw() != last.getYaw() || location.getPitch() != last.getPitch())
+		if(yaw != lya || pit != lpi)
 		{
-			plook(location.getYaw(), location.getPitch());
+			plook(yaw, pit);
 		}
 		
 		last = location.clone();
