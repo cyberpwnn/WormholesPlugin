@@ -147,11 +147,16 @@ public class ApertureService
 				{
 					for(Player j : lastPort.get(i).k())
 					{
-						for(Entity k : lastPort.get(i).get(j).getEntities())
+						for(Entity k : i.getPosition().getArea().getEntities())
 						{
-							if(!i.getPosition().isInsidePortal(k.getLocation()))
+							if(lastPort.get(i).get(j).contains(k.getLocation()))
 							{
-								Wormholes.aperture.hideEntity(j, k);
+								hideEntity(j, k);
+							}
+							
+							else
+							{
+								showEntity(j, k);
 							}
 						}
 						
@@ -161,8 +166,8 @@ public class ApertureService
 							
 							if(ap != null)
 							{
-								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
-								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
 								
 								for(Vector k : r.k())
 								{
@@ -172,6 +177,7 @@ public class ApertureService
 									if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
 									{
 										l.setDirection(rl.get(k));
+										
 										Wormholes.entity.set(j, i, ri, l);
 									}
 								}
@@ -247,7 +253,7 @@ public class ApertureService
 			blacklistQueue.put(v, new GList<Entity>());
 		}
 		
-		blacklistQueue.get(v).add(e);
+		blacklistQueue.get(v).remove(e);
 	}
 	
 	public void showAll(Player p)
