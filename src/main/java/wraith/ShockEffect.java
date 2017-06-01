@@ -14,35 +14,16 @@ public class ShockEffect
 	
 	public void play(Location l, Vector dir)
 	{
-		int[] k = new int[] {0};
+		Vector direction = dir.clone();
+		Location start = l.clone();
 		
-		new Task(0)
+		for(float i = 0; i < Math.abs(power); i += 0.19f)
 		{
-			@Override
-			public void run()
-			{
-				if(k[0] > 2)
-				{
-					cancel();
-				}
-				
-				for(int j = 0; j < 1; j++)
-				{
-					Vector direction = dir.clone();
-					Location start = l.clone();
-					
-					for(float i = 0; i < Math.abs(power); i += 0.43f)
-					{
-						direction.add(new Vector(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiply(Math.random() * 8 * i));
-						Location b = start.clone().add(direction);
-						getArm().play(start, b.clone(), (double) 9);
-						start = b;
-					}
-				}
-				
-				k[0]++;
-			}
-		};
+			direction.add(new Vector(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiply(Math.random() * 3 * i));
+			Location b = start.clone().add(direction);
+			getArm().play(start, b.clone(), (double) 14);
+			start = b;
+		}
 	}
 	
 	public LineParticleManipulator getArm()
