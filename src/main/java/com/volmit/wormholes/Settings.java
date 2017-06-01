@@ -126,13 +126,14 @@ public class Settings
 	{
 		for(EntityType i : EntityType.values())
 		{
+			APERTURE_ENTITIY_TYPES.add(i.toString());
+			
 			if(i.equals(EntityType.PLAYER))
 			{
 				continue;
 			}
 			
 			ALLOW_ENTITIY_TYPES.add(i.toString());
-			APERTURE_ENTITIY_TYPES.add(i.toString());
 		}
 	}
 	
