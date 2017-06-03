@@ -47,17 +47,20 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
-		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+		if((e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType().equals(Material.AIR)) || e.getPlayer().getItemInHand() == null)
 		{
-			for(Portal i : Wormholes.host.getLocalPortals())
+			if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			{
-				for(Block j : i.getPosition().getKeyBlocks())
+				for(Portal i : Wormholes.host.getLocalPortals())
 				{
-					if(j.equals(e.getClickedBlock()))
+					for(Block j : i.getPosition().getKeyBlocks())
 					{
-						if(configure((LocalPortal) i, e.getPlayer()))
+						if(j.equals(e.getClickedBlock()))
 						{
-							e.setCancelled(true);
+							if(configure((LocalPortal) i, e.getPlayer()))
+							{
+								e.setCancelled(true);
+							}
 						}
 					}
 				}

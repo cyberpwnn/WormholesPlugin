@@ -70,6 +70,7 @@ public class Wormholes extends ControllablePlugin
 	@Override
 	public void onStop()
 	{
+		Status.fdq = true;
 		host.dequeueAll();
 	}
 	
@@ -111,6 +112,7 @@ public class Wormholes extends ControllablePlugin
 	
 	public void doReload()
 	{
+		host.globalReload();
 		Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 		Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 	}

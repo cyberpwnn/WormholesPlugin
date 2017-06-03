@@ -9,6 +9,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
 import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
+import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
 import wraith.GList;
@@ -72,22 +73,40 @@ public class RasteredChunk
 		int size = 8 + (inf.size() * 12);
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
 		
-		Wormholes.provider.getRasterer().queueRaster(p, new QueuedChunk(size, dist)
+		if(Status.fdq)
 		{
-			@Override
-			public void run()
+			try
 			{
-				try
-				{
-					ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
-				}
-				
-				catch(InvocationTargetException e)
-				{
-					System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
-					e.printStackTrace();
-				}
+				ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
 			}
-		});
+			
+			catch(InvocationTargetException e)
+			{
+				System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
+				e.printStackTrace();
+			}
+		}
+		
+		else
+		{
+			Wormholes.provider.getRasterer().queueRaster(p, new QueuedChunk(size, dist)
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
+					}
+					
+					catch(InvocationTargetException e)
+					{
+						System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+		
 	}
 }

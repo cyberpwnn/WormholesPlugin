@@ -118,6 +118,7 @@ public class ProjectionService implements Listener
 			}
 			
 			lastPort.remove(p);
+			Wormholes.provider.getRasterer().flush();
 		}
 	}
 	

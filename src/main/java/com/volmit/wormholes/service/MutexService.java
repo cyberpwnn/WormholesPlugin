@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -34,6 +35,7 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.portal.RemotePortal;
+import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.wormhole.LocalWormhole;
 import com.volmit.wormholes.wormhole.MutexWormhole;
 import com.volmit.wormholes.wormhole.Wormhole;
@@ -61,9 +63,11 @@ public class MutexService implements Listener
 	private GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> pendingPulls;
 	private Integer broadcastInterval;
 	private GMap<Player, Runnable> waiting;
+	private GList<String> sr;
 	
 	public MutexService()
 	{
+		sr = new GList<String>();
 		Wraith.registerListener(this);
 		insideThrottle = new GList<Entity>();
 		waiting = new GMap<Player, Runnable>();
@@ -108,6 +112,8 @@ public class MutexService implements Listener
 		{
 			i.load();
 		}
+		
+		Wormholes.projector.deproject((LocalPortal) portal);
 	}
 	
 	public void removeLocalPortal(Portal portal)
@@ -399,6 +405,12 @@ public class MutexService implements Listener
 					}
 				}
 				
+				else if(i.getType().equals("rld"))
+				{
+					Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
+					Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
+				}
+				
 				else if(i.getType().equals("tp"))
 				{
 					Wormholes.bus.read(i);
@@ -513,6 +525,22 @@ public class MutexService implements Listener
 			return;
 		}
 		
+		if(sr.contains(remotePortalReference.getServer()))
+		{
+			return;
+		}
+		
+		sr.add(remotePortalReference.getServer());
+		
+		new TaskLater(200)
+		{
+			@Override
+			public void run()
+			{
+				sr.remove(remotePortalReference.getServer());
+			}
+		};
+		
 		Transmission r = new Transmission(Wormholes.bus.getServerName(), remotePortalReference.getServer(), "mreq");
 		r.set("to", remotePortalReference.toData().toJSON().toString());
 		r.send();
@@ -543,7 +571,12 @@ public class MutexService implements Listener
 					{
 						if(i instanceof RemotePortal && i.toData().equals(c))
 						{
-							i.getProjectionPlane().addSuperCompressed(data);
+							if(!Wormholes.projector.getRemotePlanes().contains(i.getKey()))
+							{
+								Wormholes.projector.getRemotePlanes().put(i.getKey(), new ProjectionPlane());
+							}
+							
+							Wormholes.projector.getRemotePlanes().get(i.getKey()).addSuperCompressed(data);
 							break;
 						}
 					}
@@ -754,5 +787,11 @@ public class MutexService implements Listener
 		inject.run();
 		Wormholes.provider.dfd();
 		Wormholes.instance.doReload();
+	}
+	
+	public void globalReload()
+	{
+		Transmission t = new Transmission(Wormholes.bus.getServerName(), "ALL", "rld");
+		t.forceSend();
 	}
 }

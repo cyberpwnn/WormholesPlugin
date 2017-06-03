@@ -72,6 +72,9 @@ public class Settings
 	@Comment("Time Threshold in milliseconds to poll for servers and online status.\nEnsure it is at least half the time of the push threshold.")
 	public static int NETWORK_POLL_THRESHOLD = 1000;
 	
+	@Comment("Just send the player and let the other server handle where to spawn the player")
+	public static boolean BUNGEECORD_SEND_ONLY = false;
+	
 	public static DataCluster getConfig()
 	{
 		DataCluster cc = new DataCluster();

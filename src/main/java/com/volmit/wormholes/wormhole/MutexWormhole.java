@@ -4,6 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
 import com.volmit.wormholes.portal.LocalPortal;
@@ -44,6 +45,12 @@ public class MutexWormhole extends BaseWormhole
 			}
 			
 			Wraith.callEvent(new WormholePushEntityEvent(getDestination(), e));
+			
+			if(Settings.BUNGEECORD_SEND_ONLY)
+			{
+				new PluginMessage(Wormholes.instance, "ConnectOther", p.getName(), getDestination().getServer()).send();
+				return;
+			}
 			
 			getSource().getService().sendPlayerThrough(p, p.getUniqueId(), getSource(), getDestination(), velocity, direction, entry, new Runnable()
 			{

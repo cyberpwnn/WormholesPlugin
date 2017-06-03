@@ -35,8 +35,56 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.3.1</version>
 						<configuration>
-							<outputDirectory>${development.folder}</outputDirectory>
 							<finalName>${project.name}</finalName>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>runbatchfile</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${ct.libs}/scripts/distribute.bat</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>development-bungeecord</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.3.1</version>
+						<configuration>
+							<finalName>${project.name}</finalName>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>runbatchfile</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${ct.libs}/scripts/distribute-bungeecord.bat</executable>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -51,7 +99,6 @@
 						<artifactId>maven-jar-plugin</artifactId>
 						<version>2.3.1</version>
 						<configuration>
-							<outputDirectory>${production.folder}</outputDirectory>
 							<finalName>${project.name}-${project.version}</finalName>
 						</configuration>
 					</plugin>
