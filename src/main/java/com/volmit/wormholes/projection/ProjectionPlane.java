@@ -62,7 +62,7 @@ public class ProjectionPlane
 			
 			for(Vector i : mapping.k())
 			{
-				Vector b = i.clone().add(new Vector(0.5, 0.5, 0.5));
+				Vector b = i.clone();
 				Vector k = from.angle(b, to);
 				k.setX(k.getBlockX());
 				k.setY(k.getBlockY());
@@ -162,7 +162,7 @@ public class ProjectionPlane
 			
 			if(f)
 			{
-				mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
+				mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()).clone().add(new Vector(0.5, 0.5, 0.5)), new MaterialBlock(i.getType(), i.getData()));
 			}
 		}
 	}
