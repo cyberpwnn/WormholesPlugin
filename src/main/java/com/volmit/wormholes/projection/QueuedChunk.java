@@ -4,13 +4,15 @@ public abstract class QueuedChunk
 {
 	private int bytes;
 	private int dist;
+	private int lf;
 	
 	public abstract void run();
 	
-	public QueuedChunk(int bytes, int dist)
+	public QueuedChunk(int bytes, int dist, int lf)
 	{
 		this.bytes = bytes;
 		this.dist = dist;
+		this.lf = lf;
 	}
 	
 	public int getBytes()
@@ -21,5 +23,10 @@ public abstract class QueuedChunk
 	public int getDist()
 	{
 		return dist;
+	}
+	
+	public int getLf()
+	{
+		return lf;
 	}
 }
