@@ -101,6 +101,8 @@ public class Wormholes extends ControllablePlugin
 				Status.packetBytesPerSecond = 0;
 				Status.pps = Status.permutationsPerSecond;
 				Status.permutationsPerSecond = 0;
+				Status.lightFaulted = Status.lightFault;
+				Status.lightFault = 0;
 			}
 		}
 		
