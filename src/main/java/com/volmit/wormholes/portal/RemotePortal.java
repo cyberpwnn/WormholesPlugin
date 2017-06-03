@@ -76,6 +76,7 @@ public class RemotePortal implements Portal
 		cc.set("kd", getKey().getD().ordinal());
 		cc.set("kl", getKey().getL().ordinal());
 		cc.set("kr", getKey().getR().ordinal());
+		cc.set("kx", getKey().getSName() + "vxx");
 		cc.set("if", getIdentity().getFront().ordinal());
 		
 		return cc;
