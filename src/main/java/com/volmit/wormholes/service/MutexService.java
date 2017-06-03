@@ -42,6 +42,7 @@ import com.volmit.wormholes.wormhole.Wormhole;
 import wraith.A;
 import wraith.CustomGZIPOutputStream;
 import wraith.DataCluster;
+import wraith.Direction;
 import wraith.FinalInteger;
 import wraith.ForwardedPluginMessage;
 import wraith.GList;
@@ -55,6 +56,7 @@ import wraith.TICK;
 import wraith.Task;
 import wraith.TaskLater;
 import wraith.Timer;
+import wraith.VectorMath;
 import wraith.Wraith;
 
 public class MutexService implements Listener
@@ -208,6 +210,38 @@ public class MutexService implements Listener
 		if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
 		{
 			Wormholes.provider.movePlayer(e.getPlayer());
+		}
+		
+		if(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ())
+		{
+			handleArrivalIntent(e.getPlayer());
+		}
+	}
+	
+	private void handleArrivalIntent(Player e)
+	{
+		Portal portal = Wormholes.registry.getClosestViewedPortal(e.getLocation());
+		
+		if(portal != null && portal.hasWormhole() && portal.isWormholeMutex())
+		{
+			Portal destination = portal.getWormhole().getDestination();
+			Vector direction = e.getLocation().getDirection();
+			Vector velocity = e.getVelocity();
+			Vector entry = VectorMath.directionNoNormal(portal.getPosition().getCenter(), e.getLocation());
+			Direction closestDirection = Direction.closest(direction, portal.getIdentity().getFront(), portal.getIdentity().getBack());
+			Direction closestVelocity = Direction.closest(velocity, portal.getIdentity().getFront(), portal.getIdentity().getBack());
+			direction = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(direction, destination.getIdentity().getFront()) : closestDirection.angle(direction, destination.getIdentity().getBack());
+			entry = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(entry, destination.getIdentity().getFront()) : closestDirection.angle(entry, destination.getIdentity().getBack());
+			velocity = closestVelocity.equals(portal.getIdentity().getFront()) ? closestVelocity.angle(velocity, destination.getIdentity().getFront()) : closestVelocity.angle(velocity, destination.getIdentity().getBack());
+			entry = portal.getIdentity().getFront().isVertical() ? new Vector(0, -1, 0) : entry;
+			
+			if(portal.getIdentity().getFront().isVertical() && !destination.getIdentity().getFront().isVertical())
+			{
+				direction = velocity.clone();
+			}
+			
+			ArrivalVector vx = new ArrivalVector(velocity, direction, entry);
+			sendArrival((RemotePortal) destination, e, vx);
 		}
 	}
 	
@@ -696,34 +730,26 @@ public class MutexService implements Listener
 		Wormholes.provider.movePlayer(e.getPlayer());
 		addThrottle(e.getPlayer());
 		
-		for(UUID i : pendingPulls.k())
+		for(LocalPortal i : arrivals.k())
 		{
-			Player j = e.getPlayer();
-			
-			if(j.getUniqueId().equals(i))
+			for(UUID j : arrivals.get(i).k())
 			{
-				GQuadraset<Portal, Vector, Vector, Vector> q = pendingPulls.get(i);
-				pendingPulls.remove(i);
-				
-				if(q.getA() instanceof LocalPortal)
+				if(e.getPlayer().getUniqueId().equals(j))
 				{
-					Location l = q.getA().getPosition().getPane().getCenter().clone().add(q.getD()).clone().setDirection(q.getC());
-					addThrottle(j);
-					j.teleport(l);
-					j.setVelocity(q.getB());
+					ArrivalVector av = arrivals.get(i).get(j);
+					Location position = i.getIdentity().getFront().isVertical() ? i.getPosition().getCenter() : i.getPosition().getCenterDown().clone().add(0, 1, 0);
+					position.setDirection(av.getDirection());
 					
 					new TaskLater()
 					{
 						@Override
 						public void run()
 						{
-							j.teleport(l);
-							j.setVelocity(q.getB());
+							e.getPlayer().teleport(position);
+							e.getPlayer().setVelocity(av.getVelocity());
 						}
 					};
 				}
-				
-				break;
 			}
 		}
 	}
