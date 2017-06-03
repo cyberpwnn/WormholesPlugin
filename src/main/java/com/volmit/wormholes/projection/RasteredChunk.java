@@ -54,16 +54,26 @@ public class RasteredChunk
 		WrapperPlayServerMultiBlockChange w = new WrapperPlayServerMultiBlockChange();
 		w.setChunk(new ChunkCoordIntPair(x, z));
 		GList<MultiBlockChangeInfo> inf = new GList<MultiBlockChangeInfo>();
+		int lf = 0;
 		
 		for(int i = 0; i < 16; i++)
 		{
-			for(int j = 0; j < 256; j++)
+			for(int k = 0; k < 16; k++)
 			{
-				for(int k = 0; k < 16; k++)
+				int hv = 0;
+				
+				for(int j = 0; j < 256; j++)
 				{
 					if(mbi[i][j][k] != null)
 					{
 						inf.add(mbi[i][j][k]);
+						lf += hv;
+						hv = 0;
+					}
+					
+					else
+					{
+						hv++;
 					}
 				}
 			}
@@ -89,13 +99,14 @@ public class RasteredChunk
 		
 		else
 		{
-			Wormholes.provider.getRasterer().queueRaster(p, new QueuedChunk(size, dist)
+			Wormholes.provider.getRasterer().queueRaster(p, new QueuedChunk(size, dist, lf)
 			{
 				@Override
 				public void run()
 				{
 					try
 					{
+						Status.lightFault += getLf();
 						ProtocolLibrary.getProtocolManager().sendServerPacket(p, w.getHandle());
 					}
 					
@@ -107,6 +118,5 @@ public class RasteredChunk
 				}
 			});
 		}
-		
 	}
 }
