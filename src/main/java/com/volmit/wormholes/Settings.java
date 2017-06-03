@@ -44,11 +44,15 @@ public class Settings
 	
 	@Experimental
 	@Comment("The maximum partial chunks which can be sent in one interval")
-	public static int CHUNK_SEND_MAX = 2;
+	public static int CHUNK_SEND_MAX = 7;
+	
+	@Experimental
+	@Comment("The maximum potential blocks to change per packet.")
+	public static int CHUNK_MAX_CHANGE = 10240;
 	
 	@Experimental
 	@Comment("The interval in which portals are checked to ensure they are populated with projection maps\nThis is only called one time when the portal is created.")
-	public static int NETWORK_POPULATE_MAPPING_INTERVAL = 20;
+	public static int NETWORK_POPULATE_MAPPING_INTERVAL = 40;
 	
 	@Experimental
 	@Comment("The max packet size in bytes.\nLower values will force wormholes to send more packets\nIncreasing this could cause bungeecord to reject the packet.")
@@ -67,6 +71,10 @@ public class Settings
 	@Experimental
 	@Comment("Time Threshold in milliseconds to push online servers")
 	public static int NETWORK_PUSH_THRESHOLD = 5000;
+	
+	@Experimental
+	@Comment("Time Threshold in milliseconds to push excess queue packets to players")
+	public static int NETWORK_FLUSH_THRESHOLD = 750;
 	
 	@Experimental
 	@Comment("Time Threshold in milliseconds to poll for servers and online status.\nEnsure it is at least half the time of the push threshold.")
