@@ -1,5 +1,6 @@
 package com.volmit.wormholes.service;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
@@ -29,6 +30,60 @@ public class PortalRegistry
 	public GList<Portal> getLocalPortals()
 	{
 		return localPortals;
+	}
+	
+	public boolean hasPortalsInView(Location l)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(l))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public Portal getClosestViewedPortal(Location l)
+	{
+		GList<Portal> p = getPortalsInView(l);
+		
+		if(p.isEmpty())
+		{
+			return null;
+		}
+		
+		double max = Double.MAX_VALUE;
+		Portal c = null;
+		
+		for(Portal i : p)
+		{
+			double d = i.getPosition().getCenter().distance(l);
+			
+			if(d < max)
+			{
+				max = d;
+				c = i;
+			}
+		}
+		
+		return c;
+	}
+	
+	public GList<Portal> getPortalsInView(Location l)
+	{
+		GList<Portal> portals = new GList<Portal>();
+		
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(l))
+			{
+				portals.add(i);
+			}
+		}
+		
+		return portals;
 	}
 	
 	public GMap<String, GList<Portal>> getMutexPortals()
