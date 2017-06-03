@@ -35,7 +35,6 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.portal.RemotePortal;
-import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.wormhole.LocalWormhole;
 import com.volmit.wormholes.wormhole.MutexWormhole;
 import com.volmit.wormholes.wormhole.Wormhole;
@@ -63,11 +62,9 @@ public class MutexService implements Listener
 	private GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> pendingPulls;
 	private Integer broadcastInterval;
 	private GMap<Player, Runnable> waiting;
-	private GList<String> sr;
 	
 	public MutexService()
 	{
-		sr = new GList<String>();
 		Wraith.registerListener(this);
 		insideThrottle = new GList<Entity>();
 		waiting = new GMap<Player, Runnable>();
@@ -301,6 +298,7 @@ public class MutexService implements Listener
 				if(i instanceof RemotePortal && !i.getProjectionPlane().hasContent())
 				{
 					layer2StreamRequest(i);
+					continue;
 				}
 			}
 		}
@@ -446,9 +444,15 @@ public class MutexService implements Listener
 					
 					DataCluster cc = new DataCluster(new JSONObject(i.getString("to")));
 					
-					for(Portal j : Wormholes.registry.localPortals)
+					for(Portal j : getLocalPortals())
 					{
-						if(cc.equals(j.toData()))
+						DataCluster a = cc.copy();
+						DataCluster b = j.toData().copy();
+						
+						a.remove("if");
+						b.remove("if");
+						
+						if(a.toJSON().toString().equals(b.toJSON().toString()))
 						{
 							LocalPortal target = (LocalPortal) j;
 							beginStream(target.getServer(), i.getSource(), target.toData().toJSON().toString(), target);
@@ -469,7 +473,7 @@ public class MutexService implements Listener
 		
 		if(!lp.getProjectionPlane().hasContent())
 		{
-			lp.getProjectionPlane().sample(lp.getPosition().getCenter(), Settings.PROJECTION_SAMPLE_RADIUS);
+			lp.getProjectionPlane().sample(lp.getPosition().getCenter(), Settings.PROJECTION_SAMPLE_RADIUS, lp.getIdentity().getFront().isVertical());
 		}
 		
 		new A()
@@ -525,22 +529,6 @@ public class MutexService implements Listener
 			return;
 		}
 		
-		if(sr.contains(remotePortalReference.getServer()))
-		{
-			return;
-		}
-		
-		sr.add(remotePortalReference.getServer());
-		
-		new TaskLater(200)
-		{
-			@Override
-			public void run()
-			{
-				sr.remove(remotePortalReference.getServer());
-			}
-		};
-		
 		Transmission r = new Transmission(Wormholes.bus.getServerName(), remotePortalReference.getServer(), "mreq");
 		r.set("to", remotePortalReference.toData().toJSON().toString());
 		r.send();
@@ -567,17 +555,21 @@ public class MutexService implements Listener
 					byte[] data = IOUtils.toByteArray(dis);
 					dis.close();
 					
-					for(Portal i : getPortals().copy())
+					for(String s : getMutexPortals().k())
 					{
-						if(i instanceof RemotePortal && i.toData().equals(c))
+						for(Portal i : getMutexPortals().get(s))
 						{
-							if(!Wormholes.projector.getRemotePlanes().contains(i.getKey()))
-							{
-								Wormholes.projector.getRemotePlanes().put(i.getKey(), new ProjectionPlane());
-							}
 							
-							Wormholes.projector.getRemotePlanes().get(i.getKey()).addSuperCompressed(data);
-							break;
+							DataCluster a = c.copy();
+							DataCluster b = i.toData().copy();
+							a.remove("if");
+							b.remove("if");
+							
+							if(i instanceof RemotePortal && a.toJSON().toString().equals(b.toJSON().toString()))
+							{
+								i.getProjectionPlane().addSuperCompressed(data);
+								break;
+							}
 						}
 					}
 				}
@@ -627,6 +619,7 @@ public class MutexService implements Listener
 				
 				if(cd.get() <= 0)
 				{
+					waiting.remove(p);
 					cancel();
 					Wormholes.fx.throwBack(p, Wormholes.fx.throwBackVector(p, source), source);
 				}
