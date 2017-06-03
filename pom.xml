@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.volmit</groupId>
 	<artifactId>Wormholes</artifactId>
-	<version>1.41b</version>
+	<version>2.51b</version>
 	<name>Wormholes</name>
 	<description>See what's on the other side.</description>
 	<properties>
