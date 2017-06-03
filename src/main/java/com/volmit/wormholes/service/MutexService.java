@@ -35,6 +35,7 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.portal.RemotePortal;
+import com.volmit.wormholes.projection.ArrivalVector;
 import com.volmit.wormholes.wormhole.LocalWormhole;
 import com.volmit.wormholes.wormhole.MutexWormhole;
 import com.volmit.wormholes.wormhole.Wormhole;
@@ -62,6 +63,7 @@ public class MutexService implements Listener
 	private GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> pendingPulls;
 	private Integer broadcastInterval;
 	private GMap<Player, Runnable> waiting;
+	private GMap<LocalPortal, GMap<UUID, ArrivalVector>> arrivals;
 	
 	public MutexService()
 	{
@@ -70,6 +72,36 @@ public class MutexService implements Listener
 		waiting = new GMap<Player, Runnable>();
 		pendingPulls = new GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>>();
 		broadcastInterval = 20;
+		arrivals = new GMap<LocalPortal, GMap<UUID, ArrivalVector>>();
+	}
+	
+	public void sendArrival(RemotePortal r, Player p, ArrivalVector v)
+	{
+		Transmission t = new Transmission(Wormholes.bus.getServerName(), r.getServer(), "a");
+		t.set("id", p.getUniqueId().toString());
+		t.set("v", v.toString());
+		t.set("rid", r.toData().toJSON().toString());
+		t.send();
+	}
+	
+	public ArrivalVector getArrival(LocalPortal l, Player p)
+	{
+		return arrivals.containsKey(l) ? arrivals.get(l).get(p.getUniqueId()) : null;
+	}
+	
+	public boolean hasArrival(LocalPortal l, Player p)
+	{
+		return getArrival(l, p) != null;
+	}
+	
+	public void setArrival(LocalPortal p, UUID u, ArrivalVector a)
+	{
+		if(!arrivals.containsKey(p))
+		{
+			arrivals.put(p, new GMap<UUID, ArrivalVector>());
+		}
+		
+		arrivals.get(p).put(u, a);
 	}
 	
 	public void setPending(UUID id, Portal portal, Vector velocity, Vector direction, Vector placement)
@@ -399,6 +431,28 @@ public class MutexService implements Listener
 						{
 							waiting.get(j).run();
 							waiting.remove(j);
+						}
+					}
+				}
+				
+				else if(i.getType().equals("a"))
+				{
+					UUID id = UUID.fromString(i.getString("id"));
+					DataCluster rid = new DataCluster(new JSONObject(i.getString("rid")));
+					ArrivalVector ar = new ArrivalVector(new Vector(), new Vector(), new Vector());
+					ar.fromString(i.getString("v"));
+					
+					for(Portal j : getLocalPortals())
+					{
+						DataCluster a = j.toData();
+						DataCluster b = rid.copy();
+						a.remove("if");
+						b.remove("if");
+						
+						if(a.toJSON().toString().equals(b.toJSON().toString()))
+						{
+							LocalPortal l = (LocalPortal) j;
+							setArrival(l, id, ar);
 						}
 					}
 				}
