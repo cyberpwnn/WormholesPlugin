@@ -108,6 +108,12 @@ public class RasteredSystem
 		for(int i = 0; i < gList.size(); i++)
 		{
 			QueuedChunk c = gList.get(i);
+			
+			if(c == null)
+			{
+				continue;
+			}
+			
 			if(c.getDist() < max)
 			{
 				max = c.getDist();
