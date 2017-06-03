@@ -39,6 +39,7 @@ public class ProjectionService implements Listener
 	private Long tpl;
 	private GMap<Portal, GMap<Player, Viewport>> lastPort;
 	private RenderMesh mesh;
+	private long lms;
 	
 	public ProjectionService()
 	{
@@ -48,6 +49,7 @@ public class ProjectionService implements Listener
 		lastPort = new GMap<Portal, GMap<Player, Viewport>>();
 		mesh = new RenderMesh();
 		Wraith.registerListener(this);
+		lms = M.ms();
 	}
 	
 	public void flush()
@@ -75,6 +77,20 @@ public class ProjectionService implements Listener
 									if(i.getPosition().getArea().hasPlayers() && ((LocalPortal) i).getSettings().isProject())
 									{
 										project((LocalPortal) i);
+										
+										try
+										{
+											if(M.ms() - lms > Settings.NETWORK_FLUSH_THRESHOLD)
+											{
+												lms = M.ms();
+												Wormholes.provider.getRasterer().flush();
+											}
+										}
+										
+										catch(Exception e)
+										{
+											
+										}
 									}
 								}
 								
@@ -84,7 +100,6 @@ public class ProjectionService implements Listener
 								}
 							}
 							
-							Wormholes.provider.getRasterer().flush();
 							projecting = false;
 							
 							t.stop();
