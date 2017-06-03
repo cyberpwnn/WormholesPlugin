@@ -112,4 +112,9 @@ public class RasteredPlayer
 	{
 		return queuedLayer.containsKey(l) && !queuedLayer.get(l).equals(new MaterialBlock(l));
 	}
+	
+	public int queueSize()
+	{
+		return queuedLayer.size();
+	}
 }
