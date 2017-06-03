@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.CL;
@@ -493,6 +494,9 @@ public class MutexService implements Listener
 				
 				else if(i.getType().equals("rld"))
 				{
+					Status.fdq = true;
+					Wormholes.provider.getRasterer().dequeueAll();
+					Wormholes.provider.getRasterer().flush();
 					Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 					Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 				}

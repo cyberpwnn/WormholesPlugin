@@ -114,6 +114,9 @@ public class Wormholes extends ControllablePlugin
 	
 	public void doReload()
 	{
+		Status.fdq = true;
+		Wormholes.provider.getRasterer().dequeueAll();
+		Wormholes.provider.getRasterer().flush();
 		host.globalReload();
 		Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 		Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
