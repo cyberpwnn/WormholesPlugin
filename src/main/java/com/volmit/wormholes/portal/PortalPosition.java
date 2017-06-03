@@ -15,6 +15,7 @@ import wraith.VectorMath;
 public class PortalPosition
 {
 	private Cuboid pane;
+	private Cuboid ipane;
 	private Cuboid area;
 	private Cuboid frameUp;
 	private Cuboid frameDown;
@@ -31,6 +32,10 @@ public class PortalPosition
 	private Location cornerUR;
 	private Location cornerDL;
 	private Location cornerDR;
+	private Location corneriUL;
+	private Location corneriUR;
+	private Location corneriDL;
+	private Location corneriDR;
 	private PortalIdentity identity;
 	private BoundingBox boundingBox;
 	
@@ -55,6 +60,22 @@ public class PortalPosition
 		area = new Cuboid(center).e(Axis.X, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Y, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Z, Settings.PROJECTION_SAMPLE_RADIUS);
 		boundingBox = new BoundingBox(area);
 		keyset = new GList<Block>().qadd(centerUp.getBlock()).qadd(centerDown.getBlock()).qadd(centerLeft.getBlock()).qadd(centerRight.getBlock());
+		ipane = new Cuboid(pane);
+		
+		for(Direction j : Direction.udnews())
+		{
+			if(identity.getFront().equals(j) || identity.getFront().equals(j.reverse()))
+			{
+				continue;
+			}
+			
+			ipane = ipane.e(j, -1);
+		}
+		
+		corneriUL = uli();
+		corneriUR = uri();
+		corneriDL = bli();
+		corneriDR = bri();
 	}
 	
 	public boolean intersects(Location a, Location b)
@@ -177,6 +198,70 @@ public class PortalPosition
 		return null;
 	}
 	
+	private Location uli()
+	{
+		for(Block i : new GList<Block>(ipane.getFace(identity.getUp().f()).iterator()))
+		{
+			for(Block j : new GList<Block>(ipane.getFace(identity.getLeft().f()).iterator()))
+			{
+				if(i.equals(j))
+				{
+					return j.getLocation().clone().add(0.5, 0.5, 0.5);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private Location uri()
+	{
+		for(Block i : new GList<Block>(ipane.getFace(identity.getUp().f()).iterator()))
+		{
+			for(Block j : new GList<Block>(ipane.getFace(identity.getRight().f()).iterator()))
+			{
+				if(i.equals(j))
+				{
+					return j.getLocation().clone().add(0.5, 0.5, 0.5);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private Location bli()
+	{
+		for(Block i : new GList<Block>(ipane.getFace(identity.getDown().f()).iterator()))
+		{
+			for(Block j : new GList<Block>(ipane.getFace(identity.getLeft().f()).iterator()))
+			{
+				if(i.equals(j))
+				{
+					return j.getLocation().clone().add(0.5, 0.5, 0.5);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private Location bri()
+	{
+		for(Block i : new GList<Block>(ipane.getFace(identity.getDown().f()).iterator()))
+		{
+			for(Block j : new GList<Block>(ipane.getFace(identity.getRight().f()).iterator()))
+			{
+				if(i.equals(j))
+				{
+					return j.getLocation().clone().add(0.5, 0.5, 0.5);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public Cuboid getOPane()
 	{
 		return pane.e(getIdentity().getAxis(), 5);
@@ -275,5 +360,35 @@ public class PortalPosition
 	public GList<Block> getKeyBlocks()
 	{
 		return keyset.copy();
+	}
+	
+	public Cuboid getIpane()
+	{
+		return ipane;
+	}
+	
+	public GList<Block> getKeyset()
+	{
+		return keyset;
+	}
+	
+	public Location getCorneriUL()
+	{
+		return corneriUL;
+	}
+	
+	public Location getCorneriUR()
+	{
+		return corneriUR;
+	}
+	
+	public Location getCorneriDL()
+	{
+		return corneriDL;
+	}
+	
+	public Location getCorneriDR()
+	{
+		return corneriDR;
 	}
 }
