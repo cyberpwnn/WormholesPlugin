@@ -14,11 +14,14 @@ public class Status
 	public static Average avgBPS = new Average(2);
 	
 	public static String inf = "";
+	public static int lightFault = 0;
+	public static int lightFaulted = 0;
 	
 	public static void sample()
 	{
 		inf = "";
 		inf += C.LIGHT_PURPLE + "NET: " + C.WHITE + F.fileSize((long) avgBPS.getAverage()) + "/s ";
-		inf += C.LIGHT_PURPLE + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms (" + F.f(pps) + " permute)";
+		inf += C.LIGHT_PURPLE + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms (" + F.f(pps) + " permute) ";
+		inf += C.LIGHT_PURPLE + "LUX: " + C.WHITE + F.f(lightFaulted);
 	}
 }
