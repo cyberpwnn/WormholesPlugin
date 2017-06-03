@@ -16,6 +16,7 @@ import wraith.GList;
 import wraith.GMap;
 import wraith.MaterialBlock;
 import wraith.VectorMath;
+import wraith.W;
 
 public class ProjectionPlane
 {
@@ -131,19 +132,38 @@ public class ProjectionPlane
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void sample(Location l, int rad)
+	public void sample(Location l, int rad, boolean vertical)
 	{
 		remapCache.clear();
 		Cuboid c = new Cuboid(l);
 		
 		for(Direction i : Direction.udnews())
 		{
+			if(i.isVertical() && !vertical)
+			{
+				rad = 9;
+			}
+			
 			c = c.e(i, rad);
 		}
 		
 		for(Block i : new GList<Block>(c.iterator()))
 		{
-			mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
+			boolean f = false;
+			
+			for(Block j : W.blockFaces(i))
+			{
+				if(j.getType().isTransparent())
+				{
+					f = true;
+					break;
+				}
+			}
+			
+			if(f)
+			{
+				mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.getLocation()), new MaterialBlock(i.getType(), i.getData()));
+			}
 		}
 	}
 }
