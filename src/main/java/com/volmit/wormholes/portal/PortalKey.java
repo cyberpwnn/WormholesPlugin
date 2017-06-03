@@ -128,22 +128,22 @@ public class PortalKey
 		
 		PortalKey other = (PortalKey) obj;
 		
-		if(d != other.d)
+		if(!d.equals(other.d))
 		{
 			return false;
 		}
 		
-		if(l != other.l)
+		if(!l.equals(other.l))
 		{
 			return false;
 		}
 		
-		if(r != other.r)
+		if(!r.equals(other.r))
 		{
 			return false;
 		}
 		
-		if(u != other.u)
+		if(!u.equals(other.u))
 		{
 			return false;
 		}
