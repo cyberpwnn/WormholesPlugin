@@ -166,4 +166,14 @@ public class ProjectionPlane
 			}
 		}
 	}
+	
+	public GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>> getRemapCache()
+	{
+		return remapCache;
+	}
+	
+	public GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> getOrmapCache()
+	{
+		return ormapCache;
+	}
 }

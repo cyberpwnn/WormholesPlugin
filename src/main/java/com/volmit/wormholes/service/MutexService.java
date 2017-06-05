@@ -221,28 +221,29 @@ public class MutexService implements Listener
 	
 	private void handleArrivalIntent(Player e)
 	{
-		Portal portal = Wormholes.registry.getClosestViewedPortal(e.getLocation());
-		
-		if(portal != null && portal.hasWormhole() && portal.isWormholeMutex())
+		for(Portal portal : Wormholes.registry.getPortalsInCloseView(e.getLocation()))
 		{
-			Portal destination = portal.getWormhole().getDestination();
-			Vector direction = e.getLocation().getDirection();
-			Vector velocity = e.getVelocity();
-			Vector entry = VectorMath.directionNoNormal(portal.getPosition().getCenter(), e.getLocation());
-			Direction closestDirection = Direction.closest(direction, portal.getIdentity().getFront(), portal.getIdentity().getBack());
-			Direction closestVelocity = Direction.closest(velocity, portal.getIdentity().getFront(), portal.getIdentity().getBack());
-			direction = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(direction, destination.getIdentity().getFront()) : closestDirection.angle(direction, destination.getIdentity().getBack());
-			entry = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(entry, destination.getIdentity().getFront()) : closestDirection.angle(entry, destination.getIdentity().getBack());
-			velocity = closestVelocity.equals(portal.getIdentity().getFront()) ? closestVelocity.angle(velocity, destination.getIdentity().getFront()) : closestVelocity.angle(velocity, destination.getIdentity().getBack());
-			entry = portal.getIdentity().getFront().isVertical() ? new Vector(0, -1, 0) : entry;
-			
-			if(portal.getIdentity().getFront().isVertical() && !destination.getIdentity().getFront().isVertical())
+			if(portal != null && portal.hasWormhole() && portal.isWormholeMutex())
 			{
-				direction = velocity.clone();
+				Portal destination = portal.getWormhole().getDestination();
+				Vector direction = e.getLocation().getDirection();
+				Vector velocity = e.getVelocity();
+				Vector entry = VectorMath.directionNoNormal(portal.getPosition().getCenter(), e.getLocation());
+				Direction closestDirection = Direction.closest(direction, portal.getIdentity().getFront(), portal.getIdentity().getBack());
+				Direction closestVelocity = Direction.closest(velocity, portal.getIdentity().getFront(), portal.getIdentity().getBack());
+				direction = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(direction, destination.getIdentity().getFront()) : closestDirection.angle(direction, destination.getIdentity().getBack());
+				entry = closestDirection.equals(portal.getIdentity().getFront()) ? closestDirection.angle(entry, destination.getIdentity().getFront()) : closestDirection.angle(entry, destination.getIdentity().getBack());
+				velocity = closestVelocity.equals(portal.getIdentity().getFront()) ? closestVelocity.angle(velocity, destination.getIdentity().getFront()) : closestVelocity.angle(velocity, destination.getIdentity().getBack());
+				entry = portal.getIdentity().getFront().isVertical() ? new Vector(0, -1, 0) : entry;
+				
+				if(portal.getIdentity().getFront().isVertical() && !destination.getIdentity().getFront().isVertical())
+				{
+					direction = velocity.clone();
+				}
+				
+				ArrivalVector vx = new ArrivalVector(velocity, direction, entry);
+				sendArrival((RemotePortal) destination, e, vx);
 			}
-			
-			ArrivalVector vx = new ArrivalVector(velocity, direction, entry);
-			sendArrival((RemotePortal) destination, e, vx);
 		}
 	}
 	

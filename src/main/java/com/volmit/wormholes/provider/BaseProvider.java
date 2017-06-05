@@ -39,6 +39,7 @@ import wraith.NMSX;
 import wraith.PlayerHud;
 import wraith.TXT;
 import wraith.TaskLater;
+import wraith.Title;
 import wraith.VectorMath;
 import wraith.W;
 import wraith.Wraith;
@@ -73,6 +74,18 @@ public abstract class BaseProvider implements PortalProvider
 		{
 			debug.add(p);
 		}
+	}
+	
+	public void errorMessage(Player p, String title, String msg)
+	{
+		Title t = new Title();
+		t.setTitle("    ");
+		t.setSubTitle(title);
+		t.setAction(msg);
+		t.setFadeIn(5);
+		t.setFadeOut(50);
+		t.setStayTime(1);
+		t.send(p);
 	}
 	
 	public boolean isDebugging(Player p)

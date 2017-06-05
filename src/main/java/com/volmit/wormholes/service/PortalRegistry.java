@@ -86,6 +86,21 @@ public class PortalRegistry
 		return portals;
 	}
 	
+	public GList<Portal> getPortalsInCloseView(Location l)
+	{
+		GList<Portal> portals = new GList<Portal>();
+		
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getIarea().contains(l))
+			{
+				portals.add(i);
+			}
+		}
+		
+		return portals;
+	}
+	
 	public GMap<String, GList<Portal>> getMutexPortals()
 	{
 		return mutexPortals;

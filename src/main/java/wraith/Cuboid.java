@@ -111,45 +111,53 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		GList<Entity> entities = new GList<Entity>();
 		
-		for(Chunk i : getChunks())
+		try
 		{
-			for(Entity j : i.getEntities())
+			for(Chunk i : getChunks())
 			{
-				if(contains(j.getLocation()))
+				for(Entity j : i.getEntities())
 				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.87))))
-				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.75))))
-				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.5))))
-				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.25))))
-				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.15))))
-				{
-					entities.add(j);
-				}
-				
-				else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.05))))
-				{
-					entities.add(j);
+					if(contains(j.getLocation()))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.87))))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.75))))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.5))))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.25))))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.15))))
+					{
+						entities.add(j);
+					}
+					
+					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.05))))
+					{
+						entities.add(j);
+					}
 				}
 			}
+		}
+		
+		catch(Exception e)
+		{
+			
 		}
 		
 		return entities;

@@ -21,6 +21,7 @@ public class PortalPosition
 	private Cuboid frameDown;
 	private Cuboid frameLeft;
 	private Cuboid frameRight;
+	private Cuboid iarea;
 	private GList<Cuboid> frame;
 	private GList<Block> keyset;
 	private Location centerUp;
@@ -58,6 +59,7 @@ public class PortalPosition
 		centerLeft = frameLeft.getCenter().clone();
 		centerRight = frameRight.getCenter().clone();
 		area = new Cuboid(center).e(Axis.X, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Y, Settings.PROJECTION_SAMPLE_RADIUS).e(Axis.Z, Settings.PROJECTION_SAMPLE_RADIUS);
+		iarea = new Cuboid(center).e(Axis.X, 8).e(Axis.Y, 8).e(Axis.Z, 8);
 		boundingBox = new BoundingBox(area);
 		keyset = new GList<Block>().qadd(centerUp.getBlock()).qadd(centerDown.getBlock()).qadd(centerLeft.getBlock()).qadd(centerRight.getBlock());
 		ipane = new Cuboid(pane);
@@ -390,5 +392,10 @@ public class PortalPosition
 	public Location getCorneriDR()
 	{
 		return corneriDR;
+	}
+	
+	public Cuboid getIarea()
+	{
+		return iarea;
 	}
 }

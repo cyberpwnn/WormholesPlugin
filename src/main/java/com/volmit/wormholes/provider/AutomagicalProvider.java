@@ -22,6 +22,7 @@ import wraith.Cuboid;
 import wraith.Direction;
 import wraith.GList;
 import wraith.NMSX;
+import wraith.ParticleEffect;
 import wraith.TaskLater;
 import wraith.W;
 import wraith.Wraith;
@@ -105,7 +106,6 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		Direction initialD = null;
 		Direction altD = null;
 		boolean found = false;
-		Block bAl = null;
 		Direction finalDirection = null;
 		Cuboid c = null;
 		
@@ -119,9 +119,39 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				{
 					initialD = i;
 					setDist = j;
-					found = true;
 					blockCenter = block.getLocation().clone().add(i.toVector().clone().multiply((j + 1) / 2)).getBlock();
-					break;
+					
+					for(Direction k : Direction.udnews())
+					{
+						if(k.equals(initialD) || k.equals(initialD.reverse()))
+						{
+							continue;
+						}
+						
+						Block bCheck2 = blockCenter.getLocation().clone().add(k.toVector().clone().multiply((j + 1) / 2)).getBlock();
+						
+						if(W.isColored(bCheck2))
+						{
+							altD = k;
+							Block bCheck3 = bCheck2.getLocation().clone().add(k.reverse().toVector().clone().multiply(j + 1)).getBlock();
+							
+							if(W.isColored(bCheck2) && W.isColored(bCheck3))
+							{
+								GList<Direction> dirs = Direction.udnews();
+								dirs.remove(initialD);
+								dirs.remove(initialD.reverse());
+								dirs.remove(altD);
+								dirs.remove(altD.reverse());
+								axis = dirs.get(0).getAxis();
+								found = true;
+							}
+						}
+						
+						if(found)
+						{
+							break;
+						}
+					}
 				}
 			}
 			
@@ -137,48 +167,6 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		}
 		
 		found = false;
-		
-		for(Direction i : Direction.udnews())
-		{
-			if(i.equals(initialD) || i.equals(initialD.reverse()))
-			{
-				continue;
-			}
-			
-			for(int j : maxBase)
-			{
-				Block bCheck = blockCenter.getLocation().clone().add(i.toVector().clone().multiply((j + 1) / 2)).getBlock();
-				
-				if(W.isColored(bCheck))
-				{
-					bAl = bCheck;
-					altD = i;
-					bCheck = bAl.getLocation().clone().add(i.reverse().toVector().clone().multiply(j + 1)).getBlock();
-					
-					if(W.isColored(bCheck))
-					{
-						GList<Direction> dirs = Direction.udnews();
-						dirs.remove(initialD);
-						dirs.remove(initialD.reverse());
-						dirs.remove(altD);
-						dirs.remove(altD.reverse());
-						axis = dirs.get(0).getAxis();
-						found = true;
-						break;
-					}
-				}
-			}
-			
-			if(found)
-			{
-				break;
-			}
-		}
-		
-		if(!found)
-		{
-			return;
-		}
 		
 		c = new Cuboid(blockCenter.getLocation());
 		
@@ -228,18 +216,23 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				catch(InvalidPortalKeyException e1)
 				{
 					e.setCancelled(true);
-					e.getPlayer().sendMessage(C.RED + e1.getMessage());
+					errorMessage(e.getPlayer(), C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
+					
+					for(Block vc : new GList<Block>(cx.iterator()))
+					{
+						ParticleEffect.BARRIER.display(0f, 1, vc.getLocation().clone().add(0.5, 0.5, 0.5), 32);
+					}
 				}
 				
 				catch(InvalidPortalPositionException e1)
 				{
-					System.out.println("dbg");
+					errorMessage(e.getPlayer(), C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
 				}
 				
 				catch(DuplicatePortalKeyException e1)
 				{
 					e.setCancelled(true);
-					e.getPlayer().sendMessage(C.RED + e1.getMessage());
+					errorMessage(e.getPlayer(), C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
 				}
 			}
 		};
