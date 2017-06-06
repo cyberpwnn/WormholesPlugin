@@ -1,5 +1,7 @@
 package com.volmit.wormholes;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import wraith.C;
 import wraith.TXT;
 
@@ -14,4 +16,16 @@ public class Info
 	public static String PERM_BUILD = "wormholes.build";
 	public static String PERM_CONFIGURE = "wormholes.configure";
 	public static String PERM_USE = "wormholes.use";
+	public static String HR = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 75);
+	public static String HRN = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28) + ChatColor.RESET + C.LIGHT_PURPLE + "  %s  " + C.DARK_GRAY + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28);
+	
+	public static String hr()
+	{
+		return HR;
+	}
+	
+	public static String hrn(String s)
+	{
+		return String.format(HRN, s);
+	}
 }
