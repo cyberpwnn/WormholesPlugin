@@ -12,6 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -52,6 +53,7 @@ import wraith.GQuadraset;
 import wraith.GSound;
 import wraith.JSONObject;
 import wraith.MSound;
+import wraith.MaterialBlock;
 import wraith.PlayerScrollEvent;
 import wraith.TICK;
 import wraith.Task;
@@ -531,6 +533,37 @@ public class MutexService implements Listener
 					}
 				}
 				
+				else if(i.getType().equals("blk"))
+				{
+					Wormholes.bus.read(i);
+					
+					DataCluster cc = new DataCluster(new JSONObject(i.getString("id")));
+					
+					for(Portal j : getLocalPortals())
+					{
+						DataCluster a = cc.copy();
+						DataCluster b = j.toData().copy();
+						
+						a.remove("if");
+						b.remove("if");
+						
+						if(a.toJSON().toString().equals(b.toJSON().toString()))
+						{
+							LocalPortal target = (LocalPortal) j;
+							Vector v = new Vector(i.getInt("vx"), i.getInt("vy"), i.getInt("vz"));
+							@SuppressWarnings("deprecation")
+							MaterialBlock mb = new MaterialBlock(Material.getMaterial(i.getInt("m")), i.getInt("d").byteValue());
+							
+							if(target.hasWormhole() && target.isWormholeMutex())
+							{
+								target.getWormhole().getDestination().getProjectionPlane().blockChange(v, mb);
+							}
+							
+							break;
+						}
+					}
+				}
+				
 				else if(i.getType().equals("mreq") && Settings.ENABLE_PROJECTIONS)
 				{
 					Wormholes.bus.read(i);
@@ -810,11 +843,21 @@ public class MutexService implements Listener
 	{
 		for(Portal i : getLocalPortals())
 		{
-			if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
+			if(i.getPosition().getArea().contains(e.getBlock().getLocation()))
 			{
-				if(i.getPosition().getCenterDown().equals(e.getBlock().getLocation()) || i.getPosition().getCenterUp().equals(e.getBlock().getLocation()) || i.getPosition().getCenterLeft().equals(e.getBlock().getLocation()) || i.getPosition().getCenterRight().equals(e.getBlock().getLocation()))
+				if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
 				{
-					if(!canDestroy(e.getPlayer()))
+					if(i.getPosition().getCenterDown().equals(e.getBlock().getLocation()) || i.getPosition().getCenterUp().equals(e.getBlock().getLocation()) || i.getPosition().getCenterLeft().equals(e.getBlock().getLocation()) || i.getPosition().getCenterRight().equals(e.getBlock().getLocation()))
+					{
+						if(!canDestroy(e.getPlayer()))
+						{
+							e.setCancelled(true);
+							new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+							Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+						}
+					}
+					
+					else if(!canBuild(e.getPlayer()))
 					{
 						e.setCancelled(true);
 						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
@@ -822,14 +865,44 @@ public class MutexService implements Listener
 					}
 				}
 				
-				else if(!canBuild(e.getPlayer()))
-				{
-					e.setCancelled(true);
-					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
-					Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
-				}
+				blockChange(e.getBlock().getLocation(), i);
 			}
 		}
+	}
+	
+	public void blockChange(Location l, Portal p)
+	{
+		new TaskLater()
+		{
+			@Override
+			public void run()
+			{
+				if(p.hasWormhole())
+				{
+					Vector v = VectorMath.directionNoNormal(p.getPosition().getCenter(), l.getBlock().getLocation()).clone().add(new Vector(0.5, 0.5, 0.5));
+					MaterialBlock m = new MaterialBlock(l);
+					p.getProjectionPlane().blockChange(v, m);
+					
+					if(p.isWormholeMutex())
+					{
+						sendBlockChange(v, m, p.getWormhole().getDestination());
+					}
+				}
+			}
+		};
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void sendBlockChange(Vector v, MaterialBlock m, Portal destination)
+	{
+		Transmission t = new Transmission(Wormholes.bus.getServerName(), destination.getServer(), "blk");
+		t.set("id", destination.toData().toJSON().toString());
+		t.set("vx", v.getBlockX());
+		t.set("vy", v.getBlockX());
+		t.set("vz", v.getBlockX());
+		t.set("m", m.getMaterial().getId());
+		t.set("d", m.getData().intValue());
+		t.send();
 	}
 	
 	@EventHandler
@@ -837,14 +910,19 @@ public class MutexService implements Listener
 	{
 		for(Portal i : getLocalPortals())
 		{
-			if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
+			if(i.getPosition().getArea().contains(e.getBlock().getLocation()))
 			{
-				if(!canBuild(e.getPlayer()))
+				if(i.getPosition().getPane().contains(e.getBlock().getLocation()))
 				{
-					e.setCancelled(true);
-					new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
-					Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+					if(!canBuild(e.getPlayer()))
+					{
+						e.setCancelled(true);
+						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+						Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
+					}
 				}
+				
+				blockChange(e.getBlock().getLocation(), i);
 			}
 		}
 	}
