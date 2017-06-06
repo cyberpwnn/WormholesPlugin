@@ -131,6 +131,12 @@ public class ProjectionPlane
 		return bytes;
 	}
 	
+	public void blockChange(Vector v, MaterialBlock mb)
+	{
+		mapping.put(v, mb);
+		remapCache.clear();
+	}
+	
 	@SuppressWarnings("deprecation")
 	public void sample(Location l, int rad, boolean vertical)
 	{
