@@ -10,12 +10,13 @@ public class PhantomSpinner
 	private ProgressSpinner s;
 	private ProgressSpinner c;
 	
-	public PhantomSpinner()
+	public PhantomSpinner(C light, C mid, C dark)
 	{
 		s = new ProgressSpinner();
-		c = new ProgressSpinner(C.LIGHT_PURPLE.toString(), C.LIGHT_PURPLE.toString(), C.LIGHT_PURPLE.toString(), C.DARK_PURPLE.toString(), C.DARK_GRAY.toString(), C.DARK_GRAY.toString(), C.DARK_GRAY.toString(), C.DARK_PURPLE.toString());
+		c = new ProgressSpinner(light.toString(), light.toString(), light.toString(), mid.toString(), dark.toString(), dark.toString(), dark.toString(), mid.toString());
 	}
 	
+	@Override
 	public String toString()
 	{
 		return c.toString() + s.toString();
