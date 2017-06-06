@@ -1,6 +1,8 @@
 package com.volmit.wormholes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,8 +21,12 @@ import com.volmit.wormholes.service.PortalRegistry;
 import com.volmit.wormholes.service.ProjectionService;
 import com.volmit.wormholes.service.TimingsService;
 import wraith.C;
+import wraith.ColoredString;
 import wraith.ControllablePlugin;
 import wraith.Direction;
+import wraith.RTEX;
+import wraith.RTX;
+import wraith.SYM;
 import wraith.SubCommand;
 import wraith.SubGroup;
 import wraith.TICK;
@@ -126,17 +132,60 @@ public class Wormholes extends ControllablePlugin
 	{
 		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
 		{
-			private void list(CommandSender p)
+			private void list(CommandSender p, String[] a)
 			{
 				if(new Permissable(p).canList())
 				{
-					p.sendMessage(C.GRAY + "Listing " + host.getLocalPortals().size() + " Portals");
+					if(a.length == 2)
+					{
+						if(a[0].equalsIgnoreCase("-tp"))
+						{
+							String to = a[1];
+							World world = Bukkit.getWorld(to.split(",")[0]);
+							int x = Integer.valueOf(to.split(",")[1]);
+							int y = Integer.valueOf(to.split(",")[2]);
+							int z = Integer.valueOf(to.split(",")[3]);
+							Location v = new Location(world, x, y, z);
+							Portal por = registry.getPortalsInCloseView(v).get(0);
+							((Player) p).teleport(v.clone().add(por.getIdentity().getFront().toVector().clone()));
+							return;
+						}
+						
+						if(a[0].equalsIgnoreCase("-dl"))
+						{
+							if(new Permissable(p).canDestroy())
+							{
+								String to = a[1];
+								World world = Bukkit.getWorld(to.split(",")[0]);
+								int x = Integer.valueOf(to.split(",")[1]);
+								int y = Integer.valueOf(to.split(",")[2]);
+								int z = Integer.valueOf(to.split(",")[3]);
+								Location v = new Location(world, x, y, z);
+								Portal por = registry.getPortalsInCloseView(v).get(0);
+								host.removeLocalPortal(por);
+							}
+						}
+					}
+					
+					p.sendMessage(Info.hrn(host.getLocalPortals().size() + " Portals"));
 					
 					for(Portal i : host.getLocalPortals())
 					{
-						String state = i.hasWormhole() ? i.isWormholeMutex() ? "mutex" : "local" : "no";
-						p.sendMessage(i.getKey().toString() + C.GRAY + " (" + state + " link" + ") @ " + i.getPosition().getCenter().getWorld().getName() + ": " + i.getPosition().getCenter().getBlockX() + ", " + i.getPosition().getCenter().getBlockY() + ", " + i.getPosition().getCenter().getBlockZ());
+						RTX r = new RTX();
+						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.LIGHT_PURPLE, "Link: "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? "Mutex Link\n" : "Local Link\n" : "No Link\n"), new ColoredString(C.LIGHT_PURPLE, "Polarity: "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
+						r.addText("Portal <", C.GRAY);
+						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getU()));
+						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getD()));
+						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getL()));
+						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getR()));
+						r.addText("> ", C.GRAY);
+						r.addText("@ " + i.getPosition().getCenter().getWorld().getName() + " [" + i.getPosition().getCenter().getBlockX() + " " + i.getPosition().getCenter().getBlockY() + " " + i.getPosition().getCenter().getBlockZ() + "]", C.GRAY);
+						r.addTextFireHoverCommand(" [TP]", new RTEX(new ColoredString(C.GREEN, "Teleport to this portal")), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
+						r.addTextFireHoverCommand(" [DELETE]", new RTEX(new ColoredString(C.RED, "DELETE to this portal")), "/w list -dl " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.RED);
+						r.tellRawTo((Player) p);
 					}
+					
+					p.sendMessage(Info.hr());
 				}
 				
 				else
@@ -148,13 +197,16 @@ public class Wormholes extends ControllablePlugin
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
-				list(p);
+				for(Portal i : host.getLocalPortals())
+				{
+					p.sendMessage(i.getKey().toString());
+				}
 			}
 			
 			@Override
 			public void cp(Player p, String[] args)
 			{
-				list(p);
+				list(p, args);
 			}
 		});
 		
@@ -217,40 +269,6 @@ public class Wormholes extends ControllablePlugin
 					else
 					{
 						((BaseProvider) provider).debug(p);
-					}
-				}
-				
-				else
-				{
-					p.sendMessage(Info.TAG + "No Permission");
-				}
-			}
-		});
-		
-		sub.add(new SubCommand("Destroys the portal looked at", "destroy", "del", "wipe")
-		{
-			@Override
-			public void cs(CommandSender p, String[] args)
-			{
-				p.sendMessage(C.RED + "Player only command");
-			}
-			
-			@Override
-			public void cp(Player p, String[] args)
-			{
-				if(new Permissable(p).canDestroy())
-				{
-					Portal portal = Wormholes.registry.getPortalLookingAt(p);
-					
-					if(portal != null)
-					{
-						p.sendMessage(C.GREEN + "Destroyed Portal");
-						Wormholes.host.removeLocalPortal(portal);
-					}
-					
-					else
-					{
-						p.sendMessage(C.RED + "Must be looking at a portal");
 					}
 				}
 				
