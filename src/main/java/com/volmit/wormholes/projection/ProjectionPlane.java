@@ -105,7 +105,7 @@ public class ProjectionPlane
 	public GList<Byte[]> getSuperCompressed(int maxSize) throws IOException
 	{
 		GList<Byte[]> bytes = new GList<Byte[]>();
-		GMap<Vector, MaterialBlock> mapping = this.mapping.copy();
+		GMap<Vector, MaterialBlock> mapping = this.mapping;
 		GList<Vector> vectors = mapping.k();
 		
 		while(!vectors.isEmpty())

@@ -54,6 +54,7 @@ import wraith.GSound;
 import wraith.JSONObject;
 import wraith.MSound;
 import wraith.MaterialBlock;
+import wraith.ParticleEffect;
 import wraith.PlayerScrollEvent;
 import wraith.TICK;
 import wraith.Task;
@@ -557,6 +558,7 @@ public class MutexService implements Listener
 							if(target.hasWormhole() && target.isWormholeMutex())
 							{
 								target.getWormhole().getDestination().getProjectionPlane().blockChange(v, mb);
+								ParticleEffect.BARRIER.display(0f, 1, target.getPosition().getCenter().clone().add(v), 30);
 							}
 							
 							break;
@@ -898,8 +900,8 @@ public class MutexService implements Listener
 		Transmission t = new Transmission(Wormholes.bus.getServerName(), destination.getServer(), "blk");
 		t.set("id", destination.toData().toJSON().toString());
 		t.set("vx", v.getBlockX());
-		t.set("vy", v.getBlockX());
-		t.set("vz", v.getBlockX());
+		t.set("vy", v.getBlockY());
+		t.set("vz", v.getBlockZ());
 		t.set("m", m.getMaterial().getId());
 		t.set("d", m.getData().intValue());
 		t.send();

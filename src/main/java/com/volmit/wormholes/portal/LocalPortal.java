@@ -16,14 +16,10 @@ import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.wormhole.Wormhole;
-import wraith.C;
 import wraith.DataCluster;
 import wraith.Direction;
 import wraith.GList;
-import wraith.Hologram;
 import wraith.M;
-import wraith.PhantomHologram;
-import wraith.PhantomSpinner;
 import wraith.RayTrace;
 import wraith.VectorMath;
 import wraith.Wraith;
@@ -39,10 +35,6 @@ public class LocalPortal implements Portal
 	private AperturePlane apature;
 	private Boolean saved;
 	private PortalSettings settings;
-	private Boolean loading;
-	private PhantomSpinner spinner;
-	private Hologram hologram;
-	private Boolean currentlyLoading;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -55,25 +47,12 @@ public class LocalPortal implements Portal
 		server = "";
 		apature = new AperturePlane();
 		settings = new PortalSettings();
-		loading = true;
-		currentlyLoading = false;
-		spinner = new PhantomSpinner(C.LIGHT_PURPLE, C.DARK_PURPLE, C.DARK_GRAY);
-	}
-	
-	public void setLoading(boolean loading)
-	{
-		this.loading = loading;
-	}
-	
-	public boolean isLoading()
-	{
-		return loading;
 	}
 	
 	@Override
 	public void update()
 	{
-		if(!hasValidKey())
+		if(!hasValidIshKey())
 		{
 			Wormholes.host.removeLocalPortal(this);
 			return;
@@ -177,26 +156,6 @@ public class LocalPortal implements Portal
 		{
 			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical());
 		}
-		
-		if(loading)
-		{
-			if(!currentlyLoading)
-			{
-				hologram = new PhantomHologram(getPosition().getCenter().clone().add(0, -2.3, 0));
-			}
-			
-			hologram.setDisplay(spinner.toString());
-		}
-		
-		if(!loading)
-		{
-			if(currentlyLoading)
-			{
-				hologram.destroy();
-			}
-		}
-		
-		currentlyLoading = loading;
 	}
 	
 	public void reversePolarity()
@@ -449,6 +408,21 @@ public class LocalPortal implements Portal
 		return true;
 	}
 	
+	public boolean hasValidIshKey()
+	{
+		try
+		{
+			Wormholes.provider.buildKey(getPosition());
+		}
+		
+		catch(InvalidPortalKeyException e)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public boolean hasValidKey()
 	{
@@ -510,16 +484,6 @@ public class LocalPortal implements Portal
 		getPosition().getCenterUp().getBlock().setType(Material.AIR);
 		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
 		getPosition().getCenterRight().getBlock().setType(Material.AIR);
-		
-		try
-		{
-			
-		}
-		
-		catch(Exception e)
-		{
-			hologram.destroy();
-		}
 	}
 	
 	public Boolean getHasHadWormhole()

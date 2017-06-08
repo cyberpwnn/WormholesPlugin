@@ -156,7 +156,6 @@ public class ProjectionService implements Listener
 		
 		if(p.hasWormhole())
 		{
-			((LocalPortal) p).setLoading(false);
 			Wormhole w = p.getWormhole();
 			PortalIdentity identity = w.getDestination().getIdentity();
 			ProjectionPlane plane = w.getDestination().getProjectionPlane();

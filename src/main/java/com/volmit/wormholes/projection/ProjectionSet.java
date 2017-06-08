@@ -67,7 +67,7 @@ public class ProjectionSet
 	
 	public GList<Cuboid> get()
 	{
-		return cuboids.copy();
+		return cuboids;
 	}
 	
 	public GList<Block> getBlocks()
