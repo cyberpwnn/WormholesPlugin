@@ -8,15 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
-import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
-import com.volmit.wormholes.wrapper.WrapperPlayServerEntityLook;
-import com.volmit.wormholes.wrapper.WrapperPlayServerEntityTeleport;
-import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
-import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMoveLook;
-import com.volmit.wormholes.wrapper.WrapperPlayServerSpawnEntityLiving;
-import wraith.AbstractPacket;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.AbstractPacket;
+import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.WrapperPlayServerEntityDestroy;
+import com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation;
+import com.volmit.wormholes.util.WrapperPlayServerEntityLook;
+import com.volmit.wormholes.util.WrapperPlayServerEntityTeleport;
+import com.volmit.wormholes.util.WrapperPlayServerRelEntityMove;
+import com.volmit.wormholes.util.WrapperPlayServerRelEntityMoveLook;
+import com.volmit.wormholes.util.WrapperPlayServerSpawnEntityLiving;
 
 public class VEntity
 {

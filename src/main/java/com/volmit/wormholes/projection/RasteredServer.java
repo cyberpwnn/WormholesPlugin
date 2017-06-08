@@ -2,8 +2,8 @@ package com.volmit.wormholes.projection;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import wraith.GMap;
-import wraith.MaterialBlock;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public class RasteredServer
 {

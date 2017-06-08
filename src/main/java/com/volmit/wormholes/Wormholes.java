@@ -20,20 +20,20 @@ import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.service.PortalRegistry;
 import com.volmit.wormholes.service.ProjectionService;
 import com.volmit.wormholes.service.TimingsService;
-import wraith.C;
-import wraith.ColoredString;
-import wraith.ControllablePlugin;
-import wraith.Direction;
-import wraith.RTEX;
-import wraith.RTX;
-import wraith.SYM;
-import wraith.SubCommand;
-import wraith.SubGroup;
-import wraith.TICK;
-import wraith.TXT;
-import wraith.TickHandle;
-import wraith.TickHandler;
-import wraith.Ticked;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.ColoredString;
+import com.volmit.wormholes.util.ControllablePlugin;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.RTEX;
+import com.volmit.wormholes.util.RTX;
+import com.volmit.wormholes.util.SYM;
+import com.volmit.wormholes.util.SubCommand;
+import com.volmit.wormholes.util.SubGroup;
+import com.volmit.wormholes.util.TICK;
+import com.volmit.wormholes.util.TXT;
+import com.volmit.wormholes.util.TickHandle;
+import com.volmit.wormholes.util.TickHandler;
+import com.volmit.wormholes.util.Ticked;
 
 @Ticked(0)
 @TickHandle(TickHandler.SYNCED)

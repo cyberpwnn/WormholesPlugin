@@ -2,7 +2,7 @@ package com.volmit.wormholes.wormhole;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import wraith.GList;
+import com.volmit.wormholes.util.GList;
 
 public class WormholeEntityFilter implements WormholeFilter
 {

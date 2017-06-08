@@ -2,8 +2,8 @@ package com.volmit.wormholes;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import wraith.C;
-import wraith.TXT;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.TXT;
 
 public class Info
 {

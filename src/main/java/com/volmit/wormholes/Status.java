@@ -1,8 +1,8 @@
 package com.volmit.wormholes;
 
-import wraith.Average;
-import wraith.C;
-import wraith.F;
+import com.volmit.wormholes.util.Average;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.F;
 
 public class Status
 {

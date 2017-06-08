@@ -4,7 +4,7 @@ import org.bukkit.entity.Entity;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import wraith.GList;
+import com.volmit.wormholes.util.GList;
 
 public abstract class BaseWormhole implements Wormhole
 {

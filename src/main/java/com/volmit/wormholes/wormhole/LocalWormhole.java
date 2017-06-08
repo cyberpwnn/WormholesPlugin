@@ -9,9 +9,9 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import wraith.Direction;
-import wraith.VectorMath;
-import wraith.Wraith;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.Wraith;
 
 public class LocalWormhole extends BaseWormhole
 {

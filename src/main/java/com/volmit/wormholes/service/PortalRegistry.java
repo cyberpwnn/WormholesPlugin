@@ -6,8 +6,8 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.projection.ProjectionSet;
-import wraith.GList;
-import wraith.GMap;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
 
 public class PortalRegistry
 {

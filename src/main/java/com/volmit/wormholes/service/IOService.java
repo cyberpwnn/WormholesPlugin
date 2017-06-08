@@ -6,10 +6,10 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
-import wraith.DataCluster;
-import wraith.JSONObject;
-import wraith.YAMLDataInput;
-import wraith.YAMLDataOutput;
+import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.JSONObject;
+import com.volmit.wormholes.util.YAMLDataInput;
+import com.volmit.wormholes.util.YAMLDataOutput;
 
 public class IOService
 {

@@ -1,7 +1,7 @@
 package com.volmit.wormholes.event;
 
 import com.volmit.wormholes.portal.Portal;
-import wraith.CancellablePhantomEvent;
+import com.volmit.wormholes.util.CancellablePhantomEvent;
 
 public class PortalEvent extends CancellablePhantomEvent
 {

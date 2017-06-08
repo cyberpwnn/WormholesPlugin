@@ -7,8 +7,8 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import wraith.PluginMessage;
-import wraith.Wraith;
+import com.volmit.wormholes.util.PluginMessage;
+import com.volmit.wormholes.util.Wraith;
 
 public class MutexWormhole extends BaseWormhole
 {

@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import com.volmit.wormholes.aperture.RemoteInstance;
 import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.portal.Portal;
-import wraith.GList;
-import wraith.GMap;
-import wraith.GSet;
-import wraith.Timer;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.Timer;
 
 public class EntityService
 {

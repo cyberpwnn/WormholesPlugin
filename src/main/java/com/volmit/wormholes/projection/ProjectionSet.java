@@ -3,8 +3,8 @@ package com.volmit.wormholes.projection;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import wraith.Cuboid;
-import wraith.GList;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.GList;
 
 public class ProjectionSet
 {

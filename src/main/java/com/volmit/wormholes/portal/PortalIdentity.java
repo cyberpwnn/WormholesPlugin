@@ -1,8 +1,8 @@
 package com.volmit.wormholes.portal;
 
-import wraith.Axis;
-import wraith.Direction;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.Axis;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.VectorMath;
 
 public class PortalIdentity
 {

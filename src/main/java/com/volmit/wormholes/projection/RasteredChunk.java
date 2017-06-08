@@ -11,10 +11,10 @@ import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
-import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
-import wraith.GList;
-import wraith.MaterialBlock;
-import wraith.W;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.MaterialBlock;
+import com.volmit.wormholes.util.W;
+import com.volmit.wormholes.util.WrapperPlayServerMultiBlockChange;
 
 public class RasteredChunk
 {

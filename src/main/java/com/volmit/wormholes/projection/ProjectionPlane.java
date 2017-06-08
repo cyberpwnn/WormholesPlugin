@@ -9,14 +9,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
-import wraith.Cuboid;
-import wraith.Direction;
-import wraith.GBiset;
-import wraith.GList;
-import wraith.GMap;
-import wraith.MaterialBlock;
-import wraith.VectorMath;
-import wraith.W;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GBiset;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.MaterialBlock;
+import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.W;
 
 public class ProjectionPlane
 {

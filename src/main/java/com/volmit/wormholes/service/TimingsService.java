@@ -1,6 +1,6 @@
 package com.volmit.wormholes.service;
 
-import wraith.Timed;
+import com.volmit.wormholes.util.Timed;
 
 public class TimingsService
 {

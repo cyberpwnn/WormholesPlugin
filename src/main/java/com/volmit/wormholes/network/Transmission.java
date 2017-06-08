@@ -2,8 +2,8 @@ package com.volmit.wormholes.network;
 
 import java.io.IOException;
 import com.volmit.wormholes.Wormholes;
-import wraith.DataCluster;
-import wraith.M;
+import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.M;
 
 public class Transmission extends DataCluster
 {

@@ -5,12 +5,12 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.projection.BoundingBox;
-import wraith.Axis;
-import wraith.Cuboid;
-import wraith.Direction;
-import wraith.GList;
-import wraith.RayTrace;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.Axis;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.RayTrace;
+import com.volmit.wormholes.util.VectorMath;
 
 public class PortalPosition
 {

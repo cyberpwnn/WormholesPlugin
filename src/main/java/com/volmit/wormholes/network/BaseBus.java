@@ -1,6 +1,6 @@
 package com.volmit.wormholes.network;
 
-import wraith.GList;
+import com.volmit.wormholes.util.GList;
 
 public abstract class BaseBus implements TransmissionBus
 {

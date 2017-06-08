@@ -5,14 +5,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.portal.LocalPortal;
-import wraith.GList;
-import wraith.GSound;
-import wraith.M;
-import wraith.MSound;
-import wraith.ParticleEffect;
-import wraith.ShockEffect;
-import wraith.TaskLater;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GSound;
+import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.MSound;
+import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.ShockEffect;
+import com.volmit.wormholes.util.TaskLater;
+import com.volmit.wormholes.util.VectorMath;
 
 public class EffectService
 {

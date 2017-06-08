@@ -1,7 +1,7 @@
 package com.volmit.wormholes.projection;
 
 import org.bukkit.entity.Player;
-import wraith.Cuboid;
+import com.volmit.wormholes.util.Cuboid;
 
 public class BaseViewportRenderer implements ViewportRenderer
 {

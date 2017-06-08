@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import org.bukkit.entity.EntityType;
 import com.volmit.wormholes.config.Experimental;
-import wraith.Comment;
-import wraith.DataCluster;
-import wraith.GList;
+import com.volmit.wormholes.util.Comment;
+import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.GList;
 
 public class Settings
 {

@@ -2,7 +2,7 @@ package com.volmit.wormholes.projection;
 
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.portal.LocalPortal;
-import wraith.GMap;
+import com.volmit.wormholes.util.GMap;
 
 public class RenderSet
 {

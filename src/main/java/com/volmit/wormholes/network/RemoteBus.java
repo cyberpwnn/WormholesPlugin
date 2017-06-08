@@ -6,7 +6,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.volmit.wormholes.Wormholes;
-import wraith.ForwardedPluginMessage;
+import com.volmit.wormholes.util.ForwardedPluginMessage;
 
 public class RemoteBus extends BaseBus implements PluginMessageListener
 {

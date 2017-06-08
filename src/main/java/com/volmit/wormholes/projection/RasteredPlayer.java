@@ -3,8 +3,8 @@ package com.volmit.wormholes.projection;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import wraith.GMap;
-import wraith.MaterialBlock;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public class RasteredPlayer
 {

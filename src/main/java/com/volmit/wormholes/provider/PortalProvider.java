@@ -11,7 +11,7 @@ import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.projection.RasteredSystem;
 import com.volmit.wormholes.projection.Viewport;
-import wraith.GMap;
+import com.volmit.wormholes.util.GMap;
 
 public interface PortalProvider
 {

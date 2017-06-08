@@ -3,7 +3,7 @@ package com.volmit.wormholes.wormhole;
 import org.bukkit.entity.Entity;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import wraith.GList;
+import com.volmit.wormholes.util.GList;
 
 public interface Wormhole
 {

@@ -1,8 +1,8 @@
 package com.volmit.wormholes.portal;
 
 import org.bukkit.DyeColor;
-import wraith.C;
-import wraith.SYM;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.SYM;
 
 public class PortalKey
 {

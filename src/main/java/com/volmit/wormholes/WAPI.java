@@ -7,7 +7,7 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.RemotePortal;
-import wraith.GList;
+import com.volmit.wormholes.util.GList;
 
 public class WAPI
 {

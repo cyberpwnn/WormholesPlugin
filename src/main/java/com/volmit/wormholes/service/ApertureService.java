@@ -21,13 +21,13 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.projection.Viewport;
-import wraith.CustomGZIPOutputStream;
-import wraith.DataCluster;
-import wraith.ForwardedPluginMessage;
-import wraith.GList;
-import wraith.GMap;
-import wraith.JSONObject;
-import wraith.Timer;
+import com.volmit.wormholes.util.CustomGZIPOutputStream;
+import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.ForwardedPluginMessage;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.JSONObject;
+import com.volmit.wormholes.util.Timer;
 
 public class ApertureService
 {

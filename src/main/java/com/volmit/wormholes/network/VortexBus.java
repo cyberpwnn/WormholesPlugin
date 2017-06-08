@@ -8,10 +8,10 @@ import com.google.common.io.ByteStreams;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.service.TimingsService;
-import wraith.GList;
-import wraith.M;
-import wraith.PluginMessage;
-import wraith.Timer;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.PluginMessage;
+import com.volmit.wormholes.util.Timer;
 
 public class VortexBus implements TransmissionBus, PluginMessageListener
 {

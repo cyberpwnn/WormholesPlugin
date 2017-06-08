@@ -8,9 +8,9 @@ import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.Portal;
-import wraith.Cuboid;
-import wraith.GList;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.VectorMath;
 
 public class Viewport
 {

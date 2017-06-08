@@ -12,10 +12,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.portal.LocalPortal;
-import wraith.CustomGZIPOutputStream;
-import wraith.Direction;
-import wraith.GMap;
-import wraith.VectorMath;
+import com.volmit.wormholes.util.CustomGZIPOutputStream;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.VectorMath;
 
 public class AperturePlane
 {

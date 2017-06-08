@@ -3,8 +3,8 @@ package com.volmit.wormholes.portal;
 import com.volmit.wormholes.aperture.AperturePlane;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
+import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.wormhole.Wormhole;
-import wraith.DataCluster;
 
 public interface Portal
 {

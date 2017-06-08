@@ -3,7 +3,7 @@ package com.volmit.wormholes.projection;
 import java.nio.ByteBuffer;
 import org.bukkit.Material;
 import org.bukkit.util.Vector;
-import wraith.MaterialBlock;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public class MBC
 {

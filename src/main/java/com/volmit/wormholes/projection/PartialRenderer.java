@@ -1,6 +1,6 @@
 package com.volmit.wormholes.projection;
 
-import wraith.Cuboid;
+import com.volmit.wormholes.util.Cuboid;
 
 public class PartialRenderer
 {

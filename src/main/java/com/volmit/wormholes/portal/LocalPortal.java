@@ -15,14 +15,14 @@ import com.volmit.wormholes.event.WormholeUnlinkEvent;
 import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
+import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.RayTrace;
+import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.Wraith;
 import com.volmit.wormholes.wormhole.Wormhole;
-import wraith.DataCluster;
-import wraith.Direction;
-import wraith.GList;
-import wraith.M;
-import wraith.RayTrace;
-import wraith.VectorMath;
-import wraith.Wraith;
 
 public class LocalPortal implements Portal
 {

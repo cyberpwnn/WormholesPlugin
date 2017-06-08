@@ -16,16 +16,16 @@ import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import wraith.Axis;
-import wraith.C;
-import wraith.Cuboid;
-import wraith.Direction;
-import wraith.GList;
-import wraith.NMSX;
-import wraith.ParticleEffect;
-import wraith.TaskLater;
-import wraith.W;
-import wraith.Wraith;
+import com.volmit.wormholes.util.Axis;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.NMSX;
+import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.TaskLater;
+import com.volmit.wormholes.util.W;
+import com.volmit.wormholes.util.Wraith;
 
 public class AutomagicalProvider extends BaseProvider implements Listener
 {
