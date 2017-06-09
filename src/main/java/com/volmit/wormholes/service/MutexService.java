@@ -28,6 +28,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
+import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.CL;
@@ -219,6 +220,17 @@ public class MutexService implements Listener
 		if(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ())
 		{
 			handleArrivalIntent(e.getPlayer());
+		}
+		
+		for(Portal i : WAPI.getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(e.getTo()))
+			{
+				if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
+				{
+					((LocalPortal) i).getMask().sched(e.getPlayer());
+				}
+			}
 		}
 	}
 	

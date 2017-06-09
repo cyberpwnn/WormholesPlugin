@@ -13,6 +13,7 @@ import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.event.WormholeLinkEvent;
 import com.volmit.wormholes.event.WormholeUnlinkEvent;
 import com.volmit.wormholes.exception.InvalidPortalKeyException;
+import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.DataCluster;
@@ -35,6 +36,7 @@ public class LocalPortal implements Portal
 	private AperturePlane apature;
 	private Boolean saved;
 	private PortalSettings settings;
+	private ProjectionMask mask;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -47,6 +49,7 @@ public class LocalPortal implements Portal
 		server = "";
 		apature = new AperturePlane();
 		settings = new PortalSettings();
+		mask = new ProjectionMask();
 	}
 	
 	@Override
@@ -499,5 +502,10 @@ public class LocalPortal implements Portal
 	public PortalSettings getSettings()
 	{
 		return settings;
+	}
+	
+	public ProjectionMask getMask()
+	{
+		return mask;
 	}
 }

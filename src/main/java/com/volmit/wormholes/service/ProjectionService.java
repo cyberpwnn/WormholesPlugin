@@ -74,10 +74,10 @@ public class ProjectionService implements Listener
 							{
 								try
 								{
-									if(i.getPosition().getArea().hasPlayers() && ((LocalPortal) i).getSettings().isProject())
+									if(i.getPosition().getArea().hasPlayers() && ((LocalPortal) i).getSettings().isProject() && ((LocalPortal) i).getMask().needsProjection())
 									{
 										project((LocalPortal) i);
-										
+										((LocalPortal) i).getMask().clear();
 										try
 										{
 											if(M.ms() - lms > Settings.NETWORK_FLUSH_THRESHOLD)
@@ -178,7 +178,7 @@ public class ProjectionService implements Listener
 					
 					for(Block j : vIn.getProjectionSet().getBlocks())
 					{
-						if(vIn.contains(j.getLocation()))
+						if(vIn.contains(j))
 						{
 							Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
 							Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
@@ -198,7 +198,7 @@ public class ProjectionService implements Listener
 					
 					for(Block j : vOut.getProjectionSet().getBlocks())
 					{
-						if(vOut.contains(j.getLocation()) && !vIn.contains(j.getLocation()))
+						if(vOut.contains(j) && !vIn.contains(j))
 						{
 							Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
 						}

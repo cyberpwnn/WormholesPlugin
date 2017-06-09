@@ -573,7 +573,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	 */
 	public boolean contains(Block b)
 	{
-		return contains(b.getLocation());
+		return contains(b.getX(), b.getY(), b.getZ());
 	}
 	
 	/**

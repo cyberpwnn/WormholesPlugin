@@ -114,6 +114,24 @@ public class ProjectionSet
 		return false;
 	}
 	
+	public boolean contains(Block l)
+	{
+		if(l == null)
+		{
+			return false;
+		}
+		
+		for(Cuboid i : get())
+		{
+			if(i.contains(l))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public int hashCode()
 	{

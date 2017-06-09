@@ -78,6 +78,16 @@ public class Viewport
 		return set.contains(l);
 	}
 	
+	public boolean contains(Block l)
+	{
+		if(portal.getPosition().getPane().contains(l))
+		{
+			return false;
+		}
+		
+		return set.contains(l);
+	}
+	
 	public Location getIris()
 	{
 		return p.getLocation().clone().add(0, 1.7, 0);
