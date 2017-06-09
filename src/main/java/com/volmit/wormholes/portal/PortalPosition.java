@@ -266,7 +266,7 @@ public class PortalPosition
 	
 	public Cuboid getOPane()
 	{
-		return pane.e(getIdentity().getAxis(), 5);
+		return pane.e(getIdentity().getAxis(), 2);
 	}
 	
 	public Cuboid getPane()

@@ -1,9 +1,11 @@
 package com.volmit.wormholes.wormhole;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
+import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.GList;
 
 public abstract class BaseWormhole implements Wormhole
@@ -40,6 +42,11 @@ public abstract class BaseWormhole implements Wormhole
 	@Override
 	public void push(Entity e)
 	{
+		for(Player i : new Area(e.getLocation(), 32).getNearbyPlayers())
+		{
+			Wormholes.aperture.hideEntity(i, e);
+		}
+		
 		for(WormholeFilter i : getFilters())
 		{
 			if(i.onFilter(this, e))

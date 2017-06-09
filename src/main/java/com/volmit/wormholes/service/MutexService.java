@@ -21,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -121,6 +122,17 @@ public class MutexService implements Listener
 		if(!insideThrottle.contains(e))
 		{
 			insideThrottle.add(e);
+		}
+	}
+	
+	public void on(EntitySpawnEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(e.getLocation()))
+			{
+				((LocalPortal) i).checkSend(e.getEntity(), i.getWormhole());
+			}
 		}
 	}
 	

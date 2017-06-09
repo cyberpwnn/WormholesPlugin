@@ -12,15 +12,19 @@ import com.volmit.wormholes.aperture.AperturePlane;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.event.WormholeLinkEvent;
 import com.volmit.wormholes.event.WormholeUnlinkEvent;
+import com.volmit.wormholes.exception.DuplicatePortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalKeyException;
+import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.Intersection;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.RayTrace;
+import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
 import com.volmit.wormholes.wormhole.Wormhole;
@@ -88,64 +92,7 @@ public class LocalPortal implements Portal
 				Wormholes.fx.ambient(this);
 			}
 			
-			GList<Entity> entities = getPosition().getOPane().getEntities();
-			Wormhole w = getWormhole();
-			
-			for(Entity i : entities)
-			{
-				if(!getService().isThrottled(i))
-				{
-					if(i instanceof Player)
-					{
-						if(getPosition().getPane().contains(i.getLocation()))
-						{
-							if(new Permissable(((Player) i)).canUse())
-							{
-								getService().addThrottle(i);
-								w.push(i);
-							}
-							
-							else
-							{
-								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
-							}
-						}
-					}
-					
-					else if(getPosition().getPane().contains(i.getLocation()))
-					{
-						if(i.getType().equals(EntityType.ARMOR_STAND))
-						{
-							continue;
-						}
-						
-						if(!Settings.ALLOW_ENTITIES)
-						{
-							Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
-						}
-						
-						else
-						{
-							if(!settings.isAllowEntities())
-							{
-								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
-								continue;
-							}
-							
-							if(Settings.ALLOW_ENTITIY_TYPES.contains(i.getType().toString()))
-							{
-								getService().addThrottle(i);
-								w.push(i);
-							}
-							
-							else
-							{
-								Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
-							}
-						}
-					}
-				}
-			}
+			checkFrame();
 		}
 		
 		else if(hasHadWormhole)
@@ -158,32 +105,178 @@ public class LocalPortal implements Portal
 		if(!plane.hasContent())
 		{
 			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical());
+			specialUpdate();
+		}
+	}
+	
+	public void checkFrame(Entity i)
+	{
+		Wormhole w = getWormhole();
+		
+		if(!getService().isThrottled(i))
+		{
+			if(i instanceof Player)
+			{
+				if(getPosition().getPane().contains(i.getLocation()))
+				{
+					if(new Permissable(((Player) i)).canUse())
+					{
+						getService().addThrottle(i);
+						w.push(i);
+					}
+					
+					else
+					{
+						Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
+					}
+				}
+			}
+			
+			else if(getPosition().getPane().contains(i.getLocation()))
+			{
+				checkSend(i, w);
+			}
+		}
+	}
+	
+	public void throwBack(Entity i)
+	{
+		Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
+	}
+	
+	public void checkSend(Entity i, Wormhole w)
+	{
+		if(w == null)
+		{
+			return;
+		}
+		
+		boolean[] wx = {false};
+		
+		if(getPosition().getPane().contains(i.getLocation()))
+		{
+			wx[0] = true;
+		}
+		
+		if(!wx[0])
+		{
+			wx[0] = Intersection.intersects(getPosition(), i.getLocation(), i.getVelocity().clone().multiply(10));
+		}
+		
+		if(!wx[0])
+		{
+			return;
+		}
+		
+		if(i.getType().equals(EntityType.ARMOR_STAND))
+		{
+			return;
+		}
+		
+		if(!Settings.ALLOW_ENTITIES)
+		{
+			throwBack(i);
+		}
+		
+		else if(!settings.isAllowEntities())
+		{
+			throwBack(i);
+		}
+		
+		else if(Settings.ALLOW_ENTITIY_TYPES.contains(i.getType().toString()))
+		{
+			send(i, w);
+		}
+		
+		else
+		{
+			throwBack(i);
+		}
+	}
+	
+	public void send(Entity i, Wormhole w)
+	{
+		getService().addThrottle(i);
+		w.push(i);
+	}
+	
+	public void checkFrame()
+	{
+		GList<Entity> entities = getPosition().getOPane().getEntities();
+		
+		for(Entity i : entities)
+		{
+			checkFrame(i);
+		}
+	}
+	
+	public void specialUpdate()
+	{
+		for(Player i : getPosition().getArea().getPlayers())
+		{
+			mask.sched(i);
+			
+			new TaskLater(20)
+			{
+				@Override
+				public void run()
+				{
+					mask.sched(i);
+				}
+			};
 		}
 	}
 	
 	public void reversePolarity()
 	{
-		Wormholes.host.updateEverything(new Runnable()
+		try
 		{
-			@Override
-			public void run()
+			PortalPosition p = getPosition();
+			PortalPosition n = new PortalPosition(new PortalIdentity(p.getIdentity().getFront(), getKey()), p.getPane());
+			PortalKey pk;
+			pk = Wormholes.provider.buildKey(n);
+			n.getIdentity().setKey(pk);
+			
+			new TaskLater()
 			{
-				try
+				@Override
+				public void run()
 				{
-					PortalPosition p = getPosition();
-					PortalPosition n = new PortalPosition(new PortalIdentity(p.getIdentity().getFront(), getKey()), p.getPane());
-					PortalKey pk;
-					pk = Wormholes.provider.buildKey(n);
-					n.getIdentity().setKey(pk);
-					position = n;
-				}
-				
-				catch(InvalidPortalKeyException e)
-				{
+					Wormholes.host.removeLocalPortalReverse(LocalPortal.this);
 					
+					new TaskLater()
+					{
+						@Override
+						public void run()
+						{
+							try
+							{
+								Wormholes.provider.createPortal(n.getIdentity(), n);
+								
+								new TaskLater(2)
+								{
+									@Override
+									public void run()
+									{
+										specialUpdate();
+									}
+								};
+							}
+							
+							catch(InvalidPortalKeyException | InvalidPortalPositionException | DuplicatePortalKeyException e)
+							{
+								e.printStackTrace();
+							}
+						}
+					};
 				}
-			}
-		});
+			};
+		}
+		
+		catch(InvalidPortalKeyException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public Direction getThrowDirection(Location l)
