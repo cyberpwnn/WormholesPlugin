@@ -248,6 +248,34 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
+		sub.add(new SubCommand("Version Information", "version", "v", "ver")
+		{
+			private void v(CommandSender p)
+			{
+				if(new Permissable(p).canList())
+				{
+					p.sendMessage(C.LIGHT_PURPLE + "Running " + C.WHITE + Wormholes.this.getDescription().getVersion());
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
+			}
+			
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				v(p);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				v(p);
+			}
+		});
+		
 		sub.add(new SubCommand("Realtime sample information", "debug", "db", "vb")
 		{
 			@Override
