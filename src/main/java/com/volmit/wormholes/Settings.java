@@ -33,10 +33,12 @@ public class Settings
 	public static int MAX_PORTAL_SIZE = 9;
 	
 	@CMin(1)
+	@CMax(20)
 	@Experimental
 	@Comment("Modify the interval in which entities are updated, sent through bungee, and sent to players\nMust be 1 or higher")
 	public static int APERTURE_MAX_SPEED = 2;
 	
+	@CMax(16)
 	@CMin(1)
 	@Experimental
 	@Comment("Low usage worker threads for low priority tasks along with flushing the rasterer (sending packets & compression)")
@@ -147,6 +149,83 @@ public class Settings
 		}
 		
 		return cc;
+	}
+	
+	public static void chkConfig()
+	{
+		for(Field i : Settings.class.getFields())
+		{
+			try
+			{
+				chkField(i);
+			}
+			
+			catch(IllegalArgumentException | IllegalAccessException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void chkField(Field f) throws IllegalArgumentException, IllegalAccessException
+	{
+		if(f.getType().equals(double.class))
+		{
+			if(f.isAnnotationPresent(CMax.class))
+			{
+				CMax m = f.getAnnotation(CMax.class);
+				double value = (double) f.get(null);
+				
+				if(value > m.value())
+				{
+					System.out.println("WARNING: " + f.getName() + " is set to " + value + " which is higher than the allowed maximum (" + m.value() + "). FIXING...");
+					value = m.value();
+					f.set(null, value);
+				}
+			}
+			
+			if(f.isAnnotationPresent(CMin.class))
+			{
+				CMin m = f.getAnnotation(CMin.class);
+				double value = (double) f.get(null);
+				
+				if(value < m.value())
+				{
+					System.out.println("WARNING: " + f.getName() + " is set to " + value + " which is lower than the allowed minimum (" + m.value() + "). FIXING...");
+					value = m.value();
+					f.set(null, value);
+				}
+			}
+		}
+		
+		if(f.getType().equals(int.class))
+		{
+			if(f.isAnnotationPresent(CMax.class))
+			{
+				CMax m = f.getAnnotation(CMax.class);
+				int value = (int) f.get(null);
+				
+				if(value > m.value())
+				{
+					System.out.println("WARNING: " + f.getName() + " is set to " + value + " which is higher than the allowed maximum (" + m.value() + "). FIXING...");
+					value = (int) m.value();
+					f.set(null, value);
+				}
+			}
+			
+			if(f.isAnnotationPresent(CMin.class))
+			{
+				CMin m = f.getAnnotation(CMin.class);
+				int value = (int) f.get(null);
+				
+				if(value < m.value())
+				{
+					System.out.println("WARNING: " + f.getName() + " is set to " + value + " which is lower than the allowed minimum (" + m.value() + "). FIXING...");
+					value = (int) m.value();
+					f.set(null, value);
+				}
+			}
+		}
 	}
 	
 	public static void setConfig(DataCluster cc)

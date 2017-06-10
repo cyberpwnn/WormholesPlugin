@@ -24,6 +24,7 @@ public class IOService
 		{
 			doConfigBasic();
 			doConfigExperimental();
+			Settings.chkConfig();
 		}
 		
 		catch(IOException e)

@@ -36,14 +36,14 @@ com.volmit.wormholes.Settings -> com.volmit.wormholes.src.ipsum:
     int NETWORK_FLUSH_THRESHOLD -> facilisis
     int NETWORK_POLL_THRESHOLD -> In
     boolean BUNGEECORD_SEND_ONLY -> hac
-    16:266:void <clinit>() -> <clinit>
+    16:268:void <clinit>() -> <clinit>
     13:13:void <init>() -> <init>
-    128:149:com.volmit.wormholes.util.DataCluster getConfig() -> ipsum
-    154:166:void chkConfig() -> dolor
-    170:227:void chkField(java.lang.reflect.Field) -> Lorem
-    231:251:void setConfig(com.volmit.wormholes.util.DataCluster) -> Lorem
-    270:291:com.volmit.wormholes.util.DataCluster getExperimentalConfig() -> sit
-    296:316:void setExperimentalConfig(com.volmit.wormholes.util.DataCluster) -> ipsum
+    130:151:com.volmit.wormholes.util.DataCluster getConfig() -> ipsum
+    156:168:void chkConfig() -> dolor
+    172:229:void chkField(java.lang.reflect.Field) -> Lorem
+    233:253:void setConfig(com.volmit.wormholes.util.DataCluster) -> Lorem
+    272:293:com.volmit.wormholes.util.DataCluster getExperimentalConfig() -> sit
+    298:318:void setExperimentalConfig(com.volmit.wormholes.util.DataCluster) -> ipsum
 com.volmit.wormholes.Status -> com.volmit.wormholes.src.dolor:
     int packetBytesPerSecond -> habitasse
     double projectionTime -> platea
