@@ -58,10 +58,10 @@ public class Wormholes extends ControllablePlugin
 	@Override
 	public void onStart()
 	{
-		pool = new ParallelPoolManager("Power Thread", 4, QueueMode.ROUND_ROBIN);
-		Direction.calculatePermutations();
 		instance = this;
+		Direction.calculatePermutations();
 		io = new IOService();
+		pool = new ParallelPoolManager("Power Thread", Settings.WORMHOLE_POWER_THREADS, QueueMode.ROUND_ROBIN);
 		timings = new TimingsService();
 		Wormholes.instance.getServer().getMessenger().registerOutgoingPluginChannel(Wormholes.instance, "BungeeCord");
 		bus = new VortexBus();

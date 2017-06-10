@@ -2,6 +2,7 @@ package com.volmit.wormholes.util;
 
 import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.volmit.wormholes.Settings;
 
 public abstract class ControllablePlugin extends JavaPlugin implements Controllable
 {
@@ -10,15 +11,13 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	@Override
 	public void onLoad()
 	{
-		destroyOldThreads();
-		readCurrentTick();
+		
 	}
 	
 	@Override
 	public void onEnable()
 	{
 		Wraith.instance = this;
-		setupTicker();
 		
 		base = new Controller(null)
 		{
@@ -42,6 +41,9 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 		};
 		
 		start();
+		destroyOldThreads();
+		readCurrentTick();
+		setupTicker();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -89,7 +91,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 		File prop = new File("server.properties");
 		TICK.tick = (ms - prop.lastModified()) / 50;
 		System.out.println("Setting Tick to " + TICK.tick);
-		Wraith.poolManager = new ParallelPoolManager(2);
+		Wraith.poolManager = new ParallelPoolManager(Settings.WORMHOLE_WORKER_THREADS);
 	}
 	
 	private void setupTicker()
