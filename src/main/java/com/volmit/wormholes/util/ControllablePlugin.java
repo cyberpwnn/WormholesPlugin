@@ -49,7 +49,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	{
 		for(Thread i : new GList<Thread>(Thread.getAllStackTraces().keySet()))
 		{
-			if(i.getName().startsWith("CT Parallel Tick Thread "))
+			if(i.getName().startsWith("Wormhole"))
 			{
 				try
 				{

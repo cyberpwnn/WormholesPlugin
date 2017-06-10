@@ -22,11 +22,11 @@ import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MaterialBlock;
-import com.volmit.wormholes.util.TICK;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
@@ -54,7 +54,7 @@ public class ProjectionService implements Listener
 	
 	public void flush()
 	{
-		if(!projecting && Settings.ENABLE_PROJECTIONS && TICK.tick % Settings.PROJECTION_MAX_SPEED == 0)
+		if(!projecting && Settings.ENABLE_PROJECTIONS)
 		{
 			projecting = true;
 			
@@ -77,7 +77,9 @@ public class ProjectionService implements Listener
 									if(i.getPosition().getArea().hasPlayers() && ((LocalPortal) i).getSettings().isProject() && ((LocalPortal) i).getMask().needsProjection())
 									{
 										project((LocalPortal) i);
+										Wormholes.pool.lock();
 										((LocalPortal) i).getMask().clear();
+										
 										try
 										{
 											if(M.ms() - lms > Settings.NETWORK_FLUSH_THRESHOLD)
@@ -176,35 +178,49 @@ public class ProjectionService implements Listener
 					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
 					boolean br = false;
 					
-					for(Block j : vIn.getProjectionSet().getBlocks())
+					Wormholes.pool.queue(new Execution()
 					{
-						if(vIn.contains(j))
+						@Override
+						public void run()
 						{
-							Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
-							Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
-							p.getIdentity().getFront().angle(vec, identity.getFront());
-							MaterialBlock mb = map.get(vec);
-							
-							if(mb == null)
+							for(Block j : vIn.getProjectionSet().getBlocks())
 							{
-								continue;
+								if(vIn.contains(j))
+								{
+									Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
+									Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+									p.getIdentity().getFront().angle(vec, identity.getFront());
+									MaterialBlock mb = map.get(vec);
+									
+									if(mb == null)
+									{
+										continue;
+									}
+									
+									Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
+								}
+								
+								Status.permutationsPerSecond++;
 							}
-							
-							Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
 						}
-						
-						Status.permutationsPerSecond++;
-					}
+					});
 					
-					for(Block j : vOut.getProjectionSet().getBlocks())
+					Wormholes.pool.queue(new Execution()
 					{
-						if(vOut.contains(j) && !vIn.contains(j))
+						@Override
+						public void run()
 						{
-							Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
+							for(Block j : vOut.getProjectionSet().getBlocks())
+							{
+								if(vOut.contains(j) && !vIn.contains(j))
+								{
+									Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
+								}
+								
+								Status.permutationsPerSecond++;
+							}
 						}
-						
-						Status.permutationsPerSecond++;
-					}
+					});
 					
 					if(br)
 					{

@@ -9,6 +9,7 @@ public class ParallelPoolManager
 	private int next;
 	private int threadCount;
 	private Queue<Execution> squeue;
+	private String key;
 	
 	public void syncQueue(Execution e)
 	{
@@ -21,6 +22,13 @@ public class ParallelPoolManager
 		{
 			squeue.poll().run();
 		}
+	}
+	
+	public ParallelPoolManager(String key, int threadCount, QueueMode mode)
+	{
+		this(threadCount, mode);
+		
+		this.key = key;
 	}
 	
 	public ParallelPoolManager(int threadCount, QueueMode mode)
@@ -39,6 +47,23 @@ public class ParallelPoolManager
 		this.threadCount = threadCount;
 		next = 0;
 		this.mode = mode;
+		key = "Worker Thread";
+	}
+	
+	public void lock()
+	{
+		while(getQueueSize() != 0)
+		{
+			try
+			{
+				Thread.sleep(1);
+			}
+			
+			catch(InterruptedException e)
+			{
+				
+			}
+		}
 	}
 	
 	public void start()
@@ -67,6 +92,18 @@ public class ParallelPoolManager
 	public int getSize()
 	{
 		return threads.size();
+	}
+	
+	public int getQueueSize()
+	{
+		int s = 0;
+		
+		for(ParallelThread i : getThreads())
+		{
+			s += i.getQueue().size();
+		}
+		
+		return s;
 	}
 	
 	public ParallelThread[] getThreads()
@@ -113,7 +150,7 @@ public class ParallelPoolManager
 	{
 		for(int i = 0; i < count; i++)
 		{
-			ParallelThread p = new ParallelThread(i);
+			ParallelThread p = new ParallelThread(key, i);
 			p.start();
 			threads.add(p);
 		}

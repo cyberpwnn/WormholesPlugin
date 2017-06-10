@@ -8,14 +8,15 @@ public class ParallelThread extends Thread
 	private Queue<Execution> queue;
 	private ThreadInformation info;
 	
-	public ParallelThread(int id)
+	public ParallelThread(String key, int id)
 	{
 		queue = new ConcurrentLinkedQueue<Execution>();
 		info = new ThreadInformation(id);
 		setPriority(MAX_PRIORITY);
-		setName("CT Parallel Tick Thread " + id);
+		setName("Wormhole " + key + " " + id);
 	}
 	
+	@Override
 	public void run()
 	{
 		while(!interrupted())

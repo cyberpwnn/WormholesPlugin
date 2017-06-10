@@ -24,6 +24,8 @@ import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.ParallelPoolManager;
+import com.volmit.wormholes.util.QueueMode;
 import com.volmit.wormholes.util.RTEX;
 import com.volmit.wormholes.util.RTX;
 import com.volmit.wormholes.util.SYM;
@@ -50,11 +52,13 @@ public class Wormholes extends ControllablePlugin
 	public static EntityService entity;
 	public static IOService io;
 	public static EffectService fx;
+	public static ParallelPoolManager pool;
 	private SubGroup sub;
 	
 	@Override
 	public void onStart()
 	{
+		pool = new ParallelPoolManager("Power Thread", 4, QueueMode.ROUND_ROBIN);
 		Direction.calculatePermutations();
 		instance = this;
 		io = new IOService();
@@ -71,6 +75,7 @@ public class Wormholes extends ControllablePlugin
 		sub = new SubGroup("w");
 		fx = new EffectService();
 		buildSubs();
+		pool.start();
 	}
 	
 	@Override
@@ -78,6 +83,7 @@ public class Wormholes extends ControllablePlugin
 	{
 		Status.fdq = true;
 		host.dequeueAll();
+		pool.shutdown();
 	}
 	
 	@Override
