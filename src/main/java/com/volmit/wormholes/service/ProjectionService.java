@@ -98,7 +98,7 @@ public class ProjectionService implements Listener
 								
 								catch(Exception e)
 								{
-									
+									e.printStackTrace();
 								}
 							}
 							

@@ -50,8 +50,10 @@ public class ParallelPoolManager
 		key = "Worker Thread";
 	}
 	
-	public void lock()
+	public long lock()
 	{
+		long k = M.ms();
+		
 		while(getQueueSize() != 0)
 		{
 			try
@@ -64,6 +66,8 @@ public class ParallelPoolManager
 				
 			}
 		}
+		
+		return M.ms() - k;
 	}
 	
 	public void start()
