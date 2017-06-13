@@ -804,6 +804,11 @@ public class MutexService implements Listener
 					Location position = i.getIdentity().getFront().isVertical() ? i.getPosition().getCenter() : i.getPosition().getCenterDown().clone().add(0, 1, 0);
 					position.setDirection(av.getDirection());
 					
+					if(Settings.BUNGEECORD_SEND_ONLY)
+					{
+						continue;
+					}
+					
 					new TaskLater()
 					{
 						@Override

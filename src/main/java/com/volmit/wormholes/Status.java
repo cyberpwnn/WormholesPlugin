@@ -12,6 +12,8 @@ public class Status
 	public static int pps;
 	public static boolean fdq;
 	public static Average avgBPS = new Average(2);
+	public static Average avgPower = new Average(5);
+	public static Average avgWrk = new Average(5);
 	
 	public static String inf = "";
 	public static int lightFault = 0;
@@ -19,9 +21,12 @@ public class Status
 	
 	public static void sample()
 	{
+		avgPower.put(WAPI.getPowerPoolInfo().getUtilization());
+		avgWrk.put(WAPI.getWorkerPoolInfo().getUtilization());
 		inf = "";
+		inf += C.LIGHT_PURPLE + "POW: " + C.WHITE + F.pc(avgPower.getAverage()) + " ";
+		inf += C.LIGHT_PURPLE + "WRK: " + C.WHITE + F.pc(avgWrk.getAverage()) + " ";
 		inf += C.LIGHT_PURPLE + "NET: " + C.WHITE + F.fileSize((long) avgBPS.getAverage()) + "/s ";
-		inf += C.LIGHT_PURPLE + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms (" + F.f(pps) + " permute) ";
-		inf += C.LIGHT_PURPLE + "LUX: " + C.WHITE + F.f(lightFaulted);
+		inf += C.LIGHT_PURPLE + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms";
 	}
 }

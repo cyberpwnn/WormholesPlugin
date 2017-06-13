@@ -10,6 +10,7 @@ public class ParallelPoolManager
 	private int threadCount;
 	private Queue<Execution> squeue;
 	private String key;
+	private ThreadInformation info;
 	
 	public void syncQueue(Execution e)
 	{
@@ -48,6 +49,7 @@ public class ParallelPoolManager
 		next = 0;
 		this.mode = mode;
 		key = "Worker Thread";
+		info = new ThreadInformation(-1);
 	}
 	
 	public long lock()
@@ -115,8 +117,35 @@ public class ParallelPoolManager
 		return threads.toArray(new ParallelThread[threads.size()]);
 	}
 	
+	private void updateThreadInformation()
+	{
+		if(threads.isEmpty())
+		{
+			return;
+		}
+		
+		double ticksPerSecond = 0;
+		int queuedSize = 0;
+		double utilization = 0;
+		
+		for(ParallelThread ph : threads.copy())
+		{
+			ticksPerSecond += ph.getInfo().getTicksPerSecondAverage();
+			queuedSize += ph.getQueue().size();
+			utilization += ph.getInfo().getUtilization();
+		}
+		
+		utilization /= threads.size();
+		ticksPerSecond /= threads.size();
+		getAverageInfo().setTicksPerSecond(ticksPerSecond);
+		getAverageInfo().setQueuedSize(queuedSize);
+		getAverageInfo().setUtilization(utilization);
+	}
+	
 	private ParallelThread nextThread()
 	{
+		updateThreadInformation();
+		
 		if(threads.size() == 1)
 		{
 			return threads.get(0);
@@ -158,5 +187,35 @@ public class ParallelPoolManager
 			p.start();
 			threads.add(p);
 		}
+	}
+	
+	public QueueMode getMode()
+	{
+		return mode;
+	}
+	
+	public int getNext()
+	{
+		return next;
+	}
+	
+	public int getThreadCount()
+	{
+		return threadCount;
+	}
+	
+	public Queue<Execution> getSqueue()
+	{
+		return squeue;
+	}
+	
+	public String getKey()
+	{
+		return key;
+	}
+	
+	public ThreadInformation getAverageInfo()
+	{
+		return info;
 	}
 }

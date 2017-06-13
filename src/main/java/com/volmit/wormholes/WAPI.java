@@ -8,6 +8,9 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.RemotePortal;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.ParallelPoolManager;
+import com.volmit.wormholes.util.ThreadInformation;
+import com.volmit.wormholes.util.Wraith;
 
 public class WAPI
 {
@@ -34,6 +37,26 @@ public class WAPI
 		}
 		
 		return p;
+	}
+	
+	public static ThreadInformation getWorkerPoolInfo()
+	{
+		return getWorkerPool().getAverageInfo();
+	}
+	
+	public static ThreadInformation getPowerPoolInfo()
+	{
+		return getPowerPool().getAverageInfo();
+	}
+	
+	public static ParallelPoolManager getWorkerPool()
+	{
+		return Wraith.poolManager;
+	}
+	
+	public static ParallelPoolManager getPowerPool()
+	{
+		return Wormholes.pool;
 	}
 	
 	public static Portal getPortalAt(Location l)

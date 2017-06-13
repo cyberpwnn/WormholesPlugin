@@ -24,6 +24,7 @@ import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.QueueMode;
 import com.volmit.wormholes.util.RTEX;
@@ -32,7 +33,6 @@ import com.volmit.wormholes.util.SYM;
 import com.volmit.wormholes.util.SubCommand;
 import com.volmit.wormholes.util.SubGroup;
 import com.volmit.wormholes.util.TICK;
-import com.volmit.wormholes.util.TXT;
 import com.volmit.wormholes.util.TickHandle;
 import com.volmit.wormholes.util.TickHandler;
 import com.volmit.wormholes.util.Ticked;
@@ -116,6 +116,8 @@ public class Wormholes extends ControllablePlugin
 				Status.lightFaulted = Status.lightFault;
 				Status.lightFault = 0;
 			}
+			
+			Status.sample();
 		}
 		
 		catch(Throwable e)
@@ -222,17 +224,31 @@ public class Wormholes extends ControllablePlugin
 			{
 				if(new Permissable(p).canList())
 				{
-					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
+					p.sendMessage(Info.hrn("Worker Threads"));
+					
+					p.sendMessage(C.LIGHT_PURPLE + "Threads: " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
+					p.sendMessage(C.LIGHT_PURPLE + "Utilization: " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.LIGHT_PURPLE + "Effective TPS: " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
+					
+					p.sendMessage(Info.hrn("POWER Threads"));
+					
+					p.sendMessage(C.LIGHT_PURPLE + "Threads: " + C.WHITE + WAPI.getPowerPool().getThreadCount());
+					p.sendMessage(C.LIGHT_PURPLE + "Utilization: " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.LIGHT_PURPLE + "Effective TPS: " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
+					
+					p.sendMessage(Info.hrn("Sync"));
 					for(String i : TimingsService.root.toLines(0, 2))
 					{
 						p.sendMessage(i);
 					}
-					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
+					p.sendMessage(Info.hrn("Async"));
+					
 					for(String i : TimingsService.asyn.toLines(0, 2))
 					{
 						p.sendMessage(i);
 					}
-					p.sendMessage(TXT.line(C.DARK_GRAY, 24));
+					
+					p.sendMessage(Info.HR);
 				}
 				
 				else

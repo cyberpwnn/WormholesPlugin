@@ -37,13 +37,13 @@ public class ParallelThread extends Thread
 				conditionallySleep(diff);
 				info.setTicksPerSecond(20 - ((1.0 - (50.0 / tdiff)) * 20));
 				info.setTicksPerSecond(info.getTicksPerSecond() < 0 ? 0 : info.getTicksPerSecond());
-				info.setUtilization(time);
+				info.setUtilization(1.0 - (info.getTicksPerSecond() / 20.0));
 				info.setTick(info.getTick() + 1);
 			}
 			
 			catch(InterruptedException e)
 			{
-				System.out.println("Shutting Down Parallel Thread " + info.getId());
+				System.out.println("Shutting Down " + getName());
 			}
 			
 			catch(Exception e)

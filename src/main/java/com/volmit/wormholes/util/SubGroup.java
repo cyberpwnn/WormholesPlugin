@@ -2,6 +2,7 @@ package com.volmit.wormholes.util;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import com.volmit.wormholes.Info;
 
 public class SubGroup
 {
@@ -21,10 +22,14 @@ public class SubGroup
 	
 	public void showHelp(CommandSender sender)
 	{
+		sender.sendMessage(Info.hrn("Commands"));
+		
 		for(SubCommand i : subCommands)
 		{
 			sendLine(sender, i);
 		}
+		
+		sender.sendMessage(Info.HR);
 	}
 	
 	public void sendLine(CommandSender sender, SubCommand s)

@@ -11,14 +11,15 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	@Override
 	public void onLoad()
 	{
-		
+		destroyOldThreads();
+		readCurrentTick();
 	}
 	
 	@Override
 	public void onEnable()
 	{
 		Wraith.instance = this;
-		
+		setupTicker();
 		base = new Controller(null)
 		{
 			@Override
@@ -41,9 +42,6 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 		};
 		
 		start();
-		destroyOldThreads();
-		readCurrentTick();
-		setupTicker();
 	}
 	
 	@SuppressWarnings("deprecation")

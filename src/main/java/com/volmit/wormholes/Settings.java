@@ -12,6 +12,9 @@ import com.volmit.wormholes.util.GList;
 
 public class Settings
 {
+	@Comment("Just send the player and let the other server handle where to spawn the player")
+	public static boolean BUNGEECORD_SEND_ONLY = false;
+	
 	@Comment("Allowed entity types. (bungeecord portals cannot support entities)")
 	public static ArrayList<String> ALLOW_ENTITIY_TYPES = new GList<String>();
 	
@@ -121,9 +124,6 @@ public class Settings
 	@Experimental
 	@Comment("Time Threshold in milliseconds to poll for servers and online status.\nEnsure it is at least half the time of the push threshold.")
 	public static int NETWORK_POLL_THRESHOLD = 1000;
-	
-	@Comment("Just send the player and let the other server handle where to spawn the player")
-	public static boolean BUNGEECORD_SEND_ONLY = false;
 	
 	public static DataCluster getConfig()
 	{
