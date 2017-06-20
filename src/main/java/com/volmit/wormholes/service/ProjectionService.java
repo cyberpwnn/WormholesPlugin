@@ -1,5 +1,6 @@
 package com.volmit.wormholes.service;
 
+import java.util.Iterator;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -70,15 +71,40 @@ public class ProjectionService implements Listener
 							Timer t = new Timer();
 							t.start();
 							
-							for(Portal i : Wormholes.host.getLocalPortals())
+							for(Portal po : Wormholes.host.getLocalPortals())
 							{
+								if(((LocalPortal) po).getSided())
+								{
+									continue;
+								}
+								
 								try
 								{
-									if(i.getPosition().getArea().hasPlayers() && ((LocalPortal) i).getSettings().isProject() && ((LocalPortal) i).getMask().needsProjection())
+									if(lastPort.containsKey(po))
 									{
-										project((LocalPortal) i);
+										for(Player i : lastPort.get(po).k())
+										{
+											if(!po.getPosition().getArea().contains(i.getLocation()))
+											{
+												lastPort.get(po).remove(i);
+												deproject((LocalPortal) po, i);
+											}
+										}
+									}
+									
+									for(Entity j : po.getPosition().getBoundingBox().getExiting())
+									{
+										if(j instanceof Player)
+										{
+											deproject((LocalPortal) po);
+										}
+									}
+									
+									if(po.getPosition().getArea().hasPlayers() && ((LocalPortal) po).getSettings().isProject() && ((LocalPortal) po).getMask().needsProjection())
+									{
+										project((LocalPortal) po);
 										Wormholes.pool.lock();
-										((LocalPortal) i).getMask().clear();
+										((LocalPortal) po).getMask().clear();
 										
 										try
 										{
@@ -139,6 +165,19 @@ public class ProjectionService implements Listener
 		}
 	}
 	
+	public void deproject(LocalPortal p, Player i)
+	{
+		Iterator<Block> it = p.getPosition().getArea().iterator();
+		
+		while(it.hasNext())
+		{
+			Block b = it.next();
+			Wormholes.provider.getRasterer().dequeue(i, b.getLocation());
+		}
+		
+		Wormholes.provider.getRasterer().get(i).flush();
+	}
+	
 	public void project(LocalPortal p)
 	{
 		if(Wormholes.registry.destroyQueue.contains(p))
@@ -167,6 +206,18 @@ public class ProjectionService implements Listener
 				GMap<Player, Viewport> view = Wormholes.provider.getViewport(p);
 				GMap<Vector, MaterialBlock> map = plane.remap(identity.getFront(), p.getIdentity().getFront());
 				
+				if(map.isEmpty() || map.size() < 250)
+				{
+					if(!p.isWormholeMutex())
+					{
+						plane.getMapping().clear();
+						plane.getRemapCache().clear();
+						plane.getOrmapCache().clear();
+					}
+					
+					return;
+				}
+				
 				if(view.isEmpty())
 				{
 					return;
@@ -183,24 +234,30 @@ public class ProjectionService implements Listener
 						@Override
 						public void run()
 						{
-							for(Block j : vIn.getProjectionSet().getBlocks())
+							for(Iterator<Block> it : vIn.getProjectionSet().iterator())
 							{
-								if(vIn.contains(j))
+								while(it.hasNext())
 								{
-									Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
-									Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
-									p.getIdentity().getFront().angle(vec, identity.getFront());
-									MaterialBlock mb = map.get(vec);
+									Block j = it.next();
 									
-									if(mb == null)
+									if(vIn.contains(j))
 									{
-										continue;
+										Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
+										Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+										p.getIdentity().getFront().angle(vec, identity.getFront());
+										
+										MaterialBlock mb = map.get(vec);
+										
+										if(mb == null)
+										{
+											continue;
+										}
+										
+										Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
 									}
 									
-									Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
+									Status.permutationsPerSecond++;
 								}
-								
-								Status.permutationsPerSecond++;
 							}
 						}
 					});
@@ -210,14 +267,19 @@ public class ProjectionService implements Listener
 						@Override
 						public void run()
 						{
-							for(Block j : vOut.getProjectionSet().getBlocks())
+							for(Iterator<Block> it : vOut.getProjectionSet().iterator())
 							{
-								if(vOut.contains(j) && !vIn.contains(j))
+								while(it.hasNext())
 								{
-									Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
+									Block j = it.next();
+									
+									if(vOut.getProjectionSet().contains(j) && !vIn.contains(j))
+									{
+										Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
+									}
+									
+									Status.permutationsPerSecond++;
 								}
-								
-								Status.permutationsPerSecond++;
 							}
 						}
 					});
