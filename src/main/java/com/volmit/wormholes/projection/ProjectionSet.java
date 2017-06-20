@@ -1,5 +1,6 @@
 package com.volmit.wormholes.projection;
 
+import java.util.Iterator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -68,6 +69,18 @@ public class ProjectionSet
 	public GList<Cuboid> get()
 	{
 		return cuboids;
+	}
+	
+	public GList<Iterator<Block>> iterator()
+	{
+		GList<Iterator<Block>> itx = new GList<Iterator<Block>>();
+		
+		for(Cuboid i : get())
+		{
+			itx.add(i.iterator());
+		}
+		
+		return itx;
 	}
 	
 	public GList<Block> getBlocks()
