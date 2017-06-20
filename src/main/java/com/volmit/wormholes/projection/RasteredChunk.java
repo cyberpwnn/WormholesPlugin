@@ -49,7 +49,7 @@ public class RasteredChunk
 		}
 	}
 	
-	public void project(Player p)
+	public int project(Player p)
 	{
 		WrapperPlayServerMultiBlockChange w = new WrapperPlayServerMultiBlockChange();
 		w.setChunk(new ChunkCoordIntPair(x, z));
@@ -79,8 +79,20 @@ public class RasteredChunk
 			}
 		}
 		
-		int dist = W.chunkDistance(p.getLocation().getChunk(), p.getLocation().getWorld().getChunkAt(x, z));
+		int dist = 0;
+		
+		try
+		{
+			dist = W.chunkDistance(p.getLocation().getChunk(), p.getLocation().getWorld().getChunkAt(x, z));
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
 		int size = 8 + (inf.size() * 12);
+		int sv = inf.size();
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
 		
 		if(Status.fdq)
@@ -118,5 +130,7 @@ public class RasteredChunk
 				}
 			});
 		}
+		
+		return sv;
 	}
 }
