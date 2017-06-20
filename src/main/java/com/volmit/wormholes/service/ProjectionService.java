@@ -4,10 +4,7 @@ import java.util.Iterator;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
@@ -21,10 +18,7 @@ import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.projection.RenderMesh;
 import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.A;
-import com.volmit.wormholes.util.Axis;
-import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Execution;
-import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MaterialBlock;
@@ -296,29 +290,6 @@ public class ProjectionService implements Listener
 					
 					lastPort.get(p).put(i, view.get(i));
 				}
-			}
-		}
-	}
-	
-	@EventHandler
-	public void on(PlayerTeleportEvent e)
-	{
-		if(M.ms() - tpl > 1000)
-		{
-			if(e.getCause().equals(TeleportCause.UNKNOWN))
-			{
-				tpl = M.ms();
-				Wormholes.provider.getRasterer().dequeue(e.getPlayer(), e.getPlayer().getLocation().getBlock().getLocation());
-				
-				Cuboid c = new Cuboid(e.getTo());
-				c = c.e(Axis.X, 16).e(Axis.Y, 8).e(Axis.Z, 16);
-				
-				for(Block i : new GList<Block>(c.iterator()))
-				{
-					Wormholes.provider.getRasterer().dequeue(e.getPlayer(), i.getLocation());
-				}
-				
-				e.setTo(e.getTo().clone().add(0, 0.3, 0));
 			}
 		}
 	}
