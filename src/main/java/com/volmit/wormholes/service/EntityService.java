@@ -4,6 +4,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.aperture.RemoteInstance;
+import com.volmit.wormholes.aperture.RemotePlayer;
 import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.GList;
@@ -37,6 +38,11 @@ public class EntityService
 			
 			for(Portal j : entities.get(i).k())
 			{
+				if(j.getSided())
+				{
+					continue;
+				}
+				
 				if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
 				{
 					for(VEntity k : entities.get(i).get(j).copy())
@@ -95,9 +101,22 @@ public class EntityService
 			}
 		}
 		
-		VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), UUID.randomUUID(), l);
+		UUID id = UUID.randomUUID();
+		
+		if(ri instanceof RemotePlayer)
+		{
+			id = ((RemotePlayer) ri).getUuid();
+		}
+		
+		VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
 		ve.spawn();
 		ve.flush();
 		entities.get(p).get(i).add(ve);
+	}
+	
+	public void shutdown()
+	{
+		flush();
+		flush();
 	}
 }
