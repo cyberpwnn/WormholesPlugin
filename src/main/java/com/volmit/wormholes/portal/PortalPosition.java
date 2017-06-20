@@ -80,13 +80,18 @@ public class PortalPosition
 		corneriDR = bri();
 	}
 	
+	public Location intersectsv(Location l, Vector next)
+	{
+		return intersectsv(l, l.clone().add(next));
+	}
+	
 	public boolean intersects(Location a, Location b)
 	{
 		double distance = a.distance(b);
 		boolean[] traces = {false};
 		Vector direction = VectorMath.direction(a, b);
 		
-		new RayTrace(a, direction, distance + 0.5, 0.9)
+		new RayTrace(a, direction, distance * 1.2, 0.1)
 		{
 			@Override
 			public void onTrace(Location location)
@@ -95,6 +100,28 @@ public class PortalPosition
 				{
 					stop();
 					traces[0] = true;
+				}
+			}
+		}.trace();
+		
+		return traces[0];
+	}
+	
+	public Location intersectsv(Location a, Location b)
+	{
+		double distance = a.distance(b);
+		Location[] traces = {null};
+		Vector direction = VectorMath.direction(a, b);
+		
+		new RayTrace(a, direction, distance * 1.2, 0.1)
+		{
+			@Override
+			public void onTrace(Location location)
+			{
+				if(isInsidePortal(location))
+				{
+					stop();
+					traces[0] = location.clone();
 				}
 			}
 		}.trace();
@@ -266,7 +293,7 @@ public class PortalPosition
 	
 	public Cuboid getOPane()
 	{
-		return pane.e(getIdentity().getAxis(), 2);
+		return pane.e(getIdentity().getAxis(), 24);
 	}
 	
 	public Cuboid getPane()
