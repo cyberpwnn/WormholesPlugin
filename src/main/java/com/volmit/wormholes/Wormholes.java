@@ -5,9 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.VortexBus;
+import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.provider.AutomagicalProvider;
 import com.volmit.wormholes.provider.BaseProvider;
@@ -19,11 +21,13 @@ import com.volmit.wormholes.service.IOService;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.service.PortalRegistry;
 import com.volmit.wormholes.service.ProjectionService;
+import com.volmit.wormholes.service.SkinService;
 import com.volmit.wormholes.service.TimingsService;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.QueueMode;
@@ -50,6 +54,7 @@ public class Wormholes extends ControllablePlugin
 	public static ProjectionService projector;
 	public static TimingsService timings;
 	public static EntityService entity;
+	public static SkinService skin;
 	public static IOService io;
 	public static EffectService fx;
 	public static ParallelPoolManager pool;
@@ -71,6 +76,7 @@ public class Wormholes extends ControllablePlugin
 		projector = new ProjectionService();
 		provider = new AutomagicalProvider();
 		entity = new EntityService();
+		skin = new SkinService();
 		provider.loadAllPortals();
 		sub = new SubGroup("w");
 		fx = new EffectService();
@@ -81,9 +87,15 @@ public class Wormholes extends ControllablePlugin
 	@Override
 	public void onStop()
 	{
+		for(Portal i : host.getLocalPortals())
+		{
+			((LocalPortal) i).clearHolograms();
+		}
+		
 		Status.fdq = true;
 		host.dequeueAll();
 		pool.shutdown();
+		entity.shutdown();
 	}
 	
 	@Override
@@ -117,6 +129,11 @@ public class Wormholes extends ControllablePlugin
 				Status.lightFault = 0;
 			}
 			
+			if(TICK.tick % Settings.WORMHOLE_SKIN_FLUSH == 0)
+			{
+				skin.flush();
+			}
+			
 			Status.sample();
 		}
 		
@@ -132,6 +149,10 @@ public class Wormholes extends ControllablePlugin
 		Wormholes.provider.getRasterer().dequeueAll();
 		Wormholes.provider.getRasterer().flush();
 		host.globalReload();
+		for(Entity j : EntityHologram.lock)
+		{
+			j.remove();
+		}
 		Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 		Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 	}
@@ -181,13 +202,28 @@ public class Wormholes extends ControllablePlugin
 					{
 						RTX r = new RTX();
 						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.LIGHT_PURPLE, "Link: "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? "Mutex Link\n" : "Local Link\n" : "No Link\n"), new ColoredString(C.LIGHT_PURPLE, "Polarity: "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
-						r.addText("Portal <", C.GRAY);
+						
+						if(i.getSided())
+						{
+							r.addText("Endpoint <", C.GRAY);
+						}
+						
+						else
+						{
+							r.addText("Portal <", C.GRAY);
+						}
+						
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getU()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getD()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getL()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getR()));
 						r.addText("> ", C.GRAY);
-						r.addText("@ " + i.getPosition().getCenter().getWorld().getName() + " [" + i.getPosition().getCenter().getBlockX() + " " + i.getPosition().getCenter().getBlockY() + " " + i.getPosition().getCenter().getBlockZ() + "]", C.GRAY);
+						
+						if(i.hasDisplayName())
+						{
+							r.addText("(" + i.getDisplayName() + ")", C.WHITE);
+						}
+						
 						r.addTextFireHoverCommand(" [TP]", new RTEX(new ColoredString(C.GREEN, "Teleport to this portal")), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
 						r.addTextFireHoverCommand(" [DELETE]", new RTEX(new ColoredString(C.RED, "DELETE to this portal")), "/w list -dl " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.RED);
 						r.tellRawTo((Player) p);
