@@ -22,6 +22,7 @@ public class IOService
 	{
 		try
 		{
+			Wormholes.instance.getDataFolder().mkdirs();
 			doConfigBasic();
 			doConfigExperimental();
 			Settings.chkConfig();
@@ -92,7 +93,7 @@ public class IOService
 		
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			
 		}
 		
 		return null;
