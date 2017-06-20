@@ -1,5 +1,6 @@
 package com.volmit.wormholes.wormhole;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class MutexWormhole extends BaseWormhole
 	}
 	
 	@Override
-	public void onPush(Entity e)
+	public void onPush(Entity e, Location intercept)
 	{
 		if(e instanceof Player && Wormholes.bus.isOnline())
 		{
