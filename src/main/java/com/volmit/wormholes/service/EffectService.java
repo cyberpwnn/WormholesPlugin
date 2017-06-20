@@ -13,6 +13,7 @@ import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.ShockEffect;
 import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.WarpEffect;
 
 public class EffectService
 {
@@ -50,6 +51,13 @@ public class EffectService
 		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 0.5f).play(lx);
 	}
 	
+	public void strikens(LocalPortal p)
+	{
+		Location lx = p.getPosition().getRandomKeyBlock().getLocation().clone().add(0.5, 0.5, 0.5);
+		Location lc = p.getPosition().getCenter().clone().add(0.5, 0.5, 0.5);
+		new WarpEffect(0.06f).play(lx, VectorMath.direction(lx, lc));
+	}
+	
 	public void strikeAll(LocalPortal p)
 	{
 		for(Block i : p.getPosition().getKeyBlocks())
@@ -80,9 +88,9 @@ public class EffectService
 		}
 	}
 	
-	public void push(Entity e, Vector v, LocalPortal p)
+	public void push(Entity e, Vector v, LocalPortal p, Location vx)
 	{
-		phase(p, e.getLocation().getBlock().getLocation().clone().add(0.5, 0.5, 0.5));
+		phase(p, vx.clone().add(0.5, 0.5, 0.5));
 		new GSound(MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.7f + (float) (Math.random() * 0.2)).play(e.getLocation());
 		new GSound(MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.5f + (float) (Math.random() * 0.2)).play(e.getLocation());
 		new GSound(MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.3f + (float) (Math.random() * 0.2)).play(e.getLocation());
@@ -103,11 +111,21 @@ public class EffectService
 	
 	public void ambient(LocalPortal p)
 	{
-		new GSound(MSound.PORTAL.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		new GSound(MSound.PORTAL.bukkitSound(), 0.044f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
 		
-		if(M.r(0.08))
+		if(M.r(0.05))
 		{
-			new GSound(MSound.PORTAL_TRAVEL.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+			new GSound(MSound.PORTAL_TRAVEL.bukkitSound(), 0.03f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		}
+		
+		if(M.r(0.07))
+		{
+			new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.12f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		}
+		
+		if(M.r(0.09))
+		{
+			new GSound(MSound.ZOMBIE_WALK.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
 		}
 	}
 	
@@ -141,7 +159,7 @@ public class EffectService
 			}
 		}
 		
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			Vector vx = new Vector(0, 0, 0);
 			
