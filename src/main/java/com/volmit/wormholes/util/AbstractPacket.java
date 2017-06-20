@@ -74,6 +74,7 @@ public abstract class AbstractPacket
 		{
 			ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, getHandle());
 		}
+		
 		catch(InvocationTargetException e)
 		{
 			throw new RuntimeException("Cannot send packet.", e);
