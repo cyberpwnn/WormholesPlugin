@@ -145,11 +145,6 @@ public class ProjectionPlane
 		
 		for(Direction i : Direction.udnews())
 		{
-			if(i.isVertical() && !vertical)
-			{
-				rad = 9;
-			}
-			
 			c = c.e(i, rad);
 		}
 		
