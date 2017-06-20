@@ -40,25 +40,18 @@ public class Viewport
 		Location lb = portal.getPosition().getCornerUR();
 		Vector va = VectorMath.direction(getIris(), la);
 		Vector vb = VectorMath.direction(getIris(), lb);
+		Integer dfd = (int) getIris().clone().distance(portal.getPosition().getCenter());
 		
-		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6; i++)
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6 + dfd; i++)
 		{
 			Location ma = getIris().clone().add(va.clone().multiply(i));
 			Location mb = getIris().clone().add(vb.clone().multiply(i));
+			
 			set.add(new Cuboid(ma, mb));
 			
 			if(set.contains(portal.getPosition().getCenter()))
 			{
 				set.clear();
-			}
-		}
-		
-		for(Cuboid i : set.get().copy())
-		{
-			if(i.getCenter().distance(p.getLocation()) < portal.getPosition().getCenter().distance(p.getLocation()))
-			{
-				set.clear();
-				return;
 			}
 		}
 	}
@@ -152,6 +145,7 @@ public class Viewport
 		{
 			return false;
 		}
+		
 		if(set == null)
 		{
 			if(other.set != null)
@@ -168,6 +162,43 @@ public class Viewport
 	
 	public ProjectionSet getProjectionSet()
 	{
+		return set;
+	}
+	
+	public Location getLA()
+	{
+		return portal.getPosition().getCornerDL();
+	}
+	
+	public Location getLB()
+	{
+		return portal.getPosition().getCornerUR();
+	}
+	
+	public ProjectionSet betweenThisAnd(Viewport p, Portal por)
+	{
+		Location iris = p.getIris();
+		Location la = p.getLA();
+		Location lb = getLB();
+		
+		ProjectionSet set = new ProjectionSet();
+		Vector va = VectorMath.direction(iris, la);
+		Vector vb = VectorMath.direction(iris, lb);
+		Integer dfd = (int) iris.clone().distance(portal.getPosition().getCenter());
+		
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6 + dfd; i++)
+		{
+			Location ma = iris.clone().add(va.clone().multiply(i));
+			Location mb = iris.clone().add(vb.clone().multiply(i));
+			
+			set.add(new Cuboid(ma, mb));
+			
+			if(set.contains(portal.getPosition().getCenter()))
+			{
+				set.clear();
+			}
+		}
+		
 		return set;
 	}
 }
