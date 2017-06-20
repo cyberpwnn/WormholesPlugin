@@ -30,8 +30,9 @@ public class VEntity
 	private float pit;
 	private float lya;
 	private float lpi;
+	private VirtualPlayer vp;
 	
-	public VEntity(Player viewer, EntityType type, int id, UUID uuid, Location location)
+	public VEntity(Player viewer, EntityType type, int id, UUID uuid, Location location, String name)
 	{
 		this.viewer = viewer;
 		this.type = type;
@@ -43,6 +44,7 @@ public class VEntity
 		pit = location.getPitch();
 		lya = yaw;
 		lpi = pit;
+		vp = type.equals(EntityType.PLAYER) ? new VirtualPlayer(viewer, uuid, id, name, name) : null;
 	}
 	
 	public void prelativeMove(double x, double y, double z)
@@ -98,27 +100,24 @@ public class VEntity
 	
 	public void despawn()
 	{
-		WrapperPlayServerEntityDestroy w = new WrapperPlayServerEntityDestroy();
-		w.setEntityIds(new int[] {id});
-		send(w);
+		if(vp != null)
+		{
+			vp.despawn();
+		}
+		
+		else
+		{
+			WrapperPlayServerEntityDestroy w = new WrapperPlayServerEntityDestroy();
+			w.setEntityIds(new int[] {id});
+			send(w);
+		}
 	}
 	
 	public void spawn()
 	{
 		if(getType().equals(EntityType.PLAYER))
 		{
-			WrapperPlayServerSpawnEntityLiving w = new WrapperPlayServerSpawnEntityLiving();
-			w.setEntityID(id);
-			w.setX(location.getX());
-			w.setY(location.getY());
-			w.setZ(location.getZ());
-			w.setYaw(location.getYaw());
-			w.setPitch(location.getPitch());
-			w.setHeadPitch(location.getPitch());
-			w.setType(EntityType.VILLAGER);
-			w.setUniqueId(uuid);
-			w.setMetadata(new WrappedDataWatcher());
-			send(w);
+			vp.spawn(location);
 		}
 		
 		else
@@ -140,7 +139,6 @@ public class VEntity
 	
 	public void send(AbstractPacket w)
 	{
-		
 		try
 		{
 			ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, w.getHandle());
@@ -188,21 +186,52 @@ public class VEntity
 		
 		if(distance > 7)
 		{
-			pteleport(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			if(vp != null)
+			{
+				vp.teleport(location);
+			}
+			
+			else
+			{
+				pteleport(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			}
 		}
 		
 		else
 		{
 			Vector dir = VectorMath.directionNoNormal(last, location);
-			prelativeMove(dir.getX(), dir.getY(), dir.getZ());
+			
+			if(vp != null)
+			{
+				vp.move(vp.getLocation().clone().add(dir));
+			}
+			
+			else
+			{
+				prelativeMove(dir.getX(), dir.getY(), dir.getZ());
+			}
 		}
 		
 		if(yaw != lya || pit != lpi)
 		{
-			plook(yaw, pit);
+			if(vp != null)
+			{
+				vp.getNextLocation().setYaw(yaw);
+				vp.getNextLocation().setPitch(pit);
+			}
+			
+			else
+			{
+				plook(yaw, pit);
+			}
 		}
 		
 		last = location.clone();
+		
+		if(vp != null)
+		{
+			vp.tick();
+		}
 	}
 	
 	@Override
@@ -213,9 +242,14 @@ public class VEntity
 		result = prime * result + id;
 		result = prime * result + ((last == null) ? 0 : last.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + Float.floatToIntBits(lpi);
+		result = prime * result + Float.floatToIntBits(lya);
+		result = prime * result + Float.floatToIntBits(pit);
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		result = prime * result + ((viewer == null) ? 0 : viewer.hashCode());
+		result = prime * result + ((vp == null) ? 0 : vp.hashCode());
+		result = prime * result + Float.floatToIntBits(yaw);
 		return result;
 	}
 	
@@ -261,6 +295,18 @@ public class VEntity
 		{
 			return false;
 		}
+		if(Float.floatToIntBits(lpi) != Float.floatToIntBits(other.lpi))
+		{
+			return false;
+		}
+		if(Float.floatToIntBits(lya) != Float.floatToIntBits(other.lya))
+		{
+			return false;
+		}
+		if(Float.floatToIntBits(pit) != Float.floatToIntBits(other.pit))
+		{
+			return false;
+		}
 		if(type != other.type)
 		{
 			return false;
@@ -284,6 +330,21 @@ public class VEntity
 			}
 		}
 		else if(!viewer.equals(other.viewer))
+		{
+			return false;
+		}
+		if(vp == null)
+		{
+			if(other.vp != null)
+			{
+				return false;
+			}
+		}
+		else if(!vp.equals(other.vp))
+		{
+			return false;
+		}
+		if(Float.floatToIntBits(yaw) != Float.floatToIntBits(other.yaw))
 		{
 			return false;
 		}
