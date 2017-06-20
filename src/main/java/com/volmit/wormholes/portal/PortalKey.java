@@ -1,8 +1,13 @@
 package com.volmit.wormholes.portal;
 
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.SYM;
+import com.volmit.wormholes.util.VectorMath;
 
 public class PortalKey
 {
@@ -29,17 +34,12 @@ public class PortalKey
 	
 	public String getSName()
 	{
-		return (int) toData()[0] + "" + (int) toData()[1] + "" + (int) toData()[2] + "" + (int) toData()[3] + "KV";
+		return (int) toData()[0] + "," + (int) toData()[1] + "," + (int) toData()[2] + "," + (int) toData()[3];
 	}
 	
 	public static PortalKey fromSName(String s)
 	{
-		if(s.length() == 6)
-		{
-			return new PortalKey(new byte[] {Integer.valueOf(s.charAt(0) + "").byteValue(), Integer.valueOf(s.charAt(1) + "").byteValue(), Integer.valueOf(s.charAt(2) + "").byteValue(), Integer.valueOf(s.charAt(3) + "").byteValue()});
-		}
-		
-		return null;
+		return new PortalKey(new byte[] {Integer.valueOf(s.split(",")[0]).byteValue(), Integer.valueOf(s.split(",")[1]).byteValue(), Integer.valueOf(s.split(",")[2]).byteValue(), Integer.valueOf(s.split(",")[3]).byteValue()});
 	}
 	
 	public DyeColor getU()
@@ -149,5 +149,51 @@ public class PortalKey
 		}
 		
 		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void applyToCuboid(Cuboid c, Direction d)
+	{
+		Axis a = d.getAxis();
+		Direction f = d;
+		Direction front = f.reverse();
+		Direction left = f.isVertical() ? Direction.getDirection(VectorMath.rotate90CCZ(front.toVector())) : Direction.getDirection(VectorMath.rotate90CY(front.toVector()));
+		Direction right = f.isVertical() ? Direction.getDirection(VectorMath.rotate90CZ(front.toVector())) : Direction.getDirection(VectorMath.rotate90CCY(front.toVector()));
+		Direction up = f.isVertical() ? Direction.news().qdel(left).qdel(right).get(0) : Direction.U;
+		Direction down = f.isVertical() ? Direction.news().qdel(left).qdel(right).get(1) : Direction.D;
+		
+		for(Direction i : Direction.udnews())
+		{
+			if(i.getAxis().equals(a))
+			{
+				continue;
+			}
+			
+			Cuboid cx = c.getFace(i.f());
+			DyeColor dd = null;
+			
+			if(i.equals(down))
+			{
+				dd = getD();
+			}
+			
+			else if(i.equals(up))
+			{
+				dd = getU();
+			}
+			
+			else if(i.equals(left))
+			{
+				dd = getL();
+			}
+			
+			else
+			{
+				dd = getR();
+			}
+			
+			cx.getCenter().getBlock().setType(Material.WOOL);
+			cx.getCenter().getBlock().setData(dd.getWoolData());
+		}
 	}
 }
