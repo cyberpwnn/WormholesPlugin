@@ -2,8 +2,10 @@ package com.volmit.wormholes.portal;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
@@ -21,7 +23,8 @@ import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
-import com.volmit.wormholes.util.Intersection;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.Hologram;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.RayTrace;
 import com.volmit.wormholes.util.TaskLater;
@@ -31,16 +34,19 @@ import com.volmit.wormholes.wormhole.Wormhole;
 
 public class LocalPortal implements Portal
 {
-	private PortalIdentity identity;
-	private PortalPosition position;
-	private ProjectionPlane plane;
-	private String server;
-	private Boolean hasBeenValid;
-	private Boolean hasHadWormhole;
-	private AperturePlane apature;
-	private Boolean saved;
-	private PortalSettings settings;
-	private ProjectionMask mask;
+	protected PortalIdentity identity;
+	protected PortalPosition position;
+	protected ProjectionPlane plane;
+	protected String server;
+	protected Boolean hasBeenValid;
+	protected Boolean hasHadWormhole;
+	protected AperturePlane apature;
+	protected Boolean saved;
+	protected PortalSettings settings;
+	protected ProjectionMask mask;
+	protected Boolean sided;
+	protected String displayName;
+	protected GMap<Player, Hologram> holograms;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -54,16 +60,29 @@ public class LocalPortal implements Portal
 		apature = new AperturePlane();
 		settings = new PortalSettings();
 		mask = new ProjectionMask();
+		sided = false;
+		displayName = "Portal";
+		holograms = new GMap<Player, Hologram>();
 	}
 	
-	@Override
-	public void update()
+	public void checkKey()
 	{
+		if(sided)
+		{
+			return;
+		}
+		
 		if(!hasValidIshKey())
 		{
 			Wormholes.host.removeLocalPortal(this);
 			return;
 		}
+	}
+	
+	@Override
+	public void update()
+	{
+		checkKey();
 		
 		if(!saved)
 		{
@@ -82,17 +101,20 @@ public class LocalPortal implements Portal
 				Wraith.callEvent(new WormholeLinkEvent(this, getWormhole().getDestination()));
 			}
 			
-			if(M.r(0.9))
+			if(!sided)
 			{
-				Wormholes.fx.rise(this);
+				if(M.r(0.9))
+				{
+					Wormholes.fx.rise(this);
+				}
+				
+				if(M.r(0.07))
+				{
+					Wormholes.fx.ambient(this);
+				}
+				
+				checkFrame();
 			}
-			
-			if(M.r(0.07))
-			{
-				Wormholes.fx.ambient(this);
-			}
-			
-			checkFrame();
 		}
 		
 		else if(hasHadWormhole)
@@ -105,11 +127,59 @@ public class LocalPortal implements Portal
 		if(!plane.hasContent())
 		{
 			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical());
-			specialUpdate();
+			
+			if(!sided)
+			{
+				specialUpdate();
+			}
 		}
 	}
 	
-	public void checkFrame(Entity i)
+	public void showHologram(Player p, Hologram h)
+	{
+		if(hasHologram(p))
+		{
+			removeHologram(p);
+		}
+		
+		holograms.put(p, h);
+	}
+	
+	public void removeHologram(Player p)
+	{
+		if(!hasHologram(p))
+		{
+			return;
+		}
+		
+		getHologram(p).destroy();
+		holograms.remove(p);
+	}
+	
+	public void clearHolograms()
+	{
+		for(Player i : holograms.k())
+		{
+			removeHologram(i);
+		}
+	}
+	
+	public Hologram getHologram(Player p)
+	{
+		if(hasHologram(p))
+		{
+			return holograms.get(p);
+		}
+		
+		return null;
+	}
+	
+	public boolean hasHologram(Player p)
+	{
+		return holograms.containsKey(p);
+	}
+	
+	public void checkFrame(Entity i, Location ic)
 	{
 		Wormhole w = getWormhole();
 		
@@ -117,24 +187,20 @@ public class LocalPortal implements Portal
 		{
 			if(i instanceof Player)
 			{
-				if(getPosition().getPane().contains(i.getLocation()))
+				if(new Permissable(((Player) i)).canUse())
 				{
-					if(new Permissable(((Player) i)).canUse())
-					{
-						getService().addThrottle(i);
-						w.push(i);
-					}
-					
-					else
-					{
-						Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
-					}
+					send(i, w, ic);
+				}
+				
+				else
+				{
+					Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 				}
 			}
 			
-			else if(getPosition().getPane().contains(i.getLocation()))
+			else
 			{
-				checkSend(i, w);
+				checkSend(i, w, ic);
 			}
 		}
 	}
@@ -144,26 +210,9 @@ public class LocalPortal implements Portal
 		Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 	}
 	
-	public void checkSend(Entity i, Wormhole w)
+	public void checkSend(Entity i, Wormhole w, Location ic)
 	{
 		if(w == null)
-		{
-			return;
-		}
-		
-		boolean[] wx = {false};
-		
-		if(getPosition().getPane().contains(i.getLocation()))
-		{
-			wx[0] = true;
-		}
-		
-		if(!wx[0])
-		{
-			wx[0] = Intersection.intersects(getPosition(), i.getLocation(), i.getVelocity().clone().multiply(10));
-		}
-		
-		if(!wx[0])
 		{
 			return;
 		}
@@ -185,7 +234,7 @@ public class LocalPortal implements Portal
 		
 		else if(Settings.ALLOW_ENTITIY_TYPES.contains(i.getType().toString()))
 		{
-			send(i, w);
+			send(i, w, ic);
 		}
 		
 		else
@@ -194,10 +243,78 @@ public class LocalPortal implements Portal
 		}
 	}
 	
-	public void send(Entity i, Wormhole w)
+	public void send(Entity i, Wormhole w, Location v)
 	{
+		if(getService().isThrottled(i))
+		{
+			return;
+		}
+		
+		if(getService().isILocked(i))
+		{
+			return;
+		}
+		
+		getService().ilock(i);
+		
+		int k = 1;
+		
+		if(!i.getType().equals(EntityType.PLAYER))
+		{
+			k += 20;
+		}
+		
+		new TaskLater(k)
+		{
+			@Override
+			public void run()
+			{
+				getService().unILock(i);
+			}
+		};
+		
+		if(i.getLocation().getBlock().getType().isSolid())
+		{
+			getService().unILock(i);
+			return;
+		}
+		
+		if(i instanceof LivingEntity)
+		{
+			LivingEntity e = (LivingEntity) i;
+			
+			if(e.getLocation().getBlock().getType().isSolid() || e.getEyeLocation().getBlock().getType().isSolid())
+			{
+				getService().unILock(i);
+				return;
+			}
+			
+			if(!w.getSource().getIdentity().getFront().isVertical())
+			{
+				if(!w.getSource().getPosition().getPane().contains(e.getLocation()) || !w.getSource().getPosition().getPane().contains(e.getEyeLocation()))
+				{
+					getService().unILock(i);
+					return;
+				}
+			}
+			
+			else if(!w.getSource().getPosition().getPane().contains(e.getLocation()) && !w.getSource().getPosition().getPane().contains(e.getEyeLocation()))
+			{
+				getService().unILock(i);
+				return;
+			}
+		}
+		
+		if(i instanceof Arrow)
+		{
+			if(((Arrow) i).isOnGround())
+			{
+				return;
+			}
+		}
+		
 		getService().addThrottle(i);
-		w.push(i);
+		w.push(i, v);
 	}
 	
 	public void checkFrame()
@@ -206,7 +323,16 @@ public class LocalPortal implements Portal
 		
 		for(Entity i : entities)
 		{
-			checkFrame(i);
+			if(getPosition().getPane().contains(i.getLocation()))
+			{
+				checkFrame(i, i.getLocation().getBlock().getLocation().clone().add(0.5, 0.5, 0.5));
+				continue;
+			}
+			
+			if(getPosition().intersects(i.getLocation(), i.getVelocity()))
+			{
+				checkFrame(i, getPosition().intersectsv(i.getLocation(), i.getVelocity()));
+			}
 		}
 	}
 	
@@ -413,6 +539,7 @@ public class LocalPortal implements Portal
 		cc.set("kl", getKey().getL().ordinal());
 		cc.set("kr", getKey().getR().ordinal());
 		cc.set("kx", getKey().getSName() + "vxx");
+		cc.set("ks", getSided());
 		cc.set("if", getIdentity().getFront().ordinal());
 		
 		return cc;
@@ -600,5 +727,70 @@ public class LocalPortal implements Portal
 	public ProjectionMask getMask()
 	{
 		return mask;
+	}
+	
+	@Override
+	public Boolean getSided()
+	{
+		return sided;
+	}
+	
+	@Override
+	@SuppressWarnings("deprecation")
+	public void setSided(Boolean sided)
+	{
+		this.sided = sided;
+		
+		if(sided)
+		{
+			Wormholes.projector.deproject(this);
+			getPosition().getCenterDown().getBlock().setType(Material.AIR);
+			getPosition().getCenterUp().getBlock().setType(Material.AIR);
+			getPosition().getCenterLeft().getBlock().setType(Material.AIR);
+			getPosition().getCenterRight().getBlock().setType(Material.AIR);
+		}
+		
+		else
+		{
+			PortalKey k = getKey();
+			getPosition().getCenterDown().getBlock().setType(Material.WOOL);
+			getPosition().getCenterUp().getBlock().setType(Material.WOOL);
+			getPosition().getCenterLeft().getBlock().setType(Material.WOOL);
+			getPosition().getCenterRight().getBlock().setType(Material.WOOL);
+			getPosition().getCenterDown().getBlock().setData(k.getD().getWoolData());
+			getPosition().getCenterUp().getBlock().setData(k.getU().getWoolData());
+			getPosition().getCenterLeft().getBlock().setData(k.getL().getWoolData());
+			getPosition().getCenterRight().getBlock().setData(k.getR().getWoolData());
+		}
+		
+		Wormholes.provider.wipe(this);
+		Wormholes.provider.save(this);
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+	
+	@Override
+	public void updateDisplayName(String n)
+	{
+		displayName = n;
+		save();
+		clearHolograms();
+	}
+	
+	@Override
+	public boolean hasDisplayName()
+	{
+		return displayName != null && displayName.length() > 0;
+	}
+	
+	@Override
+	public void save()
+	{
+		Wormholes.provider.wipe(this);
+		Wormholes.provider.save(this);
 	}
 }
