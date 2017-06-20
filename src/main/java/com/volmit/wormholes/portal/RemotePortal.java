@@ -12,11 +12,22 @@ public class RemotePortal implements Portal
 {
 	private String server;
 	private PortalIdentity identity;
+	private Boolean sided;
+	private String displayName;
+	private Boolean wait;
 	
-	public RemotePortal(String server, PortalIdentity identity)
+	public RemotePortal(String server, PortalIdentity identity, String displayName)
 	{
 		this.identity = identity;
 		this.server = server;
+		sided = false;
+		this.displayName = displayName;
+		wait = false;
+	}
+	
+	public void setWait()
+	{
+		wait = true;
 	}
 	
 	@Override
@@ -77,6 +88,7 @@ public class RemotePortal implements Portal
 		cc.set("kl", getKey().getL().ordinal());
 		cc.set("kr", getKey().getR().ordinal());
 		cc.set("kx", getKey().getSName() + "vxx");
+		cc.set("ks", getSided());
 		cc.set("if", getIdentity().getFront().ordinal());
 		
 		return cc;
@@ -87,6 +99,7 @@ public class RemotePortal implements Portal
 	{
 		PortalKey k = new PortalKey(new byte[] {cc.getInt("ku").byteValue(), cc.getInt("kd").byteValue(), cc.getInt("kl").byteValue(), cc.getInt("kr").byteValue()});
 		PortalIdentity i = new PortalIdentity(Direction.values()[cc.getInt("if")], k);
+		setSided(cc.getBoolean("ks"));
 		identity = i;
 	}
 	
@@ -168,5 +181,46 @@ public class RemotePortal implements Portal
 	public AperturePlane getApature()
 	{
 		return Wormholes.aperture.getRemoteApaturePlanes().get(getKey());
+	}
+	
+	@Override
+	public Boolean getSided()
+	{
+		return sided;
+	}
+	
+	@Override
+	public void setSided(Boolean sided)
+	{
+		this.sided = sided;
+	}
+	
+	@Override
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+	
+	@Override
+	public void updateDisplayName(String n)
+	{
+		displayName = n;
+	}
+	
+	@Override
+	public boolean hasDisplayName()
+	{
+		return displayName != null && displayName.length() > 0;
+	}
+	
+	@Override
+	public void save()
+	{
+		
+	}
+	
+	public Boolean getWait()
+	{
+		return wait;
 	}
 }
