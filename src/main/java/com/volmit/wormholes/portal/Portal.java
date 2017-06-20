@@ -35,4 +35,16 @@ public interface Portal
 	public ProjectionPlane getProjectionPlane();
 	
 	public AperturePlane getApature();
+	
+	public Boolean getSided();
+	
+	public void setSided(Boolean sided);
+	
+	public String getDisplayName();
+	
+	public void updateDisplayName(String n);
+	
+	public boolean hasDisplayName();
+	
+	public void save();
 }
