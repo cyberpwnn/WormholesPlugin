@@ -20,7 +20,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,6 +47,7 @@ import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.FinalInteger;
 import com.volmit.wormholes.util.ForwardedPluginMessage;
 import com.volmit.wormholes.util.GList;
@@ -53,13 +57,13 @@ import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.JSONObject;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.MaterialBlock;
-import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PlayerScrollEvent;
 import com.volmit.wormholes.util.TICK;
 import com.volmit.wormholes.util.Task;
 import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
 import com.volmit.wormholes.wormhole.LocalWormhole;
 import com.volmit.wormholes.wormhole.MutexWormhole;
@@ -71,7 +75,9 @@ public class MutexService implements Listener
 	private GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>> pendingPulls;
 	private Integer broadcastInterval;
 	private GMap<Player, Runnable> waiting;
+	private GMap<Player, Vector> actualVectors;
 	private GMap<LocalPortal, GMap<UUID, ArrivalVector>> arrivals;
+	private GList<Integer> iLock;
 	
 	public MutexService()
 	{
@@ -81,6 +87,8 @@ public class MutexService implements Listener
 		pendingPulls = new GMap<UUID, GQuadraset<Portal, Vector, Vector, Vector>>();
 		broadcastInterval = 20;
 		arrivals = new GMap<LocalPortal, GMap<UUID, ArrivalVector>>();
+		iLock = new GList<Integer>();
+		actualVectors = new GMap<Player, Vector>();
 	}
 	
 	public void sendArrival(RemotePortal r, Player p, ArrivalVector v)
@@ -90,6 +98,26 @@ public class MutexService implements Listener
 		t.set("v", v.toString());
 		t.set("rid", r.toData().toJSON().toString());
 		t.send();
+	}
+	
+	public void ilock(Entity e)
+	{
+		if(isILocked(e))
+		{
+			return;
+		}
+		
+		iLock.add(e.getEntityId());
+	}
+	
+	public boolean isILocked(Entity e)
+	{
+		return iLock.contains(e.getEntityId());
+	}
+	
+	public void unILock(Entity e)
+	{
+		iLock.remove((Integer) e.getEntityId());
 	}
 	
 	public ArrivalVector getArrival(LocalPortal l, Player p)
@@ -125,13 +153,42 @@ public class MutexService implements Listener
 		}
 	}
 	
+	public void setDestinationSided(LocalPortal p, boolean sided)
+	{
+		if(p.hasWormhole())
+		{
+			if(p.isWormholeMutex())
+			{
+				Transmission t = new Transmission(p.getServer(), p.getWormhole().getDestination().getServer(), sided ? "sided" : "usided");
+				t.set("id", p.getWormhole().getDestination().toData().toJSON().toString());
+				((RemotePortal) p.getWormhole().getDestination()).setWait();
+				t.send();
+				
+				try
+				{
+					broadcastPortals();
+				}
+				
+				catch(IOException e)
+				{
+					
+				}
+			}
+			
+			else
+			{
+				((LocalPortal) p.getWormhole().getDestination()).setSided(sided);
+			}
+		}
+	}
+	
 	public void on(EntitySpawnEvent e)
 	{
 		for(Portal i : getLocalPortals())
 		{
 			if(i.getPosition().getArea().contains(e.getLocation()))
 			{
-				((LocalPortal) i).checkSend(e.getEntity(), i.getWormhole());
+				((LocalPortal) i).checkSend(e.getEntity(), i.getWormhole(), e.getLocation());
 			}
 		}
 	}
@@ -166,6 +223,7 @@ public class MutexService implements Listener
 	
 	public void removeLocalPortal(Portal portal)
 	{
+		((LocalPortal) portal).clearHolograms();
 		((LocalPortal) portal).destroy();
 		Wormholes.projector.getMesh().removePortal((LocalPortal) portal);
 		Wormholes.projector.deproject((LocalPortal) portal);
@@ -175,6 +233,7 @@ public class MutexService implements Listener
 	
 	public void removeLocalPortalReverse(Portal portal)
 	{
+		((LocalPortal) portal).clearHolograms();
 		Wormholes.projector.getMesh().removePortal((LocalPortal) portal);
 		Wormholes.projector.deproject((LocalPortal) portal);
 		Wormholes.registry.localPortals.remove(portal);
@@ -224,7 +283,12 @@ public class MutexService implements Listener
 	@EventHandler
 	public void on(PlayerMoveEvent e)
 	{
-		if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
+		if(e.getFrom().getWorld().equals(e.getTo().getWorld()))
+		{
+			actualVectors.put(e.getPlayer(), VectorMath.directionNoNormal(e.getFrom(), e.getTo()));
+		}
+		
+		if(e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ())
 		{
 			Wormholes.provider.movePlayer(e.getPlayer());
 		}
@@ -375,6 +439,7 @@ public class MutexService implements Listener
 		t.start();
 		updatePortals();
 		updateThrottles();
+		//clearVectorCache();
 		
 		try
 		{
@@ -453,6 +518,7 @@ public class MutexService implements Listener
 					for(Portal j : getLocalPortals())
 					{
 						DataCluster data = j.toData();
+						data.set("dn", j.getDisplayName());
 						String c = data.toJSON().toString();
 						portals.add(c);
 					}
@@ -478,7 +544,7 @@ public class MutexService implements Listener
 					for(String j : i.getStringList("p"))
 					{
 						DataCluster cc = new DataCluster(new JSONObject(j));
-						RemotePortal rp = new RemotePortal(i.getSource(), null);
+						RemotePortal rp = new RemotePortal(i.getSource(), null, cc.getString("dn"));
 						rp.fromData(cc);
 						Wormholes.registry.mutexPortals.get(i.getSource()).add(rp);
 					}
@@ -525,6 +591,12 @@ public class MutexService implements Listener
 					Status.fdq = true;
 					Wormholes.provider.getRasterer().dequeueAll();
 					Wormholes.provider.getRasterer().flush();
+					
+					for(Entity j : EntityHologram.lock)
+					{
+						j.remove();
+					}
+					
 					Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 					Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 				}
@@ -582,7 +654,6 @@ public class MutexService implements Listener
 							if(target.hasWormhole() && target.isWormholeMutex())
 							{
 								target.getWormhole().getDestination().getProjectionPlane().blockChange(v, mb);
-								ParticleEffect.BARRIER.display(0f, 1, target.getPosition().getCenter().clone().add(v), 30);
 							}
 							
 							break;
@@ -608,6 +679,56 @@ public class MutexService implements Listener
 						{
 							LocalPortal target = (LocalPortal) j;
 							beginStream(target.getServer(), i.getSource(), target.toData().toJSON().toString(), target);
+							break;
+						}
+					}
+				}
+				
+				else if(i.getType().equals("sided"))
+				{
+					Wormholes.bus.read(i);
+					DataCluster cc = new DataCluster(new JSONObject(i.getString("id")));
+					
+					for(Portal j : getLocalPortals())
+					{
+						DataCluster a = cc.copy();
+						DataCluster b = j.toData().copy();
+						
+						a.remove("if");
+						b.remove("if");
+						
+						if(a.toJSON().toString().equals(b.toJSON().toString()))
+						{
+							LocalPortal target = (LocalPortal) j;
+							target.setSided(true);
+							
+							for(Player k : target.getPosition().getArea().getPlayers())
+							{
+								k.sendMessage("Received message to go SIDED");
+							}
+							
+							break;
+						}
+					}
+				}
+				
+				else if(i.getType().equals("usided"))
+				{
+					Wormholes.bus.read(i);
+					DataCluster cc = new DataCluster(new JSONObject(i.getString("id")));
+					
+					for(Portal j : getLocalPortals())
+					{
+						DataCluster a = cc.copy();
+						DataCluster b = j.toData().copy();
+						
+						a.remove("if");
+						b.remove("if");
+						
+						if(a.toJSON().toString().equals(b.toJSON().toString()))
+						{
+							LocalPortal target = (LocalPortal) j;
+							target.setSided(false);
 							break;
 						}
 					}
@@ -870,6 +991,48 @@ public class MutexService implements Listener
 	}
 	
 	@EventHandler
+	public void on(BlockPhysicsEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(e.getBlock().getLocation()))
+			{
+				blockChange(e.getBlock().getLocation(), i);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void on(BlockFromToEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(e.getBlock().getLocation()))
+			{
+				blockChange(e.getBlock().getLocation(), i);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void on(EntityExplodeEvent e)
+	{
+		for(Portal i : getLocalPortals())
+		{
+			if(i.getPosition().getArea().contains(e.getLocation()))
+			{
+				for(Block j : e.blockList())
+				{
+					if(i.getPosition().getArea().contains(j.getLocation()))
+					{
+						blockChange(j.getLocation(), i);
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
 	public void on(BlockBreakEvent e)
 	{
 		for(Portal i : getLocalPortals())
@@ -901,22 +1064,39 @@ public class MutexService implements Listener
 		}
 	}
 	
-	public void blockChange(Location l, Portal p)
+	public void blockChange(Location lx, Portal p)
 	{
 		new TaskLater()
 		{
 			@Override
 			public void run()
 			{
-				if(p.hasWormhole())
+				for(Block i : W.blockFaces(lx.getBlock()))
 				{
-					Vector v = VectorMath.directionNoNormal(p.getPosition().getCenter(), l.getBlock().getLocation()).clone().add(new Vector(0.5, 0.5, 0.5));
-					MaterialBlock m = new MaterialBlock(l);
-					p.getProjectionPlane().blockChange(v, m);
+					Location l = i.getLocation();
 					
-					if(p.isWormholeMutex())
+					if(p.hasWormhole())
 					{
-						sendBlockChange(v, m, p.getWormhole().getDestination());
+						Vector v = VectorMath.directionNoNormal(p.getPosition().getCenter(), l.getBlock().getLocation()).clone().add(new Vector(0.5, 0.5, 0.5));
+						
+						v = p.getIdentity().getFront().angle(v, p.getIdentity().getBack());
+						
+						MaterialBlock m = new MaterialBlock(l);
+						p.getProjectionPlane().blockChange(v, m);
+						
+						if(p.isWormholeMutex())
+						{
+							sendBlockChange(v, m, p.getWormhole().getDestination());
+						}
+						
+						else
+						{
+							for(Player j : p.getWormhole().getDestination().getPosition().getArea().getPlayers())
+							{
+								Wormholes.provider.movePlayer(j);
+								((LocalPortal) p.getWormhole().getDestination()).getMask().sched(j);
+							}
+						}
 					}
 				}
 			}
@@ -980,5 +1160,35 @@ public class MutexService implements Listener
 	{
 		Transmission t = new Transmission(Wormholes.bus.getServerName(), "ALL", "rld");
 		t.forceSend();
+	}
+	
+	public GMap<Player, Runnable> getWaiting()
+	{
+		return waiting;
+	}
+	
+	public GMap<Player, Vector> getActualVectors()
+	{
+		return actualVectors;
+	}
+	
+	public GMap<LocalPortal, GMap<UUID, ArrivalVector>> getArrivals()
+	{
+		return arrivals;
+	}
+	
+	public GList<Integer> getiLock()
+	{
+		return iLock;
+	}
+	
+	public void clearVectorCache()
+	{
+		actualVectors.clear();
+	}
+	
+	public Vector getActualVector(Player p)
+	{
+		return actualVectors.containsKey(p) ? actualVectors.get(p) : p.getVelocity();
 	}
 }
