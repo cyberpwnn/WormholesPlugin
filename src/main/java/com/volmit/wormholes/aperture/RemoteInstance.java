@@ -1,6 +1,5 @@
 package com.volmit.wormholes.aperture;
 
-import java.util.UUID;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -21,10 +20,10 @@ public interface RemoteInstance
 		{
 			if(i.getType().equals(EntityType.PLAYER))
 			{
-				return new RemotePlayer(40978 - i.getEntityId(), ((Player) i).getName(), UUID.nameUUIDFromBytes(i.getUniqueId().toString().getBytes()), i.getEntityId());
+				return new RemotePlayer(2097800 + i.getEntityId(), ((Player) i).getName(), ((Player) i).getUniqueId(), i.getEntityId());
 			}
 			
-			return new RemoteEntity((int) (4097800 - i.getEntityId()), i.getType(), i.getEntityId());
+			return new RemoteEntity((int) (4097800 + i.getEntityId()), i.getType(), i.getEntityId());
 		}
 		
 		return null;
