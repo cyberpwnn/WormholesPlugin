@@ -106,6 +106,11 @@ public class ApertureService
 		
 		for(Portal i : Wormholes.host.getLocalPortals())
 		{
+			if(i.getSided())
+			{
+				continue;
+			}
+			
 			if(i.hasWormhole())
 			{
 				if(Settings.ENABLE_APERTURE && ((LocalPortal) i).getSettings().isAparture())
@@ -166,19 +171,27 @@ public class ApertureService
 							
 							if(ap != null)
 							{
-								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
-								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getBack(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
 								
 								for(Vector k : r.k())
 								{
-									Location l = i.getPosition().getCenter().clone().add(k);
-									RemoteInstance ri = r.get(k);
-									
-									if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
+									try
 									{
-										l.setDirection(rl.get(k));
+										Location l = i.getPosition().getCenter().clone().add(k);
+										RemoteInstance ri = r.get(k);
 										
-										Wormholes.entity.set(j, i, ri, l);
+										if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
+										{
+											l.setDirection(rl.get(k));
+											
+											Wormholes.entity.set(j, i, ri, l);
+										}
+									}
+									
+									catch(Exception e)
+									{
+										
 									}
 								}
 							}
