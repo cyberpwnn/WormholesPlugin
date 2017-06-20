@@ -7,8 +7,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
+import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.exception.DuplicatePortalKeyException;
@@ -64,6 +67,30 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 							}
 						}
 					}
+				}
+			}
+			
+			return;
+		}
+		
+		ItemStack is = e.getPlayer().getItemInHand();
+		
+		if(is == null || is.getType().equals(Material.AIR))
+		{
+			return;
+		}
+		
+		if(is.getType().equals(Material.NAME_TAG))
+		{
+			ItemMeta im = is.getItemMeta();
+			String title = im.getDisplayName();
+			Portal p = WAPI.getPortalLookingAt(e.getPlayer());
+			
+			if(p != null && p.getPosition().getCenter().distance(e.getPlayer().getLocation()) <= 5)
+			{
+				if(new Permissable(e.getPlayer()).canConfigure())
+				{
+					p.updateDisplayName(title);
 				}
 			}
 		}
