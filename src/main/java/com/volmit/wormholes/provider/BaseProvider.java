@@ -1,7 +1,9 @@
 package com.volmit.wormholes.provider;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -19,6 +21,7 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalIdentity;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
+import com.volmit.wormholes.portal.RemotePortal;
 import com.volmit.wormholes.projection.BoundingBox;
 import com.volmit.wormholes.projection.NulledViewport;
 import com.volmit.wormholes.projection.RasteredSystem;
@@ -238,6 +241,8 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("l", p.getSettings().isProject());
 			cc.set("m", p.getSettings().isHasCustomName());
 			cc.set("n", p.getSettings().getCustomName());
+			cc.set("o", p.getSided() ? 1 : 0);
+			cc.set("p", p.getDisplayName());
 			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
 		}
 	}
@@ -255,22 +260,38 @@ public abstract class BaseProvider implements PortalProvider
 				try
 				{
 					DataCluster cc = Wormholes.io.load(i);
+					Boolean sided = cc.getInt("o") == 1 ? true : false;
 					World w = Bukkit.getWorld(cc.getString("g"));
 					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
 					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
 					Direction d = Direction.values()[cc.getInt("h")];
-					LocalPortal lp = createPortal(d, new Cuboid(a, b));
+					Cuboid c = new Cuboid(a, b);
+					PortalKey k = PortalKey.fromSName(cc.getString("i"));
+					k.applyToCuboid(c, d);
+					LocalPortal lp = createPortal(d, c);
 					lp.getSettings().setAllowEntities(cc.getBoolean("j"));
 					lp.getSettings().setAparture(cc.getBoolean("k"));
 					lp.getSettings().setProject(cc.getBoolean("l"));
 					lp.getSettings().setHasCustomName(cc.getBoolean("m"));
 					lp.getSettings().setCustomName(cc.getString("n"));
+					lp.setSided(sided);
+					lp.updateDisplayName(cc.getString("p"));
 					i.delete();
 				}
 				
 				catch(Exception e)
 				{
 					i.delete();
+					
+					try
+					{
+						FileUtils.forceDelete(i);
+					}
+					
+					catch(IOException e1)
+					{
+						
+					}
 				}
 			}
 		}
@@ -278,6 +299,11 @@ public abstract class BaseProvider implements PortalProvider
 	
 	public boolean configure(LocalPortal l, Player p)
 	{
+		if(l.getSided())
+		{
+			return false;
+		}
+		
 		if(new Permissable(p).canConfigure() && !conf.contains(l))
 		{
 			if(M.ms() - lastms > 50)
@@ -339,6 +365,11 @@ public abstract class BaseProvider implements PortalProvider
 							{
 								NMSX.sendActionBar(p, C.YELLOW + "Exit this menu (or just walk away from it)");
 							}
+							
+							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Setting portals to omni-directional will hide the destination.");
+							}
 						}
 						
 						@Override
@@ -371,6 +402,19 @@ public abstract class BaseProvider implements PortalProvider
 								s = C.RED + s + " Portal";
 							}
 							
+							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							{
+								if(l.hasWormhole() && l.isWormholeMutex() && ((RemotePortal) l.getWormhole().getDestination()).getWait())
+								{
+									s = C.DARK_GRAY + "Please Wait...";
+								}
+								
+								else
+								{
+									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.LIGHT_PURPLE + "Bi-Directional" : C.GOLD + "Uni-Directional");
+								}
+							}
+							
 							return C.LIGHT_PURPLE + "> " + C.WHITE + s + C.LIGHT_PURPLE + " <";
 						}
 						
@@ -390,6 +434,11 @@ public abstract class BaseProvider implements PortalProvider
 							else if(s.startsWith("Project Blocks: "))
 							{
 								s = "Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
+							}
+							
+							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							{
+								s = "Set " + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? "Bi-Directional" : "Uni-Directional");
 							}
 							
 							else if(s.equalsIgnoreCase("Destroy"))
@@ -425,6 +474,24 @@ public abstract class BaseProvider implements PortalProvider
 							if(selection.startsWith("Entities"))
 							{
 								l.getSettings().setAllowEntities(!l.getSettings().isAllowEntities());
+								update();
+							}
+							
+							if(selection.startsWith("Set Uni-Directional"))
+							{
+								if(l.hasWormhole())
+								{
+									if(l.isWormholeMutex())
+									{
+										Wormholes.host.setDestinationSided(l, !l.getWormhole().getDestination().getSided());
+									}
+									
+									else
+									{
+										Wormholes.host.setDestinationSided(l, !((LocalPortal) l.getWormhole().getDestination()).getSided());
+									}
+								}
+								
 								update();
 							}
 							
@@ -544,12 +611,8 @@ public abstract class BaseProvider implements PortalProvider
 					op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
 					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Actions " + TXT.line(C.LIGHT_PURPLE, 5));
 					op.add("Reverse Polarity");
+					op.add("Set Uni-Directional");
 					op.add("Destroy");
-					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Status " + TXT.line(C.LIGHT_PURPLE, 5));
-					op.add("Facing Direction: " + C.YELLOW + l.getIdentity().getFront());
-					op.add("Portal Link State: " + (l.hasWormhole() ? (l.isWormholeMutex() ? C.YELLOW + "Bungeecord" : C.YELLOW + "Local") : C.RED + "Unlinked"));
-					op.add("Portal Key: " + l.getKey());
-					op.add("Portal Bounds: " + C.YELLOW + l.getIdentity().getFront() + "" + l.getIdentity().getBack() + " <" + l.getIdentity().getUp() + "" + l.getIdentity().getDown() + "> " + l.getIdentity().getLeft() + "" + l.getIdentity().getRight());
 					op.add("Exit");
 					hud.setContent(op);
 					hud.open();
