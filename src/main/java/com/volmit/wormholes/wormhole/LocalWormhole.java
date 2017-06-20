@@ -3,15 +3,20 @@ package com.volmit.wormholes.wormhole;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
+import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
+import com.volmit.wormholes.util.WrapperPlayServerEntityVelocity;
 
 public class LocalWormhole extends BaseWormhole
 {
@@ -26,10 +31,10 @@ public class LocalWormhole extends BaseWormhole
 	}
 	
 	@Override
-	public void onPush(Entity e)
+	public void onPush(Entity e, Location intercept)
 	{
 		Vector direction = e.getLocation().getDirection();
-		Vector velocity = e.getVelocity();
+		Vector velocity = e instanceof Player ? Wormholes.host.getActualVector((Player) e) : e.getVelocity();
 		Vector entry = VectorMath.directionNoNormal(getSource().getPosition().getCenter(), e.getLocation());
 		Direction closestDirection = Direction.closest(direction, getSource().getIdentity().getFront(), getSource().getIdentity().getBack());
 		Direction closestVelocity = Direction.closest(velocity, getSource().getIdentity().getFront(), getSource().getIdentity().getBack());
@@ -44,10 +49,62 @@ public class LocalWormhole extends BaseWormhole
 			destination.setDirection(velocity.clone());
 		}
 		
+		if(!getSource().getIdentity().getFront().isVertical() && getDestination().getIdentity().getFront().isVertical())
+		{
+			destination = getDestination().getPosition().getCenter();
+			destination = getSource().getIdentity().getFront().isVertical() ? destination.subtract(0, 1, 0) : destination.clone().add(entry).setDirection(direction);
+		}
+		
 		Wraith.callEvent(new WormholePushEntityEvent(getDestination(), e));
 		
+		if(e instanceof Projectile)
+		{
+			destination.setDirection(velocity.clone());
+		}
+		
+		if(e instanceof Fireball)
+		{
+			((Fireball) e).setDirection(velocity);
+		}
+		
+		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getDestination(), intercept);
+		Vector vx = velocity.clone();
+		e.setVelocity(vx);
 		e.teleport(destination);
-		e.setVelocity(velocity);
-		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getDestination());
+		e.setVelocity(vx);
+		
+		if(e.getType().equals(EntityType.PLAYER))
+		{
+			specialVelocity((Player) e, vx);
+		}
+		
+		Area a = new Area(e.getLocation(), 12);
+		
+		for(Player i : a.getNearbyPlayers())
+		{
+			specialVelocity(i, vx, e);
+		}
+		
+		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getSource(), e.getLocation());
+	}
+	
+	public void specialVelocity(Player p, Vector v)
+	{
+		WrapperPlayServerEntityVelocity w = new WrapperPlayServerEntityVelocity();
+		w.setEntityID(p.getEntityId());
+		w.setVelocityX(v.getX());
+		w.setVelocityY(v.getY());
+		w.setVelocityZ(v.getZ());
+		w.sendPacket(p);
+	}
+	
+	public void specialVelocity(Player p, Vector v, Entity e)
+	{
+		WrapperPlayServerEntityVelocity w = new WrapperPlayServerEntityVelocity();
+		w.setEntityID(e.getEntityId());
+		w.setVelocityX(v.getX());
+		w.setVelocityY(v.getY());
+		w.setVelocityZ(v.getZ());
+		w.sendPacket(p);
 	}
 }
