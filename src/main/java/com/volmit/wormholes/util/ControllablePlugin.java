@@ -45,7 +45,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void destroyOldThreads()
+	public void destroyOldThreads()
 	{
 		for(Thread i : new GList<Thread>(Thread.getAllStackTraces().keySet()))
 		{
@@ -54,7 +54,7 @@ public abstract class ControllablePlugin extends JavaPlugin implements Controlla
 				try
 				{
 					i.interrupt();
-					i.join(100);
+					i.join(200);
 				}
 				
 				catch(InterruptedException e)
