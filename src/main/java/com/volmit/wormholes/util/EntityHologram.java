@@ -1,6 +1,5 @@
 package com.volmit.wormholes.util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
  */
 public class EntityHologram implements Hologram
 {
+	public static GList<Entity> lock = new GList<Entity>();
 	private Entity base;
 	private Player exc;
 	
@@ -25,6 +25,7 @@ public class EntityHologram implements Hologram
 	{
 		exc = null;
 		this.base = base;
+		lock.add(base);
 	}
 	
 	@Override
@@ -68,6 +69,7 @@ public class EntityHologram implements Hologram
 	public void destroy()
 	{
 		getHandle().remove();
+		lock.remove(base);
 	}
 	
 	@Override
@@ -80,14 +82,6 @@ public class EntityHologram implements Hologram
 	public void setExclusive(Player p)
 	{
 		exc = p;
-		
-		for(Player i : Bukkit.getOnlinePlayers())
-		{
-			if(i.equals(p))
-			{
-				continue;
-			}
-		}
 	}
 	
 	@Override
