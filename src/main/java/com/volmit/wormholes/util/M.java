@@ -326,7 +326,7 @@ public class M
 	{
 		double a = 0.0;
 		
-		for(double i : doubles)
+		for(double i : doubles.copy())
 		{
 			a += i;
 		}
