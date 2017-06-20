@@ -1,5 +1,6 @@
 package com.volmit.wormholes.wormhole;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.Wormholes;
@@ -40,7 +41,7 @@ public abstract class BaseWormhole implements Wormhole
 	}
 	
 	@Override
-	public void push(Entity e)
+	public void push(Entity e, Location intercept)
 	{
 		for(Player i : new Area(e.getLocation(), 32).getNearbyPlayers())
 		{
@@ -56,9 +57,8 @@ public abstract class BaseWormhole implements Wormhole
 			}
 		}
 		
-		Wormholes.fx.push(e, e.getVelocity(), getSource());
-		onPush(e);
+		onPush(e, intercept);
 	}
 	
-	public abstract void onPush(Entity e);
+	public abstract void onPush(Entity e, Location intercept);
 }
