@@ -8,6 +8,7 @@ import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.SYM;
 import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.W;
 
 public class PortalKey
 {
@@ -151,7 +152,6 @@ public class PortalKey
 		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void applyToCuboid(Cuboid c, Direction d)
 	{
 		Axis a = d.getAxis();
@@ -192,8 +192,12 @@ public class PortalKey
 				dd = getR();
 			}
 			
-			cx.getCenter().getBlock().setType(Material.WOOL);
-			cx.getCenter().getBlock().setData(dd.getWoolData());
+			if(!W.isColorable(cx.getCenter().getBlock()))
+			{
+				cx.getCenter().getBlock().setType(Material.WOOL);
+			}
+			
+			W.setColor(cx.getCenter().getBlock(), dd);
 		}
 	}
 }

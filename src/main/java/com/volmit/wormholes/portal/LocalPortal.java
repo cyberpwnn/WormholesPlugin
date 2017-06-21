@@ -29,6 +29,7 @@ import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.RayTrace;
 import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
 import com.volmit.wormholes.wormhole.Wormhole;
 
@@ -754,7 +755,6 @@ public class LocalPortal implements Portal
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public void setSided(Boolean sided)
 	{
 		this.sided = sided;
@@ -771,14 +771,31 @@ public class LocalPortal implements Portal
 		else
 		{
 			PortalKey k = getKey();
-			getPosition().getCenterDown().getBlock().setType(Material.WOOL);
-			getPosition().getCenterUp().getBlock().setType(Material.WOOL);
-			getPosition().getCenterLeft().getBlock().setType(Material.WOOL);
-			getPosition().getCenterRight().getBlock().setType(Material.WOOL);
-			getPosition().getCenterDown().getBlock().setData(k.getD().getWoolData());
-			getPosition().getCenterUp().getBlock().setData(k.getU().getWoolData());
-			getPosition().getCenterLeft().getBlock().setData(k.getL().getWoolData());
-			getPosition().getCenterRight().getBlock().setData(k.getR().getWoolData());
+			
+			if(!W.isColorable(getPosition().getCenterDown().getBlock()))
+			{
+				getPosition().getCenterDown().getBlock().setType(Material.WOOL);
+			}
+			
+			if(!W.isColorable(getPosition().getCenterUp().getBlock()))
+			{
+				getPosition().getCenterUp().getBlock().setType(Material.WOOL);
+			}
+			
+			if(!W.isColorable(getPosition().getCenterLeft().getBlock()))
+			{
+				getPosition().getCenterLeft().getBlock().setType(Material.WOOL);
+			}
+			
+			if(!W.isColorable(getPosition().getCenterRight().getBlock()))
+			{
+				getPosition().getCenterRight().getBlock().setType(Material.WOOL);
+			}
+			
+			W.setColor(getPosition().getCenterDown().getBlock(), k.getD());
+			W.setColor(getPosition().getCenterUp().getBlock(), k.getU());
+			W.setColor(getPosition().getCenterLeft().getBlock(), k.getL());
+			W.setColor(getPosition().getCenterRight().getBlock(), k.getR());
 		}
 		
 		Wormholes.provider.wipe(this);

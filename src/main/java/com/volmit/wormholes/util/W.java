@@ -52,6 +52,11 @@ public class W
 		return getColor(l.getBlock());
 	}
 	
+	public static boolean isColorable(Block b)
+	{
+		return getColor(b) != null;
+	}
+	
 	@SuppressWarnings("deprecation")
 	public static DyeColor getColor(Block b)
 	{
@@ -71,18 +76,28 @@ public class W
 			}
 		}
 		
-		if(b.getType().toString().contains("_SHULKER_BOX"))
+		return null;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void setColor(Block b, DyeColor d)
+	{
+		if(isColorable(b))
 		{
-			for(DyeColor d : DyeColor.values())
+			if(b.getType().toString().equals("CONCRETE") || b.getType().toString().equals("CONCRETE_POWDER") || b.getType().equals(Material.WOOL) || b.getType().equals(Material.STAINED_CLAY) || b.getType().equals(Material.STAINED_GLASS) || b.getType().equals(Material.STAINED_GLASS_PANE))
 			{
-				if(b.getType().toString().contains(d.toString() + "_SHULKER_"))
-				{
-					return d;
-				}
+				b.setData(d.getWoolData());
+			}
+			
+			else if(b.getType().toString().contains("_TERRACOTTA"))
+			{
+				String type = d.toString() + "_GLAZED_TERRACOTTA";
+				Material m = Material.valueOf(type);
+				byte dx = b.getData();
+				b.setType(m);
+				b.setData(dx);
 			}
 		}
-		
-		return null;
 	}
 	
 	/**
