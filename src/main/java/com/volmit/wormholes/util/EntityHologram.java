@@ -3,6 +3,7 @@ package com.volmit.wormholes.util;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import com.volmit.wormholes.Wormholes;
 
 /**
  * Represents an entity hologram
@@ -82,6 +83,17 @@ public class EntityHologram implements Hologram
 	public void setExclusive(Player p)
 	{
 		exc = p;
+		
+		for(Player i : p.getWorld().getPlayers())
+		{
+			if(i.equals(p))
+			{
+				continue;
+			}
+			
+			i.sendMessage("Hidden from " + p.getName());
+			Wormholes.host.getHider().hideEntity(i, base);
+		}
 	}
 	
 	@Override

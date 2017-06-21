@@ -40,13 +40,11 @@ public class SkinProperties
 		try
 		{
 			url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uvd + "?unsigned=false");
-			System.out.println("USING URL: " + url.toString());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 			String line;
 			
 			while((line = reader.readLine()) != null)
 			{
-				System.out.println(line);
 				k += line;
 			}
 			

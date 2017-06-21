@@ -125,8 +125,6 @@ public class Frustrum
 			distance--;
 		}
 		
-		System.out.println(blocks.size());
-		
 		return blocks;
 	}
 	

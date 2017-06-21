@@ -89,7 +89,6 @@ public enum Direction
 			}
 		}
 		
-		System.out.println("Failed to find vector angle permutation for " + this + " to " + d);
 		return initial;
 	}
 	

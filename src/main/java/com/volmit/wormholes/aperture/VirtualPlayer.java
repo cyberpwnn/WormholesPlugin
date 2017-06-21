@@ -120,7 +120,6 @@ public class VirtualPlayer
 	
 	private void sendPlayerInfo()
 	{
-		System.out.println("Virtual: " + getName() + " >> " + getUuid().toString());
 		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
 		w.setAction(PlayerInfoAction.ADD_PLAYER);
 		GList<PlayerInfoData> l = new GList<PlayerInfoData>();

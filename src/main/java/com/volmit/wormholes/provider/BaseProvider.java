@@ -411,7 +411,7 @@ public abstract class BaseProvider implements PortalProvider
 								
 								else
 								{
-									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.GOLD + "Bi-Directional" : C.GOLD + "Uni-Directional");
+									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.LIGHT_PURPLE + "Bi-Directional" : C.GOLD + "Uni-Directional");
 								}
 							}
 							

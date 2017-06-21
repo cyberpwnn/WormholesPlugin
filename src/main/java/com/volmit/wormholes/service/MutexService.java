@@ -35,6 +35,8 @@ import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
+import com.volmit.wormholes.aperture.EntityHider;
+import com.volmit.wormholes.aperture.EntityHider.Policy;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.CL;
 import com.volmit.wormholes.network.Transmission;
@@ -79,6 +81,7 @@ public class MutexService implements Listener
 	private GMap<Player, Vector> actualVectors;
 	private GMap<LocalPortal, GMap<UUID, ArrivalVector>> arrivals;
 	private GList<Integer> iLock;
+	private EntityHider hider;
 	
 	public MutexService()
 	{
@@ -90,6 +93,7 @@ public class MutexService implements Listener
 		arrivals = new GMap<LocalPortal, GMap<UUID, ArrivalVector>>();
 		iLock = new GList<Integer>();
 		actualVectors = new GMap<Player, Vector>();
+		hider = new EntityHider(Wormholes.instance, Policy.BLACKLIST);
 	}
 	
 	public void sendArrival(RemotePortal r, Player p, ArrivalVector v)
@@ -1195,5 +1199,10 @@ public class MutexService implements Listener
 	public Vector getActualVector(Player p)
 	{
 		return actualVectors.containsKey(p) ? actualVectors.get(p) : p.getVelocity();
+	}
+	
+	public EntityHider getHider()
+	{
+		return hider;
 	}
 }

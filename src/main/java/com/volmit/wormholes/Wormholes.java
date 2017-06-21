@@ -26,6 +26,7 @@ import com.volmit.wormholes.service.TimingsService;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
+import com.volmit.wormholes.util.D;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
@@ -59,6 +60,7 @@ public class Wormholes extends ControllablePlugin
 	public static EffectService fx;
 	public static ParallelPoolManager pool;
 	private SubGroup sub;
+	private D dispatcher;
 	
 	@Override
 	public void onStart()
@@ -82,6 +84,9 @@ public class Wormholes extends ControllablePlugin
 		fx = new EffectService();
 		buildSubs();
 		pool.start();
+		dispatcher = new D("Wormholes");
+		Info.buildBlocks();
+		Info.splash();
 	}
 	
 	@Override
@@ -412,5 +417,80 @@ public class Wormholes extends ControllablePlugin
 		}
 		
 		return false;
+	}
+	
+	public static Wormholes getInstance()
+	{
+		return instance;
+	}
+	
+	public static VortexBus getBus()
+	{
+		return bus;
+	}
+	
+	public static MutexService getHost()
+	{
+		return host;
+	}
+	
+	public static PortalProvider getProvider()
+	{
+		return provider;
+	}
+	
+	public static PortalRegistry getRegistry()
+	{
+		return registry;
+	}
+	
+	public static ApertureService getAperture()
+	{
+		return aperture;
+	}
+	
+	public static ProjectionService getProjector()
+	{
+		return projector;
+	}
+	
+	public static TimingsService getTimings()
+	{
+		return timings;
+	}
+	
+	public static EntityService getEntity()
+	{
+		return entity;
+	}
+	
+	public static SkinService getSkin()
+	{
+		return skin;
+	}
+	
+	public static IOService getIo()
+	{
+		return io;
+	}
+	
+	public static EffectService getFx()
+	{
+		return fx;
+	}
+	
+	public static ParallelPoolManager getPool()
+	{
+		return pool;
+	}
+	
+	public SubGroup getSub()
+	{
+		return sub;
+	}
+	
+	public D getDispatcher()
+	{
+		return dispatcher;
 	}
 }
