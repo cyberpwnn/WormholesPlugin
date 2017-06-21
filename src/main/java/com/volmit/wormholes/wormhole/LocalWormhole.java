@@ -67,7 +67,7 @@ public class LocalWormhole extends BaseWormhole
 			((Fireball) e).setDirection(velocity);
 		}
 		
-		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getDestination(), intercept);
+		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getSource(), intercept);
 		Vector vx = velocity.clone();
 		e.setVelocity(vx);
 		e.teleport(destination);
@@ -85,7 +85,7 @@ public class LocalWormhole extends BaseWormhole
 			specialVelocity(i, vx, e);
 		}
 		
-		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getSource(), e.getLocation());
+		Wormholes.fx.push(e, e.getVelocity(), (LocalPortal) getDestination(), e.getLocation());
 	}
 	
 	public void specialVelocity(Player p, Vector v)
