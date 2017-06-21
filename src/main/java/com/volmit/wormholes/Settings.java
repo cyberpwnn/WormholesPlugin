@@ -37,6 +37,12 @@ public class Settings
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;
 	
+	@CName("MAX_VELOCITY_CAPTURE_RANGE")
+	@CMax(128)
+	@CMin(12)
+	@Comment("The max distance a portal will start raycasting players to determine velocity intersections.")
+	public static int MAX_VELOCITY_CAPTURE_RANGE = 36;
+	
 	@CName("MAX_PORTAL_SIZE")
 	@CMax(33)
 	@CMin(3)

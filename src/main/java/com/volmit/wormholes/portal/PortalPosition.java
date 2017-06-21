@@ -298,7 +298,7 @@ public class PortalPosition
 	
 	public Cuboid getOPane()
 	{
-		return pane.e(getIdentity().getAxis(), 24);
+		return pane.e(getIdentity().getAxis(), Settings.MAX_VELOCITY_CAPTURE_RANGE);
 	}
 	
 	public Cuboid getPane()

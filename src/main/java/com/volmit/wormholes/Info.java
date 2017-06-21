@@ -98,7 +98,7 @@ public class Info
 		String[] mv = mv("WORMHOLES", C.DARK_GRAY, C.YELLOW, C.DARK_GRAY, C.DARK_GRAY, C.YELLOW, C.DARK_GRAY, C.DARK_GRAY, C.DARK_GRAY, C.YELLOW, C.DARK_GRAY);
 		String n = "\n";
 		
-		m(mv[0] + n + mv[1] + n + mv[2] + n + mv[3] + n + mv[4] + n + mv[5] + n + mv[6]);
+		m(n + mv[0] + n + mv[1] + n + mv[2] + n + mv[3] + n + mv[4] + n + mv[5] + n + mv[6]);
 		
 	}
 	

@@ -325,13 +325,31 @@ public class LocalPortal implements Portal
 		{
 			if(getPosition().getPane().contains(i.getLocation()))
 			{
+				Wormhole w = getWormhole();
+				
+				if(!w.getSource().getIdentity().getFront().isVertical() && w.getDestination().getIdentity().getFront().isVertical() && i instanceof LivingEntity)
+				{
+					checkFrame(i, ((LivingEntity) i).getEyeLocation().getBlock().getLocation().clone().add(0.5, 0.5, 0.5));
+					continue;
+				}
+				
 				checkFrame(i, i.getLocation().getBlock().getLocation().clone().add(0.5, 0.5, 0.5));
 				continue;
 			}
 			
 			if(getPosition().intersects(i.getLocation(), i.getVelocity()))
 			{
-				checkFrame(i, getPosition().intersectsv(i.getLocation(), i.getVelocity()));
+				Wormhole w = getWormhole();
+				
+				if(!w.getSource().getIdentity().getFront().isVertical() && w.getDestination().getIdentity().getFront().isVertical() && i instanceof LivingEntity)
+				{
+					checkFrame(i, getPosition().intersectsv(((LivingEntity) i).getEyeLocation(), i.getVelocity()));
+				}
+				
+				else
+				{
+					checkFrame(i, getPosition().intersectsv(i.getLocation(), i.getVelocity()));
+				}
 			}
 		}
 	}

@@ -49,12 +49,6 @@ public class LocalWormhole extends BaseWormhole
 			destination.setDirection(velocity.clone());
 		}
 		
-		if(!getSource().getIdentity().getFront().isVertical() && getDestination().getIdentity().getFront().isVertical())
-		{
-			destination = getDestination().getPosition().getCenter();
-			destination = getSource().getIdentity().getFront().isVertical() ? destination.subtract(0, 1, 0) : destination.clone().add(entry).setDirection(direction);
-		}
-		
 		Wraith.callEvent(new WormholePushEntityEvent(getDestination(), e));
 		
 		if(e instanceof Projectile)
