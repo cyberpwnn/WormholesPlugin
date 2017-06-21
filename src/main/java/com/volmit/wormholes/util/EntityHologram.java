@@ -91,7 +91,6 @@ public class EntityHologram implements Hologram
 				continue;
 			}
 			
-			i.sendMessage("Hidden from " + p.getName());
 			Wormholes.host.getHider().hideEntity(i, base);
 		}
 	}

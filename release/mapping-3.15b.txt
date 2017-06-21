@@ -2773,7 +2773,8 @@ com.volmit.wormholes.util.EntityHologram -> com.volmit.wormholes.src.facilisi:
     com.volmit.wormholes.util.GList lock -> cp
     org.bukkit.entity.Entity base -> cq
     org.bukkit.entity.Player exc -> cr
-    26:30:void <init>(org.bukkit.entity.Entity) -> <init>
+    15:15:void <clinit>() -> <clinit>
+    25:30:void <init>(org.bukkit.entity.Entity) -> <init>
     35:35:org.bukkit.entity.Entity getHandle() -> verb
     41:41:java.lang.String getDisplay() -> getDisplay
     47:55:void setDisplay(java.lang.String) -> setDisplay
@@ -2781,9 +2782,8 @@ com.volmit.wormholes.util.EntityHologram -> com.volmit.wormholes.src.facilisi:
     66:67:void setTextLocation(org.bukkit.Location) -> at
     72:74:void destroy() -> destroy
     79:79:org.bukkit.Location getLocation() -> getLocation
-    85:97:void setExclusive(org.bukkit.entity.Player) -> posuere
-    102:102:org.bukkit.entity.Player getExclusive() -> confuse
-    15:15:void <clinit>() -> <clinit>
+    85:96:void setExclusive(org.bukkit.entity.Player) -> posuere
+    101:101:org.bukkit.entity.Player getExclusive() -> confuse
 com.volmit.wormholes.util.EntityHud -> com.volmit.wormholes.src.libero:
     org.bukkit.entity.Entity track -> cs
     double maxDist -> ct
@@ -5481,48 +5481,48 @@ com.volmit.wormholes.util.W -> com.volmit.wormholes.src.markets:
     28:28:void <init>() -> <init>
     39:47:boolean visible(org.bukkit.block.Block) -> ipsum
     52:52:org.bukkit.DyeColor getColor(org.bukkit.Location) -> hac
-    58:63:org.bukkit.DyeColor getColor(org.bukkit.block.Block) -> dolor
-    76:79:void colorArmor(org.bukkit.inventory.ItemStack,org.bukkit.Color) -> Lorem
-    90:101:org.bukkit.entity.Entity getEntity(int) -> tristique
-    116:129:int count(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock) -> Lorem
-    146:146:boolean has(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock,int) -> Lorem
-    158:158:int getChunkX(org.bukkit.block.Block) -> sit
-    170:170:int getChunkY(org.bukkit.block.Block) -> amet
-    183:184:void dropXp(org.bukkit.Location,int) -> dolor
-    195:195:int getChunkZ(org.bukkit.block.Block) -> consectetur
-    211:218:void take(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock,int) -> ipsum
-    234:242:int getManhattanDistance(org.bukkit.Location,org.bukkit.Location,boolean) -> Lorem
-    247:254:com.volmit.wormholes.util.GList news(org.bukkit.Location) -> habitasse
-    271:279:int getManhattanDistance(org.bukkit.block.Block,org.bukkit.block.Block,boolean) -> Lorem
-    291:291:com.volmit.wormholes.util.GList getBlocks(org.bukkit.Chunk) -> sit
-    303:313:com.volmit.wormholes.util.GList getChunklets(org.bukkit.Chunk) -> amet
-    325:325:org.bukkit.World getSyncWorld(org.bukkit.World) -> ipsum
-    337:344:com.volmit.wormholes.util.GList getChunklets(com.volmit.wormholes.util.GList) -> Vestibulum
-    361:428:com.volmit.wormholes.util.MaterialBlock getMaterialBlock(java.lang.String) -> et
-    442:454:org.bukkit.block.Block[] getRelative(org.bukkit.block.Block,org.bukkit.block.BlockFace[]) -> Lorem
-    469:470:void setTypeAndData(org.bukkit.block.Block,org.bukkit.Material,org.bukkit.material.MaterialData) -> Lorem
-    487:488:void setTypeAndData(org.bukkit.block.Block,org.bukkit.Material,org.bukkit.material.MaterialData,boolean) -> Lorem
-    502:503:void setTypeAndRawData(org.bukkit.block.Block,org.bukkit.Material,int) -> Lorem
-    520:521:void setTypeAndRawData(org.bukkit.block.Block,org.bukkit.Material,int,boolean) -> Lorem
-    534:535:void setData(org.bukkit.block.Block,org.bukkit.material.MaterialData) -> Lorem
-    550:551:void setData(org.bukkit.block.Block,org.bukkit.material.MaterialData,boolean) -> Lorem
-    567:577:int getHighestPotionLevel(org.bukkit.potion.PotionEffectType,java.util.Collection) -> Lorem
-    589:596:com.volmit.wormholes.util.GList chunkFaces(org.bukkit.Chunk) -> consectetur
-    608:617:com.volmit.wormholes.util.GList blockFaces(org.bukkit.block.Block) -> adipiscing
-    629:643:org.bukkit.Location simulateFall(org.bukkit.Location) -> platea
-    657:669:com.volmit.wormholes.util.GList chunkRadius(org.bukkit.Chunk,int) -> Lorem
-    683:695:com.volmit.wormholes.util.GList blockRadius(org.bukkit.block.Block,int) -> Lorem
-    718:750:org.bukkit.entity.Entity getEntityLookingAt(org.bukkit.entity.Entity,double,double) -> Lorem
-    768:775:boolean isLookingAt(org.bukkit.entity.Entity,org.bukkit.entity.Entity,double,double) -> Lorem
-    789:789:double differenceOfVectors(org.bukkit.util.Vector,org.bukkit.util.Vector) -> Lorem
-    794:794:int chunkDistance(org.bukkit.Chunk,org.bukkit.Chunk) -> Lorem
-    799:799:boolean isColored(org.bukkit.block.Block) -> elit
+    58:85:org.bukkit.DyeColor getColor(org.bukkit.block.Block) -> dolor
+    98:101:void colorArmor(org.bukkit.inventory.ItemStack,org.bukkit.Color) -> Lorem
+    112:123:org.bukkit.entity.Entity getEntity(int) -> tristique
+    138:151:int count(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock) -> Lorem
+    168:168:boolean has(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock,int) -> Lorem
+    180:180:int getChunkX(org.bukkit.block.Block) -> sit
+    192:192:int getChunkY(org.bukkit.block.Block) -> amet
+    205:206:void dropXp(org.bukkit.Location,int) -> dolor
+    217:217:int getChunkZ(org.bukkit.block.Block) -> consectetur
+    233:240:void take(org.bukkit.entity.Player,com.volmit.wormholes.util.MaterialBlock,int) -> ipsum
+    256:264:int getManhattanDistance(org.bukkit.Location,org.bukkit.Location,boolean) -> Lorem
+    269:276:com.volmit.wormholes.util.GList news(org.bukkit.Location) -> habitasse
+    293:301:int getManhattanDistance(org.bukkit.block.Block,org.bukkit.block.Block,boolean) -> Lorem
+    313:313:com.volmit.wormholes.util.GList getBlocks(org.bukkit.Chunk) -> sit
+    325:335:com.volmit.wormholes.util.GList getChunklets(org.bukkit.Chunk) -> amet
+    347:347:org.bukkit.World getSyncWorld(org.bukkit.World) -> ipsum
+    359:366:com.volmit.wormholes.util.GList getChunklets(com.volmit.wormholes.util.GList) -> Vestibulum
+    383:450:com.volmit.wormholes.util.MaterialBlock getMaterialBlock(java.lang.String) -> et
+    464:476:org.bukkit.block.Block[] getRelative(org.bukkit.block.Block,org.bukkit.block.BlockFace[]) -> Lorem
+    491:492:void setTypeAndData(org.bukkit.block.Block,org.bukkit.Material,org.bukkit.material.MaterialData) -> Lorem
+    509:510:void setTypeAndData(org.bukkit.block.Block,org.bukkit.Material,org.bukkit.material.MaterialData,boolean) -> Lorem
+    524:525:void setTypeAndRawData(org.bukkit.block.Block,org.bukkit.Material,int) -> Lorem
+    542:543:void setTypeAndRawData(org.bukkit.block.Block,org.bukkit.Material,int,boolean) -> Lorem
+    556:557:void setData(org.bukkit.block.Block,org.bukkit.material.MaterialData) -> Lorem
+    572:573:void setData(org.bukkit.block.Block,org.bukkit.material.MaterialData,boolean) -> Lorem
+    589:599:int getHighestPotionLevel(org.bukkit.potion.PotionEffectType,java.util.Collection) -> Lorem
+    611:618:com.volmit.wormholes.util.GList chunkFaces(org.bukkit.Chunk) -> consectetur
+    630:639:com.volmit.wormholes.util.GList blockFaces(org.bukkit.block.Block) -> adipiscing
+    651:665:org.bukkit.Location simulateFall(org.bukkit.Location) -> platea
+    679:691:com.volmit.wormholes.util.GList chunkRadius(org.bukkit.Chunk,int) -> Lorem
+    705:717:com.volmit.wormholes.util.GList blockRadius(org.bukkit.block.Block,int) -> Lorem
+    740:772:org.bukkit.entity.Entity getEntityLookingAt(org.bukkit.entity.Entity,double,double) -> Lorem
+    790:797:boolean isLookingAt(org.bukkit.entity.Entity,org.bukkit.entity.Entity,double,double) -> Lorem
+    811:811:double differenceOfVectors(org.bukkit.util.Vector,org.bukkit.util.Vector) -> Lorem
+    816:816:int chunkDistance(org.bukkit.Chunk,org.bukkit.Chunk) -> Lorem
+    821:821:boolean isColored(org.bukkit.block.Block) -> elit
 com.volmit.wormholes.util.W$1 -> com.volmit.wormholes.src.markets$1:
     java.lang.Double val$doff -> iC
     org.bukkit.entity.Entity val$e -> oW
     org.bukkit.entity.Entity[] val$result -> iE
-    732:732:void <init>(org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,java.lang.Double,org.bukkit.entity.Entity,org.bukkit.entity.Entity[]) -> <init>
-    736:747:void onTrace(org.bukkit.Location) -> adipiscing
+    1:753:void <init>(org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,java.lang.Double,org.bukkit.entity.Entity,org.bukkit.entity.Entity[]) -> <init>
+    758:769:void onTrace(org.bukkit.Location) -> adipiscing
 com.volmit.wormholes.util.WarpEffect -> com.volmit.wormholes.src.services:
     java.lang.Float power -> nW
     11:13:void <init>(java.lang.Float) -> <init>

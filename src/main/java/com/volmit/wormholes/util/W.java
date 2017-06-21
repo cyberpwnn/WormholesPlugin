@@ -55,9 +55,31 @@ public class W
 	@SuppressWarnings("deprecation")
 	public static DyeColor getColor(Block b)
 	{
-		if(b.getType().equals(Material.WOOL) || b.getType().equals(Material.STAINED_CLAY) || b.getType().equals(Material.STAINED_GLASS) || b.getType().equals(Material.STAINED_GLASS_PANE))
+		if(b.getType().toString().equals("CONCRETE") || b.getType().toString().equals("CONCRETE_POWDER") || b.getType().equals(Material.WOOL) || b.getType().equals(Material.STAINED_CLAY) || b.getType().equals(Material.STAINED_GLASS) || b.getType().equals(Material.STAINED_GLASS_PANE))
 		{
 			return DyeColor.getByWoolData(b.getData());
+		}
+		
+		if(b.getType().toString().contains("_TERRACOTTA"))
+		{
+			for(DyeColor d : DyeColor.values())
+			{
+				if(b.getType().toString().contains(d.toString() + "_"))
+				{
+					return d;
+				}
+			}
+		}
+		
+		if(b.getType().toString().contains("_SHULKER_BOX"))
+		{
+			for(DyeColor d : DyeColor.values())
+			{
+				if(b.getType().toString().contains(d.toString() + "_SHULKER_"))
+				{
+					return d;
+				}
+			}
 		}
 		
 		return null;
