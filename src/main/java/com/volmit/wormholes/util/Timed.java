@@ -79,7 +79,7 @@ public class Timed
 	{
 		GList<String> l = cache.copy();
 		String ind = TXT.repeat(" ", startIndent);
-		String r = ind + C.LIGHT_PURPLE + getId() + " " + C.AQUA + F.f(getTotalTimeMS(), 4) + "ms" + C.YELLOW + " (" + F.f(getTimeMS(), 4) + "ms)";
+		String r = ind + C.GOLD + getId() + " " + C.AQUA + F.f(getTotalTimeMS(), 4) + "ms" + C.YELLOW + " (" + F.f(getTimeMS(), 4) + "ms)";
 		l.add(r);
 		
 		for(Timed i : getTimers())

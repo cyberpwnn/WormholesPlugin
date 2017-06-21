@@ -9,10 +9,10 @@ com.volmit.wormholes.Info -> com.volmit.wormholes.src.Lorem:
     java.lang.String PERM_USE -> elit
     java.lang.String HR -> Morbi
     java.lang.String HRN -> pulvinar
+    10:20:void <clinit>() -> <clinit>
     8:8:void <init>() -> <init>
     24:24:java.lang.String hr() -> Lorem
     29:29:java.lang.String hrn(java.lang.String) -> Lorem
-    10:20:void <clinit>() -> <clinit>
 com.volmit.wormholes.Settings -> com.volmit.wormholes.src.ipsum:
     boolean BUNGEECORD_SEND_ONLY -> vulputate
     java.util.ArrayList ALLOW_ENTITIY_TYPES -> dictum
@@ -57,9 +57,9 @@ com.volmit.wormholes.Status -> com.volmit.wormholes.src.dolor:
     java.lang.String inf -> sem
     int lightFault -> sed
     int lightFaulted -> volutpat
+    9:20:void <clinit>() -> <clinit>
     7:7:void <init>() -> <init>
     24:31:void sample() -> amet
-    9:20:void <clinit>() -> <clinit>
 com.volmit.wormholes.WAPI -> com.volmit.wormholes.src.sit:
     15:15:void <init>() -> <init>
     19:19:java.util.List getPortals() -> consectetur
@@ -612,58 +612,59 @@ com.volmit.wormholes.portal.PortalPosition -> com.volmit.wormholes.src.sed:
     com.volmit.wormholes.portal.PortalIdentity identity -> luctus
     com.volmit.wormholes.projection.BoundingBox boundingBox -> potenti
     43:81:void <init>(com.volmit.wormholes.portal.PortalIdentity,com.volmit.wormholes.util.Cuboid) -> <init>
-    85:85:org.bukkit.Location intersectsv(org.bukkit.Location,org.bukkit.util.Vector) -> Lorem
-    90:107:boolean intersects(org.bukkit.Location,org.bukkit.Location) -> Lorem
-    112:129:org.bukkit.Location intersectsv(org.bukkit.Location,org.bukkit.Location) -> ipsum
-    134:134:org.bukkit.block.Block getRandomKeyBlock() -> malesuada
-    139:139:boolean intersects(org.bukkit.Location,org.bukkit.util.Vector) -> ipsum
-    144:144:boolean isInsidePortal(org.bukkit.Location) -> elit
-    149:163:com.volmit.wormholes.util.Cuboid getSideArea(org.bukkit.Location) -> Morbi
-    168:179:org.bukkit.Location ul() -> quis
-    184:195:org.bukkit.Location ur() -> ullamcorper
-    200:211:org.bukkit.Location bl() -> aliquet
-    216:227:org.bukkit.Location br() -> nulla
-    232:243:org.bukkit.Location uli() -> Vivamus
-    248:259:org.bukkit.Location uri() -> tellus
-    264:275:org.bukkit.Location bli() -> leo
-    280:291:org.bukkit.Location bri() -> tincidunt
-    296:296:com.volmit.wormholes.util.Cuboid getOPane() -> luctus
-    301:301:com.volmit.wormholes.util.Cuboid getPane() -> Maecenas
-    306:306:com.volmit.wormholes.util.Cuboid getArea() -> est
-    311:311:com.volmit.wormholes.util.Cuboid getFrameUp() -> hendrerit
-    316:316:com.volmit.wormholes.util.Cuboid getFrameDown() -> Etiam
-    321:321:com.volmit.wormholes.util.Cuboid getFrameLeft() -> diam
-    326:326:com.volmit.wormholes.util.Cuboid getFrameRight() -> dignissim
-    331:331:com.volmit.wormholes.util.GList getFrame() -> arcu
-    336:336:org.bukkit.Location getCenterUp() -> varius
-    341:341:org.bukkit.Location getCenterDown() -> placerat
-    346:346:org.bukkit.Location getCenterLeft() -> Nunc
-    351:351:org.bukkit.Location getCenterRight() -> Ut
-    356:356:org.bukkit.Location getCenter() -> getCenter
-    361:361:org.bukkit.Location getCornerUL() -> eleifend
-    366:366:org.bukkit.Location getCornerUR() -> nibh
-    371:371:org.bukkit.Location getCornerDL() -> faucibus
-    376:376:org.bukkit.Location getCornerDR() -> Class
-    381:381:com.volmit.wormholes.portal.PortalIdentity getIdentity() -> aliquam
-    386:386:com.volmit.wormholes.projection.BoundingBox getBoundingBox() -> aptent
-    391:391:com.volmit.wormholes.util.GList getKeyBlocks() -> taciti
-    396:396:com.volmit.wormholes.util.Cuboid getIpane() -> sociosqu
-    401:401:com.volmit.wormholes.util.GList getKeyset() -> ad
-    406:406:org.bukkit.Location getCorneriUL() -> litora
-    411:411:org.bukkit.Location getCorneriUR() -> torquent
-    416:416:org.bukkit.Location getCorneriDL() -> per
-    421:421:org.bukkit.Location getCorneriDR() -> conubia
-    426:426:com.volmit.wormholes.util.Cuboid getIarea() -> nostra
+    85:85:int getSize() -> getSize
+    90:90:org.bukkit.Location intersectsv(org.bukkit.Location,org.bukkit.util.Vector) -> Lorem
+    95:112:boolean intersects(org.bukkit.Location,org.bukkit.Location) -> Lorem
+    117:134:org.bukkit.Location intersectsv(org.bukkit.Location,org.bukkit.Location) -> ipsum
+    139:139:org.bukkit.block.Block getRandomKeyBlock() -> malesuada
+    144:144:boolean intersects(org.bukkit.Location,org.bukkit.util.Vector) -> ipsum
+    149:149:boolean isInsidePortal(org.bukkit.Location) -> elit
+    154:168:com.volmit.wormholes.util.Cuboid getSideArea(org.bukkit.Location) -> Morbi
+    173:184:org.bukkit.Location ul() -> quis
+    189:200:org.bukkit.Location ur() -> ullamcorper
+    205:216:org.bukkit.Location bl() -> aliquet
+    221:232:org.bukkit.Location br() -> nulla
+    237:248:org.bukkit.Location uli() -> Vivamus
+    253:264:org.bukkit.Location uri() -> tellus
+    269:280:org.bukkit.Location bli() -> leo
+    285:296:org.bukkit.Location bri() -> tincidunt
+    301:301:com.volmit.wormholes.util.Cuboid getOPane() -> luctus
+    306:306:com.volmit.wormholes.util.Cuboid getPane() -> Maecenas
+    311:311:com.volmit.wormholes.util.Cuboid getArea() -> est
+    316:316:com.volmit.wormholes.util.Cuboid getFrameUp() -> hendrerit
+    321:321:com.volmit.wormholes.util.Cuboid getFrameDown() -> Etiam
+    326:326:com.volmit.wormholes.util.Cuboid getFrameLeft() -> diam
+    331:331:com.volmit.wormholes.util.Cuboid getFrameRight() -> dignissim
+    336:336:com.volmit.wormholes.util.GList getFrame() -> arcu
+    341:341:org.bukkit.Location getCenterUp() -> varius
+    346:346:org.bukkit.Location getCenterDown() -> placerat
+    351:351:org.bukkit.Location getCenterLeft() -> Nunc
+    356:356:org.bukkit.Location getCenterRight() -> Ut
+    361:361:org.bukkit.Location getCenter() -> getCenter
+    366:366:org.bukkit.Location getCornerUL() -> eleifend
+    371:371:org.bukkit.Location getCornerUR() -> nibh
+    376:376:org.bukkit.Location getCornerDL() -> faucibus
+    381:381:org.bukkit.Location getCornerDR() -> Class
+    386:386:com.volmit.wormholes.portal.PortalIdentity getIdentity() -> aliquam
+    391:391:com.volmit.wormholes.projection.BoundingBox getBoundingBox() -> aptent
+    396:396:com.volmit.wormholes.util.GList getKeyBlocks() -> taciti
+    401:401:com.volmit.wormholes.util.Cuboid getIpane() -> sociosqu
+    406:406:com.volmit.wormholes.util.GList getKeyset() -> ad
+    411:411:org.bukkit.Location getCorneriUL() -> litora
+    416:416:org.bukkit.Location getCorneriUR() -> torquent
+    421:421:org.bukkit.Location getCorneriDL() -> per
+    426:426:org.bukkit.Location getCorneriDR() -> conubia
+    431:431:com.volmit.wormholes.util.Cuboid getIarea() -> nostra
 com.volmit.wormholes.portal.PortalPosition$1 -> com.volmit.wormholes.src.sed$1:
     com.volmit.wormholes.portal.PortalPosition this$0 -> pretium
     boolean[] val$traces -> dui
-    1:94:void <init>(com.volmit.wormholes.portal.PortalPosition,org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,boolean[]) -> <init>
-    99:104:void onTrace(org.bukkit.Location) -> adipiscing
+    1:99:void <init>(com.volmit.wormholes.portal.PortalPosition,org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,boolean[]) -> <init>
+    104:109:void onTrace(org.bukkit.Location) -> adipiscing
 com.volmit.wormholes.portal.PortalPosition$2 -> com.volmit.wormholes.src.sed$2:
     com.volmit.wormholes.portal.PortalPosition this$0 -> pretium
     org.bukkit.Location[] val$traces -> massa
-    1:116:void <init>(com.volmit.wormholes.portal.PortalPosition,org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,org.bukkit.Location[]) -> <init>
-    121:126:void onTrace(org.bukkit.Location) -> adipiscing
+    1:121:void <init>(com.volmit.wormholes.portal.PortalPosition,org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,org.bukkit.Location[]) -> <init>
+    126:131:void onTrace(org.bukkit.Location) -> adipiscing
 com.volmit.wormholes.portal.PortalSettings -> com.volmit.wormholes.src.volutpat:
     boolean project -> gravida
     boolean aparture -> fringilla
@@ -912,7 +913,7 @@ com.volmit.wormholes.projection.Viewport -> com.volmit.wormholes.src.tempor:
     org.bukkit.entity.Player p -> benchmark
     com.volmit.wormholes.portal.Portal portal -> sodales
     com.volmit.wormholes.projection.ProjectionSet set -> enhance
-    22:26:void <init>(org.bukkit.entity.Player,com.volmit.wormholes.portal.Portal) -> <init>
+    21:26:void <init>(org.bukkit.entity.Player,com.volmit.wormholes.portal.Portal) -> <init>
     30:34:void wipe() -> Curabitur
     38:57:void rebuild() -> mattis
     61:61:com.volmit.wormholes.util.GList getEntities() -> gravida
@@ -940,15 +941,15 @@ com.volmit.wormholes.projection.ViewportRenderer -> com.volmit.wormholes.src.ege
 com.volmit.wormholes.provider.AutomagicalProvider -> com.volmit.wormholes.src.semper:
     35:38:void <init>() -> <init>
     43:49:void onFlush() -> venenatis
-    54:97:void on(org.bukkit.event.player.PlayerInteractEvent) -> Lorem
-    102:266:void ona(org.bukkit.event.player.PlayerInteractEvent) -> ipsum
+    54:98:void on(org.bukkit.event.player.PlayerInteractEvent) -> Lorem
+    103:267:void ona(org.bukkit.event.player.PlayerInteractEvent) -> ipsum
 com.volmit.wormholes.provider.AutomagicalProvider$1 -> com.volmit.wormholes.src.semper$1:
     com.volmit.wormholes.provider.AutomagicalProvider this$0 -> envisioneer
     com.volmit.wormholes.util.Direction val$md -> evolve
     com.volmit.wormholes.util.Cuboid val$cx -> expedite
     org.bukkit.event.player.PlayerInteractEvent val$e -> exploit
-    1:232:void <init>(com.volmit.wormholes.provider.AutomagicalProvider,com.volmit.wormholes.util.Direction,com.volmit.wormholes.util.Cuboid,org.bukkit.event.player.PlayerInteractEvent) -> <init>
-    239:264:void run() -> run
+    1:233:void <init>(com.volmit.wormholes.provider.AutomagicalProvider,com.volmit.wormholes.util.Direction,com.volmit.wormholes.util.Cuboid,org.bukkit.event.player.PlayerInteractEvent) -> <init>
+    240:265:void run() -> run
 com.volmit.wormholes.provider.BaseProvider -> com.volmit.wormholes.src.aliquam:
     com.volmit.wormholes.projection.RasteredSystem rasterer -> extend
     com.volmit.wormholes.util.GList moved -> facilitate
@@ -1111,91 +1112,92 @@ com.volmit.wormholes.service.MutexService -> com.volmit.wormholes.src.vel:
     com.volmit.wormholes.util.GMap actualVectors -> reinvent
     com.volmit.wormholes.util.GMap arrivals -> repurpose
     com.volmit.wormholes.util.GList iLock -> revolutionize
-    82:92:void <init>() -> <init>
-    96:101:void sendArrival(com.volmit.wormholes.portal.RemotePortal,org.bukkit.entity.Player,com.volmit.wormholes.projection.ArrivalVector) -> Lorem
-    105:111:void ilock(org.bukkit.entity.Entity) -> adipiscing
-    115:115:boolean isILocked(org.bukkit.entity.Entity) -> elit
-    120:121:void unILock(org.bukkit.entity.Entity) -> Morbi
-    125:125:com.volmit.wormholes.projection.ArrivalVector getArrival(com.volmit.wormholes.portal.LocalPortal,org.bukkit.entity.Player) -> ipsum
-    130:130:boolean hasArrival(com.volmit.wormholes.portal.LocalPortal,org.bukkit.entity.Player) -> dolor
-    135:141:void setArrival(com.volmit.wormholes.portal.LocalPortal,java.util.UUID,com.volmit.wormholes.projection.ArrivalVector) -> Lorem
-    145:146:void setPending(java.util.UUID,com.volmit.wormholes.portal.Portal,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector) -> Lorem
-    150:154:void addThrottle(org.bukkit.entity.Entity) -> pulvinar
-    158:183:void setDestinationSided(com.volmit.wormholes.portal.LocalPortal,boolean) -> Lorem
-    187:194:void on(org.bukkit.event.entity.EntitySpawnEvent) -> Lorem
-    199:200:void on(org.bukkit.event.player.PlayerItemHeldEvent) -> Lorem
-    204:205:void removeThrottle(org.bukkit.entity.Entity) -> vulputate
-    209:209:boolean isThrottled(org.bukkit.entity.Entity) -> dictum
-    214:222:void addLocalPortal(com.volmit.wormholes.portal.Portal) -> ipsum
-    226:232:void removeLocalPortal(com.volmit.wormholes.portal.Portal) -> dolor
-    236:241:void removeLocalPortalReverse(com.volmit.wormholes.portal.Portal) -> sit
-    245:255:com.volmit.wormholes.portal.Portal[] getPortals(com.volmit.wormholes.portal.PortalKey) -> dolor
-    260:268:com.volmit.wormholes.portal.Portal getPortal(com.volmit.wormholes.portal.PortalKey,com.volmit.wormholes.portal.LocalPortal) -> Lorem
-    274:281:void on(org.bukkit.event.world.ChunkUnloadEvent) -> ipsum
-    286:311:void on(org.bukkit.event.player.PlayerMoveEvent) -> Lorem
-    315:339:void handleArrivalIntent(org.bukkit.entity.Player) -> mi
-    343:343:boolean hasLink(com.volmit.wormholes.portal.LocalPortal) -> Pellentesque
-    348:348:boolean isLinkMutex(com.volmit.wormholes.portal.LocalPortal) -> at
-    353:353:boolean hasWormhole(com.volmit.wormholes.portal.LocalPortal) -> iaculis
-    358:358:boolean isMutexWormhole(com.volmit.wormholes.portal.LocalPortal) -> urna
-    363:368:com.volmit.wormholes.wormhole.Wormhole getWormhole(com.volmit.wormholes.portal.LocalPortal) -> Proin
-    373:389:boolean isPositionValid(com.volmit.wormholes.portal.PortalPosition) -> ipsum
-    394:411:boolean isKeyValid(com.volmit.wormholes.portal.PortalKey) -> sit
-    416:433:boolean isKeyValidAlready(com.volmit.wormholes.portal.PortalKey) -> amet
-    438:468:void flush() -> flush
-    472:473:void dequeue(com.volmit.wormholes.portal.Portal) -> amet
-    477:495:void updateThrottles() -> Interdum
-    499:738:void broadcastPortals() -> aggregate
-    742:796:void beginStream(java.lang.String,java.lang.String,java.lang.String,com.volmit.wormholes.portal.LocalPortal) -> Lorem
-    800:808:void layer2StreamRequest(com.volmit.wormholes.portal.Portal) -> consectetur
-    812:856:void layer2Stream(byte[]) -> sit
-    860:902:void sendPlayerThrough(org.bukkit.entity.Player,java.util.UUID,com.volmit.wormholes.portal.LocalPortal,com.volmit.wormholes.portal.Portal,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector,java.lang.Runnable) -> Lorem
-    906:910:void updatePortals() -> architect
-    915:945:void on(org.bukkit.event.player.PlayerJoinEvent) -> Lorem
-    949:957:com.volmit.wormholes.util.GList getPortals() -> benchmark
-    962:962:com.volmit.wormholes.util.GList getLocalPortals() -> brand
-    967:967:com.volmit.wormholes.util.GList getInsideThrottle() -> cultivate
-    972:972:java.lang.Integer getBroadcastInterval() -> deliver
-    977:977:com.volmit.wormholes.util.GMap getMutexPortals() -> deploy
-    982:982:com.volmit.wormholes.util.GMap getPendingPulls() -> disintermediate
-    987:991:void dequeueAll() -> libero
-    996:1003:void on(org.bukkit.event.block.BlockPhysicsEvent) -> Lorem
-    1008:1015:void on(org.bukkit.event.block.BlockFromToEvent) -> Lorem
-    1020:1033:void on(org.bukkit.event.entity.EntityExplodeEvent) -> Lorem
-    1038:1065:void on(org.bukkit.event.block.BlockBreakEvent) -> Lorem
-    1069:1104:void blockChange(org.bukkit.Location,com.volmit.wormholes.portal.Portal) -> Lorem
-    1109:1117:void sendBlockChange(org.bukkit.util.Vector,com.volmit.wormholes.util.MaterialBlock,com.volmit.wormholes.portal.Portal) -> Lorem
-    1122:1139:void on(org.bukkit.event.block.BlockPlaceEvent) -> Lorem
-    1143:1143:boolean canBuild(org.bukkit.entity.Player) -> euismod
-    1148:1148:boolean canDestroy(org.bukkit.entity.Player) -> Pellentesque
-    1153:1157:void updateEverything(java.lang.Runnable) -> Lorem
-    1161:1163:void globalReload() -> drive
-    1167:1167:com.volmit.wormholes.util.GMap getWaiting() -> e
-    1172:1172:com.volmit.wormholes.util.GMap getActualVectors() -> enable
-    1177:1177:com.volmit.wormholes.util.GMap getArrivals() -> embrace
-    1182:1182:com.volmit.wormholes.util.GList getiLock() -> empower
-    1187:1188:void clearVectorCache() -> engage
-    1192:1192:org.bukkit.util.Vector getActualVector(org.bukkit.entity.Player) -> at
-    77:77:com.volmit.wormholes.util.GMap access$0(com.volmit.wormholes.service.MutexService) -> Lorem
+    83:93:void <init>() -> <init>
+    97:102:void sendArrival(com.volmit.wormholes.portal.RemotePortal,org.bukkit.entity.Player,com.volmit.wormholes.projection.ArrivalVector) -> Lorem
+    106:112:void ilock(org.bukkit.entity.Entity) -> adipiscing
+    116:116:boolean isILocked(org.bukkit.entity.Entity) -> elit
+    121:122:void unILock(org.bukkit.entity.Entity) -> Morbi
+    126:126:com.volmit.wormholes.projection.ArrivalVector getArrival(com.volmit.wormholes.portal.LocalPortal,org.bukkit.entity.Player) -> ipsum
+    131:131:boolean hasArrival(com.volmit.wormholes.portal.LocalPortal,org.bukkit.entity.Player) -> dolor
+    136:142:void setArrival(com.volmit.wormholes.portal.LocalPortal,java.util.UUID,com.volmit.wormholes.projection.ArrivalVector) -> Lorem
+    146:147:void setPending(java.util.UUID,com.volmit.wormholes.portal.Portal,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector) -> Lorem
+    151:155:void addThrottle(org.bukkit.entity.Entity) -> pulvinar
+    159:184:void setDestinationSided(com.volmit.wormholes.portal.LocalPortal,boolean) -> Lorem
+    188:195:void on(org.bukkit.event.entity.EntitySpawnEvent) -> Lorem
+    200:201:void on(org.bukkit.event.player.PlayerItemHeldEvent) -> Lorem
+    205:206:void removeThrottle(org.bukkit.entity.Entity) -> vulputate
+    210:210:boolean isThrottled(org.bukkit.entity.Entity) -> dictum
+    215:223:void addLocalPortal(com.volmit.wormholes.portal.Portal) -> ipsum
+    227:233:void removeLocalPortal(com.volmit.wormholes.portal.Portal) -> dolor
+    237:242:void removeLocalPortalReverse(com.volmit.wormholes.portal.Portal) -> sit
+    246:256:com.volmit.wormholes.portal.Portal[] getPortals(com.volmit.wormholes.portal.PortalKey) -> dolor
+    261:269:com.volmit.wormholes.portal.Portal getPortal(com.volmit.wormholes.portal.PortalKey,com.volmit.wormholes.portal.LocalPortal) -> Lorem
+    275:282:void on(org.bukkit.event.world.ChunkUnloadEvent) -> ipsum
+    287:312:void on(org.bukkit.event.player.PlayerMoveEvent) -> Lorem
+    316:340:void handleArrivalIntent(org.bukkit.entity.Player) -> mi
+    344:344:boolean hasLink(com.volmit.wormholes.portal.LocalPortal) -> Pellentesque
+    349:349:boolean isLinkMutex(com.volmit.wormholes.portal.LocalPortal) -> at
+    354:354:boolean hasWormhole(com.volmit.wormholes.portal.LocalPortal) -> iaculis
+    359:359:boolean isMutexWormhole(com.volmit.wormholes.portal.LocalPortal) -> urna
+    364:369:com.volmit.wormholes.wormhole.Wormhole getWormhole(com.volmit.wormholes.portal.LocalPortal) -> Proin
+    374:390:boolean isPositionValid(com.volmit.wormholes.portal.PortalPosition) -> ipsum
+    395:412:boolean isKeyValid(com.volmit.wormholes.portal.PortalKey) -> sit
+    417:434:boolean isKeyValidAlready(com.volmit.wormholes.portal.PortalKey) -> amet
+    439:468:void flush() -> flush
+    472:473:void on(org.bukkit.event.player.PlayerQuitEvent) -> ipsum
+    477:478:void dequeue(com.volmit.wormholes.portal.Portal) -> amet
+    482:500:void updateThrottles() -> Interdum
+    504:743:void broadcastPortals() -> aggregate
+    747:801:void beginStream(java.lang.String,java.lang.String,java.lang.String,com.volmit.wormholes.portal.LocalPortal) -> Lorem
+    805:813:void layer2StreamRequest(com.volmit.wormholes.portal.Portal) -> consectetur
+    817:861:void layer2Stream(byte[]) -> sit
+    865:907:void sendPlayerThrough(org.bukkit.entity.Player,java.util.UUID,com.volmit.wormholes.portal.LocalPortal,com.volmit.wormholes.portal.Portal,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector,java.lang.Runnable) -> Lorem
+    911:915:void updatePortals() -> architect
+    920:950:void on(org.bukkit.event.player.PlayerJoinEvent) -> Lorem
+    954:962:com.volmit.wormholes.util.GList getPortals() -> benchmark
+    967:967:com.volmit.wormholes.util.GList getLocalPortals() -> brand
+    972:972:com.volmit.wormholes.util.GList getInsideThrottle() -> cultivate
+    977:977:java.lang.Integer getBroadcastInterval() -> deliver
+    982:982:com.volmit.wormholes.util.GMap getMutexPortals() -> deploy
+    987:987:com.volmit.wormholes.util.GMap getPendingPulls() -> disintermediate
+    992:996:void dequeueAll() -> libero
+    1001:1008:void on(org.bukkit.event.block.BlockPhysicsEvent) -> Lorem
+    1013:1020:void on(org.bukkit.event.block.BlockFromToEvent) -> Lorem
+    1025:1038:void on(org.bukkit.event.entity.EntityExplodeEvent) -> Lorem
+    1043:1070:void on(org.bukkit.event.block.BlockBreakEvent) -> Lorem
+    1074:1109:void blockChange(org.bukkit.Location,com.volmit.wormholes.portal.Portal) -> Lorem
+    1114:1122:void sendBlockChange(org.bukkit.util.Vector,com.volmit.wormholes.util.MaterialBlock,com.volmit.wormholes.portal.Portal) -> Lorem
+    1127:1144:void on(org.bukkit.event.block.BlockPlaceEvent) -> Lorem
+    1148:1148:boolean canBuild(org.bukkit.entity.Player) -> euismod
+    1153:1153:boolean canDestroy(org.bukkit.entity.Player) -> Pellentesque
+    1158:1162:void updateEverything(java.lang.Runnable) -> Lorem
+    1166:1168:void globalReload() -> drive
+    1172:1172:com.volmit.wormholes.util.GMap getWaiting() -> e
+    1177:1177:com.volmit.wormholes.util.GMap getActualVectors() -> enable
+    1182:1182:com.volmit.wormholes.util.GMap getArrivals() -> embrace
+    1187:1187:com.volmit.wormholes.util.GList getiLock() -> empower
+    1192:1193:void clearVectorCache() -> engage
+    1197:1197:org.bukkit.util.Vector getActualVector(org.bukkit.entity.Player) -> at
+    78:78:com.volmit.wormholes.util.GMap access$0(com.volmit.wormholes.service.MutexService) -> Lorem
 com.volmit.wormholes.service.MutexService$1 -> com.volmit.wormholes.src.vel$1:
     com.volmit.wormholes.service.MutexService this$0 -> scale
     com.volmit.wormholes.portal.LocalPortal val$lp -> seize
     java.lang.String val$as -> strategize
     java.lang.String val$to -> streamline
-    1:752:void <init>(com.volmit.wormholes.service.MutexService,com.volmit.wormholes.portal.LocalPortal,java.lang.String,java.lang.String) -> <init>
-    759:794:void async() -> engineer
+    1:757:void <init>(com.volmit.wormholes.service.MutexService,com.volmit.wormholes.portal.LocalPortal,java.lang.String,java.lang.String) -> <init>
+    764:799:void async() -> engineer
 com.volmit.wormholes.service.MutexService$1$1 -> com.volmit.wormholes.src.vel$1$1:
     com.volmit.wormholes.service.MutexService$1 this$1 -> syndicate
     java.lang.String val$as -> strategize
     java.lang.Byte[] val$i -> synergize
     java.lang.String val$to -> streamline
-    1:763:void <init>(com.volmit.wormholes.service.MutexService$1,java.lang.String,java.lang.Byte[],java.lang.String) -> <init>
-    770:785:void async() -> engineer
+    1:768:void <init>(com.volmit.wormholes.service.MutexService$1,java.lang.String,java.lang.Byte[],java.lang.String) -> <init>
+    775:790:void async() -> engineer
 com.volmit.wormholes.service.MutexService$2 -> com.volmit.wormholes.src.vel$2:
     com.volmit.wormholes.service.MutexService this$0 -> scale
     byte[] val$msgbytes -> synthesize
-    1:817:void <init>(com.volmit.wormholes.service.MutexService,byte[]) -> <init>
-    824:854:void async() -> engineer
+    1:822:void <init>(com.volmit.wormholes.service.MutexService,byte[]) -> <init>
+    829:859:void async() -> engineer
 com.volmit.wormholes.service.MutexService$3 -> com.volmit.wormholes.src.vel$3:
     com.volmit.wormholes.service.MutexService this$0 -> scale
     org.bukkit.entity.Player val$p -> ridiculus
@@ -1207,21 +1209,21 @@ com.volmit.wormholes.service.MutexService$3 -> com.volmit.wormholes.src.vel$3:
     org.bukkit.util.Vector val$entry -> visualize
     com.volmit.wormholes.util.FinalInteger val$cd -> whiteboard
     com.volmit.wormholes.portal.LocalPortal val$source -> B2B
-    1:862:void <init>(com.volmit.wormholes.service.MutexService,int,org.bukkit.entity.Player,java.lang.Runnable,com.volmit.wormholes.portal.Portal,java.util.UUID,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector,com.volmit.wormholes.util.FinalInteger,com.volmit.wormholes.portal.LocalPortal) -> <init>
-    867:899:void run() -> run
+    1:867:void <init>(com.volmit.wormholes.service.MutexService,int,org.bukkit.entity.Player,java.lang.Runnable,com.volmit.wormholes.portal.Portal,java.util.UUID,org.bukkit.util.Vector,org.bukkit.util.Vector,org.bukkit.util.Vector,com.volmit.wormholes.util.FinalInteger,com.volmit.wormholes.portal.LocalPortal) -> <init>
+    872:904:void run() -> run
 com.volmit.wormholes.service.MutexService$4 -> com.volmit.wormholes.src.vel$4:
     com.volmit.wormholes.service.MutexService this$0 -> scale
     org.bukkit.event.player.PlayerJoinEvent val$e -> B2C
     org.bukkit.Location val$position -> back
     com.volmit.wormholes.projection.ArrivalVector val$av -> end
-    1:933:void <init>(com.volmit.wormholes.service.MutexService,org.bukkit.event.player.PlayerJoinEvent,org.bukkit.Location,com.volmit.wormholes.projection.ArrivalVector) -> <init>
-    938:940:void run() -> run
+    1:938:void <init>(com.volmit.wormholes.service.MutexService,org.bukkit.event.player.PlayerJoinEvent,org.bukkit.Location,com.volmit.wormholes.projection.ArrivalVector) -> <init>
+    943:945:void run() -> run
 com.volmit.wormholes.service.MutexService$5 -> com.volmit.wormholes.src.vel$5:
     com.volmit.wormholes.service.MutexService this$0 -> scale
     org.bukkit.Location val$lx -> best
     com.volmit.wormholes.portal.Portal val$p -> of
-    1:1069:void <init>(com.volmit.wormholes.service.MutexService,org.bukkit.Location,com.volmit.wormholes.portal.Portal) -> <init>
-    1074:1102:void run() -> run
+    1:1074:void <init>(com.volmit.wormholes.service.MutexService,org.bukkit.Location,com.volmit.wormholes.portal.Portal) -> <init>
+    1079:1107:void run() -> run
 com.volmit.wormholes.service.PortalRegistry -> com.volmit.wormholes.src.Quisque:
     com.volmit.wormholes.util.GList destroyQueue -> breed
     com.volmit.wormholes.util.GList localPortals -> bleeding
@@ -3515,7 +3517,7 @@ com.volmit.wormholes.util.Intersection$MVector3 -> com.volmit.wormholes.src.leve
     float x -> x
     float y -> y
     float z -> z
-    14:18:void <init>(float,float,float) -> <init>
+    13:18:void <init>(float,float,float) -> <init>
     22:22:com.volmit.wormholes.util.Intersection$MVector3 add(com.volmit.wormholes.util.Intersection$MVector3) -> Lorem
     27:27:com.volmit.wormholes.util.Intersection$MVector3 sub(com.volmit.wormholes.util.Intersection$MVector3) -> ipsum
     32:32:com.volmit.wormholes.util.Intersection$MVector3 scale(float) -> consectetur
@@ -4138,6 +4140,7 @@ com.volmit.wormholes.util.NMSX -> com.volmit.wormholes.src.back:
     boolean useOldMethods -> iw
     java.lang.String nmsver -> ix
     com.volmit.wormholes.util.GList colors -> iy
+    1001:1027:void <clinit>() -> <clinit>
     29:29:void <init>() -> <init>
     38:40:java.lang.String getVersion() -> getVersion
     47:55:java.lang.Object serializeChat(java.lang.String) -> lectus
@@ -4173,22 +4176,21 @@ com.volmit.wormholes.util.NMSX -> com.volmit.wormholes.src.back:
     575:612:void sendTitle(org.bukkit.entity.Player,java.lang.Integer,java.lang.Integer,java.lang.Integer,java.lang.String,java.lang.String) -> Lorem
     622:623:void clearTitle(org.bukkit.entity.Player) -> habitasse
     637:669:void sendTabTitle(org.bukkit.entity.Player,java.lang.String,java.lang.String) -> ipsum
-    686:720:void sendActionBar(org.bukkit.entity.Player,java.lang.String) -> Lorem
-    731:731:java.lang.String getEntityName(org.bukkit.entity.Entity) -> purus
-    736:736:java.lang.String getNBTV() -> aj
-    746:746:java.lang.String getBukkitVersion() -> getBukkitVersion
-    756:756:java.lang.String nmsPackage() -> ak
-    766:766:java.lang.String craftPackage() -> al
-    779:792:void showEnd(org.bukkit.entity.Player) -> platea
-    804:816:void showDemo(org.bukkit.entity.Player) -> dictumst
-    830:842:void showBrightness(org.bukkit.entity.Player,float) -> Lorem
-    856:868:void showWeather(org.bukkit.entity.Player,float) -> ipsum
-    874:884:java.lang.Object getBlockPosition(org.bukkit.Location) -> enim
-    891:904:void showBlockBreakAnimation(org.bukkit.entity.Player,org.bukkit.Location,int) -> Lorem
-    916:928:void showControls(org.bukkit.entity.Player) -> Nam
-    942:954:void showPickup(org.bukkit.entity.Player,org.bukkit.entity.Entity,org.bukkit.entity.Entity) -> Lorem
-    967:980:int ping(org.bukkit.entity.Player) -> metus
-    985:1011:void <clinit>() -> <clinit>
+    681:736:void sendActionBar(org.bukkit.entity.Player,java.lang.String) -> Lorem
+    747:747:java.lang.String getEntityName(org.bukkit.entity.Entity) -> purus
+    752:752:java.lang.String getNBTV() -> aj
+    762:762:java.lang.String getBukkitVersion() -> getBukkitVersion
+    772:772:java.lang.String nmsPackage() -> ak
+    782:782:java.lang.String craftPackage() -> al
+    795:808:void showEnd(org.bukkit.entity.Player) -> platea
+    820:832:void showDemo(org.bukkit.entity.Player) -> dictumst
+    846:858:void showBrightness(org.bukkit.entity.Player,float) -> Lorem
+    872:884:void showWeather(org.bukkit.entity.Player,float) -> ipsum
+    890:900:java.lang.Object getBlockPosition(org.bukkit.Location) -> enim
+    907:920:void showBlockBreakAnimation(org.bukkit.entity.Player,org.bukkit.Location,int) -> Lorem
+    932:944:void showControls(org.bukkit.entity.Player) -> Nam
+    958:970:void showPickup(org.bukkit.entity.Player,org.bukkit.entity.Entity,org.bukkit.entity.Entity) -> Lorem
+    983:996:int ping(org.bukkit.entity.Player) -> metus
 com.volmit.wormholes.util.P -> com.volmit.wormholes.src.end:
     22:22:void <init>() -> <init>
     33:33:boolean isOnline(java.lang.String) -> Quisque
@@ -5145,7 +5147,7 @@ com.volmit.wormholes.util.SubCommand -> com.volmit.wormholes.src.robust:
 com.volmit.wormholes.util.SubGroup -> com.volmit.wormholes.src.scalable:
     com.volmit.wormholes.util.GList subCommands -> oa
     java.lang.String root -> ob
-    13:16:void <init>(java.lang.String) -> <init>
+    12:16:void <init>(java.lang.String) -> <init>
     20:21:void add(com.volmit.wormholes.util.SubCommand) -> Lorem
     25:33:void showHelp(org.bukkit.command.CommandSender) -> sit
     37:38:void sendLine(org.bukkit.command.CommandSender,com.volmit.wormholes.util.SubCommand) -> Lorem
@@ -5294,7 +5296,7 @@ com.volmit.wormholes.util.Timed -> com.volmit.wormholes.src.class:
     long time -> time
     java.lang.String id -> id
     com.volmit.wormholes.util.GList timers -> oy
-    10:14:void <init>(java.lang.String,long) -> <init>
+    9:14:void <init>(java.lang.String,long) -> <init>
     18:18:long getTime() -> getTime
     23:24:void setTime(long) -> setTime
     28:28:java.lang.String getId() -> getId
@@ -5431,14 +5433,15 @@ com.volmit.wormholes.util.VersionBukkit -> com.volmit.wormholes.src.content:
     com.volmit.wormholes.util.VersionBukkit V9 -> oN
     com.volmit.wormholes.util.VersionBukkit V11 -> oO
     com.volmit.wormholes.util.VersionBukkit V111 -> oP
-    com.volmit.wormholes.util.VersionBukkit[] $VALUES -> oQ
-    5:5:com.volmit.wormholes.util.VersionBukkit[] values() -> values
-    5:5:com.volmit.wormholes.util.VersionBukkit valueOf(java.lang.String) -> valueOf
+    com.volmit.wormholes.util.VersionBukkit V112 -> oQ
+    com.volmit.wormholes.util.VersionBukkit[] ENUM$VALUES -> oR
+    5:13:void <clinit>() -> <clinit>
     5:5:void <init>(java.lang.String,int) -> <init>
-    15:20:boolean tc() -> bX
-    25:30:boolean uc() -> bY
-    35:60:com.volmit.wormholes.util.VersionBukkit get() -> bZ
-    5:12:void <clinit>() -> <clinit>
+    17:22:boolean tc() -> bX
+    27:32:boolean uc() -> bY
+    37:67:com.volmit.wormholes.util.VersionBukkit get() -> bZ
+    1:1:com.volmit.wormholes.util.VersionBukkit[] values() -> values
+    1:1:com.volmit.wormholes.util.VersionBukkit valueOf(java.lang.String) -> valueOf
 com.volmit.wormholes.util.VisualEffect -> com.volmit.wormholes.src.convergence:
     com.volmit.wormholes.util.GList getEffects() -> global
     void play(org.bukkit.Location) -> Pellentesque
@@ -5485,7 +5488,7 @@ com.volmit.wormholes.util.W -> com.volmit.wormholes.src.deliverables:
     799:799:boolean isColored(org.bukkit.block.Block) -> elit
 com.volmit.wormholes.util.W$1 -> com.volmit.wormholes.src.deliverables$1:
     java.lang.Double val$doff -> iz
-    org.bukkit.entity.Entity val$e -> oR
+    org.bukkit.entity.Entity val$e -> oS
     org.bukkit.entity.Entity[] val$result -> iB
     732:732:void <init>(org.bukkit.Location,org.bukkit.util.Vector,java.lang.Double,java.lang.Double,java.lang.Double,org.bukkit.entity.Entity,org.bukkit.entity.Entity[]) -> <init>
     736:747:void onTrace(org.bukkit.Location) -> adipiscing
@@ -5496,20 +5499,20 @@ com.volmit.wormholes.util.WarpEffect -> com.volmit.wormholes.src.commerce:
     45:47:com.volmit.wormholes.util.LineParticleManipulator getArm(int) -> lacinia
 com.volmit.wormholes.util.WarpEffect$1 -> com.volmit.wormholes.src.commerce$1:
     org.bukkit.util.Vector val$direction -> utilize
-    org.bukkit.Location[] val$start -> oS
-    int val$kv -> oT
-    com.volmit.wormholes.util.WarpEffect this$0 -> oU
+    org.bukkit.Location[] val$start -> oT
+    int val$kv -> oU
+    com.volmit.wormholes.util.WarpEffect this$0 -> oV
     29:29:void <init>(com.volmit.wormholes.util.WarpEffect,java.lang.Integer,org.bukkit.util.Vector,org.bukkit.Location[],int) -> <init>
     33:37:void run() -> run
 com.volmit.wormholes.util.WarpEffect$2 -> com.volmit.wormholes.src.commerce$2:
-    int[] val$kv -> oV
-    int val$m -> oW
-    com.volmit.wormholes.util.WarpEffect this$0 -> oU
+    int[] val$kv -> oW
+    int val$m -> oX
+    com.volmit.wormholes.util.WarpEffect this$0 -> oV
     48:48:void <init>(com.volmit.wormholes.util.WarpEffect,int[],int) -> <init>
     52:61:void play(org.bukkit.Location) -> Pellentesque
 com.volmit.wormholes.util.WarpEffect$2$1 -> com.volmit.wormholes.src.commerce$2$1:
     org.bukkit.Location val$l -> cultivate
-    com.volmit.wormholes.util.WarpEffect$2 this$1 -> oX
+    com.volmit.wormholes.util.WarpEffect$2 this$1 -> oY
     54:54:void <init>(com.volmit.wormholes.util.WarpEffect$2,java.lang.Integer,org.bukkit.Location) -> <init>
     58:59:void run() -> run
 com.volmit.wormholes.util.Window -> com.volmit.wormholes.src.markets:
@@ -5538,7 +5541,7 @@ com.volmit.wormholes.util.Window -> com.volmit.wormholes.src.markets:
     boolean onClick(com.volmit.wormholes.util.Element,org.bukkit.entity.Player) -> Lorem
     boolean isOpen() -> isOpen
 com.volmit.wormholes.util.WindowBorder -> com.volmit.wormholes.src.services:
-    com.volmit.wormholes.util.GMap directionSet -> oY
+    com.volmit.wormholes.util.GMap directionSet -> oZ
     16:22:void <init>() -> <init>
     35:37:com.volmit.wormholes.util.WindowBorder put(com.volmit.wormholes.util.BorderDirection,int) -> Lorem
     49:69:boolean isValid(com.volmit.wormholes.util.Slot) -> sit
@@ -5548,8 +5551,8 @@ com.volmit.wormholes.util.Worlds -> com.volmit.wormholes.src.tailers:
     32:32:boolean hasWorld(java.lang.String) -> eros
     44:44:org.bukkit.World getWorld(java.lang.String) -> getWorld
 com.volmit.wormholes.util.Wraith -> com.volmit.wormholes.src.experiences:
-    com.volmit.wormholes.util.ParallelPoolManager poolManager -> oZ
-    org.bukkit.plugin.Plugin instance -> pa
+    com.volmit.wormholes.util.ParallelPoolManager poolManager -> pa
+    org.bukkit.plugin.Plugin instance -> pb
     9:9:void <init>() -> <init>
     16:17:void registerListener(org.bukkit.event.Listener) -> Lorem
     21:22:void callEvent(org.bukkit.event.Event) -> callEvent
@@ -5559,7 +5562,7 @@ com.volmit.wormholes.util.Wraith -> com.volmit.wormholes.src.experiences:
     67:68:void cancelTask(int) -> cancelTask
     12:12:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperHandshakingClientSetProtocol -> com.volmit.wormholes.src.eyeballs:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:int getProtocolVersion() -> getProtocolVersion
@@ -5572,7 +5575,7 @@ com.volmit.wormholes.util.WrapperHandshakingClientSetProtocol -> com.volmit.worm
     126:127:void setNextState(com.comphenix.protocol.PacketType$Protocol) -> Lorem
     24:24:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginClientEncryptionBegin -> com.volmit.wormholes.src.functionalities:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     27:29:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     43:43:byte[] getSharedSecret() -> getSharedSecret
@@ -5581,14 +5584,14 @@ com.volmit.wormholes.util.WrapperLoginClientEncryptionBegin -> com.volmit.wormho
     75:76:void setVerifyToken(byte[]) -> setVerifyToken
     23:23:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginClientStart -> com.volmit.wormholes.src.infomediaries:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:com.comphenix.protocol.wrappers.WrappedGameProfile getProfile() -> getProfile
     55:56:void setProfile(com.comphenix.protocol.wrappers.WrappedGameProfile) -> Lorem
     24:24:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginServerDisconnect -> com.volmit.wormholes.src.infrastructures:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:com.comphenix.protocol.wrappers.WrappedChatComponent getReason() -> cd
@@ -5597,7 +5600,7 @@ com.volmit.wormholes.util.WrapperLoginServerDisconnect -> com.volmit.wormholes.s
     67:68:void setJsonData(com.comphenix.protocol.wrappers.WrappedChatComponent) -> ipsum
     24:24:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginServerEncryptionBegin -> com.volmit.wormholes.src.initiatives:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:java.lang.String getServerId() -> getServerId
@@ -5608,21 +5611,21 @@ com.volmit.wormholes.util.WrapperLoginServerEncryptionBegin -> com.volmit.wormho
     99:100:void setVerifyToken(byte[]) -> setVerifyToken
     24:24:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginServerSetCompression -> com.volmit.wormholes.src.interfaces:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     27:29:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:int getThreshold() -> getThreshold
     56:57:void setThreshold(int) -> setThreshold
     23:23:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperLoginServerSuccess -> com.volmit.wormholes.src.methodologies:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     43:43:com.comphenix.protocol.wrappers.WrappedGameProfile getProfile() -> getProfile
     52:53:void setProfile(com.comphenix.protocol.wrappers.WrappedGameProfile) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientAbilities -> com.volmit.wormholes.src.metrics:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     37:37:boolean isInvulnurable() -> cf
@@ -5639,12 +5642,12 @@ com.volmit.wormholes.util.WrapperPlayClientAbilities -> com.volmit.wormholes.src
     81:82:void setWalkingSpeed(float) -> elit
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientArmAnimation -> com.volmit.wormholes.src.mindshare:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientBlockDig -> com.volmit.wormholes.src.models:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -5655,7 +5658,7 @@ com.volmit.wormholes.util.WrapperPlayClientBlockDig -> com.volmit.wormholes.src.
     84:85:void setStatus(com.comphenix.protocol.wrappers.EnumWrappers$PlayerDigType) -> Lorem
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientBlockPlace -> com.volmit.wormholes.src.networks:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     38:38:com.comphenix.protocol.wrappers.EnumWrappers$Hand getHand() -> cn
@@ -5664,7 +5667,7 @@ com.volmit.wormholes.util.WrapperPlayClientBlockPlace -> com.volmit.wormholes.sr
     50:51:void setTimestamp(long) -> Pellentesque
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientBoatMove -> com.volmit.wormholes.src.niches:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     38:38:boolean getLeftOar() -> co
@@ -5673,28 +5676,28 @@ com.volmit.wormholes.util.WrapperPlayClientBoatMove -> com.volmit.wormholes.src.
     50:51:void setRightOar(boolean) -> Pellentesque
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientChat -> com.volmit.wormholes.src.paradigms:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:java.lang.String getMessage() -> getMessage
     51:52:void setMessage(java.lang.String) -> setMessage
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientClientCommand -> com.volmit.wormholes.src.partnerships:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.EnumWrappers$ClientCommand getAction() -> cq
     54:55:void setAction(com.comphenix.protocol.wrappers.EnumWrappers$ClientCommand) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientCloseWindow -> com.volmit.wormholes.src.platforms:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
     53:54:void setWindowId(int) -> tempor
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientCustomPayload -> com.volmit.wormholes.src.portals:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:java.lang.String getChannel() -> getChannel
@@ -5705,7 +5708,7 @@ com.volmit.wormholes.util.WrapperPlayClientCustomPayload -> com.volmit.wormholes
     100:101:void setContents(byte[]) -> dictum
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientEnchantItem -> com.volmit.wormholes.src.relationships:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
@@ -5714,7 +5717,7 @@ com.volmit.wormholes.util.WrapperPlayClientEnchantItem -> com.volmit.wormholes.s
     74:75:void setEnchantment(int) -> eget
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientEntityAction -> com.volmit.wormholes.src.ROI:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -5727,28 +5730,28 @@ com.volmit.wormholes.util.WrapperPlayClientEntityAction -> com.volmit.wormholes.
     118:119:void setJumpBoost(int) -> aliquam
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientFlying -> com.volmit.wormholes.src.synergies:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:boolean getOnGround() -> cy
     53:54:void setOnGround(boolean) -> at
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientHeldItemSlot -> com.volmit.wormholes.src.readiness:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getSlot() -> getSlot
     53:54:void setSlot(int) -> lectus
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientKeepAlive -> com.volmit.wormholes.src.schemas:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:int getKeepAliveId() -> cz
     51:52:void setKeepAliveId(int) -> consequat
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientLook -> com.volmit.wormholes.src.solutions:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:float getYaw() -> getYaw
@@ -5759,7 +5762,7 @@ com.volmit.wormholes.util.WrapperPlayClientLook -> com.volmit.wormholes.src.solu
     93:94:void setOnGround(boolean) -> at
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientPosition -> com.volmit.wormholes.src.supply:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:double getX() -> getX
@@ -5772,7 +5775,7 @@ com.volmit.wormholes.util.WrapperPlayClientPosition -> com.volmit.wormholes.src.
     114:115:void setOnGround(boolean) -> at
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientPositionLook -> com.volmit.wormholes.src.chains:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:double getX() -> getX
@@ -5789,14 +5792,14 @@ com.volmit.wormholes.util.WrapperPlayClientPositionLook -> com.volmit.wormholes.
     154:155:void setOnGround(boolean) -> at
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientResourcePackStatus -> com.volmit.wormholes.src.systems:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:com.comphenix.protocol.wrappers.EnumWrappers$ResourcePackStatus getResult() -> cA
     56:57:void setResult(com.comphenix.protocol.wrappers.EnumWrappers$ResourcePackStatus) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientSetCreativeSlot -> com.volmit.wormholes.src.technologies:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:int getSlot() -> getSlot
@@ -5805,7 +5808,7 @@ com.volmit.wormholes.util.WrapperPlayClientSetCreativeSlot -> com.volmit.wormhol
     74:75:void setClickedItem(org.bukkit.inventory.ItemStack) -> in
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientSettings -> com.volmit.wormholes.src.users:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:java.lang.String getLocale() -> getLocale
@@ -5820,14 +5823,14 @@ com.volmit.wormholes.util.WrapperPlayClientSettings -> com.volmit.wormholes.src.
     134:135:void setDisplayedSkinParts(int) -> neque
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientSpectate -> com.volmit.wormholes.src.vortals:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:java.util.UUID getTargetPlayer() -> cF
     53:54:void setTargetPlayer(java.util.UUID) -> amet
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientSteerVehicle -> com.volmit.wormholes.src.obfuscate:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:float getSideways() -> cG
@@ -5840,7 +5843,7 @@ com.volmit.wormholes.util.WrapperPlayClientSteerVehicle -> com.volmit.wormholes.
     89:90:void setUnmount(boolean) -> urna
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientTabComplete -> com.volmit.wormholes.src.star:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     43:43:java.lang.String getText() -> getText
@@ -5851,14 +5854,14 @@ com.volmit.wormholes.util.WrapperPlayClientTabComplete -> com.volmit.wormholes.s
     91:92:void setLookedAtBlock(com.comphenix.protocol.wrappers.BlockPosition) -> dolor
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientTeleportAccept -> com.volmit.wormholes.src.see:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:int getTeleportId() -> cM
     55:56:void setTeleportId(int) -> sagittis
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientTransaction -> com.volmit.wormholes.src.definition:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
@@ -5869,7 +5872,7 @@ com.volmit.wormholes.util.WrapperPlayClientTransaction -> com.volmit.wormholes.s
     94:95:void setAccepted(boolean) -> Proin
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientUpdateSign -> com.volmit.wormholes.src.show:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -5878,7 +5881,7 @@ com.volmit.wormholes.util.WrapperPlayClientUpdateSign -> com.volmit.wormholes.sr
     72:78:void setLines(java.lang.String[]) -> in
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientUseEntity -> com.volmit.wormholes.src.verb:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     34:36:void <init>() -> <init>
     39:40:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getTargetID() -> cP
@@ -5891,7 +5894,7 @@ com.volmit.wormholes.util.WrapperPlayClientUseEntity -> com.volmit.wormholes.src
     115:116:void setTargetVector(org.bukkit.util.Vector) -> at
     31:31:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientUseItem -> com.volmit.wormholes.src.confuse:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -5908,7 +5911,7 @@ com.volmit.wormholes.util.WrapperPlayClientUseItem -> com.volmit.wormholes.src.c
     136:137:void setCursorPositionZ(float) -> Vestibulum
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientVehicleMove -> com.volmit.wormholes.src.baffle:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:double getX() -> getX
@@ -5923,7 +5926,7 @@ com.volmit.wormholes.util.WrapperPlayClientVehicleMove -> com.volmit.wormholes.s
     134:135:void setPitch(float) -> setPitch
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientWindowClick -> com.volmit.wormholes.src.Relevance:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:int getWindowId() -> cr
@@ -5940,20 +5943,20 @@ com.volmit.wormholes.util.WrapperPlayClientWindowClick -> com.volmit.wormholes.s
     142:143:void setShift(com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType) -> Lorem
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType -> com.volmit.wormholes.src.Relevance$Lorem:
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType PICKUP -> pc
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType QUICK_MOVE -> pd
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType SWAP -> pe
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType CLONE -> pf
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType THROW -> pg
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType QUICK_CRAFT -> ph
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType PICKUP_ALL -> pi
-    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType[] $VALUES -> pj
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType PICKUP -> pd
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType QUICK_MOVE -> pe
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType SWAP -> pf
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType CLONE -> pg
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType THROW -> ph
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType QUICK_CRAFT -> pi
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType PICKUP_ALL -> pj
+    com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType[] $VALUES -> pk
     145:145:com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType[] values() -> values
     145:145:com.volmit.wormholes.util.WrapperPlayClientWindowClick$InventoryClickType valueOf(java.lang.String) -> valueOf
     145:145:void <init>(java.lang.String,int) -> <init>
     145:146:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerAbilities -> com.volmit.wormholes.src.A:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     37:37:boolean isInvulnurable() -> cf
@@ -5970,7 +5973,7 @@ com.volmit.wormholes.util.WrapperPlayServerAbilities -> com.volmit.wormholes.src
     81:82:void setWalkingSpeed(float) -> elit
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerAnimation -> com.volmit.wormholes.src.ZComplexity:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -5981,7 +5984,7 @@ com.volmit.wormholes.util.WrapperPlayServerAnimation -> com.volmit.wormholes.src
     97:98:void setAnimation(int) -> Quisque
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerAttachEntity -> com.volmit.wormholes.src.Length:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -5992,7 +5995,7 @@ com.volmit.wormholes.util.WrapperPlayServerAttachEntity -> com.volmit.wormholes.
     97:98:void setVehicleId(int) -> congue
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerBed -> com.volmit.wormholes.src.lists:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6003,7 +6006,7 @@ com.volmit.wormholes.util.WrapperPlayServerBed -> com.volmit.wormholes.src.lists
     98:99:void setLocation(com.comphenix.protocol.wrappers.BlockPosition) -> Lorem
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerBlockAction -> com.volmit.wormholes.src.blocks:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -6016,7 +6019,7 @@ com.volmit.wormholes.util.WrapperPlayServerBlockAction -> com.volmit.wormholes.s
     116:117:void setBlockType(org.bukkit.Material) -> dolor
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerBlockBreakAnimation -> com.volmit.wormholes.src.Common:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     34:36:void <init>() -> <init>
     39:40:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     50:50:int getEntityID() -> cv
@@ -6029,7 +6032,7 @@ com.volmit.wormholes.util.WrapperPlayServerBlockBreakAnimation -> com.volmit.wor
     119:120:void setDestroyStage(int) -> Integer
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerBlockChange -> com.volmit.wormholes.src.Informal:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -6039,14 +6042,14 @@ com.volmit.wormholes.util.WrapperPlayServerBlockChange -> com.volmit.wormholes.s
     86:87:void setBlockData(com.comphenix.protocol.wrappers.WrappedBlockData) -> Lorem
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCamera -> com.volmit.wormholes.src.Synonyms:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:int getCameraId() -> de
     51:52:void setCameraId(int) -> commodo
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerChat -> com.volmit.wormholes.src.for:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.WrappedChatComponent getMessage() -> df
@@ -6057,14 +6060,14 @@ com.volmit.wormholes.util.WrapperPlayServerChat -> com.volmit.wormholes.src.for:
     91:92:void setPosition(byte) -> setPosition
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCloseWindow -> com.volmit.wormholes.src.b:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
     53:54:void setWindowId(int) -> tempor
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCollect -> com.volmit.wormholes.src.c:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:int getCollectedEntityId() -> dg
@@ -6073,7 +6076,7 @@ com.volmit.wormholes.util.WrapperPlayServerCollect -> com.volmit.wormholes.src.c
     69:70:void setCollectorEntityId(int) -> cursus
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCombatEvent -> com.volmit.wormholes.src.d:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:com.comphenix.protocol.wrappers.EnumWrappers$CombatEventType getEvent() -> di
@@ -6088,10 +6091,10 @@ com.volmit.wormholes.util.WrapperPlayServerCombatEvent -> com.volmit.wormholes.s
     130:135:void setMessage(java.lang.String) -> setMessage
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCombatEvent$1 -> com.volmit.wormholes.src.d$1:
-    int[] $SwitchMap$com$comphenix$protocol$wrappers$EnumWrappers$CombatEventType -> pk
+    int[] $SwitchMap$com$comphenix$protocol$wrappers$EnumWrappers$CombatEventType -> pl
     97:97:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCustomPayload -> com.volmit.wormholes.src.f:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:java.lang.String getChannel() -> getChannel
@@ -6102,7 +6105,7 @@ com.volmit.wormholes.util.WrapperPlayServerCustomPayload -> com.volmit.wormholes
     100:101:void setContents(byte[]) -> dictum
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerCustomSoundEffect -> com.volmit.wormholes.src.g:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:java.lang.String getSoundName() -> dk
@@ -6121,7 +6124,7 @@ com.volmit.wormholes.util.WrapperPlayServerCustomSoundEffect -> com.volmit.wormh
     180:181:void setPitch(float) -> setPitch
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntity -> com.volmit.wormholes.src.h:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -6130,7 +6133,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntity -> com.volmit.wormholes.src.h:
     77:77:org.bukkit.entity.Entity getEntity(com.comphenix.protocol.events.PacketEvent) -> Lorem
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityDestroy -> com.volmit.wormholes.src.i:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getCount() -> getCount
@@ -6138,7 +6141,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityDestroy -> com.volmit.wormholes
     64:65:void setEntityIds(int[]) -> Lorem
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityEffect -> com.volmit.wormholes.src.j:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -6155,7 +6158,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityEffect -> com.volmit.wormholes.
     151:152:void setHideParticles(boolean) -> ac
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityEquipment -> com.volmit.wormholes.src.k:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     35:37:void <init>() -> <init>
     40:41:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     51:51:int getEntityID() -> cv
@@ -6168,7 +6171,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityEquipment -> com.volmit.wormhol
     108:109:void setItem(org.bukkit.inventory.ItemStack) -> setItem
     31:31:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation -> com.volmit.wormholes.src.l:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6179,7 +6182,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation -> com.volmit.worm
     98:99:void setHeadYaw(byte) -> vulputate
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityLook -> com.volmit.wormholes.src.m:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -6194,7 +6197,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityLook -> com.volmit.wormholes.sr
     131:132:void setOnGround(boolean) -> at
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityMetadata -> com.volmit.wormholes.src.n:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     36:38:void <init>() -> <init>
     41:42:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     52:52:int getEntityID() -> cv
@@ -6205,7 +6208,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityMetadata -> com.volmit.wormhole
     99:100:void setMetadata(java.util.List) -> setMetadata
     32:32:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityStatus -> com.volmit.wormholes.src.o:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -6216,7 +6219,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityStatus -> com.volmit.wormholes.
     97:98:void setEntityStatus(byte) -> dictum
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityTeleport -> com.volmit.wormholes.src.p:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:int getEntityID() -> cv
@@ -6237,7 +6240,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityTeleport -> com.volmit.wormhole
     144:145:void setOnGround(boolean) -> at
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerEntityVelocity -> com.volmit.wormholes.src.q:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6252,7 +6255,7 @@ com.volmit.wormholes.util.WrapperPlayServerEntityVelocity -> com.volmit.wormhole
     132:133:void setVelocityZ(double) -> Pellentesque
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerExperience -> com.volmit.wormholes.src.r:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:float getExperienceBar() -> dx
@@ -6263,7 +6266,7 @@ com.volmit.wormholes.util.WrapperPlayServerExperience -> com.volmit.wormholes.sr
     89:90:void setTotalExperience(int) -> setTotalExperience
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerExplosion -> com.volmit.wormholes.src.s:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:double getX() -> getX
@@ -6284,7 +6287,7 @@ com.volmit.wormholes.util.WrapperPlayServerExplosion -> com.volmit.wormholes.src
     154:155:void setPlayerVelocityZ(float) -> euismod
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerGameStateChange -> com.volmit.wormholes.src.t:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     43:43:int getReason() -> getReason
@@ -6293,28 +6296,28 @@ com.volmit.wormholes.util.WrapperPlayServerGameStateChange -> com.volmit.wormhol
     72:73:void setValue(float) -> setValue
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerHeldItemSlot -> com.volmit.wormholes.src.u:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getSlot() -> getSlot
     53:54:void setSlot(int) -> lectus
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerKeepAlive -> com.volmit.wormholes.src.v:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:int getKeepAliveId() -> cz
     51:52:void setKeepAliveId(int) -> consequat
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerKickDisconnect -> com.volmit.wormholes.src.w:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     47:47:com.comphenix.protocol.wrappers.WrappedChatComponent getReason() -> cd
     56:57:void setReason(com.comphenix.protocol.wrappers.WrappedChatComponent) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerLogin -> com.volmit.wormholes.src.x:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     35:37:void <init>() -> <init>
     40:41:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     51:51:int getEntityID() -> cv
@@ -6335,7 +6338,7 @@ com.volmit.wormholes.util.WrapperPlayServerLogin -> com.volmit.wormholes.src.x:
     199:200:void setReducedDebugInfo(boolean) -> setReducedDebugInfo
     32:32:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerMap -> com.volmit.wormholes.src.y:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getItemDamage() -> dG
@@ -6358,7 +6361,7 @@ com.volmit.wormholes.util.WrapperPlayServerMap -> com.volmit.wormholes.src.y:
     127:128:void setData(byte[]) -> setData
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerMapChunk -> com.volmit.wormholes.src.z:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getChunkX() -> getChunkX
@@ -6371,7 +6374,7 @@ com.volmit.wormholes.util.WrapperPlayServerMapChunk -> com.volmit.wormholes.src.
     103:104:void setGroundUpContinuous(boolean) -> posuere
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerMount -> com.volmit.wormholes.src.B:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     38:40:void <init>() -> <init>
     43:44:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     54:54:int getEntityID() -> cv
@@ -6385,7 +6388,7 @@ com.volmit.wormholes.util.WrapperPlayServerMount -> com.volmit.wormholes.src.B:
     114:120:void setPassengers(java.util.List) -> consectetur
     35:35:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerMultiBlockChange -> com.volmit.wormholes.src.C:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.ChunkCoordIntPair getChunk() -> getChunk
@@ -6394,7 +6397,7 @@ com.volmit.wormholes.util.WrapperPlayServerMultiBlockChange -> com.volmit.wormho
     72:73:void setRecords(com.comphenix.protocol.wrappers.MultiBlockChangeInfo[]) -> Lorem
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerNamedEntitySpawn -> com.volmit.wormholes.src.D:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     37:39:void <init>() -> <init>
     42:43:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     53:53:int getEntityID() -> cv
@@ -6419,7 +6422,7 @@ com.volmit.wormholes.util.WrapperPlayServerNamedEntitySpawn -> com.volmit.wormho
     202:203:void setMetadata(com.comphenix.protocol.wrappers.WrappedDataWatcher) -> Lorem
     33:33:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerNamedSoundEffect -> com.volmit.wormholes.src.E:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     41:41:org.bukkit.Sound getSoundEffect() -> dR
@@ -6438,14 +6441,14 @@ com.volmit.wormholes.util.WrapperPlayServerNamedSoundEffect -> com.volmit.wormho
     153:154:void setPitch(float) -> setPitch
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerOpenSignEditor -> com.volmit.wormholes.src.F:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
     54:55:void setLocation(com.comphenix.protocol.wrappers.BlockPosition) -> Lorem
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerOpenWindow -> com.volmit.wormholes.src.G:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     50:50:int getWindowID() -> dV
@@ -6462,7 +6465,7 @@ com.volmit.wormholes.util.WrapperPlayServerOpenWindow -> com.volmit.wormholes.sr
     160:160:org.bukkit.entity.Entity getEntity(com.comphenix.protocol.events.PacketEvent) -> Lorem
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerPlayerInfo -> com.volmit.wormholes.src.H:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     41:41:com.comphenix.protocol.wrappers.EnumWrappers$PlayerInfoAction getAction() -> dZ
@@ -6471,7 +6474,7 @@ com.volmit.wormholes.util.WrapperPlayServerPlayerInfo -> com.volmit.wormholes.sr
     53:54:void setData(java.util.List) -> adipiscing
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerPlayerListHeaderFooter -> com.volmit.wormholes.src.I:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:com.comphenix.protocol.wrappers.WrappedChatComponent getHeader() -> eb
@@ -6480,8 +6483,8 @@ com.volmit.wormholes.util.WrapperPlayServerPlayerListHeaderFooter -> com.volmit.
     71:72:void setFooter(com.comphenix.protocol.wrappers.WrappedChatComponent) -> consectetur
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerPosition -> com.volmit.wormholes.src.J:
-    com.comphenix.protocol.PacketType TYPE -> pb
-    java.lang.Class FLAGS_CLASS -> pl
+    com.comphenix.protocol.PacketType TYPE -> pc
+    java.lang.Class FLAGS_CLASS -> pm
     34:36:void <init>() -> <init>
     39:40:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     50:50:double getX() -> getX
@@ -6499,18 +6502,18 @@ com.volmit.wormholes.util.WrapperPlayServerPosition -> com.volmit.wormholes.src.
     162:163:void setFlags(java.util.Set) -> Lorem
     31:143:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag -> com.volmit.wormholes.src.J$Lorem:
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag X -> pm
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Y -> pn
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Z -> po
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Y_ROT -> pp
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag X_ROT -> pq
-    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag[] $VALUES -> pr
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag X -> pn
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Y -> po
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Z -> pp
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag Y_ROT -> pq
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag X_ROT -> pr
+    com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag[] $VALUES -> ps
     146:146:com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag[] values() -> values
     146:146:com.volmit.wormholes.util.WrapperPlayServerPosition$PlayerTeleportFlag valueOf(java.lang.String) -> valueOf
     146:146:void <init>(java.lang.String,int) -> <init>
     146:147:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerRelEntityMove -> com.volmit.wormholes.src.K:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6527,7 +6530,7 @@ com.volmit.wormholes.util.WrapperPlayServerRelEntityMove -> com.volmit.wormholes
     120:121:void setOnGround(boolean) -> at
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerRelEntityMoveLook -> com.volmit.wormholes.src.L:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getEntityID() -> cv
@@ -6548,7 +6551,7 @@ com.volmit.wormholes.util.WrapperPlayServerRelEntityMoveLook -> com.volmit.wormh
     209:210:void setOnGround(boolean) -> at
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerRemoveEntityEffect -> com.volmit.wormholes.src.M:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     34:36:void <init>() -> <init>
     39:40:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     50:50:int getEntityID() -> cv
@@ -6559,7 +6562,7 @@ com.volmit.wormholes.util.WrapperPlayServerRemoveEntityEffect -> com.volmit.worm
     87:88:void setEffect(org.bukkit.potion.PotionEffectType) -> ipsum
     30:30:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerResourcePackSend -> com.volmit.wormholes.src.N:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:java.lang.String getUrl() -> getUrl
@@ -6568,7 +6571,7 @@ com.volmit.wormholes.util.WrapperPlayServerResourcePackSend -> com.volmit.wormho
     78:79:void setHash(java.lang.String) -> Donec
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerRespawn -> com.volmit.wormholes.src.O:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     48:48:int getDimension() -> getDimension
@@ -6581,7 +6584,7 @@ com.volmit.wormholes.util.WrapperPlayServerRespawn -> com.volmit.wormholes.src.O
     118:119:void setLevelType(org.bukkit.WorldType) -> Lorem
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardDisplayObjective -> com.volmit.wormholes.src.P:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:int getPosition() -> getPosition
@@ -6590,7 +6593,7 @@ com.volmit.wormholes.util.WrapperPlayServerScoreboardDisplayObjective -> com.vol
     75:76:void setScoreName(java.lang.String) -> setScoreName
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective -> com.volmit.wormholes.src.Q:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     63:63:java.lang.String getName() -> getName
@@ -6603,23 +6606,23 @@ com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective -> com.volmit.wor
     134:135:void setMode(int) -> setMode
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay -> com.volmit.wormholes.src.Q$Lorem:
-    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay INTEGER -> ps
-    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay HEARTS -> pt
-    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay[] $VALUES -> pu
+    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay INTEGER -> pt
+    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay HEARTS -> pu
+    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay[] $VALUES -> pv
     137:137:com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay[] values() -> values
     137:137:com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$HealthDisplay valueOf(java.lang.String) -> valueOf
     137:137:void <init>(java.lang.String,int) -> <init>
     137:138:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$Mode -> com.volmit.wormholes.src.Q$ipsum:
-    int ADD_OBJECTIVE -> pv
-    int REMOVE_OBJECTIVE -> pw
-    int UPDATE_VALUE -> px
-    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$Mode INSTANCE -> py
+    int ADD_OBJECTIVE -> pw
+    int REMOVE_OBJECTIVE -> px
+    int UPDATE_VALUE -> py
+    com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$Mode INSTANCE -> pz
     43:43:void <init>() -> <init>
     51:51:com.volmit.wormholes.util.WrapperPlayServerScoreboardObjective$Mode getInstance() -> en
     48:48:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardScore -> com.volmit.wormholes.src.R:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:java.lang.String getScoreName() -> getScoreName
@@ -6632,7 +6635,7 @@ com.volmit.wormholes.util.WrapperPlayServerScoreboardScore -> com.volmit.wormhol
     104:105:void setScoreboardAction(com.comphenix.protocol.wrappers.EnumWrappers$ScoreboardAction) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam -> com.volmit.wormholes.src.S:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     68:68:java.lang.String getName() -> getName
@@ -6657,25 +6660,25 @@ com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam -> com.volmit.wormhole
     273:274:void setPackOptionData(int) -> sodales
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam$Mode -> com.volmit.wormholes.src.S$Lorem:
-    int TEAM_CREATED -> pz
-    int TEAM_REMOVED -> pA
-    int TEAM_UPDATED -> pB
-    int PLAYERS_ADDED -> pC
-    int PLAYERS_REMOVED -> pD
-    com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam$Mode INSTANCE -> pE
+    int TEAM_CREATED -> pA
+    int TEAM_REMOVED -> pB
+    int TEAM_UPDATED -> pC
+    int PLAYERS_ADDED -> pD
+    int PLAYERS_REMOVED -> pE
+    com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam$Mode INSTANCE -> pF
     46:46:void <init>() -> <init>
     56:56:com.volmit.wormholes.util.WrapperPlayServerScoreboardTeam$Mode getInstance() -> er
     53:53:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerServerDifficulty -> com.volmit.wormholes.src.T:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     46:46:com.comphenix.protocol.wrappers.EnumWrappers$Difficulty getDifficulty() -> dD
     55:56:void setDifficulty(com.comphenix.protocol.wrappers.EnumWrappers$Difficulty) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSetCooldown -> com.volmit.wormholes.src.U:
-    java.lang.Class ITEM_CLASS -> pF
-    com.comphenix.protocol.PacketType TYPE -> pb
+    java.lang.Class ITEM_CLASS -> pG
+    com.comphenix.protocol.PacketType TYPE -> pc
     36:38:void <init>() -> <init>
     41:42:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:46:org.bukkit.Material getItem() -> es
@@ -6686,8 +6689,8 @@ com.volmit.wormholes.util.WrapperPlayServerSetCooldown -> com.volmit.wormholes.s
     31:33:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSetCooldown$1 -> com.volmit.wormholes.src.U$1:
 com.volmit.wormholes.util.WrapperPlayServerSetCooldown$ItemConverter -> com.volmit.wormholes.src.U$Lorem:
-    com.comphenix.protocol.reflect.accessors.MethodAccessor getMaterial -> pG
-    com.comphenix.protocol.reflect.accessors.MethodAccessor getItem -> pH
+    com.comphenix.protocol.reflect.accessors.MethodAccessor getMaterial -> pH
+    com.comphenix.protocol.reflect.accessors.MethodAccessor getItem -> pI
     63:63:void <init>() -> <init>
     69:76:org.bukkit.Material getSpecific(java.lang.Object) -> enim
     81:88:java.lang.Object getGeneric(java.lang.Class,org.bukkit.Material) -> Lorem
@@ -6697,7 +6700,7 @@ com.volmit.wormholes.util.WrapperPlayServerSetCooldown$ItemConverter -> com.volm
     63:63:void <init>(com.volmit.wormholes.util.WrapperPlayServerSetCooldown$1) -> <init>
     64:65:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSetSlot -> com.volmit.wormholes.src.V:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     51:51:int getWindowId() -> cr
@@ -6708,8 +6711,8 @@ com.volmit.wormholes.util.WrapperPlayServerSetSlot -> com.volmit.wormholes.src.V
     98:99:void setSlotData(org.bukkit.inventory.ItemStack) -> purus
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntity -> com.volmit.wormholes.src.W:
-    com.comphenix.protocol.PacketType TYPE -> pb
-    com.comphenix.protocol.injector.PacketConstructor entityConstructor -> pI
+    com.comphenix.protocol.PacketType TYPE -> pc
+    com.comphenix.protocol.injector.PacketConstructor entityConstructor -> pJ
     86:88:void <init>() -> <init>
     91:92:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     95:96:void <init>(org.bukkit.entity.Entity,int,int) -> <init>
@@ -6742,37 +6745,37 @@ com.volmit.wormholes.util.WrapperPlayServerSpawnEntity -> com.volmit.wormholes.s
     376:377:void setObjectData(int) -> velit
     34:34:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntity$ObjectTypes -> com.volmit.wormholes.src.W$Lorem:
-    int BOAT -> pJ
-    int ITEM_STACK -> pK
-    int AREA_EFFECT_CLOUD -> pL
-    int MINECART -> pM
-    int ACTIVATED_TNT -> pN
-    int ENDER_CRYSTAL -> pO
-    int TIPPED_ARROW_PROJECTILE -> pP
-    int SNOWBALL_PROJECTILE -> pQ
-    int EGG_PROJECTILE -> pR
-    int GHAST_FIREBALL -> pS
-    int BLAZE_FIREBALL -> pT
-    int THROWN_ENDERPEARL -> pU
-    int WITHER_SKULL_PROJECTILE -> pV
-    int SHULKER_BULLET -> pW
-    int FALLING_BLOCK -> pX
-    int ITEM_FRAME -> pY
-    int EYE_OF_ENDER -> pZ
-    int THROWN_POTION -> qa
-    int THROWN_EXP_BOTTLE -> qb
-    int FIREWORK_ROCKET -> qc
-    int LEASH_KNOT -> qd
-    int ARMORSTAND -> qe
-    int FISHING_FLOAT -> qf
-    int SPECTRAL_ARROW -> qg
-    int DRAGON_FIREBALL -> qh
-    com.volmit.wormholes.util.WrapperPlayServerSpawnEntity$ObjectTypes INSTANCE -> qi
+    int BOAT -> pK
+    int ITEM_STACK -> pL
+    int AREA_EFFECT_CLOUD -> pM
+    int MINECART -> pN
+    int ACTIVATED_TNT -> pO
+    int ENDER_CRYSTAL -> pP
+    int TIPPED_ARROW_PROJECTILE -> pQ
+    int SNOWBALL_PROJECTILE -> pR
+    int EGG_PROJECTILE -> pS
+    int GHAST_FIREBALL -> pT
+    int BLAZE_FIREBALL -> pU
+    int THROWN_ENDERPEARL -> pV
+    int WITHER_SKULL_PROJECTILE -> pW
+    int SHULKER_BULLET -> pX
+    int FALLING_BLOCK -> pY
+    int ITEM_FRAME -> pZ
+    int EYE_OF_ENDER -> qa
+    int THROWN_POTION -> qb
+    int THROWN_EXP_BOTTLE -> qc
+    int FIREWORK_ROCKET -> qd
+    int LEASH_KNOT -> qe
+    int ARMORSTAND -> qf
+    int FISHING_FLOAT -> qg
+    int SPECTRAL_ARROW -> qh
+    int DRAGON_FIREBALL -> qi
+    com.volmit.wormholes.util.WrapperPlayServerSpawnEntity$ObjectTypes INSTANCE -> qj
     43:43:void <init>() -> <init>
     81:81:com.volmit.wormholes.util.WrapperPlayServerSpawnEntity$ObjectTypes getInstance() -> eD
     73:73:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntityExperienceOrb -> com.volmit.wormholes.src.X:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6789,8 +6792,8 @@ com.volmit.wormholes.util.WrapperPlayServerSpawnEntityExperienceOrb -> com.volmi
     158:159:void setCount(int) -> setCount
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntityLiving -> com.volmit.wormholes.src.Y:
-    com.comphenix.protocol.PacketType TYPE -> pb
-    com.comphenix.protocol.injector.PacketConstructor entityConstructor -> pI
+    com.comphenix.protocol.PacketType TYPE -> pc
+    com.comphenix.protocol.injector.PacketConstructor entityConstructor -> pJ
     41:43:void <init>() -> <init>
     46:47:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     50:51:void <init>(org.bukkit.entity.Entity) -> <init>
@@ -6825,7 +6828,7 @@ com.volmit.wormholes.util.WrapperPlayServerSpawnEntityLiving -> com.volmit.wormh
     313:314:void setMetadata(com.comphenix.protocol.wrappers.WrappedDataWatcher) -> Lorem
     35:35:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntityPainting -> com.volmit.wormholes.src.Z:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     35:37:void <init>() -> <init>
     40:41:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     51:51:int getEntityID() -> cv
@@ -6840,7 +6843,7 @@ com.volmit.wormholes.util.WrapperPlayServerSpawnEntityPainting -> com.volmit.wor
     128:129:void setDirection(com.comphenix.protocol.wrappers.EnumWrappers$Direction) -> Lorem
     31:31:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnEntityWeather -> com.volmit.wormholes.src.aa:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     33:35:void <init>() -> <init>
     38:39:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getEntityID() -> cv
@@ -6857,21 +6860,21 @@ com.volmit.wormholes.util.WrapperPlayServerSpawnEntityWeather -> com.volmit.worm
     158:159:void setZ(double) -> setZ
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerSpawnPosition -> com.volmit.wormholes.src.ab:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
     54:55:void setLocation(com.comphenix.protocol.wrappers.BlockPosition) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerStatistic -> com.volmit.wormholes.src.ae:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     40:40:java.util.Map getStatistics() -> getStatistics
     44:45:void setStatistics(java.util.Map) -> ipsum
     28:28:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerTabComplete -> com.volmit.wormholes.src.af:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getCount() -> getCount
@@ -6879,7 +6882,7 @@ com.volmit.wormholes.util.WrapperPlayServerTabComplete -> com.volmit.wormholes.s
     65:66:void setMatches(java.lang.String[]) -> purus
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerTileEntityData -> com.volmit.wormholes.src.ag:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     31:33:void <init>() -> <init>
     36:37:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.BlockPosition getLocation() -> ck
@@ -6890,7 +6893,7 @@ com.volmit.wormholes.util.WrapperPlayServerTileEntityData -> com.volmit.wormhole
     94:95:void setNbtData(com.comphenix.protocol.wrappers.nbt.NbtBase) -> Lorem
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerTitle -> com.volmit.wormholes.src.ah:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:com.comphenix.protocol.wrappers.EnumWrappers$TitleAction getAction() -> eH
@@ -6905,7 +6908,7 @@ com.volmit.wormholes.util.WrapperPlayServerTitle -> com.volmit.wormholes.src.ah:
     129:130:void setFadeOut(int) -> setFadeOut
     27:27:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerTransaction -> com.volmit.wormholes.src.ai:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
@@ -6916,7 +6919,7 @@ com.volmit.wormholes.util.WrapperPlayServerTransaction -> com.volmit.wormholes.s
     94:95:void setAccepted(boolean) -> Proin
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerUnloadChunk -> com.volmit.wormholes.src.aj:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:int getChunkX() -> getChunkX
@@ -6925,7 +6928,7 @@ com.volmit.wormholes.util.WrapperPlayServerUnloadChunk -> com.volmit.wormholes.s
     74:75:void setChunkZ(int) -> viverra
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerUpdateAttributes -> com.volmit.wormholes.src.ak:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     36:38:void <init>() -> <init>
     41:42:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     52:52:int getEntityID() -> cv
@@ -6936,7 +6939,7 @@ com.volmit.wormholes.util.WrapperPlayServerUpdateAttributes -> com.volmit.wormho
     99:100:void setAttributes(java.util.List) -> setAttributes
     32:32:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerUpdateHealth -> com.volmit.wormholes.src.al:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:float getHealth() -> getHealth
@@ -6947,7 +6950,7 @@ com.volmit.wormholes.util.WrapperPlayServerUpdateHealth -> com.volmit.wormholes.
     93:94:void setFoodSaturation(float) -> at
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerUpdateTime -> com.volmit.wormholes.src.am:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:long getAgeOfTheWorld() -> eL
@@ -6956,7 +6959,7 @@ com.volmit.wormholes.util.WrapperPlayServerUpdateTime -> com.volmit.wormholes.sr
     74:75:void setTimeOfDay(long) -> setTimeOfDay
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerVehicleMove -> com.volmit.wormholes.src.an:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:double getX() -> getX
@@ -6971,7 +6974,7 @@ com.volmit.wormholes.util.WrapperPlayServerVehicleMove -> com.volmit.wormholes.s
     134:135:void setPitch(float) -> setPitch
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerWindowData -> com.volmit.wormholes.src.ao:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:int getWindowId() -> cr
@@ -6982,7 +6985,7 @@ com.volmit.wormholes.util.WrapperPlayServerWindowData -> com.volmit.wormholes.sr
     93:94:void setValue(int) -> setValue
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerWindowItems -> com.volmit.wormholes.src.ap:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     32:34:void <init>() -> <init>
     37:38:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     49:49:int getWindowId() -> cr
@@ -6991,7 +6994,7 @@ com.volmit.wormholes.util.WrapperPlayServerWindowItems -> com.volmit.wormholes.s
     76:77:void setSlotData(java.util.List) -> Morbi
     29:29:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerWorldBorder -> com.volmit.wormholes.src.aq:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     38:38:com.comphenix.protocol.wrappers.EnumWrappers$WorldBorderAction getAction() -> eO
@@ -7014,7 +7017,7 @@ com.volmit.wormholes.util.WrapperPlayServerWorldBorder -> com.volmit.wormholes.s
     106:107:void setWarningDistance(int) -> setWarningDistance
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerWorldEvent -> com.volmit.wormholes.src.ar:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:int getEffectId() -> getEffectId
@@ -7027,7 +7030,7 @@ com.volmit.wormholes.util.WrapperPlayServerWorldEvent -> com.volmit.wormholes.sr
     114:115:void setDisableRelativeVolume(boolean) -> molestie
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperPlayServerWorldParticles -> com.volmit.wormholes.src.as:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     30:32:void <init>() -> <init>
     35:36:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:com.comphenix.protocol.wrappers.EnumWrappers$Particle getParticleType() -> eU
@@ -7054,41 +7057,41 @@ com.volmit.wormholes.util.WrapperPlayServerWorldParticles -> com.volmit.wormhole
     258:259:void setData(int[]) -> dolor
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperStatusClientPing -> com.volmit.wormholes.src.au:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     42:42:long getTime() -> getTime
     51:52:void setTime(long) -> setTime
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperStatusClientStart -> com.volmit.wormholes.src.av:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperStatusServerPong -> com.volmit.wormholes.src.aw:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     28:30:void <init>() -> <init>
     33:34:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     44:44:long getTime() -> getTime
     53:54:void setTime(long) -> setTime
     25:25:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.WrapperStatusServerServerInfo -> com.volmit.wormholes.src.ax:
-    com.comphenix.protocol.PacketType TYPE -> pb
+    com.comphenix.protocol.PacketType TYPE -> pc
     29:31:void <init>() -> <init>
     34:35:void <init>(com.comphenix.protocol.events.PacketContainer) -> <init>
     45:45:com.comphenix.protocol.wrappers.WrappedServerPing getJsonResponse() -> fb
     54:55:void setJsonResponse(com.comphenix.protocol.wrappers.WrappedServerPing) -> Lorem
     26:26:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.XML -> com.volmit.wormholes.src.ay:
-    java.lang.Character AMP -> qj
-    java.lang.Character APOS -> qk
-    java.lang.Character BANG -> ql
-    java.lang.Character EQ -> qm
-    java.lang.Character GT -> qn
-    java.lang.Character LT -> qo
-    java.lang.Character QUEST -> qp
-    java.lang.Character QUOT -> qq
-    java.lang.Character SLASH -> qr
+    java.lang.Character AMP -> qk
+    java.lang.Character APOS -> ql
+    java.lang.Character BANG -> qm
+    java.lang.Character EQ -> qn
+    java.lang.Character GT -> qo
+    java.lang.Character LT -> qp
+    java.lang.Character QUEST -> qq
+    java.lang.Character QUOT -> qr
+    java.lang.Character SLASH -> qs
     35:35:void <init>() -> <init>
     76:99:java.lang.String escape(java.lang.String) -> escape
     109:119:void noSpace(java.lang.String) -> malesuada
@@ -7099,7 +7102,7 @@ com.volmit.wormholes.util.XML -> com.volmit.wormholes.src.ay:
     381:485:java.lang.String toString(java.lang.Object,java.lang.String) -> toString
     38:62:void <clinit>() -> <clinit>
 com.volmit.wormholes.util.XMLTokener -> com.volmit.wormholes.src.az:
-    java.util.HashMap entity -> qs
+    java.util.HashMap entity -> qt
     55:56:void <init>(java.lang.String) -> <init>
     66:77:java.lang.String nextCDATA() -> fc
     96:115:java.lang.Object nextContent() -> fd
@@ -7115,7 +7118,7 @@ com.volmit.wormholes.util.YAMLDataOutput -> com.volmit.wormholes.src.aB:
     13:13:void <init>() -> <init>
     18:28:void save(com.volmit.wormholes.util.DataCluster,java.io.File) -> Lorem
 com.volmit.wormholes.util.ZipArchive -> com.volmit.wormholes.src.aC:
-    com.volmit.wormholes.util.GMap fileSet -> qt
+    com.volmit.wormholes.util.GMap fileSet -> qu
     17:19:void <init>() -> <init>
     24:25:void add(java.io.File,java.io.File) -> Lorem
     30:37:void remove(java.io.File) -> remove
@@ -7123,8 +7126,8 @@ com.volmit.wormholes.util.ZipArchive -> com.volmit.wormholes.src.aC:
     48:48:com.volmit.wormholes.util.ArchiveType getType() -> implement
 com.volmit.wormholes.util.package-info -> com.volmit.wormholes.src.aD:
 com.volmit.wormholes.wormhole.BaseWormhole -> com.volmit.wormholes.src.aE:
-    com.volmit.wormholes.portal.LocalPortal source -> qu
-    com.volmit.wormholes.portal.Portal destination -> qv
+    com.volmit.wormholes.portal.LocalPortal source -> qv
+    com.volmit.wormholes.portal.Portal destination -> qw
     com.volmit.wormholes.util.GList filters -> on
     18:23:void <init>(com.volmit.wormholes.portal.LocalPortal,com.volmit.wormholes.portal.Portal) -> <init>
     28:28:com.volmit.wormholes.portal.LocalPortal getSource() -> fg
@@ -7133,18 +7136,18 @@ com.volmit.wormholes.wormhole.BaseWormhole -> com.volmit.wormholes.src.aE:
     46:61:void push(org.bukkit.entity.Entity,org.bukkit.Location) -> ipsum
     void onPush(org.bukkit.entity.Entity,org.bukkit.Location) -> dolor
 com.volmit.wormholes.wormhole.FilterMode -> com.volmit.wormholes.src.aF:
-    com.volmit.wormholes.wormhole.FilterMode WHITELIST -> qw
-    com.volmit.wormholes.wormhole.FilterMode BLACKLIST -> qx
-    com.volmit.wormholes.wormhole.FilterMode[] $VALUES -> qy
+    com.volmit.wormholes.wormhole.FilterMode WHITELIST -> qx
+    com.volmit.wormholes.wormhole.FilterMode BLACKLIST -> qy
+    com.volmit.wormholes.wormhole.FilterMode[] $VALUES -> qz
     3:3:com.volmit.wormholes.wormhole.FilterMode[] values() -> values
     3:3:com.volmit.wormholes.wormhole.FilterMode valueOf(java.lang.String) -> valueOf
     3:3:void <init>(java.lang.String,int) -> <init>
     3:6:void <clinit>() -> <clinit>
 com.volmit.wormholes.wormhole.FilterPolicy -> com.volmit.wormholes.src.aG:
-    com.volmit.wormholes.wormhole.FilterPolicy MUTEX -> qz
-    com.volmit.wormholes.wormhole.FilterPolicy LOCAL -> qA
-    com.volmit.wormholes.wormhole.FilterPolicy BOTH -> qB
-    com.volmit.wormholes.wormhole.FilterPolicy[] $VALUES -> qC
+    com.volmit.wormholes.wormhole.FilterPolicy MUTEX -> qA
+    com.volmit.wormholes.wormhole.FilterPolicy LOCAL -> qB
+    com.volmit.wormholes.wormhole.FilterPolicy BOTH -> qC
+    com.volmit.wormholes.wormhole.FilterPolicy[] $VALUES -> qD
     3:3:com.volmit.wormholes.wormhole.FilterPolicy[] values() -> values
     3:3:com.volmit.wormholes.wormhole.FilterPolicy valueOf(java.lang.String) -> valueOf
     3:3:void <init>(java.lang.String,int) -> <init>
@@ -7163,11 +7166,11 @@ com.volmit.wormholes.wormhole.Wormhole -> com.volmit.wormholes.src.aJ:
     void push(org.bukkit.entity.Entity,org.bukkit.Location) -> ipsum
     com.volmit.wormholes.util.GList getFilters() -> fi
 com.volmit.wormholes.wormhole.WormholeEntityFilter -> com.volmit.wormholes.src.aK:
-    com.volmit.wormholes.wormhole.FilterPolicy policy -> qD
-    com.volmit.wormholes.wormhole.FilterMode mode -> qE
+    com.volmit.wormholes.wormhole.FilterPolicy policy -> qE
+    com.volmit.wormholes.wormhole.FilterMode mode -> qF
     com.volmit.wormholes.util.GList entities -> bQ
-    int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterMode -> qF
-    int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterPolicy -> qG
+    int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterMode -> qG
+    int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterPolicy -> qH
     13:18:void <init>(com.volmit.wormholes.wormhole.FilterPolicy,com.volmit.wormholes.wormhole.FilterMode,com.volmit.wormholes.util.GList) -> <init>
     22:23:void <init>(com.volmit.wormholes.wormhole.FilterPolicy,com.volmit.wormholes.wormhole.FilterMode,org.bukkit.entity.EntityType[]) -> <init>
     28:88:boolean onFilter(com.volmit.wormholes.wormhole.Wormhole,org.bukkit.entity.Entity) -> Lorem
@@ -7179,8 +7182,8 @@ com.volmit.wormholes.wormhole.WormholeEntityFilter -> com.volmit.wormholes.src.a
     7:7:int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterMode() -> fn
     7:7:int[] $SWITCH_TABLE$com$volmit$wormholes$wormhole$FilterPolicy() -> fo
 com.volmit.wormholes.wormhole.WormholeEntityFilter$1 -> com.volmit.wormholes.src.aK$1:
-    int[] $SwitchMap$com$volmit$wormholes$wormhole$FilterMode -> qH
-    int[] $SwitchMap$com$volmit$wormholes$wormhole$FilterPolicy -> qI
+    int[] $SwitchMap$com$volmit$wormholes$wormhole$FilterMode -> qI
+    int[] $SwitchMap$com$volmit$wormholes$wormhole$FilterPolicy -> qJ
     28:31:void <clinit>() -> <clinit>
 com.volmit.wormholes.wormhole.WormholeFilter -> com.volmit.wormholes.src.aL:
     boolean onFilter(com.volmit.wormholes.wormhole.Wormhole,org.bukkit.entity.Entity) -> Lorem

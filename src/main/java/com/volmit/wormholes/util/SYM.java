@@ -86,7 +86,7 @@ public class SYM
 		{
 			try
 			{
-				rtx.addTextHover("" + (char) i.get(null), new RTEX(new ColoredString(C.WHITE, i.getName() + "\n"), new ColoredString(C.RED, (char) i.get(null) + ""), new ColoredString(C.GREEN, (char) i.get(null) + ""), new ColoredString(C.BLUE, (char) i.get(null) + "\n"), new ColoredString(C.GOLD, (char) i.get(null) + ""), new ColoredString(C.YELLOW, (char) i.get(null) + ""), new ColoredString(C.AQUA, (char) i.get(null) + "\n")), C.LIGHT_PURPLE);
+				rtx.addTextHover("" + (char) i.get(null), new RTEX(new ColoredString(C.WHITE, i.getName() + "\n"), new ColoredString(C.RED, (char) i.get(null) + ""), new ColoredString(C.GREEN, (char) i.get(null) + ""), new ColoredString(C.BLUE, (char) i.get(null) + "\n"), new ColoredString(C.GOLD, (char) i.get(null) + ""), new ColoredString(C.YELLOW, (char) i.get(null) + ""), new ColoredString(C.AQUA, (char) i.get(null) + "\n")), C.GOLD);
 			}
 			
 			catch(Exception e)

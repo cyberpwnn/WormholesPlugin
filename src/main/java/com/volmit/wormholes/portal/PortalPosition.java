@@ -80,6 +80,11 @@ public class PortalPosition
 		corneriDR = bri();
 	}
 	
+	public int getSize()
+	{
+		return (int) centerUp.distance(centerDown);
+	}
+	
 	public Location intersectsv(Location l, Vector next)
 	{
 		return intersectsv(l, l.clone().add(next));

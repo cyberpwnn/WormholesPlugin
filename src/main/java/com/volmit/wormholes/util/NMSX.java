@@ -678,13 +678,18 @@ public class NMSX
 	 */
 	public static void sendActionBar(Player player, String message)
 	{
+		if(!VersionBukkit.tc())
+		{
+			return;
+		}
+		
 		try
 		{
 			Object ppoc;
 			Class<?> c3;
 			Class<?> c2;
 			Class<?> c1 = Class.forName("org.bukkit.craftbukkit." + nmsver + ".entity.CraftPlayer");
-			Object p = c1.cast(player);
+			Object p = c1.cast((Object) player);
 			Class<?> c4 = Class.forName("net.minecraft.server." + nmsver + ".PacketPlayOutChat");
 			Class<?> c5 = Class.forName("net.minecraft.server." + nmsver + ".Packet");
 			
@@ -702,7 +707,18 @@ public class NMSX
 				c2 = Class.forName("net.minecraft.server." + nmsver + ".ChatComponentText");
 				c3 = Class.forName("net.minecraft.server." + nmsver + ".IChatBaseComponent");
 				Object o = c2.getConstructor(String.class).newInstance(message);
-				ppoc = c4.getConstructor(c3, Byte.TYPE).newInstance(o, Byte.valueOf((byte) 2));
+				
+				if(VersionBukkit.get().equals(VersionBukkit.V112))
+				{
+					Class<?> c6 = Class.forName("net.minecraft.server." + nmsver + ".ChatMessageType");
+					Object type = c6.getMethod("valueOf", String.class).invoke(null, "GAME_INFO");
+					ppoc = c4.getConstructor(c3, c6).newInstance(o, type);
+				}
+				
+				else
+				{
+					ppoc = c4.getConstructor(c3, Byte.TYPE).newInstance(o, Byte.valueOf((byte) 2));
+				}
 			}
 			
 			Method m1 = c1.getDeclaredMethod("getHandle", new Class[0]);
@@ -715,7 +731,7 @@ public class NMSX
 		
 		catch(Exception ex)
 		{
-			
+			ex.printStackTrace();
 		}
 	}
 	

@@ -28,6 +28,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
@@ -439,7 +440,6 @@ public class MutexService implements Listener
 		t.start();
 		updatePortals();
 		updateThrottles();
-		//clearVectorCache();
 		
 		try
 		{
@@ -465,6 +465,11 @@ public class MutexService implements Listener
 		
 		t.stop();
 		TimingsService.root.get("mutex-handle").hit("mutex-service", t.getTime());
+	}
+	
+	public void on(PlayerQuitEvent e)
+	{
+		actualVectors.remove(e.getPlayer());
 	}
 	
 	public void dequeue(Portal p)

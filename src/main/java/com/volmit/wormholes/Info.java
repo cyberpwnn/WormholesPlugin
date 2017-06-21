@@ -7,7 +7,7 @@ import com.volmit.wormholes.util.TXT;
 
 public class Info
 {
-	public static String TAG = TXT.makeTag(C.DARK_GRAY, C.LIGHT_PURPLE, C.GRAY, "W");
+	public static String TAG = TXT.makeTag(C.DARK_GRAY, C.GOLD, C.GRAY, "W");
 	
 	public static String PERM_RELOAD = "wormholes.reload";
 	public static String PERM_LIST = "wormholes.list";
@@ -17,7 +17,7 @@ public class Info
 	public static String PERM_CONFIGURE = "wormholes.configure";
 	public static String PERM_USE = "wormholes.use";
 	public static String HR = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 75);
-	public static String HRN = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28) + ChatColor.RESET + C.LIGHT_PURPLE + "  %s  " + C.DARK_GRAY + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28);
+	public static String HRN = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28) + ChatColor.RESET + C.GOLD + "  %s  " + C.DARK_GRAY + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28);
 	
 	public static String hr()
 	{

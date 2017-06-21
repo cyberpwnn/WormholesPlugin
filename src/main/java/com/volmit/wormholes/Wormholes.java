@@ -201,7 +201,7 @@ public class Wormholes extends ControllablePlugin
 					for(Portal i : host.getLocalPortals())
 					{
 						RTX r = new RTX();
-						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.LIGHT_PURPLE, "Link: "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? "Mutex Link\n" : "Local Link\n" : "No Link\n"), new ColoredString(C.LIGHT_PURPLE, "Polarity: "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
+						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.GOLD, "Link: "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? "Mutex Link\n" : "Local Link\n" : "No Link\n"), new ColoredString(C.GOLD, "Polarity: "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
 						
 						if(i.getSided())
 						{
@@ -262,15 +262,15 @@ public class Wormholes extends ControllablePlugin
 				{
 					p.sendMessage(Info.hrn("Worker Threads"));
 					
-					p.sendMessage(C.LIGHT_PURPLE + "Threads: " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
-					p.sendMessage(C.LIGHT_PURPLE + "Utilization: " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.LIGHT_PURPLE + "Effective TPS: " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
+					p.sendMessage(C.GOLD + "Threads: " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
+					p.sendMessage(C.GOLD + "Utilization: " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.GOLD + "Effective TPS: " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
 					
 					p.sendMessage(Info.hrn("POWER Threads"));
 					
-					p.sendMessage(C.LIGHT_PURPLE + "Threads: " + C.WHITE + WAPI.getPowerPool().getThreadCount());
-					p.sendMessage(C.LIGHT_PURPLE + "Utilization: " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.LIGHT_PURPLE + "Effective TPS: " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
+					p.sendMessage(C.GOLD + "Threads: " + C.WHITE + WAPI.getPowerPool().getThreadCount());
+					p.sendMessage(C.GOLD + "Utilization: " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.GOLD + "Effective TPS: " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
 					
 					p.sendMessage(Info.hrn("Sync"));
 					for(String i : TimingsService.root.toLines(0, 2))
@@ -312,7 +312,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				if(new Permissable(p).canList())
 				{
-					p.sendMessage(C.LIGHT_PURPLE + "Running " + C.WHITE + Wormholes.this.getDescription().getVersion());
+					p.sendMessage(C.GOLD + "Running " + C.WHITE + Wormholes.this.getDescription().getVersion());
 				}
 				
 				else

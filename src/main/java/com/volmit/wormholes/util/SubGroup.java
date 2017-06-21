@@ -34,7 +34,7 @@ public class SubGroup
 	
 	public void sendLine(CommandSender sender, SubCommand s)
 	{
-		sender.sendMessage(C.LIGHT_PURPLE + "/" + root + " " + C.WHITE + s.getSub() + " " + C.GRAY + "- " + s.getDescription());
+		sender.sendMessage(C.GOLD + "/" + root + " " + C.WHITE + s.getSub() + " " + C.GRAY + "- " + s.getDescription());
 	}
 	
 	public void hit(CommandSender sender, String[] args)

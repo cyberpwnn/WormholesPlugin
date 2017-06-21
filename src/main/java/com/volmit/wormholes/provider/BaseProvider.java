@@ -411,11 +411,11 @@ public abstract class BaseProvider implements PortalProvider
 								
 								else
 								{
-									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.LIGHT_PURPLE + "Bi-Directional" : C.GOLD + "Uni-Directional");
+									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.GOLD + "Bi-Directional" : C.GOLD + "Uni-Directional");
 								}
 							}
 							
-							return C.LIGHT_PURPLE + "> " + C.WHITE + s + C.LIGHT_PURPLE + " <";
+							return C.GOLD + "> " + C.WHITE + s + C.GOLD + " <";
 						}
 						
 						@Override
@@ -555,7 +555,7 @@ public abstract class BaseProvider implements PortalProvider
 									@Override
 									public String onEnable(String s)
 									{
-										return C.LIGHT_PURPLE + "> " + C.RED + s + C.LIGHT_PURPLE + " <";
+										return C.GOLD + "> " + C.RED + s + C.GOLD + " <";
 									}
 									
 									@Override
@@ -605,11 +605,11 @@ public abstract class BaseProvider implements PortalProvider
 					};
 					
 					GList<String> op = new GList<String>();
-					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Options " + TXT.line(C.LIGHT_PURPLE, 5));
+					op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Options " + TXT.line(C.GOLD, 5));
 					op.add("Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
 					op.add("Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
 					op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
-					op.add(TXT.line(C.LIGHT_PURPLE, 5) + C.GRAY + " Actions " + TXT.line(C.LIGHT_PURPLE, 5));
+					op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Actions " + TXT.line(C.GOLD, 5));
 					op.add("Reverse Polarity");
 					op.add("Set Uni-Directional");
 					op.add("Destroy");

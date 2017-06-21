@@ -91,6 +91,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				if(new Permissable(e.getPlayer()).canConfigure())
 				{
 					p.updateDisplayName(title);
+					NMSX.sendActionBar(e.getPlayer(), C.GOLD + "Updated Portal Display Name: " + C.GRAY + title);
 				}
 			}
 		}

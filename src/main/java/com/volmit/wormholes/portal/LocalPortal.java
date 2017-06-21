@@ -61,7 +61,7 @@ public class LocalPortal implements Portal
 		settings = new PortalSettings();
 		mask = new ProjectionMask();
 		sided = false;
-		displayName = "Portal";
+		displayName = "Wormhole";
 		holograms = new GMap<Player, Hologram>();
 	}
 	
