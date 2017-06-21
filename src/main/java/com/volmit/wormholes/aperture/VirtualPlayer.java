@@ -14,6 +14,7 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.VectorMath;
+import com.volmit.wormholes.util.WrapperPlayServerAnimation;
 import com.volmit.wormholes.util.WrapperPlayServerEntityDestroy;
 import com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation;
 import com.volmit.wormholes.util.WrapperPlayServerEntityMetadata;
@@ -156,10 +157,43 @@ public class VirtualPlayer
 		w.sendPacket(viewer);
 	}
 	
+	public void animationSwingMainArm()
+	{
+		sendAnimation(0);
+	}
+	
+	public void animationTakeDamage()
+	{
+		sendAnimation(1);
+	}
+	
+	private void sendAnimation(int animation)
+	{
+		WrapperPlayServerAnimation w = new WrapperPlayServerAnimation();
+		w.setAnimation(animation);
+		w.setEntityID(id);
+		w.sendPacket(viewer);
+	}
+	
 	private void sendEntityMetadata()
 	{
 		WrapperPlayServerEntityMetadata w = new WrapperPlayServerEntityMetadata();
 		GList<WrappedWatchableObject> watch = new GList<WrappedWatchableObject>();
+		w.setEntityID(id);
+		w.setMetadata(watch);
+		w.sendPacket(viewer);
+	}
+	
+	public void animationSneaking(boolean sneaking)
+	{
+		sendEntityMetadataSneaking(sneaking);
+	}
+	
+	private void sendEntityMetadataSneaking(boolean sneaking)
+	{
+		WrapperPlayServerEntityMetadata w = new WrapperPlayServerEntityMetadata();
+		GList<WrappedWatchableObject> watch = new GList<WrappedWatchableObject>();
+		watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), sneaking ? (byte) 2 : (byte) 0));
 		w.setEntityID(id);
 		w.setMetadata(watch);
 		w.sendPacket(viewer);

@@ -180,6 +180,30 @@ public class VEntity
 		look(ya, pi);
 	}
 	
+	public void setSneaking(boolean s)
+	{
+		if(vp != null)
+		{
+			vp.animationSneaking(s);
+		}
+	}
+	
+	public void swingArm()
+	{
+		if(vp != null)
+		{
+			vp.animationSwingMainArm();
+		}
+	}
+	
+	public void takeDamage()
+	{
+		if(vp != null)
+		{
+			vp.animationTakeDamage();
+		}
+	}
+	
 	public void flush()
 	{
 		double distance = last.distance(location);

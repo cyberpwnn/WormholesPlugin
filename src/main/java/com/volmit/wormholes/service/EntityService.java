@@ -2,7 +2,14 @@ package com.volmit.wormholes.service;
 
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import com.volmit.wormholes.aperture.RemoteInstance;
 import com.volmit.wormholes.aperture.RemotePlayer;
 import com.volmit.wormholes.aperture.VEntity;
@@ -11,8 +18,9 @@ import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
 import com.volmit.wormholes.util.Timer;
+import com.volmit.wormholes.util.Wraith;
 
-public class EntityService
+public class EntityService implements Listener
 {
 	private GMap<Player, GMap<Portal, GList<VEntity>>> entities;
 	private GMap<Player, GMap<Portal, GSet<Integer>>> aentities;
@@ -21,6 +29,61 @@ public class EntityService
 	{
 		entities = new GMap<Player, GMap<Portal, GList<VEntity>>>();
 		aentities = new GMap<Player, GMap<Portal, GSet<Integer>>>();
+		Wraith.registerListener(this);
+	}
+	
+	@EventHandler
+	public void on(PlayerToggleSneakEvent e)
+	{
+		for(VEntity i : getAllEntitiesAs(e.getPlayer()))
+		{
+			i.setSneaking(e.isSneaking());
+		}
+	}
+	
+	@EventHandler
+	public void on(PlayerInteractEvent e)
+	{
+		if(e.getAction().equals(Action.RIGHT_CLICK_AIR))
+		{
+			return;
+		}
+		
+		for(VEntity i : getAllEntitiesAs(e.getPlayer()))
+		{
+			i.swingArm();
+		}
+	}
+	
+	@EventHandler
+	public void on(EntityDamageEvent e)
+	{
+		for(VEntity i : getAllEntitiesAs(e.getEntity()))
+		{
+			i.takeDamage();
+		}
+	}
+	
+	public GList<VEntity> getAllEntitiesAs(Entity e)
+	{
+		GList<VEntity> vx = new GList<VEntity>();
+		int idx = RemoteInstance.create(e).getRemoteId();
+		
+		for(Player i : entities.k())
+		{
+			for(Portal j : entities.get(i).k())
+			{
+				for(VEntity k : entities.get(i).get(j))
+				{
+					if(k.getId() == idx)
+					{
+						vx.add(k);
+					}
+				}
+			}
+		}
+		
+		return vx;
 	}
 	
 	public void flush()

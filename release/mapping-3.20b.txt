@@ -1124,14 +1124,14 @@ com.volmit.wormholes.service.EffectService$3 -> com.volmit.wormholes.src.neque$3
 com.volmit.wormholes.service.EntityService -> com.volmit.wormholes.src.sagittis:
     com.volmit.wormholes.util.GMap entities -> recontextualize
     com.volmit.wormholes.util.GMap aentities -> redefine
-    27:32:void <init>() -> <init>
-    37:41:void on(org.bukkit.event.player.PlayerToggleSneakEvent) -> Lorem
-    46:50:void on(org.bukkit.event.player.PlayerInteractEvent) -> Lorem
-    55:59:void on(org.bukkit.event.entity.EntityDamageEvent) -> Lorem
-    63:80:com.volmit.wormholes.util.GList getAllEntitiesAs(org.bukkit.entity.Entity) -> adipiscing
-    85:125:void flush() -> flush
-    129:172:void set(org.bukkit.entity.Player,com.volmit.wormholes.portal.Portal,com.volmit.wormholes.aperture.RemoteInstance,org.bukkit.Location) -> Lorem
-    176:178:void shutdown() -> shutdown
+    28:33:void <init>() -> <init>
+    38:42:void on(org.bukkit.event.player.PlayerToggleSneakEvent) -> Lorem
+    47:56:void on(org.bukkit.event.player.PlayerInteractEvent) -> Lorem
+    61:65:void on(org.bukkit.event.entity.EntityDamageEvent) -> Lorem
+    69:86:com.volmit.wormholes.util.GList getAllEntitiesAs(org.bukkit.entity.Entity) -> adipiscing
+    91:131:void flush() -> flush
+    135:178:void set(org.bukkit.entity.Player,com.volmit.wormholes.portal.Portal,com.volmit.wormholes.aperture.RemoteInstance,org.bukkit.Location) -> Lorem
+    182:184:void shutdown() -> shutdown
 com.volmit.wormholes.service.IOService -> com.volmit.wormholes.src.lorem:
     16:19:void <init>() -> <init>
     25:35:void doConfig() -> evolve
