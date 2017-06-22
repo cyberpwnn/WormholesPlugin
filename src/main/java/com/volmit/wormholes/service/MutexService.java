@@ -1087,8 +1087,7 @@ public class MutexService implements Listener
 					if(p.hasWormhole())
 					{
 						Vector v = VectorMath.directionNoNormal(p.getPosition().getCenter(), l.getBlock().getLocation()).clone().add(new Vector(0.5, 0.5, 0.5));
-						
-						v = p.getIdentity().getFront().angle(v, p.getIdentity().getBack());
+						v = p.getIdentity().getFront().angle(v, p.getIdentity().getFront());
 						
 						MaterialBlock m = new MaterialBlock(l);
 						p.getProjectionPlane().blockChange(v, m);

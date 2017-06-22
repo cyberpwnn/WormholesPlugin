@@ -46,6 +46,7 @@ public abstract class BaseWormhole implements Wormhole
 		for(Player i : new Area(e.getLocation(), 32).getNearbyPlayers())
 		{
 			Wormholes.aperture.hideEntity(i, e);
+			((LocalPortal) getSource()).getMask().sched(i);
 		}
 		
 		for(WormholeFilter i : getFilters())
