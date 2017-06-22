@@ -37,6 +37,7 @@ import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.EntityHider;
 import com.volmit.wormholes.aperture.EntityHider.Policy;
+import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.CL;
 import com.volmit.wormholes.network.Transmission;
@@ -597,6 +598,7 @@ public class MutexService implements Listener
 				
 				else if(i.getType().equals("rld"))
 				{
+					Wormholes.bus.read(i);
 					Status.fdq = true;
 					Wormholes.provider.getRasterer().dequeueAll();
 					Wormholes.provider.getRasterer().flush();
@@ -608,6 +610,45 @@ public class MutexService implements Listener
 					
 					Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 					Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
+				}
+				
+				else if(i.getType().equals("action"))
+				{
+					Wormholes.bus.read(i);
+					int id = i.getInt("id");
+					String action = i.getString("ac");
+					
+					if(action.equalsIgnoreCase("swn"))
+					{
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.swingArm();
+						}
+					}
+					
+					else if(action.equalsIgnoreCase("dmg"))
+					{
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.takeDamage();
+						}
+					}
+					
+					else if(action.equalsIgnoreCase("sneak"))
+					{
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.setSneaking(true);
+						}
+					}
+					
+					else if(action.equalsIgnoreCase("unsneak"))
+					{
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.setSneaking(false);
+						}
+					}
 				}
 				
 				else if(i.getType().equals("tp"))

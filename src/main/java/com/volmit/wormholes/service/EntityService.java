@@ -10,9 +10,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import com.volmit.wormholes.WAPI;
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.RemoteInstance;
 import com.volmit.wormholes.aperture.RemotePlayer;
 import com.volmit.wormholes.aperture.VEntity;
+import com.volmit.wormholes.network.Transmission;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
@@ -39,6 +42,8 @@ public class EntityService implements Listener
 		{
 			i.setSneaking(e.isSneaking());
 		}
+		
+		dispatchAction(e.getPlayer().getEntityId(), e.isSneaking() ? "sneak" : "unsneak");
 	}
 	
 	@EventHandler
@@ -53,6 +58,8 @@ public class EntityService implements Listener
 		{
 			i.swingArm();
 		}
+		
+		dispatchAction(e.getPlayer().getEntityId(), "swn");
 	}
 	
 	@EventHandler
@@ -62,12 +69,57 @@ public class EntityService implements Listener
 		{
 			i.takeDamage();
 		}
+		
+		if(e.getEntity() instanceof Player)
+		{
+			dispatchAction(e.getEntity().getEntityId(), "dmg");
+		}
+	}
+	
+	public void dispatchAction(int id, String action)
+	{
+		GSet<String> servers = new GSet<String>();
+		
+		for(Portal i : WAPI.getRemotePortals())
+		{
+			servers.add(i.getServer());
+		}
+		
+		for(String i : servers)
+		{
+			Transmission t = new Transmission(Wormholes.bus.getServerName(), i, "action");
+			t.set("id", id);
+			t.set("ac", action);
+			t.send();
+		}
 	}
 	
 	public GList<VEntity> getAllEntitiesAs(Entity e)
 	{
 		GList<VEntity> vx = new GList<VEntity>();
 		int idx = RemoteInstance.create(e).getRemoteId();
+		
+		for(Player i : entities.k())
+		{
+			for(Portal j : entities.get(i).k())
+			{
+				for(VEntity k : entities.get(i).get(j))
+				{
+					if(k.getId() == idx)
+					{
+						vx.add(k);
+					}
+				}
+			}
+		}
+		
+		return vx;
+	}
+	
+	public GList<VEntity> getAllPlayersAs(int eid)
+	{
+		GList<VEntity> vx = new GList<VEntity>();
+		int idx = 2097800 + eid;
 		
 		for(Player i : entities.k())
 		{
