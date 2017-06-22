@@ -53,6 +53,7 @@ public class VirtualPlayer
 		sendPlayerInfo();
 		sendNamedEntitySpawn();
 		sendEntityMetadata();
+		sendPlayerInfoRemove();
 	}
 	
 	public void despawn()
@@ -119,12 +120,36 @@ public class VirtualPlayer
 		return onGround;
 	}
 	
+	private String mark()
+	{
+		String n = name;
+		
+		if(n.length() > 14)
+		{
+			n = n.substring(0, 14);
+		}
+		
+		return "* " + n;
+	}
+	
+	private void sendPlayerInfoRemove()
+	{
+		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
+		w.setAction(PlayerInfoAction.REMOVE_PLAYER);
+		GList<PlayerInfoData> l = new GList<PlayerInfoData>();
+		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), mark());
+		PlayerInfoData pid = new PlayerInfoData(profile, 1, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(mark()));
+		l.add(pid);
+		w.setData(l);
+		w.sendPacket(viewer);
+	}
+	
 	private void sendPlayerInfo()
 	{
 		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
 		w.setAction(PlayerInfoAction.ADD_PLAYER);
 		GList<PlayerInfoData> l = new GList<PlayerInfoData>();
-		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), name + " *");
+		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), mark());
 		
 		if(Wormholes.skin.hasProperties(uuid))
 		{
@@ -136,7 +161,7 @@ public class VirtualPlayer
 			Wormholes.skin.requestProperties(uuid);
 		}
 		
-		PlayerInfoData pid = new PlayerInfoData(profile, 1, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(displayName + " *"));
+		PlayerInfoData pid = new PlayerInfoData(profile, 1, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(mark()));
 		l.add(pid);
 		w.setData(l);
 		w.sendPacket(viewer);
@@ -196,18 +221,6 @@ public class VirtualPlayer
 		watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), sneaking ? (byte) 2 : (byte) 0));
 		w.setEntityID(id);
 		w.setMetadata(watch);
-		w.sendPacket(viewer);
-	}
-	
-	private void sendPlayerInfoRemove()
-	{
-		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
-		w.setAction(PlayerInfoAction.REMOVE_PLAYER);
-		GList<PlayerInfoData> l = new GList<PlayerInfoData>();
-		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), name + " *");
-		PlayerInfoData pid = new PlayerInfoData(profile, 1, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(displayName + " *"));
-		l.add(pid);
-		w.setData(l);
 		w.sendPacket(viewer);
 	}
 	
