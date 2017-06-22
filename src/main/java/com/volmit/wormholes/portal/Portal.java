@@ -4,7 +4,6 @@ import com.volmit.wormholes.aperture.AperturePlane;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.DataCluster;
-import com.volmit.wormholes.wormhole.Wormhole;
 
 public interface Portal
 {

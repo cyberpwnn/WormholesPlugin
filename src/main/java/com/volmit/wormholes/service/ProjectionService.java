@@ -13,6 +13,7 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalIdentity;
 import com.volmit.wormholes.portal.PortalKey;
+import com.volmit.wormholes.portal.Wormhole;
 import com.volmit.wormholes.projection.NulledViewport;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.projection.RenderMesh;
@@ -25,7 +26,6 @@ import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
-import com.volmit.wormholes.wormhole.Wormhole;
 
 public class ProjectionService implements Listener
 {

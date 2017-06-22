@@ -42,10 +42,13 @@ import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.CL;
 import com.volmit.wormholes.network.Transmission;
 import com.volmit.wormholes.portal.LocalPortal;
+import com.volmit.wormholes.portal.LocalWormhole;
+import com.volmit.wormholes.portal.MutexWormhole;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.portal.RemotePortal;
+import com.volmit.wormholes.portal.Wormhole;
 import com.volmit.wormholes.projection.ArrivalVector;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
@@ -69,9 +72,6 @@ import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
-import com.volmit.wormholes.wormhole.LocalWormhole;
-import com.volmit.wormholes.wormhole.MutexWormhole;
-import com.volmit.wormholes.wormhole.Wormhole;
 
 public class MutexService implements Listener
 {

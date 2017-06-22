@@ -1,4 +1,4 @@
-package com.volmit.wormholes.wormhole;
+package com.volmit.wormholes.portal;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -10,8 +10,6 @@ import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
-import com.volmit.wormholes.portal.LocalPortal;
-import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.VectorMath;

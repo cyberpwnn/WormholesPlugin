@@ -31,7 +31,6 @@ import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
-import com.volmit.wormholes.wormhole.Wormhole;
 
 public class LocalPortal implements Portal
 {

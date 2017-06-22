@@ -1,4 +1,4 @@
-package com.volmit.wormholes.wormhole;
+package com.volmit.wormholes.portal;
 
 public enum FilterMode
 {

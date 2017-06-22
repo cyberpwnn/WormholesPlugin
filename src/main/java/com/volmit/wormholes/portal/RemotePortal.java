@@ -6,7 +6,6 @@ import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
-import com.volmit.wormholes.wormhole.Wormhole;
 
 public class RemotePortal implements Portal
 {

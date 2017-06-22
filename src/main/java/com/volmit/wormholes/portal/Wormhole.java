@@ -1,9 +1,7 @@
-package com.volmit.wormholes.wormhole;
+package com.volmit.wormholes.portal;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import com.volmit.wormholes.portal.LocalPortal;
-import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.GList;
 
 public interface Wormhole
