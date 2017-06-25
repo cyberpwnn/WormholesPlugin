@@ -752,11 +752,6 @@ public class MutexService implements Listener
 							LocalPortal target = (LocalPortal) j;
 							target.setSided(true);
 							
-							for(Player k : target.getPosition().getArea().getPlayers())
-							{
-								k.sendMessage("Received message to go SIDED");
-							}
-							
 							break;
 						}
 					}

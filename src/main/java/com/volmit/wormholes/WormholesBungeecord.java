@@ -8,7 +8,10 @@ public class WormholesBungeecord extends Plugin implements Listener
 	@Override
 	public void onEnable()
 	{
-		getLogger().info("Starting Wormholes (MUTEX)");
+		getLogger().warning("-----------------------------------------------------------------------");
+		getLogger().warning("Wormholes is designed to run on each server, not on bungeecord plugins.");
+		getLogger().warning("Please install wormholes on servers connected to a bungee network.");
+		getLogger().warning("-----------------------------------------------------------------------");
 		getProxy().getPluginManager().registerListener(this, this);
 	}
 	

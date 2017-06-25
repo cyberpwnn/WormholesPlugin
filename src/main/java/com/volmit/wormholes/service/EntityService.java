@@ -103,12 +103,20 @@ public class EntityService implements Listener
 		{
 			for(Portal j : entities.get(i).k())
 			{
-				for(VEntity k : entities.get(i).get(j))
+				try
 				{
-					if(k.getId() == idx)
+					for(VEntity k : entities.get(i).get(j))
 					{
-						vx.add(k);
+						if(k.getId() == idx)
+						{
+							vx.add(k);
+						}
 					}
+				}
+				
+				catch(Exception ex)
+				{
+					
 				}
 			}
 		}
@@ -125,12 +133,20 @@ public class EntityService implements Listener
 		{
 			for(Portal j : entities.get(i).k())
 			{
-				for(VEntity k : entities.get(i).get(j))
+				try
 				{
-					if(k.getId() == idx)
+					for(VEntity k : entities.get(i).get(j))
 					{
-						vx.add(k);
+						if(k.getId() == idx)
+						{
+							vx.add(k);
+						}
 					}
+				}
+				
+				catch(Exception ex)
+				{
+					
 				}
 			}
 		}

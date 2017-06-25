@@ -93,40 +93,5 @@
 			<systemPath>${ct.libs}/ProtocolLib-4.2.1.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
-		<dependency>
-			<artifactId>nms18</artifactId>
-			<groupId>nms</groupId>
-			<version>1.8.8</version>
-			<systemPath>${ct.libs}/craftbukkit-1.8.8.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
-		<dependency>
-			<artifactId>nms19</artifactId>
-			<groupId>nms</groupId>
-			<version>1.9.4</version>
-			<systemPath>${ct.libs}/craftbukkit-1.9.4.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
-		<dependency>
-			<artifactId>nms10</artifactId>
-			<groupId>nms</groupId>
-			<version>1.10.2</version>
-			<systemPath>${ct.libs}/craftbukkit-1.10.2.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
-		<dependency>
-			<artifactId>nms11</artifactId>
-			<groupId>nms</groupId>
-			<version>1.11.2</version>
-			<systemPath>${ct.libs}/craftbukkit-1.11.2.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
-		<dependency>
-			<artifactId>nms12</artifactId>
-			<groupId>nms</groupId>
-			<version>1.12</version>
-			<systemPath>${ct.libs}/craftbukkit-1.12.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
 	</dependencies>
 </project>
