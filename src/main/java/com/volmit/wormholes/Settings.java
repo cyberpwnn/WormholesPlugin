@@ -33,6 +33,10 @@ public class Settings
 	@Comment("Should Local Wormholes allow non-player entities to pass through?")
 	public static boolean ALLOW_ENTITIES = true;
 	
+	@CName("SPLASH")
+	@Comment("Should wormholes splash the console window on enable?")
+	public static boolean SPLASH = true;
+	
 	@CName("ENABLE_APERTURE")
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;

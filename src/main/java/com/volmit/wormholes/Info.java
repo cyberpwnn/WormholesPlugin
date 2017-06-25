@@ -94,6 +94,11 @@ public class Info
 	
 	public static void splash()
 	{
+		if(!Settings.SPLASH)
+		{
+			return;
+		}
+		
 		buildBlocks();
 		String[] mv = mv("WORMHOLES", C.DARK_GRAY, C.YELLOW, C.DARK_GRAY, C.DARK_GRAY, C.YELLOW, C.DARK_GRAY, C.DARK_GRAY, C.DARK_GRAY, C.YELLOW, C.DARK_GRAY);
 		String n = "\n";
