@@ -14,6 +14,8 @@ import com.volmit.wormholes.Status;
 import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
+import com.volmit.wormholes.event.PortalActivatePlayerEvent;
+import com.volmit.wormholes.event.PortalDeactivatePlayerEvent;
 import com.volmit.wormholes.exception.DuplicatePortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalPositionException;
@@ -24,17 +26,25 @@ import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.GSound;
+import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.Task;
 import com.volmit.wormholes.util.TaskLater;
+import com.volmit.wormholes.util.Title;
 import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
 
 public class AutomagicalProvider extends BaseProvider implements Listener
 {
+	private GMap<Portal, GList<Player>> msd;
+	
 	public AutomagicalProvider()
 	{
 		Wraith.registerListener(this);
+		msd = new GMap<Portal, GList<Player>>();
 	}
 	
 	@Override
@@ -46,6 +56,71 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		{
 			NMSX.sendActionBar(i, Status.inf);
 		}
+	}
+	
+	@EventHandler
+	public void on(PortalActivatePlayerEvent e)
+	{
+		if(e.getPortal().getDisplayName().equalsIgnoreCase("Wormhole"))
+		{
+			return;
+		}
+		
+		if(Wormholes.host.isThrottled(e.getPlayer()))
+		{
+			return;
+		}
+		
+		if(!msd.containsKey(e.getPortal()))
+		{
+			msd.put(e.getPortal(), new GList<Player>());
+		}
+		
+		if(msd.get(e.getPortal()).contains(e.getPlayer()))
+		{
+			return;
+		}
+		
+		Title t = new Title();
+		t.setFadeIn(7);
+		t.setFadeOut(67);
+		t.setStayTime(1);
+		t.setTitle("    ");
+		t.setSubTitle(C.GRAY + e.getPortal().getDisplayName());
+		t.setAction("   ");
+		t.send(e.getPlayer());
+		msd.get(e.getPortal()).add(e.getPlayer());
+		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.5f, 0.23f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.6f, 0.5f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.4f, 0.8f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.3f, 0.3f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.12f, 1.7f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.32f, 0.34f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
+		
+		new Task(0)
+		{
+			@Override
+			public void run()
+			{
+				if(!e.getPlayer().isOnline())
+				{
+					msd.get(e.getPortal()).remove(e.getPlayer());
+					cancel();
+				}
+				
+				if(!e.getPortal().getPosition().getArea().contains(e.getPlayer().getLocation()))
+				{
+					msd.get(e.getPortal()).remove(e.getPlayer());
+					cancel();
+				}
+			}
+		};
+	}
+	
+	@EventHandler
+	public void on(PortalDeactivatePlayerEvent e)
+	{
+		
 	}
 	
 	@EventHandler

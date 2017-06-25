@@ -12,6 +12,8 @@ import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.AperturePlane;
 import com.volmit.wormholes.config.Permissable;
+import com.volmit.wormholes.event.PortalActivatePlayerEvent;
+import com.volmit.wormholes.event.PortalDeactivatePlayerEvent;
 import com.volmit.wormholes.event.WormholeLinkEvent;
 import com.volmit.wormholes.event.WormholeUnlinkEvent;
 import com.volmit.wormholes.exception.DuplicatePortalKeyException;
@@ -47,6 +49,7 @@ public class LocalPortal implements Portal
 	protected Boolean sided;
 	protected String displayName;
 	protected GMap<Player, Hologram> holograms;
+	protected GList<Player> activatedEntities;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -63,6 +66,7 @@ public class LocalPortal implements Portal
 		sided = false;
 		displayName = "Wormhole";
 		holograms = new GMap<Player, Hologram>();
+		activatedEntities = new GList<Player>();
 	}
 	
 	public void checkKey()
@@ -114,6 +118,25 @@ public class LocalPortal implements Portal
 				}
 				
 				checkFrame();
+				GList<Player> ac = getPosition().getActivation().getPlayers();
+				
+				for(Player i : ac)
+				{
+					if(!activatedEntities.contains(i) && isPlayerLookingAt(i))
+					{
+						activatedEntities.add(i);
+						Wraith.callEvent(new PortalActivatePlayerEvent(this, i));
+					}
+				}
+				
+				for(Player i : activatedEntities.copy())
+				{
+					if(!ac.contains(i) && activatedEntities.contains(i))
+					{
+						activatedEntities.remove(i);
+						Wraith.callEvent(new PortalDeactivatePlayerEvent(this, i));
+					}
+				}
 			}
 		}
 		

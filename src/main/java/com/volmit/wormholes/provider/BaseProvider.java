@@ -304,8 +304,14 @@ public abstract class BaseProvider implements PortalProvider
 			return false;
 		}
 		
-		if(new Permissable(p).canConfigure() && !conf.contains(l))
+		if(new Permissable(p).canConfigure())
 		{
+			if(conf.contains(l))
+			{
+				errorMessage(p, C.RED + "Unable to Configure", C.YELLOW + "Someone else is configuring this portal.");
+				return false;
+			}
+			
 			if(M.ms() - lastms > 50)
 			{
 				lastms = M.ms();
