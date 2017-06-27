@@ -7,6 +7,11 @@ echo Copy C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\targ
 xcopy /y C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\a\plugins
 echo Copy C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\b\plugins
 xcopy /y C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\b\plugins
+echo ================ Bungeenet =================
+echo Copy C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\da\plugins
+xcopy /y C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\da\plugins
+echo Copy C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\db\plugins
+xcopy /y C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Documents\development\servers\db\plugins
 echo ================ Devnet =====================
 echo Copy C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Desktop\devnet\wormholes-lobby-11\plugins
 xcopy /y C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\target\Wormholes.jar C:\Users\cyberpwn\Desktop\devnet\wormholes-lobby-11\plugins

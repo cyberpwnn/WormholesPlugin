@@ -53,7 +53,6 @@ public class VirtualPlayer
 		sendPlayerInfo();
 		sendNamedEntitySpawn();
 		sendEntityMetadata();
-		sendPlayerInfoRemove();
 	}
 	
 	public void despawn()
