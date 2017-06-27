@@ -71,6 +71,7 @@ public class SkinService
 								SkinProperties s = new SkinProperties(i);
 								request.remove(i);
 								cache.put(i, s);
+								System.out.println("Got skin for " + i);
 							}
 							
 							catch(SkinErrorException e)
@@ -78,6 +79,8 @@ public class SkinService
 								e.printStackTrace();
 							}
 						}
+						
+						running = false;
 					}
 					
 					catch(Exception e)
