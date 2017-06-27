@@ -293,37 +293,37 @@ com.volmit.wormholes.aperture.VirtualPlayer -> com.volmit.wormholes.src.purus:
     org.bukkit.Location nextLocation -> accumsan
     java.lang.Boolean onGround -> egestas
     37:47:void <init>(org.bukkit.entity.Player,java.util.UUID,java.lang.Integer,java.lang.String,java.lang.String) -> <init>
-    51:56:void spawn(org.bukkit.Location) -> sit
-    60:62:void despawn() -> sed
-    66:69:void tick() -> tick
-    73:74:void move(org.bukkit.Location) -> amet
-    78:80:void teleport(org.bukkit.Location) -> teleport
-    84:84:org.bukkit.entity.Player getViewer() -> ligula
-    89:89:java.util.UUID getUuid() -> getUuid
-    94:94:java.lang.Integer getId() -> Sed
-    99:99:java.lang.String getName() -> getName
-    104:104:java.lang.String getDisplayName() -> getDisplayName
-    109:109:org.bukkit.Location getLocation() -> getLocation
-    114:114:org.bukkit.Location getNextLocation() -> ultrices
-    119:119:java.lang.Boolean getOnGround() -> imperdiet
-    124:131:java.lang.String mark() -> turpis
-    136:144:void sendPlayerInfoRemove() -> Nullam
-    148:167:void sendPlayerInfo() -> vehicula
-    171:182:void sendNamedEntitySpawn() -> porta
-    186:187:void animationSwingMainArm() -> ultricies
-    191:192:void animationTakeDamage() -> vestibulum
-    196:200:void sendAnimation(int) -> Lorem
-    204:209:void sendEntityMetadata() -> felis
-    213:214:void animationSneaking(boolean) -> Lorem
-    218:224:void sendEntityMetadataSneaking(boolean) -> ipsum
-    228:231:void sendEntityDestroy() -> nec
-    235:259:void sendEntityMove() -> tristique
-    263:270:void sendEntityRelativeMove(org.bukkit.util.Vector) -> Lorem
-    274:284:void sendEntityRelativeMoveLook(org.bukkit.util.Vector) -> ipsum
-    288:292:void sendEntityHeadLook() -> lacinia
-    296:296:int getCompressedDiff(double,double) -> Lorem
-    302:312:int hashCode() -> hashCode
-    318:419:boolean equals(java.lang.Object) -> equals
+    51:57:void spawn(org.bukkit.Location) -> sit
+    61:63:void despawn() -> sed
+    67:70:void tick() -> tick
+    74:75:void move(org.bukkit.Location) -> amet
+    79:81:void teleport(org.bukkit.Location) -> teleport
+    85:85:org.bukkit.entity.Player getViewer() -> ligula
+    90:90:java.util.UUID getUuid() -> getUuid
+    95:95:java.lang.Integer getId() -> Sed
+    100:100:java.lang.String getName() -> getName
+    105:105:java.lang.String getDisplayName() -> getDisplayName
+    110:110:org.bukkit.Location getLocation() -> getLocation
+    115:115:org.bukkit.Location getNextLocation() -> ultrices
+    120:120:java.lang.Boolean getOnGround() -> imperdiet
+    125:132:java.lang.String mark() -> turpis
+    137:145:void sendPlayerInfoRemove() -> Nullam
+    149:168:void sendPlayerInfo() -> vehicula
+    172:183:void sendNamedEntitySpawn() -> porta
+    187:188:void animationSwingMainArm() -> ultricies
+    192:193:void animationTakeDamage() -> vestibulum
+    197:201:void sendAnimation(int) -> Lorem
+    205:210:void sendEntityMetadata() -> felis
+    214:215:void animationSneaking(boolean) -> Lorem
+    219:225:void sendEntityMetadataSneaking(boolean) -> ipsum
+    229:232:void sendEntityDestroy() -> nec
+    236:260:void sendEntityMove() -> tristique
+    264:271:void sendEntityRelativeMove(org.bukkit.util.Vector) -> Lorem
+    275:285:void sendEntityRelativeMoveLook(org.bukkit.util.Vector) -> ipsum
+    289:293:void sendEntityHeadLook() -> lacinia
+    297:297:int getCompressedDiff(double,double) -> Lorem
+    303:313:int hashCode() -> hashCode
+    319:420:boolean equals(java.lang.Object) -> equals
 com.volmit.wormholes.aperture.WhitelistAperture -> com.volmit.wormholes.src.non:
     7:8:void <init>() -> <init>
 com.volmit.wormholes.config.CMax -> com.volmit.wormholes.src.mi:
@@ -1412,14 +1412,14 @@ com.volmit.wormholes.service.SkinService -> com.volmit.wormholes.src.lacus:
     26:26:boolean hasProperties(java.util.UUID) -> Lorem
     31:36:com.volmit.wormholes.util.SkinProperties getProperty(java.util.UUID) -> ipsum
     41:47:void requestProperties(java.util.UUID) -> dolor
-    51:97:void flush() -> flush
+    51:100:void flush() -> flush
     14:14:com.volmit.wormholes.util.GSet access$0(com.volmit.wormholes.service.SkinService) -> Lorem
     13:13:com.volmit.wormholes.util.GMap access$1(com.volmit.wormholes.service.SkinService) -> ipsum
     15:15:void access$2(com.volmit.wormholes.service.SkinService,boolean) -> Lorem
 com.volmit.wormholes.service.SkinService$1 -> com.volmit.wormholes.src.lacus$1:
     com.volmit.wormholes.service.SkinService this$0 -> open
     1:60:void <init>(com.volmit.wormholes.service.SkinService) -> <init>
-    67:88:void async() -> strategize
+    67:91:void async() -> strategize
 com.volmit.wormholes.service.TimingsService -> com.volmit.wormholes.src.eu:
     com.volmit.wormholes.util.Timed root -> source
     com.volmit.wormholes.util.Timed asyn -> out
