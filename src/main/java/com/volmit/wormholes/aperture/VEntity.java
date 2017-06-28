@@ -8,15 +8,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.volmit.wormholes.util.AbstractPacket;
 import com.volmit.wormholes.util.VectorMath;
-import com.volmit.wormholes.util.WrapperPlayServerEntityDestroy;
-import com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation;
-import com.volmit.wormholes.util.WrapperPlayServerEntityLook;
-import com.volmit.wormholes.util.WrapperPlayServerEntityTeleport;
-import com.volmit.wormholes.util.WrapperPlayServerRelEntityMove;
-import com.volmit.wormholes.util.WrapperPlayServerRelEntityMoveLook;
-import com.volmit.wormholes.util.WrapperPlayServerSpawnEntityLiving;
+import com.volmit.wormholes.util.VersionBukkit;
+import com.volmit.wormholes.wrapper.AbstractPacket;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityLook;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityTeleport;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMoveLook;
+import com.volmit.wormholes.wrapper.WrapperPlayServerSpawnEntityLiving;
 
 public class VEntity
 {
@@ -60,6 +61,20 @@ public class VEntity
 	
 	public void prelativeMoveLook(double x, double y, double z, float yaw, float pitch)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			//			WrapperPlayServerRelEntityMoveLook w = new WrapperPlayServerRelEntityMoveLook();
+			//			w.setDx((int) ((((location.getBlockX() + x)) - (location.getBlockX()))));
+			//			w.setDy((int) ((((location.getBlockY() + y)) - (location.getBlockY()))));
+			//			w.setDz((int) ((((location.getBlockZ() + z)) - (location.getBlockZ()))));
+			//			w.setEntityID(id);
+			//			w.setOnGround(location.clone().add(new Vector(x, y, z)).getBlock().getType().isSolid());
+			//			w.setPitch(pitch);
+			//			w.setYaw(yaw);
+			//			send(w);
+			//			return;
+		}
+		
 		WrapperPlayServerRelEntityMoveLook w = new WrapperPlayServerRelEntityMoveLook();
 		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128));
 		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128));
@@ -117,6 +132,8 @@ public class VEntity
 	{
 		if(getType().equals(EntityType.PLAYER))
 		{
+			viewer.sendMessage("Spawn?");
+			
 			vp.spawn(location);
 		}
 		

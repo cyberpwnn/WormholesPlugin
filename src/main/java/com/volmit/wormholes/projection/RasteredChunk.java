@@ -14,7 +14,7 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.W;
-import com.volmit.wormholes.util.WrapperPlayServerMultiBlockChange;
+import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
 
 public class RasteredChunk
 {

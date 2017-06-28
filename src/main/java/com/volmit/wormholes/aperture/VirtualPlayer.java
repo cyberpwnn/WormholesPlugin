@@ -1,9 +1,13 @@
 package com.volmit.wormholes.aperture;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.NativeGameMode;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -16,14 +20,15 @@ import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.VectorMath;
-import com.volmit.wormholes.util.WrapperPlayServerAnimation;
-import com.volmit.wormholes.util.WrapperPlayServerEntityDestroy;
-import com.volmit.wormholes.util.WrapperPlayServerEntityHeadRotation;
-import com.volmit.wormholes.util.WrapperPlayServerEntityMetadata;
-import com.volmit.wormholes.util.WrapperPlayServerNamedEntitySpawn;
-import com.volmit.wormholes.util.WrapperPlayServerPlayerInfo;
-import com.volmit.wormholes.util.WrapperPlayServerRelEntityMove;
-import com.volmit.wormholes.util.WrapperPlayServerRelEntityMoveLook;
+import com.volmit.wormholes.util.VersionBukkit;
+import com.volmit.wormholes.wrapper.WrapperPlayServerAnimation;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMetadata;
+import com.volmit.wormholes.wrapper.WrapperPlayServerNamedEntitySpawn;
+import com.volmit.wormholes.wrapper.WrapperPlayServerPlayerInfo;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMoveLook;
 
 public class VirtualPlayer
 {
@@ -52,11 +57,23 @@ public class VirtualPlayer
 	
 	public void spawn(Location location)
 	{
-		this.location = location;
-		nextLocation = location;
-		sendPlayerInfo();
-		sendNamedEntitySpawn();
-		sendEntityMetadata();
+		viewer.sendMessage("Spawning?");
+		
+		try
+		{
+			this.location = location;
+			nextLocation = location;
+			sendPlayerInfo();
+			sendNamedEntitySpawn();
+			sendEntityMetadata();
+		}
+		
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		viewer.sendMessage("Spawned?");
 	}
 	
 	public void despawn()
@@ -183,8 +200,29 @@ public class VirtualPlayer
 		w.sendPacket(viewer);
 	}
 	
+	private void sendNamedEntitySpawn18()
+	{
+		WrapperPlayServerNamedEntitySpawn w = new WrapperPlayServerNamedEntitySpawn();
+		w.setEntityID(id);
+		w.setPlayerUUID(uuid);
+		w.setYaw(location.getYaw());
+		w.setPitch(location.getPitch());
+		w.setX(location.getX());
+		w.setY(location.getY());
+		w.setZ(location.getZ());
+		WrappedDataWatcher wd = new WrappedDataWatcher();
+		w.setMetadata(wd);
+		w.sendPacket(viewer);
+	}
+	
 	private void sendNamedEntitySpawn()
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendNamedEntitySpawn18();
+			return;
+		}
+		
 		WrapperPlayServerNamedEntitySpawn w = new WrapperPlayServerNamedEntitySpawn();
 		w.setEntityID(id);
 		w.setPlayerUUID(uuid);
@@ -286,8 +324,40 @@ public class VirtualPlayer
 		w.sendPacket(viewer);
 	}
 	
+	private void send(PacketContainer p)
+	{
+		try
+		{
+			ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, p);
+		}
+		
+		catch(InvocationTargetException e)
+		{
+			
+		}
+	}
+	
+	private void sendEntityRelativeMoveLook18(Vector velocity)
+	{
+		PacketContainer p = new PacketContainer(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK);
+		p.getIntegers().write(0, id);
+		p.getBytes().write(0, (byte) getCompressedDiff(location.getX(), location.getX() + velocity.getX()));
+		p.getBytes().write(1, (byte) getCompressedDiff(location.getY(), location.getY() + velocity.getY()));
+		p.getBytes().write(2, (byte) getCompressedDiff(location.getZ(), location.getZ() + velocity.getZ()));
+		p.getBooleans().write(0, onGround);
+		p.getBytes().write(3, (byte) (nextLocation.getYaw() * 256.0F / 360.0F));
+		p.getBytes().write(4, (byte) (nextLocation.getPitch() * 256.0F / 360.0F));
+		send(p);
+	}
+	
 	private void sendEntityRelativeMoveLook(Vector velocity)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendEntityRelativeMoveLook18(velocity);
+			return;
+		}
+		
 		WrapperPlayServerRelEntityMoveLook wa = new WrapperPlayServerRelEntityMoveLook();
 		wa.setEntityID(id);
 		wa.setDx(getCompressedDiff(location.getX(), location.getX() + velocity.getX()));
@@ -309,6 +379,11 @@ public class VirtualPlayer
 	}
 	
 	private int getCompressedDiff(double from, double to)
+	{
+		return (int) (((to * 32) - (from * 32)) * 128);
+	}
+	
+	private int getCompressedDiff8(double from, double to)
 	{
 		return (int) (((to * 32) - (from * 32)) * 128);
 	}

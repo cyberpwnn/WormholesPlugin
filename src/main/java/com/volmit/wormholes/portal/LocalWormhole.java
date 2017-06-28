@@ -14,7 +14,7 @@ import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
-import com.volmit.wormholes.util.WrapperPlayServerEntityVelocity;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityVelocity;
 
 public class LocalWormhole extends BaseWormhole
 {
