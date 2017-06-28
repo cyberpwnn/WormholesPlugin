@@ -1,6 +1,7 @@
 package com.volmit.wormholes.service;
 
 import java.util.UUID;
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
@@ -68,15 +69,30 @@ public class SkinService
 						{
 							try
 							{
-								SkinProperties s = new SkinProperties(i);
+								SkinProperties s = null;
+								
+								if(Wormholes.io.hasSkin(i))
+								{
+									s = Wormholes.io.loadSkin(i);
+								}
+								
+								else
+								{
+									s = new SkinProperties(i);
+								}
+								
 								request.remove(i);
 								cache.put(i, s);
-								System.out.println("Got skin for " + i);
+								
+								if(!Wormholes.io.hasSkin(i))
+								{
+									Wormholes.io.saveSkin(i, s);
+								}
 							}
 							
 							catch(SkinErrorException e)
 							{
-								e.printStackTrace();
+								
 							}
 						}
 						
@@ -86,7 +102,6 @@ public class SkinService
 					catch(Exception e)
 					{
 						running = false;
-						e.printStackTrace();
 					}
 				}
 			};
