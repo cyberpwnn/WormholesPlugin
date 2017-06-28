@@ -13,6 +13,8 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.P;
+import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.WrapperPlayServerAnimation;
 import com.volmit.wormholes.util.WrapperPlayServerEntityDestroy;
@@ -33,6 +35,7 @@ public class VirtualPlayer
 	private Location location;
 	private Location nextLocation;
 	private Boolean onGround;
+	private Boolean missingSkin;
 	
 	public VirtualPlayer(Player viewer, UUID uuid, Integer id, String name, String displayName)
 	{
@@ -44,6 +47,7 @@ public class VirtualPlayer
 		location = null;
 		nextLocation = null;
 		onGround = false;
+		missingSkin = true;
 	}
 	
 	public void spawn(Location location)
@@ -66,6 +70,17 @@ public class VirtualPlayer
 		onGround = nextLocation.getY() == nextLocation.getBlock().getLocation().add(0.5, 1, 0.5).getY();
 		sendEntityMove();
 		location = nextLocation;
+		
+		if(missingSkin && Wormholes.skin.hasProperties(uuid))
+		{
+			despawn();
+			spawn(getLocation());
+			
+			for(double i = 0.0; i < 1.9; i += 0.15)
+			{
+				ParticleEffect.SPELL_WITCH.display(0.5f, 12, getLocation().clone().add(0, i, 0), viewer);
+			}
+		}
 	}
 	
 	public void move(Location location)
@@ -121,22 +136,23 @@ public class VirtualPlayer
 	
 	private String mark()
 	{
-		String n = name;
-		
-		if(n.length() > 14)
-		{
-			n = n.substring(0, 14);
-		}
-		
-		return "* " + n;
+		return name;
 	}
 	
 	private void sendPlayerInfoRemove()
 	{
+		for(Player i : P.onlinePlayers())
+		{
+			if(i.getUniqueId().equals(uuid))
+			{
+				return;
+			}
+		}
+		
 		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
 		w.setAction(PlayerInfoAction.REMOVE_PLAYER);
 		GList<PlayerInfoData> l = new GList<PlayerInfoData>();
-		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), mark());
+		WrappedGameProfile profile = new WrappedGameProfile(uuid, mark());
 		PlayerInfoData pid = new PlayerInfoData(profile, 1, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(mark()));
 		l.add(pid);
 		w.setData(l);
@@ -148,10 +164,11 @@ public class VirtualPlayer
 		WrapperPlayServerPlayerInfo w = new WrapperPlayServerPlayerInfo();
 		w.setAction(PlayerInfoAction.ADD_PLAYER);
 		GList<PlayerInfoData> l = new GList<PlayerInfoData>();
-		WrappedGameProfile profile = new WrappedGameProfile(UUID.nameUUIDFromBytes(uuid.toString().getBytes()), mark());
+		WrappedGameProfile profile = new WrappedGameProfile(uuid, mark());
 		
 		if(Wormholes.skin.hasProperties(uuid))
 		{
+			missingSkin = false;
 			profile.getProperties().put("textures", Wormholes.skin.getProperty(uuid).sign());
 		}
 		
