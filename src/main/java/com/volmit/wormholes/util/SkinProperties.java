@@ -12,6 +12,13 @@ public class SkinProperties
 	private String value;
 	private String signature;
 	
+	public SkinProperties(String uvd, String value, String signature)
+	{
+		this.uvd = uvd;
+		this.value = value;
+		this.signature = signature;
+	}
+	
 	public SkinProperties(UUID uuid) throws SkinErrorException
 	{
 		uvd = uuid.toString().replaceAll("-", "");
@@ -62,5 +69,20 @@ public class SkinProperties
 	public WrappedSignedProperty sign()
 	{
 		return new WrappedSignedProperty("textures", value, signature);
+	}
+	
+	public String getUvd()
+	{
+		return uvd;
+	}
+	
+	public String getValue()
+	{
+		return value;
+	}
+	
+	public String getSignature()
+	{
+		return signature;
 	}
 }
