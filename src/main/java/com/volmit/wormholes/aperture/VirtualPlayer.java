@@ -1,13 +1,9 @@
 package com.volmit.wormholes.aperture;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.NativeGameMode;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -25,9 +21,12 @@ import com.volmit.wormholes.wrapper.WrapperPlayServerAnimation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMetadata;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMoveLook18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerNamedEntitySpawn;
+import com.volmit.wormholes.wrapper.WrapperPlayServerNamedEntitySpawn18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerPlayerInfo;
 import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMoveLook;
 
 public class VirtualPlayer
@@ -202,7 +201,7 @@ public class VirtualPlayer
 	
 	private void sendNamedEntitySpawn18()
 	{
-		WrapperPlayServerNamedEntitySpawn w = new WrapperPlayServerNamedEntitySpawn();
+		WrapperPlayServerNamedEntitySpawn18 w = new WrapperPlayServerNamedEntitySpawn18();
 		w.setEntityID(id);
 		w.setPlayerUUID(uuid);
 		w.setYaw(location.getYaw());
@@ -313,8 +312,25 @@ public class VirtualPlayer
 		}
 	}
 	
+	private void sendEntityRelativeMove18(Vector velocity)
+	{
+		WrapperPlayServerRelEntityMove18 w = new WrapperPlayServerRelEntityMove18();
+		w.setEntityID(id);
+		w.setDx((location.getX() - (location.getX() + velocity.getX())) / 100);
+		w.setDy((location.getY() - (location.getY() + velocity.getY())) / 100);
+		w.setDz((location.getZ() - (location.getZ() + velocity.getZ())) / 100);
+		w.setOnGround(onGround);
+		w.sendPacket(viewer);
+	}
+	
 	private void sendEntityRelativeMove(Vector velocity)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendEntityRelativeMove18(velocity);
+			return;
+		}
+		
 		WrapperPlayServerRelEntityMove w = new WrapperPlayServerRelEntityMove();
 		w.setEntityID(id);
 		w.setDx(getCompressedDiff(location.getX(), location.getX() + velocity.getX()));
@@ -324,30 +340,17 @@ public class VirtualPlayer
 		w.sendPacket(viewer);
 	}
 	
-	private void send(PacketContainer p)
-	{
-		try
-		{
-			ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, p);
-		}
-		
-		catch(InvocationTargetException e)
-		{
-			
-		}
-	}
-	
 	private void sendEntityRelativeMoveLook18(Vector velocity)
 	{
-		PacketContainer p = new PacketContainer(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK);
-		p.getIntegers().write(0, id);
-		p.getBytes().write(0, (byte) getCompressedDiff(location.getX(), location.getX() + velocity.getX()));
-		p.getBytes().write(1, (byte) getCompressedDiff(location.getY(), location.getY() + velocity.getY()));
-		p.getBytes().write(2, (byte) getCompressedDiff(location.getZ(), location.getZ() + velocity.getZ()));
-		p.getBooleans().write(0, onGround);
-		p.getBytes().write(3, (byte) (nextLocation.getYaw() * 256.0F / 360.0F));
-		p.getBytes().write(4, (byte) (nextLocation.getPitch() * 256.0F / 360.0F));
-		send(p);
+		WrapperPlayServerEntityMoveLook18 w = new WrapperPlayServerEntityMoveLook18();
+		w.setEntityID(id);
+		w.setDx((location.getX() - (location.getX() + velocity.getX())) / 100);
+		w.setDy((location.getY() - (location.getY() + velocity.getY())) / 100);
+		w.setDz((location.getZ() - (location.getZ() + velocity.getZ())) / 100);
+		w.setOnGround(onGround);
+		w.setYaw(nextLocation.getYaw());
+		w.setPitch(nextLocation.getPitch());
+		w.sendPacket(viewer);
 	}
 	
 	private void sendEntityRelativeMoveLook(Vector velocity)
@@ -379,11 +382,6 @@ public class VirtualPlayer
 	}
 	
 	private int getCompressedDiff(double from, double to)
-	{
-		return (int) (((to * 32) - (from * 32)) * 128);
-	}
-	
-	private int getCompressedDiff8(double from, double to)
 	{
 		return (int) (((to * 32) - (from * 32)) * 128);
 	}
