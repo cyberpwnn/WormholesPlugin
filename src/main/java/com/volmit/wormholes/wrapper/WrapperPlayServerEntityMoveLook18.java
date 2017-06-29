@@ -112,7 +112,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public double getDy()
 	{
-		return handle.getBytes().read(0) / 32D;
+		return handle.getBytes().read(1) / 32D;
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public void setDy(double value)
 	{
-		handle.getBytes().write(0, (byte) (value * 32));
+		handle.getBytes().write(1, (byte) (value * 32));
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public double getDz()
 	{
-		return handle.getBytes().read(0) / 32D;
+		return handle.getBytes().read(2) / 32D;
 	}
 	
 	/**
@@ -144,7 +144,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public void setDz(double value)
 	{
-		handle.getBytes().write(0, (byte) (value * 32));
+		handle.getBytes().write(2, (byte) (value * 32));
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public float getYaw()
 	{
-		return (handle.getBytes().read(0) * 360.F) / 256.0F;
+		return (handle.getBytes().read(3) * 360.F) / 256.0F;
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public void setYaw(float value)
 	{
-		handle.getBytes().write(0, (byte) (value * 256.0F / 360.0F));
+		handle.getBytes().write(3, (byte) (value * 256.0F / 360.0F));
 	}
 	
 	/**
@@ -175,7 +175,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public float getPitch()
 	{
-		return (handle.getBytes().read(1) * 360.F) / 256.0F;
+		return (handle.getBytes().read(4) * 360.F) / 256.0F;
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class WrapperPlayServerEntityMoveLook18 extends AbstractPacket18
 	 */
 	public void setPitch(float value)
 	{
-		handle.getBytes().write(1, (byte) (value * 256.0F / 360.0F));
+		handle.getBytes().write(4, (byte) (value * 256.0F / 360.0F));
 	}
 	
 	/**

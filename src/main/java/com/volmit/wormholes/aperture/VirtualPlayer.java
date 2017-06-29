@@ -20,7 +20,9 @@ import com.volmit.wormholes.util.VersionBukkit;
 import com.volmit.wormholes.wrapper.WrapperPlayServerAnimation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMetadata;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMetadata18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMoveLook18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerNamedEntitySpawn;
 import com.volmit.wormholes.wrapper.WrapperPlayServerNamedEntitySpawn18;
@@ -56,23 +58,12 @@ public class VirtualPlayer
 	
 	public void spawn(Location location)
 	{
-		viewer.sendMessage("Spawning?");
-		
-		try
-		{
-			this.location = location;
-			nextLocation = location;
-			sendPlayerInfo();
-			sendNamedEntitySpawn();
-			sendEntityMetadata();
-		}
-		
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		viewer.sendMessage("Spawned?");
+		this.location = location;
+		nextLocation = location;
+		sendPlayerInfo();
+		sendNamedEntitySpawn();
+		sendEntityMetadata();
+		sendEntityHeadLook();
 	}
 	
 	public void despawn()
@@ -267,8 +258,24 @@ public class VirtualPlayer
 		sendEntityMetadataSneaking(sneaking);
 	}
 	
+	private void sendEntityMetadataSneaking18(boolean sneaking)
+	{
+		WrapperPlayServerEntityMetadata18 w = new WrapperPlayServerEntityMetadata18();
+		GList<WrappedWatchableObject> watch = new GList<WrappedWatchableObject>();
+		watch.add(new WrappedWatchableObject(0, (byte) (sneaking ? 2 : 0)));
+		w.setEntityID(id);
+		w.setMetadata(watch);
+		w.sendPacket(viewer);
+	}
+	
 	private void sendEntityMetadataSneaking(boolean sneaking)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendEntityMetadataSneaking18(sneaking);
+			return;
+		}
+		
 		WrapperPlayServerEntityMetadata w = new WrapperPlayServerEntityMetadata();
 		GList<WrappedWatchableObject> watch = new GList<WrappedWatchableObject>();
 		watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), sneaking ? (byte) 2 : (byte) 0));
@@ -309,6 +316,7 @@ public class VirtualPlayer
 		else if(pit)
 		{
 			sendEntityRelativeMoveLook(dir);
+			sendEntityHeadLook();
 		}
 	}
 	
@@ -316,9 +324,9 @@ public class VirtualPlayer
 	{
 		WrapperPlayServerRelEntityMove18 w = new WrapperPlayServerRelEntityMove18();
 		w.setEntityID(id);
-		w.setDx((location.getX() - (location.getX() + velocity.getX())) / 100);
-		w.setDy((location.getY() - (location.getY() + velocity.getY())) / 100);
-		w.setDz((location.getZ() - (location.getZ() + velocity.getZ())) / 100);
+		w.setDx(getCompressedDiff18(location.getX(), location.getX() + velocity.getX()));
+		w.setDy(getCompressedDiff18(location.getY(), location.getY() + velocity.getY()));
+		w.setDz(getCompressedDiff18(location.getZ(), location.getZ() + velocity.getZ()));
 		w.setOnGround(onGround);
 		w.sendPacket(viewer);
 	}
@@ -344,9 +352,9 @@ public class VirtualPlayer
 	{
 		WrapperPlayServerEntityMoveLook18 w = new WrapperPlayServerEntityMoveLook18();
 		w.setEntityID(id);
-		w.setDx((location.getX() - (location.getX() + velocity.getX())) / 100);
-		w.setDy((location.getY() - (location.getY() + velocity.getY())) / 100);
-		w.setDz((location.getZ() - (location.getZ() + velocity.getZ())) / 100);
+		w.setDx(getCompressedDiff18(location.getX(), location.getX() + velocity.getX()));
+		w.setDy(getCompressedDiff18(location.getY(), location.getY() + velocity.getY()));
+		w.setDz(getCompressedDiff18(location.getZ(), location.getZ() + velocity.getZ()));
 		w.setOnGround(onGround);
 		w.setYaw(nextLocation.getYaw());
 		w.setPitch(nextLocation.getPitch());
@@ -373,8 +381,22 @@ public class VirtualPlayer
 		sendEntityHeadLook();
 	}
 	
+	private void sendEntityHeadLook18()
+	{
+		WrapperPlayServerEntityHeadRotation18 w = new WrapperPlayServerEntityHeadRotation18();
+		w.setEntityID(id);
+		w.setHeadYaw((byte) (nextLocation.getYaw() * 256.0F / 360.0F));
+		w.sendPacket(viewer);
+	}
+	
 	private void sendEntityHeadLook()
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendEntityHeadLook18();
+			return;
+		}
+		
 		WrapperPlayServerEntityHeadRotation w = new WrapperPlayServerEntityHeadRotation();
 		w.setEntityID(id);
 		w.setHeadYaw((byte) (nextLocation.getYaw() * 256.0F / 360.0F));
@@ -384,6 +406,11 @@ public class VirtualPlayer
 	private int getCompressedDiff(double from, double to)
 	{
 		return (int) (((to * 32) - (from * 32)) * 128);
+	}
+	
+	private double getCompressedDiff18(double from, double to)
+	{
+		return to - from;
 	}
 	
 	@Override
