@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.ForwardedPluginMessage;
 
@@ -39,7 +40,9 @@ public class RemoteBus extends BaseBus implements PluginMessageListener
 	
 	private void sendTransmission(Transmission t) throws IOException
 	{
-		new ForwardedPluginMessage(Wormholes.instance, CL.L1.get(), t.getDestination(), t.compress()).send();
+		byte[] bt = t.compress();
+		new ForwardedPluginMessage(Wormholes.instance, CL.L1.get(), t.getDestination(), bt).send();
+		Status.reportPacket(bt.length);
 	}
 	
 	@Override

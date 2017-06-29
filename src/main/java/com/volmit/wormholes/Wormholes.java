@@ -30,6 +30,7 @@ import com.volmit.wormholes.util.D;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
+import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.QueueMode;
 import com.volmit.wormholes.util.RTEX;
@@ -132,6 +133,21 @@ public class Wormholes extends ControllablePlugin
 				Status.permutationsPerSecond = 0;
 				Status.lightFaulted = Status.lightFault;
 				Status.lightFault = 0;
+				Status.avgBGY.put(Status.bgg);
+				Status.bgg = 0;
+			}
+			
+			if(TICK.tick % Settings.WORMHOLE_IDLE_FLUSH == 0)
+			{
+				for(Player i : P.onlinePlayers())
+				{
+					provider.movePlayer(i);
+					
+					for(Portal j : registry.getLocalPortals())
+					{
+						((LocalPortal) j).getMask().sched(i);
+					}
+				}
 			}
 			
 			if(TICK.tick % Settings.WORMHOLE_SKIN_FLUSH == 0)

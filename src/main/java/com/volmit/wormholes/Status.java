@@ -14,7 +14,8 @@ public class Status
 	public static Average avgBPS = new Average(2);
 	public static Average avgPower = new Average(5);
 	public static Average avgWrk = new Average(5);
-	
+	public static Average avgBGY = new Average(5);
+	public static long bgg = 0;
 	public static String inf = "";
 	public static int lightFault = 0;
 	public static int lightFaulted = 0;
@@ -27,6 +28,12 @@ public class Status
 		inf += C.GOLD + "POW: " + C.WHITE + F.pc(avgPower.getAverage()) + " ";
 		inf += C.GOLD + "WRK: " + C.WHITE + F.pc(avgWrk.getAverage()) + " ";
 		inf += C.GOLD + "NET: " + C.WHITE + F.fileSize((long) avgBPS.getAverage()) + "/s ";
-		inf += C.GOLD + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms";
+		inf += C.GOLD + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms ";
+		inf += C.GOLD + "BNJ: " + C.WHITE + F.fileSize((long) avgBGY.getAverage()) + "/s ";
+	}
+	
+	public static void reportPacket(long size)
+	{
+		bgg += size;
 	}
 }

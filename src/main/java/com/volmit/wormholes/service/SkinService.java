@@ -1,11 +1,14 @@
 package com.volmit.wormholes.service;
 
+import java.io.File;
 import java.util.UUID;
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.SkinErrorException;
 import com.volmit.wormholes.util.SkinProperties;
 
@@ -20,6 +23,37 @@ public class SkinService
 		running = false;
 		cache = new GMap<UUID, SkinProperties>();
 		request = new GSet<UUID>();
+		runPurger();
+	}
+	
+	public void runPurger()
+	{
+		long msx = Settings.SKIN_CACHE_PURGE_THRESHOLD;
+		msx = msx * 24l * 60l * 60l * 1000l;
+		long mb = msx;
+		
+		new A()
+		{
+			@Override
+			public void async()
+			{
+				File f = new File(Wormholes.instance.getDataFolder(), "cache");
+				File fx = new File(f, "skins");
+				
+				if(!fx.exists())
+				{
+					return;
+				}
+				
+				for(File i : fx.listFiles())
+				{
+					if(M.ms() - i.lastModified() > mb)
+					{
+						i.delete();
+					}
+				}
+			}
+		};
 	}
 	
 	public boolean hasProperties(UUID uuid)

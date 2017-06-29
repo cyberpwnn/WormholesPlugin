@@ -41,6 +41,12 @@ public class Settings
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;
 	
+	@CName("SKIN_CACHE_PURGE_THRESHOLD")
+	@CMax(10000)
+	@CMin(1)
+	@Comment("The max days a skin can be cached before being purged")
+	public static int SKIN_CACHE_PURGE_THRESHOLD = 30;
+	
 	@CName("MAX_VELOCITY_CAPTURE_RANGE")
 	@CMax(128)
 	@CMin(12)
@@ -80,6 +86,13 @@ public class Settings
 	@Experimental
 	@Comment("Using worker threads, wormholes will communicate with the mojang api to get profile skins for players through portals.")
 	public static int WORMHOLE_SKIN_FLUSH = 100;
+	
+	@CName("WORMHOLE_IDLE_FLUSH")
+	@CMin(20)
+	@CMax(1200)
+	@Experimental
+	@Comment("Update portal information to players even if they are not moving, slowly\nThis prevents visual artifacts if the viewer is not moving.")
+	public static int WORMHOLE_IDLE_FLUSH = 100;
 	
 	@CName("PROJECTION_CHANGE_THROTTLE")
 	@CMin(2048)
