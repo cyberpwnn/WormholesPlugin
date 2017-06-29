@@ -132,8 +132,6 @@ public class VEntity
 	{
 		if(getType().equals(EntityType.PLAYER))
 		{
-			viewer.sendMessage("Spawn?");
-			
 			vp.spawn(location);
 		}
 		
