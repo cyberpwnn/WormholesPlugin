@@ -13,11 +13,16 @@ import com.volmit.wormholes.util.VersionBukkit;
 import com.volmit.wormholes.wrapper.AbstractPacket;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityLook;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityLook18;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMoveLook18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityTeleport;
 import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove;
+import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMove18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerRelEntityMoveLook;
 import com.volmit.wormholes.wrapper.WrapperPlayServerSpawnEntityLiving;
+import com.volmit.wormholes.wrapper.WrapperPlayServerSpawnEntityLiving18;
 
 public class VEntity
 {
@@ -48,8 +53,30 @@ public class VEntity
 		vp = type.equals(EntityType.PLAYER) ? new VirtualPlayer(viewer, uuid, id, name, name) : null;
 	}
 	
+	public void prelativeMove18(double x, double y, double z)
+	{
+		WrapperPlayServerRelEntityMove18 w = new WrapperPlayServerRelEntityMove18();
+		w.setEntityID(id);
+		w.setDx(getCompressedDiff18(location.getX(), location.getX() + x));
+		w.setDy(getCompressedDiff18(location.getY(), location.getY() + y));
+		w.setDz(getCompressedDiff18(location.getZ(), location.getZ() + z));
+		w.setOnGround(true);
+		w.sendPacket(viewer);
+	}
+	
+	private double getCompressedDiff18(double from, double to)
+	{
+		return to - from;
+	}
+	
 	public void prelativeMove(double x, double y, double z)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			prelativeMove18(x, y, z);
+			return;
+		}
+		
 		WrapperPlayServerRelEntityMove w = new WrapperPlayServerRelEntityMove();
 		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128));
 		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128));
@@ -59,20 +86,25 @@ public class VEntity
 		send(w);
 	}
 	
+	public void prelativeMoveLook18(double x, double y, double z, float yaw, float pitch)
+	{
+		WrapperPlayServerEntityMoveLook18 w = new WrapperPlayServerEntityMoveLook18();
+		w.setEntityID(id);
+		w.setDx(getCompressedDiff18(location.getX(), location.getX() + x));
+		w.setDy(getCompressedDiff18(location.getY(), location.getY() + y));
+		w.setDz(getCompressedDiff18(location.getZ(), location.getZ() + z));
+		w.setOnGround(true);
+		w.setYaw(yaw);
+		w.setPitch(pitch);
+		w.sendPacket(viewer);
+	}
+	
 	public void prelativeMoveLook(double x, double y, double z, float yaw, float pitch)
 	{
 		if(VersionBukkit.get().equals(VersionBukkit.V8))
 		{
-			//			WrapperPlayServerRelEntityMoveLook w = new WrapperPlayServerRelEntityMoveLook();
-			//			w.setDx((int) ((((location.getBlockX() + x)) - (location.getBlockX()))));
-			//			w.setDy((int) ((((location.getBlockY() + y)) - (location.getBlockY()))));
-			//			w.setDz((int) ((((location.getBlockZ() + z)) - (location.getBlockZ()))));
-			//			w.setEntityID(id);
-			//			w.setOnGround(location.clone().add(new Vector(x, y, z)).getBlock().getType().isSolid());
-			//			w.setPitch(pitch);
-			//			w.setYaw(yaw);
-			//			send(w);
-			//			return;
+			prelativeMoveLook18(x, y, z, yaw, pitch);
+			return;
 		}
 		
 		WrapperPlayServerRelEntityMoveLook w = new WrapperPlayServerRelEntityMoveLook();
@@ -101,6 +133,12 @@ public class VEntity
 	
 	public void plook(float y, float p)
 	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			plook18(y, p);
+			return;
+		}
+		
 		WrapperPlayServerEntityLook w = new WrapperPlayServerEntityLook();
 		w.setEntityID(id);
 		w.setOnGround(true);
@@ -111,6 +149,20 @@ public class VEntity
 		WrapperPlayServerEntityHeadRotation ww = new WrapperPlayServerEntityHeadRotation();
 		ww.setHeadYaw((byte) ((yaw * 256.0F) / 360.0F));
 		send(ww);
+	}
+	
+	public void plook18(float y, float p)
+	{
+		WrapperPlayServerEntityLook18 w = new WrapperPlayServerEntityLook18();
+		w.setEntityID(id);
+		w.setOnGround(true);
+		w.setPitch(p);
+		w.setYaw(y);
+		w.sendPacket(viewer);
+		
+		WrapperPlayServerEntityHeadRotation18 ww = new WrapperPlayServerEntityHeadRotation18();
+		ww.setHeadYaw((byte) ((yaw * 256.0F) / 360.0F));
+		ww.sendPacket(viewer);
 	}
 	
 	public void despawn()
@@ -128,6 +180,20 @@ public class VEntity
 		}
 	}
 	
+	public void spawn18()
+	{
+		WrapperPlayServerSpawnEntityLiving18 w = new WrapperPlayServerSpawnEntityLiving18();
+		w.setEntityID(id);
+		w.setX(location.getX());
+		w.setY(location.getY());
+		w.setZ(location.getZ());
+		w.setYaw(location.getYaw());
+		w.setHeadPitch(location.getPitch());
+		w.setType(type);
+		w.setMetadata(new WrappedDataWatcher());
+		w.sendPacket(viewer);
+	}
+	
 	public void spawn()
 	{
 		if(getType().equals(EntityType.PLAYER))
@@ -137,6 +203,12 @@ public class VEntity
 		
 		else
 		{
+			if(VersionBukkit.get().equals(VersionBukkit.V8))
+			{
+				spawn18();
+				return;
+			}
+			
 			WrapperPlayServerSpawnEntityLiving w = new WrapperPlayServerSpawnEntityLiving();
 			w.setEntityID(id);
 			w.setX(location.getX());

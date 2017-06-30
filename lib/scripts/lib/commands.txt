@@ -1,0 +1,21 @@
+# Run this from anywhere in the putty console to reclaim all permissions
+# if a file access issue happens again.
+reclaim-permissions: sudo find /xanserver/ -exec chown xan {} \;
+
+# Before running this, ensure that
+# - You are inside of a screen
+# - Located at /xanserver (use cd /xanserver to get there)
+# This command runs the server as xan, preventing file lock issues
+server-start-command: sudo -H -u xan bash -c 'java -Xmx4g -Xms1m -jar spigot-1.12.jar'
+
+# To list all active screens
+list-screens: sudo screen -ls
+
+# To create AND ENTER a new screen
+create-screen: sudo screen -S <screen name>
+
+# To kill a screen and remove it
+kill-screen: sudo screen -X -S <screen name> kill
+
+# To re-attach to a screen (open it)
+reattach-screen: sudo screen -r <screen name>

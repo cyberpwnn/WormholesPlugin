@@ -200,49 +200,57 @@ public class EntityService implements Listener
 	
 	public void set(Player p, Portal i, RemoteInstance ri, Location l)
 	{
-		if(!entities.containsKey(p))
+		try
 		{
-			entities.put(p, new GMap<Portal, GList<VEntity>>());
-		}
-		
-		if(!entities.get(p).containsKey(i))
-		{
-			entities.get(p).put(i, new GList<VEntity>());
-		}
-		
-		if(!aentities.containsKey(p))
-		{
-			aentities.put(p, new GMap<Portal, GSet<Integer>>());
-		}
-		
-		if(!aentities.get(p).containsKey(i))
-		{
-			aentities.get(p).put(i, new GSet<Integer>());
-		}
-		
-		aentities.get(p).get(i).add(ri.getRemoteId());
-		
-		for(VEntity e : entities.get(p).get(i).copy())
-		{
-			if(ri.getRemoteId() == e.getId())
+			if(!entities.containsKey(p))
 			{
-				e.teleport(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
-				e.flush();
-				return;
+				entities.put(p, new GMap<Portal, GList<VEntity>>());
 			}
+			
+			if(!entities.get(p).containsKey(i))
+			{
+				entities.get(p).put(i, new GList<VEntity>());
+			}
+			
+			if(!aentities.containsKey(p))
+			{
+				aentities.put(p, new GMap<Portal, GSet<Integer>>());
+			}
+			
+			if(!aentities.get(p).containsKey(i))
+			{
+				aentities.get(p).put(i, new GSet<Integer>());
+			}
+			
+			aentities.get(p).get(i).add(ri.getRemoteId());
+			
+			for(VEntity e : entities.get(p).get(i).copy())
+			{
+				if(ri.getRemoteId() == e.getId())
+				{
+					e.teleport(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
+					e.flush();
+					return;
+				}
+			}
+			
+			UUID id = UUID.randomUUID();
+			
+			if(ri instanceof RemotePlayer)
+			{
+				id = ((RemotePlayer) ri).getUuid();
+			}
+			
+			VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
+			ve.spawn();
+			ve.flush();
+			entities.get(p).get(i).add(ve);
 		}
 		
-		UUID id = UUID.randomUUID();
-		
-		if(ri instanceof RemotePlayer)
+		catch(Exception e)
 		{
-			id = ((RemotePlayer) ri).getUuid();
+			e.printStackTrace();
 		}
-		
-		VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
-		ve.spawn();
-		ve.flush();
-		entities.get(p).get(i).add(ve);
 	}
 	
 	public void shutdown()

@@ -298,6 +298,11 @@ public class PortalPosition
 		return null;
 	}
 	
+	public Cuboid getIPane()
+	{
+		return ipane;
+	}
+	
 	public Cuboid getOPane()
 	{
 		return pane.e(getIdentity().getAxis(), Settings.MAX_VELOCITY_CAPTURE_RANGE);

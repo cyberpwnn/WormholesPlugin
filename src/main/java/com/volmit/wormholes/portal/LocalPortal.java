@@ -22,6 +22,7 @@ import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
+import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
@@ -36,6 +37,7 @@ import com.volmit.wormholes.util.Wraith;
 
 public class LocalPortal implements Portal
 {
+	protected Cuboid ip;
 	protected PortalIdentity identity;
 	protected PortalPosition position;
 	protected ProjectionPlane plane;
@@ -67,6 +69,7 @@ public class LocalPortal implements Portal
 		displayName = "Wormhole";
 		holograms = new GMap<Player, Hologram>();
 		activatedEntities = new GList<Player>();
+		ip = getPosition().getIPane();
 	}
 	
 	public void checkKey()
