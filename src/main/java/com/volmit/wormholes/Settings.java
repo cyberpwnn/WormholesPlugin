@@ -66,6 +66,11 @@ public class Settings
 	@Comment("Modify the interval in which entities are updated, sent through bungee, and sent to players\nMust be 1 or higher")
 	public static int APERTURE_MAX_SPEED = 2;
 	
+	@CName("USE_LIGHTMAPS")
+	@Comment("Calculate where the client will force process lighting calculations and place arbitrary blocks out of sight from the projection to mitigate client freezing.\nNote this uses extra cpu time on the server to prevent clients from freezing.")
+	@Experimental
+	public static boolean USE_LIGHTMAPS = true;
+	
 	@CName("WORMHOLE_WORKER_THREADS")
 	@CMax(16)
 	@CMin(1)
@@ -113,21 +118,21 @@ public class Settings
 	@CMax(100)
 	@Experimental
 	@Comment("Change the maximum tickrate projections can run\nNote: This is in place to prevent overprojecting faster than 1/4th of a second.")
-	public static int PROJECTION_MAX_SPEED = 5;
+	public static int PROJECTION_MAX_SPEED = 25;
 	
 	@CName("CHUNK_SEND_RATE")
 	@CMin(1)
 	@CMax(20)
 	@Experimental
 	@Comment("The interval in which wormholes will send a chunk packet to players. Must be higher than 0.\nInterval in ticks")
-	public static int CHUNK_SEND_RATE = 2;
+	public static int CHUNK_SEND_RATE = 4;
 	
 	@CName("CHUNK_SEND_MAX")
 	@CMin(1)
 	@CMax(100)
 	@Experimental
 	@Comment("The maximum partial chunks which can be sent in one interval")
-	public static int CHUNK_SEND_MAX = 7;
+	public static int CHUNK_SEND_MAX = 6;
 	
 	@CName("CHUNK_MAX_CHANGE")
 	@CMin(1024)
@@ -169,7 +174,7 @@ public class Settings
 	@CMax(5000)
 	@Experimental
 	@Comment("Time Threshold in milliseconds to push excess queue packets to players")
-	public static int NETWORK_FLUSH_THRESHOLD = 560;
+	public static int NETWORK_FLUSH_THRESHOLD = 500;
 	
 	@CName("NETWORK_POLL_THRESHOLD")
 	@CMin(100)

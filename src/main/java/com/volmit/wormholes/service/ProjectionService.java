@@ -19,6 +19,7 @@ import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.projection.RenderMesh;
 import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.A;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.M;
@@ -38,6 +39,7 @@ public class ProjectionService implements Listener
 	
 	public ProjectionService()
 	{
+		DB.d(this, "Starting Projection Service");
 		remotePlanes = new GMap<PortalKey, ProjectionPlane>();
 		projecting = false;
 		tpl = M.ms();
@@ -146,6 +148,7 @@ public class ProjectionService implements Listener
 	
 	public void deproject(LocalPortal p)
 	{
+		DB.d(this, "Deprojecting " + p.toString());
 		if(lastPort.containsKey(p))
 		{
 			for(Player i : lastPort.get(p).k())
@@ -161,6 +164,7 @@ public class ProjectionService implements Listener
 	
 	public void deproject(LocalPortal p, Player i)
 	{
+		DB.d(this, "Deprojecting " + p.toString() + " just for " + i.getName());
 		Iterator<Block> it = p.getPosition().getArea().iterator();
 		
 		while(it.hasNext())

@@ -17,6 +17,7 @@ import com.volmit.wormholes.aperture.RemotePlayer;
 import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.network.Transmission;
 import com.volmit.wormholes.portal.Portal;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
@@ -30,6 +31,7 @@ public class EntityService implements Listener
 	
 	public EntityService()
 	{
+		DB.d(this, "Starting Entity Service");
 		entities = new GMap<Player, GMap<Portal, GList<VEntity>>>();
 		aentities = new GMap<Player, GMap<Portal, GSet<Integer>>>();
 		Wraith.registerListener(this);
@@ -79,6 +81,7 @@ public class EntityService implements Listener
 	public void dispatchAction(int id, String action)
 	{
 		GSet<String> servers = new GSet<String>();
+		DB.d(this, "Dispatch Action: " + id + " -> " + action);
 		
 		for(Portal i : WAPI.getRemotePortals())
 		{
@@ -180,6 +183,7 @@ public class EntityService implements Listener
 					{
 						if(!aentities.get(i).get(j).contains(k.getId()))
 						{
+							DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
 							k.despawn();
 							entities.get(i).get(j).remove(k);
 						}
@@ -242,6 +246,7 @@ public class EntityService implements Listener
 			}
 			
 			VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
+			DB.d(this, "Spawn Virtual Entity: " + ve.getType() + " <> " + ve.getUuid());
 			ve.spawn();
 			ve.flush();
 			entities.get(p).get(i).add(ve);

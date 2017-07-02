@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  * 
  * @author cyberpwn
  */
-public class D
+public class DB
 {
 	public static boolean rdebug = false;
 	public static boolean fool = false;
@@ -18,6 +18,7 @@ public class D
 	private GList<Player> listeners;
 	public static GList<String> queue;
 	public static GList<Player> globalListeners;
+	public static DB inst = null;
 	
 	public static void d(Object inst, String s)
 	{
@@ -29,11 +30,16 @@ public class D
 		d(inst.getClass(), s);
 	}
 	
-	public static void d(Class<?> inst, String s)
+	public static void d(Class<?> t, String s)
 	{
 		if(rdebug)
 		{
-			Bukkit.getServer().getConsoleSender().sendMessage(C.RED + "DEBUG<" + C.WHITE + inst.getSimpleName() + C.RED + ">" + C.WHITE + s);
+			if(inst == null)
+			{
+				inst = new DB("Wormholes");
+			}
+			
+			inst.i(C.YELLOW + t.getSimpleName() + ": " + C.WHITE + s);
 		}
 	}
 	
@@ -43,7 +49,7 @@ public class D
 	 * @param name
 	 *            the tag or prefix for logged messages for this dispatcher
 	 */
-	public D(String name)
+	public DB(String name)
 	{
 		this.name = name;
 		listeners = new GList<Player>();
@@ -323,7 +329,7 @@ public class D
 	 */
 	public void setSilent(Boolean silent)
 	{
-		D.silent = silent;
+		DB.silent = silent;
 	}
 	
 	static
@@ -359,7 +365,7 @@ public class D
 			return false;
 		}
 		
-		D other = (D) obj;
+		DB other = (DB) obj;
 		
 		if(name == null)
 		{

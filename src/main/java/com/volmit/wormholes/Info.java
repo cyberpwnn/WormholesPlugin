@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.TXT;
 import com.volmit.wormholes.util.TextBlock;
@@ -114,6 +115,7 @@ public class Info
 	
 	public static void buildBlocks()
 	{
+		DB.d(Info.class, "Starting Text Block Builder");
 		r = new TextMap("React");
 		TextBlock rSpace = new TextBlock();
 		rSpace.add("       ");

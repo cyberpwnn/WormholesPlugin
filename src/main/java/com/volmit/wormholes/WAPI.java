@@ -7,6 +7,8 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.RemotePortal;
+import com.volmit.wormholes.util.A;
+import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.ThreadInformation;
@@ -85,6 +87,44 @@ public class WAPI
 	public static List<Portal> getPortalCloseAreaAt(Location l)
 	{
 		return Wormholes.registry.getPortalsInCloseView(l);
+	}
+	
+	public static void runPowerThread(Runnable r)
+	{
+		Wormholes.pool.queue(new Execution()
+		{
+			@Override
+			public void run()
+			{
+				r.run();
+			}
+		});
+	}
+	
+	public static void runWorkerThread(Runnable r)
+	{
+		new A()
+		{
+			@Override
+			public void async()
+			{
+				r.run();
+			}
+		};
+	}
+	
+	public static void updateProjection(Portal p)
+	{
+		for(Player i : p.getPosition().getArea().getPlayers())
+		{
+			updateProjection(i, p);
+		}
+	}
+	
+	public static void updateProjection(Player p, Portal pl)
+	{
+		Wormholes.provider.movePlayer(p);
+		((LocalPortal) pl).getMask().sched(p);
 	}
 	
 	public static Portal getPortalByKey(PortalKey key)

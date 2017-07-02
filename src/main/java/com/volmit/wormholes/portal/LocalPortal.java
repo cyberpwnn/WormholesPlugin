@@ -23,6 +23,7 @@ import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
@@ -233,6 +234,7 @@ public class LocalPortal implements Portal
 	
 	public void throwBack(Entity i)
 	{
+		DB.d(this, "throw back " + i.getUniqueId() + " #" + toString());
 		Wormholes.fx.throwBack(i, Wormholes.fx.throwBackVector(i, this), this);
 	}
 	
@@ -247,6 +249,8 @@ public class LocalPortal implements Portal
 		{
 			return;
 		}
+		
+		DB.d(this, "CHK Send: " + toString() + " " + i.getType() + " > " + i.getUniqueId() + " @" + ic.toString());
 		
 		if(!Settings.ALLOW_ENTITIES)
 		{
@@ -341,6 +345,7 @@ public class LocalPortal implements Portal
 		
 		getService().addThrottle(i);
 		w.push(i, v);
+		DB.d(this, "Send " + i.getUniqueId() + " #" + toString());
 	}
 	
 	public void checkFrame()
@@ -401,6 +406,7 @@ public class LocalPortal implements Portal
 	{
 		try
 		{
+			DB.d(this, "Reverse Polarity: " + toString());
 			PortalPosition p = getPosition();
 			PortalPosition n = new PortalPosition(new PortalIdentity(p.getIdentity().getFront(), getKey()), p.getPane());
 			PortalKey pk;
@@ -746,7 +752,9 @@ public class LocalPortal implements Portal
 	
 	public void destroy()
 	{
+		DB.d(this, "Destroy EFXC " + toString());
 		Wormholes.fx.destroyed(this);
+		DB.d(this, "Wipe key " + toString());
 		getPosition().getCenterDown().getBlock().setType(Material.AIR);
 		getPosition().getCenterUp().getBlock().setType(Material.AIR);
 		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
@@ -787,6 +795,7 @@ public class LocalPortal implements Portal
 		if(sided)
 		{
 			Wormholes.projector.deproject(this);
+			DB.d(this, "Wipe Key " + toString());
 			getPosition().getCenterDown().getBlock().setType(Material.AIR);
 			getPosition().getCenterUp().getBlock().setType(Material.AIR);
 			getPosition().getCenterLeft().getBlock().setType(Material.AIR);
@@ -821,6 +830,7 @@ public class LocalPortal implements Portal
 			W.setColor(getPosition().getCenterUp().getBlock(), k.getU());
 			W.setColor(getPosition().getCenterLeft().getBlock(), k.getL());
 			W.setColor(getPosition().getCenterRight().getBlock(), k.getR());
+			DB.d(this, "Recolor " + toString());
 		}
 		
 		Wormholes.provider.wipe(this);
@@ -852,5 +862,12 @@ public class LocalPortal implements Portal
 	{
 		Wormholes.provider.wipe(this);
 		Wormholes.provider.save(this);
+		DB.d(this, "Saved " + toString());
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "LocalPortal: " + getKey().toString() + "";
 	}
 }

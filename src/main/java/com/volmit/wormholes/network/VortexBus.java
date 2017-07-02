@@ -8,6 +8,7 @@ import com.google.common.io.ByteStreams;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.service.TimingsService;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.PluginMessage;
@@ -24,6 +25,7 @@ public class VortexBus implements TransmissionBus, PluginMessageListener
 	
 	public VortexBus()
 	{
+		DB.d(this, "Starting Vortex Bus Service");
 		l = new LocalBus();
 		r = new RemoteBus();
 		serverName = null;

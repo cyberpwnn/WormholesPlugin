@@ -14,7 +14,7 @@ public abstract class Controller implements Controllable
 	protected double tickRate;
 	protected TickHandler tickHandle;
 	protected Task task;
-	protected D d;
+	protected DB d;
 	
 	public Controller(Controllable parent)
 	{
@@ -26,7 +26,7 @@ public abstract class Controller implements Controllable
 		ticked = false;
 		tickRate = 0;
 		tickHandle = TickHandler.SYNCED;
-		d = new D(getName());
+		d = new DB(getName());
 		preStart();
 	}
 	

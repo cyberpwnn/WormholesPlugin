@@ -1,5 +1,6 @@
 package com.volmit.wormholes.service;
 
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.Timed;
 
 public class TimingsService
@@ -11,5 +12,6 @@ public class TimingsService
 	{
 		root = new Timed("wormholes", 0);
 		asyn = new Timed("wormholes-async", 0);
+		DB.d(this, "Starting Timings Service");
 	}
 }

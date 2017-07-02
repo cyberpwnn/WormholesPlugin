@@ -6,6 +6,7 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.projection.ProjectionSet;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 
@@ -17,6 +18,7 @@ public class PortalRegistry
 	
 	public PortalRegistry()
 	{
+		DB.d(this, "Starting Portal Registry");
 		localPortals = new GList<Portal>();
 		destroyQueue = new GList<Portal>();
 		mutexPortals = new GMap<String, GList<Portal>>();

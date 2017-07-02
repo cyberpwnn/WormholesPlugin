@@ -32,7 +32,7 @@ public class TextMap
 	
 	public void check()
 	{
-		D d = Wormholes.instance.getDispatcher();
+		DB d = Wormholes.instance.getDispatcher();
 		
 		d.s("Scanning " + mapping.k().size() + " Blocks...");
 		

@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.portal.LocalPortal;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.M;
@@ -19,7 +20,7 @@ public class EffectService
 {
 	public EffectService()
 	{
-		
+		DB.d(this, "Starting Effect Service");
 	}
 	
 	public void strikePortal(LocalPortal p)

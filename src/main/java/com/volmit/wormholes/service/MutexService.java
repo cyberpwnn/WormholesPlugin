@@ -52,9 +52,11 @@ import com.volmit.wormholes.portal.Wormhole;
 import com.volmit.wormholes.projection.ArrivalVector;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.FinalInteger;
 import com.volmit.wormholes.util.ForwardedPluginMessage;
 import com.volmit.wormholes.util.GList;
@@ -86,6 +88,7 @@ public class MutexService implements Listener
 	
 	public MutexService()
 	{
+		DB.d(this, "Starting Mutex Service");
 		Wraith.registerListener(this);
 		insideThrottle = new GList<Entity>();
 		waiting = new GMap<Player, Runnable>();
@@ -165,6 +168,7 @@ public class MutexService implements Listener
 		{
 			if(p.isWormholeMutex())
 			{
+				DB.d(this, "Setting portal " + p + " to sided: " + sided);
 				Transmission t = new Transmission(p.getServer(), p.getWormhole().getDestination().getServer(), sided ? "sided" : "usided");
 				t.set("id", p.getWormhole().getDestination().toData().toJSON().toString());
 				((RemotePortal) p.getWormhole().getDestination()).setWait();
@@ -217,6 +221,7 @@ public class MutexService implements Listener
 	
 	public void addLocalPortal(Portal portal)
 	{
+		DB.d(this, "Adding Local Portal " + portal.toString());
 		Wormholes.registry.localPortals.add(portal);
 		
 		for(Chunk i : portal.getPosition().getArea().getChunks())
@@ -462,6 +467,7 @@ public class MutexService implements Listener
 			{
 				if(i instanceof RemotePortal && !i.getProjectionPlane().hasContent())
 				{
+					DB.d(this, "Layer 2 Stream Request for " + i.toString());
 					layer2StreamRequest(i);
 					continue;
 				}
@@ -859,6 +865,8 @@ public class MutexService implements Listener
 			return;
 		}
 		
+		DB.d(this, "Received Layer 2 Stream " + F.fileSize(msgbytes.length));
+		
 		new A()
 		{
 			@Override
@@ -877,7 +885,6 @@ public class MutexService implements Listener
 					{
 						for(Portal i : getMutexPortals().get(s))
 						{
-							
 							DataCluster a = c.copy();
 							DataCluster b = i.toData().copy();
 							a.remove("if");
@@ -925,6 +932,7 @@ public class MutexService implements Listener
 					t.set("ex", entry.getX());
 					t.set("ey", entry.getY());
 					t.set("ez", entry.getZ());
+					DB.d(this, "sPT: " + t.toJSON().toString());
 					t.send();
 					cancel();
 					return;
@@ -967,6 +975,8 @@ public class MutexService implements Listener
 				if(e.getPlayer().getUniqueId().equals(j))
 				{
 					ArrivalVector av = arrivals.get(i).get(j);
+					DB.d(this, "Intercept Join Positioning and arive: " + e.getPlayer().getUniqueId());
+					DB.d(this, "Arrival: " + av.toString());
 					Location position = i.getIdentity().getFront().isVertical() ? i.getPosition().getCenter() : i.getPosition().getCenterDown().clone().add(0, 1, 0);
 					position.setDirection(av.getDirection());
 					
@@ -1194,6 +1204,7 @@ public class MutexService implements Listener
 	
 	public void updateEverything(Runnable inject)
 	{
+		DB.d(this, "UAInject " + inject.toString());
 		Wormholes.provider.dfs();
 		inject.run();
 		Wormholes.provider.dfd();

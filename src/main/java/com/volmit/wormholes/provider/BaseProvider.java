@@ -30,6 +30,7 @@ import com.volmit.wormholes.util.BaseHud;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Click;
 import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
@@ -57,6 +58,7 @@ public abstract class BaseProvider implements PortalProvider
 	
 	public BaseProvider()
 	{
+		DB.d(this, "Starting Base Provider");
 		rasterer = new RasteredSystem();
 		moved = new GList<Player>();
 		conf = new GList<Portal>();

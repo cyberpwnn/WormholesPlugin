@@ -13,6 +13,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.FileUtils;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.JSONObject;
 import com.volmit.wormholes.util.SkinProperties;
@@ -23,6 +24,7 @@ public class IOService
 {
 	public IOService()
 	{
+		DB.d(this, "Starting IO Service");
 		doConfig();
 	}
 	
@@ -95,6 +97,7 @@ public class IOService
 	{
 		try
 		{
+			DB.d(this, "Flush Configs");
 			Wormholes.instance.getDataFolder().mkdirs();
 			doConfigBasic();
 			doConfigExperimental();
@@ -159,6 +162,8 @@ public class IOService
 	
 	public DataCluster load(File f)
 	{
+		DB.d(this, "Load " + f);
+		
 		try
 		{
 			return new DataCluster(new JSONObject(new String(FileUtils.readFileToByteArray(f), StandardCharsets.UTF_8)));
@@ -174,6 +179,7 @@ public class IOService
 	
 	public void save(DataCluster cc, File f)
 	{
+		DB.d(this, "Read " + f);
 		try
 		{
 			FileUtils.writeByteArrayToFile(f, cc.toJSON().toString().getBytes(StandardCharsets.UTF_8));

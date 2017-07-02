@@ -28,7 +28,7 @@ public class ParallelPoolManager
 	public ParallelPoolManager(String key, int threadCount, QueueMode mode)
 	{
 		this(threadCount, mode);
-		
+		DB.d(this, "Starting Parallel Pool: " + key);
 		this.key = key;
 	}
 	

@@ -49,6 +49,19 @@ public class RasteredChunk
 		}
 	}
 	
+	public void putRaw(int x, int y, int z, MaterialBlock b)
+	{
+		try
+		{
+			mbi[x][y][z] = new MultiBlockChangeInfo(new Location(world, x + (this.x << 4), y, z + (this.z << 4)), WrappedBlockData.createData(b.getMaterial(), b.getData()));
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+	}
+	
 	public int project(Player p)
 	{
 		WrapperPlayServerMultiBlockChange w = new WrapperPlayServerMultiBlockChange();

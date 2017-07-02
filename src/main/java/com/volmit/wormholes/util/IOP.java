@@ -4,13 +4,13 @@ import org.bukkit.ChatColor;
 
 public abstract class IOP implements FOP
 {
-	private D d;
+	private DB d;
 	protected FileHack h;
 	
 	public IOP(FileHack h)
 	{
 		this.h = h;
-		d = new D("IOP<" + getClass().getSimpleName() + ">");
+		d = new DB("IOP<" + getClass().getSimpleName() + ">");
 	}
 	
 	public void queue(FOP f)

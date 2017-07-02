@@ -22,7 +22,9 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.ForwardedPluginMessage;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
@@ -38,6 +40,7 @@ public class ApertureService
 	
 	public ApertureService()
 	{
+		DB.d(this, "Starting Aperture Service");
 		b = new BlacklistAperture();
 		blacklistQueue = new GMap<Player, GList<Entity>>();
 		blacklisted = new GMap<Player, GList<Entity>>();
@@ -214,6 +217,7 @@ public class ApertureService
 		
 		try
 		{
+			DB.d(this, "Received Layer 3 Stream " + F.fileSize(data.length));
 			ByteArrayInputStream bois = new ByteArrayInputStream(data);
 			GZIPInputStream gzi = new GZIPInputStream(bois);
 			DataInputStream dis = new DataInputStream(gzi);

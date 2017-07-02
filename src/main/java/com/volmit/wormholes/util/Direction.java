@@ -242,6 +242,8 @@ public enum Direction
 			return;
 		}
 		
+		DB.d(Direction.class, "Calculating Permutations for Accelerated rotation");
+		
 		permute = new GMap<GBiset<Direction, Direction>, DOP>();
 		
 		for(Direction i : udnews())
@@ -372,6 +374,8 @@ public enum Direction
 						}
 					});
 				}
+				
+				DB.d(Direction.class, "Permutation: " + i + " -> " + j + " = " + permute.get(b).getType());
 			}
 		}
 	}

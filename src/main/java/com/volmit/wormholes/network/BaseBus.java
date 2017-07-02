@@ -1,5 +1,6 @@
 package com.volmit.wormholes.network;
 
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 
 public abstract class BaseBus implements TransmissionBus
@@ -28,12 +29,14 @@ public abstract class BaseBus implements TransmissionBus
 	@Override
 	public void inbox(Transmission t)
 	{
+		DB.d(this, "Received Transmission: " + t.toJSON().toString());
 		inbox.add(t);
 	}
 	
 	@Override
 	public void outbox(Transmission t)
 	{
+		DB.d(this, "Sent Transmission: " + t.toJSON().toString());
 		outbox.add(t);
 	}
 	

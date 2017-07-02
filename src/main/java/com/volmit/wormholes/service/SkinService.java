@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.A;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
@@ -20,6 +21,7 @@ public class SkinService
 	
 	public SkinService()
 	{
+		DB.d(this, "Starting Skin Service");
 		running = false;
 		cache = new GMap<UUID, SkinProperties>();
 		request = new GSet<UUID>();
@@ -49,6 +51,7 @@ public class SkinService
 				{
 					if(M.ms() - i.lastModified() > mb)
 					{
+						DB.d(this, "Purging skin cache file " + i);
 						i.delete();
 					}
 				}
@@ -104,29 +107,33 @@ public class SkinService
 							try
 							{
 								SkinProperties s = null;
-								
+								DB.d(this, "Skin Request for " + i);
 								if(Wormholes.io.hasSkin(i))
 								{
+									DB.d(this, "Loaded Cached Skin " + i + " from disk.");
 									s = Wormholes.io.loadSkin(i);
 								}
 								
 								else
 								{
+									DB.d(this, "Downloading skin " + i);
 									s = new SkinProperties(i);
 								}
 								
 								request.remove(i);
+								DB.d(this, "Cached Skin file " + i);
 								cache.put(i, s);
 								
 								if(!Wormholes.io.hasSkin(i))
 								{
+									DB.d(this, "Saved Dcache skin " + i);
 									Wormholes.io.saveSkin(i, s);
 								}
 							}
 							
 							catch(SkinErrorException e)
 							{
-								
+								DB.d(this, "Failed to download skin " + i + ". Waiting for cooldown on mojang server...");
 							}
 						}
 						

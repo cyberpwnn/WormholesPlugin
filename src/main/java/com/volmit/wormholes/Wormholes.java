@@ -1,5 +1,6 @@
 package com.volmit.wormholes;
 
+import java.io.File;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,7 +27,7 @@ import com.volmit.wormholes.service.TimingsService;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
-import com.volmit.wormholes.util.D;
+import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
@@ -61,11 +62,13 @@ public class Wormholes extends ControllablePlugin
 	public static EffectService fx;
 	public static ParallelPoolManager pool;
 	private SubGroup sub;
-	private D dispatcher;
+	private DB dispatcher;
 	
 	@Override
 	public void onStart()
 	{
+		DB.rdebug = new File(getDataFolder(), "debug").exists();
+		DB.d(this, "Starting Wormholes");
 		instance = this;
 		Direction.calculatePermutations();
 		io = new IOService();
@@ -85,23 +88,30 @@ public class Wormholes extends ControllablePlugin
 		fx = new EffectService();
 		buildSubs();
 		pool.start();
-		dispatcher = new D("Wormholes");
+		dispatcher = new DB("Wormholes");
 		Info.buildBlocks();
+		DB.d(this, "Initial Startup Complete");
 		Info.splash();
 	}
 	
 	@Override
 	public void onStop()
 	{
+		DB.d(this, "Stopping Wormholes");
+		DB.d(this, "Clearing Portals");
 		for(Portal i : host.getLocalPortals())
 		{
 			((LocalPortal) i).clearHolograms();
 		}
 		
+		DB.d(this, "Dequeue Host");
 		Status.fdq = true;
 		host.dequeueAll();
+		DB.d(this, "Shut down power thread pool");
 		pool.shutdown();
+		DB.d(this, "Shut down entity service");
 		entity.shutdown();
+		DB.d(this, "Shut down");
 	}
 	
 	@Override
@@ -180,6 +190,7 @@ public class Wormholes extends ControllablePlugin
 	
 	private void buildSubs()
 	{
+		DB.d(this, "Building Sub commands");
 		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
 		{
 			private void list(CommandSender p, String[] a)
@@ -535,7 +546,7 @@ public class Wormholes extends ControllablePlugin
 		return sub;
 	}
 	
-	public D getDispatcher()
+	public DB getDispatcher()
 	{
 		return dispatcher;
 	}

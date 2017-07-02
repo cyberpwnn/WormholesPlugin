@@ -39,10 +39,7 @@ public class RasteredPlayer
 	{
 		try
 		{
-			while(!q.isEmpty())
-			{
-				q.poll().run();
-			}
+			flushQueue();
 			
 			for(Location i : queuedLayer.k())
 			{
@@ -90,6 +87,14 @@ public class RasteredPlayer
 		}
 	}
 	
+	private void flushQueue()
+	{
+		while(!q.isEmpty())
+		{
+			q.poll().run();
+		}
+	}
+	
 	private int prepareChunks()
 	{
 		GMap<Chunk, RasteredChunk> preparedChunks = new GMap<Chunk, RasteredChunk>();
@@ -111,7 +116,8 @@ public class RasteredPlayer
 		
 		for(Chunk i : preparedChunks.k())
 		{
-			k += preparedChunks.get(i).project(p);
+			k++;
+			preparedChunks.get(i).project(p);
 		}
 		
 		return k;

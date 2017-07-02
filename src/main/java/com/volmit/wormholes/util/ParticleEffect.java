@@ -681,7 +681,7 @@ public enum ParticleEffect
 	{
 		if(!isSupported())
 		{
-			new D("Particles").f("Particle Incompatible with this server version!");
+			new DB("Particles").f("Particle Incompatible with this server version!");
 			return;
 		}
 		
@@ -1876,7 +1876,7 @@ public enum ParticleEffect
 			
 			catch(Exception exception)
 			{
-				new D("Particle").f("Particles incompatible with this server version!");
+				new DB("Particle").f("Particles incompatible with this server version!");
 			}
 			
 			initialized = true;
