@@ -23,6 +23,14 @@ public class RasteredSystem
 		rasteredPlayers = new GMap<Player, RasteredPlayer>();
 	}
 	
+	public void wc(Location c)
+	{
+		for(Player i : rasteredPlayers.k())
+		{
+			rasteredPlayers.get(i).wc(c);
+		}
+	}
+	
 	public void dequeueAll()
 	{
 		for(Player i : rasteredPlayers.k())

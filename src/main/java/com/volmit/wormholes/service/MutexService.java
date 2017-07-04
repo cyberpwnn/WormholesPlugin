@@ -1129,6 +1129,7 @@ public class MutexService implements Listener
 				for(Block i : W.blockFaces(lx.getBlock()))
 				{
 					Location l = i.getLocation();
+					Wormholes.provider.getRasterer().wc(l);
 					
 					if(p.hasWormhole())
 					{

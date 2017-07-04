@@ -1,9 +1,7 @@
 package com.volmit.wormholes.projection;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import com.volmit.wormholes.util.GMap;
-import com.volmit.wormholes.util.MaterialBlock;
 
 public class RasteredServer
 {
@@ -12,16 +10,6 @@ public class RasteredServer
 	public RasteredServer()
 	{
 		projections = new GMap<World, RasteredWorld>();
-	}
-	
-	public void queue(Location l, MaterialBlock b)
-	{
-		if(!projections.containsKey(l.getWorld()))
-		{
-			projections.put(l.getWorld(), new RasteredWorld(l.getWorld()));
-		}
-		
-		projections.get(l.getWorld()).queue(l, b);
 	}
 	
 	public void flush()

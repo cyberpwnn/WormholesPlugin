@@ -67,9 +67,9 @@ public class Settings
 	public static int APERTURE_MAX_SPEED = 2;
 	
 	@CName("USE_LIGHTMAPS")
-	@Comment("Calculate where the client will force process lighting calculations and place arbitrary blocks out of sight from the projection to mitigate client freezing.\nNote this uses extra cpu time on the server to prevent clients from freezing.")
+	@Comment("Send skylight chunk maps instead of multiple block changes for block projections to counteract client hitching due to lighting issues\nNote, this can cause loss of emitted light (such as torches etc) in and around the portal projection.")
 	@Experimental
-	public static boolean USE_LIGHTMAPS = true;
+	public static boolean USE_LIGHTMAPS = false;
 	
 	@CName("WORMHOLE_WORKER_THREADS")
 	@CMax(16)
@@ -125,14 +125,14 @@ public class Settings
 	@CMax(20)
 	@Experimental
 	@Comment("The interval in which wormholes will send a chunk packet to players. Must be higher than 0.\nInterval in ticks")
-	public static int CHUNK_SEND_RATE = 4;
+	public static int CHUNK_SEND_RATE = 2;
 	
 	@CName("CHUNK_SEND_MAX")
 	@CMin(1)
 	@CMax(100)
 	@Experimental
 	@Comment("The maximum partial chunks which can be sent in one interval")
-	public static int CHUNK_SEND_MAX = 6;
+	public static int CHUNK_SEND_MAX = 12;
 	
 	@CName("CHUNK_MAX_CHANGE")
 	@CMin(1024)
@@ -174,7 +174,7 @@ public class Settings
 	@CMax(5000)
 	@Experimental
 	@Comment("Time Threshold in milliseconds to push excess queue packets to players")
-	public static int NETWORK_FLUSH_THRESHOLD = 500;
+	public static int NETWORK_FLUSH_THRESHOLD = 750;
 	
 	@CName("NETWORK_POLL_THRESHOLD")
 	@CMin(100)
