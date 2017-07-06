@@ -2,14 +2,17 @@ package com.volmit.wormholes.service;
 
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.inventory.ItemStack;
 import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.RemoteInstance;
@@ -21,6 +24,9 @@ import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.MaterialBlock;
+import com.volmit.wormholes.util.PlayerScrollEvent;
+import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.Wraith;
 
@@ -35,6 +41,204 @@ public class EntityService implements Listener
 		entities = new GMap<Player, GMap<Portal, GList<VEntity>>>();
 		aentities = new GMap<Player, GMap<Portal, GSet<Integer>>>();
 		Wraith.registerListener(this);
+	}
+	
+	@EventHandler
+	public void on(InventoryClickEvent e)
+	{
+		Player p = (Player) e.getWhoClicked();
+		uinv(p);
+	}
+	
+	public void uinv(Player p)
+	{
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = p.getItemInHand();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				boolean b = false;
+				
+				for(VEntity i : getAllEntitiesAs(p))
+				{
+					if(i.getVp().setMainHand(is))
+					{
+						b = true;
+					}
+				}
+				
+				if(b)
+				{
+					dispatchAction(p.getEntityId(), "hand/" + mb.toString());
+				}
+			}
+		};
+		
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = p.getInventory().getHelmet();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				boolean b = false;
+				
+				for(VEntity i : getAllEntitiesAs(p))
+				{
+					if(i.getVp().setHelmet(is))
+					{
+						b = true;
+					}
+				}
+				
+				if(b)
+				{
+					dispatchAction(p.getEntityId(), "ihelm/" + mb.toString());
+				}
+			}
+		};
+		
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = p.getInventory().getChestplate();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				boolean b = false;
+				
+				for(VEntity i : getAllEntitiesAs(p))
+				{
+					if(i.getVp().setChestplate(is))
+					{
+						b = true;
+					}
+				}
+				
+				if(b)
+				{
+					dispatchAction(p.getEntityId(), "ichest/" + mb.toString());
+				}
+			}
+		};
+		
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = p.getInventory().getLeggings();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				boolean b = false;
+				
+				for(VEntity i : getAllEntitiesAs(p))
+				{
+					if(i.getVp().setLeggings(is))
+					{
+						b = true;
+					}
+				}
+				
+				if(b)
+				{
+					dispatchAction(p.getEntityId(), "ilegs/" + mb.toString());
+				}
+			}
+		};
+		
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = p.getInventory().getBoots();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				boolean b = false;
+				
+				for(VEntity i : getAllEntitiesAs(p))
+				{
+					if(i.getVp().setBoots(is))
+					{
+						b = true;
+					}
+				}
+				
+				if(b)
+				{
+					dispatchAction(p.getEntityId(), "iboots/" + mb.toString());
+				}
+			}
+		};
+	}
+	
+	@EventHandler
+	public void on(PlayerScrollEvent e)
+	{
+		new TaskLater()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public void run()
+			{
+				ItemStack is = e.getPlayer().getItemInHand();
+				
+				if(is == null)
+				{
+					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
+				}
+				
+				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+				
+				for(VEntity i : getAllEntitiesAs(e.getPlayer()))
+				{
+					i.getVp().setMainHand(is);
+				}
+				
+				dispatchAction(e.getPlayer().getEntityId(), "hand/" + mb.toString());
+			}
+		};
 	}
 	
 	@EventHandler
@@ -234,6 +438,8 @@ public class EntityService implements Listener
 				{
 					e.teleport(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
 					e.flush();
+					uinv(p);
+					
 					return;
 				}
 			}
@@ -249,6 +455,7 @@ public class EntityService implements Listener
 			DB.d(this, "Spawn Virtual Entity: " + ve.getType() + " <> " + ve.getUuid());
 			ve.spawn();
 			ve.flush();
+			uinv(p);
 			entities.get(p).get(i).add(ve);
 		}
 		

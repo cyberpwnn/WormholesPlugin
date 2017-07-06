@@ -2,8 +2,11 @@ package com.volmit.wormholes.aperture;
 
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.EnumWrappers.NativeGameMode;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -13,12 +16,15 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.VersionBukkit;
 import com.volmit.wormholes.wrapper.WrapperPlayServerAnimation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityDestroy;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityEquipment;
+import com.volmit.wormholes.wrapper.WrapperPlayServerEntityEquipment18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityHeadRotation18;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityMetadata;
@@ -42,6 +48,11 @@ public class VirtualPlayer
 	private Location nextLocation;
 	private Boolean onGround;
 	private Boolean missingSkin;
+	private MaterialBlock a;
+	private MaterialBlock h;
+	private MaterialBlock c;
+	private MaterialBlock l;
+	private MaterialBlock b;
 	
 	public VirtualPlayer(Player viewer, UUID uuid, Integer id, String name, String displayName)
 	{
@@ -54,6 +65,11 @@ public class VirtualPlayer
 		nextLocation = null;
 		onGround = false;
 		missingSkin = true;
+		a = new MaterialBlock(Material.AIR);
+		h = new MaterialBlock(Material.AIR);
+		c = new MaterialBlock(Material.AIR);
+		l = new MaterialBlock(Material.AIR);
+		b = new MaterialBlock(Material.AIR);
 	}
 	
 	public void spawn(Location location)
@@ -253,6 +269,82 @@ public class VirtualPlayer
 		w.sendPacket(viewer);
 	}
 	
+	@SuppressWarnings("deprecation")
+	public boolean setMainHand(ItemStack is)
+	{
+		if(new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData()).equals(a))
+		{
+			return false;
+		}
+		
+		a = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+		sendEntityEquipment(is, ItemSlot.MAINHAND);
+		
+		return true;
+	}
+	
+	public void setOffHand(ItemStack is)
+	{
+		sendEntityEquipment(is, ItemSlot.OFFHAND);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean setHelmet(ItemStack is)
+	{
+		if(new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData()).equals(h))
+		{
+			return false;
+		}
+		
+		h = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+		sendEntityEquipment(is, ItemSlot.HEAD);
+		
+		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean setChestplate(ItemStack is)
+	{
+		if(new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData()).equals(c))
+		{
+			return false;
+		}
+		
+		c = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+		sendEntityEquipment(is, ItemSlot.CHEST);
+		
+		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean setLeggings(ItemStack is)
+	{
+		if(new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData()).equals(l))
+		{
+			return false;
+		}
+		
+		l = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+		sendEntityEquipment(is, ItemSlot.LEGS);
+		
+		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean setBoots(ItemStack is)
+	{
+		if(new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData()).equals(b))
+		{
+			return false;
+		}
+		
+		b = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
+		
+		sendEntityEquipment(is, ItemSlot.FEET);
+		
+		return true;
+	}
+	
 	public void animationSneaking(boolean sneaking)
 	{
 		sendEntityMetadataSneaking(sneaking);
@@ -265,6 +357,45 @@ public class VirtualPlayer
 		watch.add(new WrappedWatchableObject(0, (byte) (sneaking ? 2 : 0)));
 		w.setEntityID(id);
 		w.setMetadata(watch);
+		w.sendPacket(viewer);
+	}
+	
+	private void sendEntityEquipment18(ItemStack item, ItemSlot slot)
+	{
+		if(slot.equals(ItemSlot.OFFHAND))
+		{
+			return;
+		}
+		
+		WrapperPlayServerEntityEquipment18 w = new WrapperPlayServerEntityEquipment18();
+		w.setEntityID(id);
+		
+		if(!(item == null || item.getType().equals(Material.AIR)))
+		{
+			w.setItem(item);
+		}
+		
+		w.setSlot(slot.ordinal() != 0 ? slot.ordinal() - 1 : 0);
+		w.sendPacket(viewer);
+	}
+	
+	private void sendEntityEquipment(ItemStack item, ItemSlot slot)
+	{
+		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		{
+			sendEntityEquipment18(item, slot);
+			return;
+		}
+		
+		WrapperPlayServerEntityEquipment w = new WrapperPlayServerEntityEquipment();
+		w.setEntityID(id);
+		
+		if(!(item == null || item.getType().equals(Material.AIR)))
+		{
+			w.setItem(item);
+		}
+		
+		w.setSlot(slot);
 		w.sendPacket(viewer);
 	}
 	

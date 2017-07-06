@@ -481,4 +481,29 @@ public class VEntity
 	{
 		return uuid;
 	}
+	
+	public float getYaw()
+	{
+		return yaw;
+	}
+	
+	public float getPit()
+	{
+		return pit;
+	}
+	
+	public float getLya()
+	{
+		return lya;
+	}
+	
+	public float getLpi()
+	{
+		return lpi;
+	}
+	
+	public VirtualPlayer getVp()
+	{
+		return vp;
+	}
 }

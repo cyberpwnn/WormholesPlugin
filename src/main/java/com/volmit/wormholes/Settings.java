@@ -69,7 +69,7 @@ public class Settings
 	@CName("USE_LIGHTMAPS")
 	@Comment("Send skylight chunk maps instead of multiple block changes for block projections to counteract client hitching due to lighting issues\nNote, this can cause loss of emitted light (such as torches etc) in and around the portal projection.")
 	@Experimental
-	public static boolean USE_LIGHTMAPS = false;
+	public static boolean USE_LIGHTMAPS = true;
 	
 	@CName("WORMHOLE_WORKER_THREADS")
 	@CMax(16)

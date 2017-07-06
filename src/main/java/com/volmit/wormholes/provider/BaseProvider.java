@@ -55,6 +55,7 @@ public abstract class BaseProvider implements PortalProvider
 	private GList<Portal> conf;
 	private long lastms = M.ms();
 	protected GList<Player> debug;
+	protected PortalBuilder builder;
 	
 	public BaseProvider()
 	{
@@ -63,6 +64,7 @@ public abstract class BaseProvider implements PortalProvider
 		moved = new GList<Player>();
 		conf = new GList<Portal>();
 		debug = new GList<Player>();
+		builder = new PortalBuilder();
 	}
 	
 	public void dedebug(Player p)
@@ -102,6 +104,7 @@ public abstract class BaseProvider implements PortalProvider
 	public void flush()
 	{
 		onFlush();
+		builder.flush();
 	}
 	
 	public abstract void onFlush();
@@ -772,5 +775,31 @@ public abstract class BaseProvider implements PortalProvider
 		}
 		
 		return views;
+	}
+	
+	public GList<Player> getMoved()
+	{
+		return moved;
+	}
+	
+	public GList<Portal> getConf()
+	{
+		return conf;
+	}
+	
+	public long getLastms()
+	{
+		return lastms;
+	}
+	
+	public GList<Player> getDebug()
+	{
+		return debug;
+	}
+	
+	@Override
+	public PortalBuilder getBuilder()
+	{
+		return builder;
 	}
 }

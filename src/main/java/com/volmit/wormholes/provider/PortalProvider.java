@@ -17,6 +17,8 @@ public interface PortalProvider
 {
 	public void flush();
 	
+	public PortalBuilder getBuilder();
+	
 	public void loadAllPortals();
 	
 	public void save(LocalPortal p);

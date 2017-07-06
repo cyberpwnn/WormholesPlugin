@@ -73,6 +73,24 @@ public class MaterialBlock
 		this.data = data;
 	}
 	
+	public static MaterialBlock of(String s)
+	{
+		try
+		{
+			if(s.contains(":"))
+			{
+				return new MaterialBlock(Material.valueOf(s.split(":")[0]), Integer.valueOf(s.split(":")[1]).byteValue());
+			}
+			
+			return new MaterialBlock(Material.valueOf(s));
+		}
+		
+		catch(Exception e)
+		{
+			return new MaterialBlock(Material.AIR);
+		}
+	}
+	
 	@Override
 	public String toString()
 	{

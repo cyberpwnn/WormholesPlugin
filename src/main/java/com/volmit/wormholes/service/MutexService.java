@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
@@ -510,6 +511,7 @@ public class MutexService implements Listener
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void broadcastPortals() throws IOException
 	{
 		if(broadcastInterval > 0)
@@ -655,6 +657,66 @@ public class MutexService implements Listener
 							j.setSneaking(false);
 						}
 					}
+					
+					else if(action.startsWith("hand/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setMainHand(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
+					
+					else if(action.startsWith("hand/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setMainHand(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
+					
+					else if(action.startsWith("ihelm/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setHelmet(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
+					
+					else if(action.startsWith("ichest/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setChestplate(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
+					
+					else if(action.startsWith("ilegs/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setLeggings(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
+					
+					else if(action.startsWith("iboots/"))
+					{
+						MaterialBlock mb = MaterialBlock.of(action.split("/")[1]);
+						
+						for(VEntity j : Wormholes.getEntity().getAllPlayersAs(id))
+						{
+							j.getVp().setBoots(new ItemStack(mb.getMaterial(), 1, (short) 0, mb.getData()));
+						}
+					}
 				}
 				
 				else if(i.getType().equals("tp"))
@@ -704,7 +766,6 @@ public class MutexService implements Listener
 						{
 							LocalPortal target = (LocalPortal) j;
 							Vector v = new Vector(i.getInt("vx"), i.getInt("vy"), i.getInt("vz"));
-							@SuppressWarnings("deprecation")
 							MaterialBlock mb = new MaterialBlock(Material.getMaterial(i.getInt("m")), i.getInt("d").byteValue());
 							
 							if(target.hasWormhole() && target.isWormholeMutex())

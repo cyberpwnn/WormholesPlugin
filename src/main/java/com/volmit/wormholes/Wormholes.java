@@ -366,6 +366,29 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
+		sub.add(new SubCommand("Get a Portal Building Wand", "wand", "w", "wan")
+		{
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				p.sendMessage(C.RED + "Ingame only.");
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				if(new Permissable(p).canBuild())
+				{
+					provider.getBuilder().giveWand(p, 3);
+				}
+				
+				else
+				{
+					p.sendMessage(Info.TAG + "No Permission");
+				}
+			}
+		});
+		
 		sub.add(new SubCommand("System Information", "platform", "plat", "pl")
 		{
 			private void v(CommandSender p)
