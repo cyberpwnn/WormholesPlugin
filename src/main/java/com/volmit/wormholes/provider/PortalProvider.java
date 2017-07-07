@@ -17,6 +17,8 @@ public interface PortalProvider
 {
 	public void flush();
 	
+	public void notifMessage(Player p, String title, String msg);
+	
 	public PortalBuilder getBuilder();
 	
 	public void loadAllPortals();
