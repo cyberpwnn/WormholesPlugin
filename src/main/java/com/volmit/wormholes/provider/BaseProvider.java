@@ -83,7 +83,8 @@ public abstract class BaseProvider implements PortalProvider
 		}
 	}
 	
-	public void errorMessage(Player p, String title, String msg)
+	@Override
+	public void notifMessage(Player p, String title, String msg)
 	{
 		Title t = new Title();
 		t.setTitle("    ");
@@ -93,6 +94,7 @@ public abstract class BaseProvider implements PortalProvider
 		t.setFadeOut(50);
 		t.setStayTime(1);
 		t.send(p);
+		new GSound(MSound.DOOR_CLOSE.bukkitSound(), 1f, 1.8f).play(p);
 	}
 	
 	public boolean isDebugging(Player p)
@@ -311,9 +313,15 @@ public abstract class BaseProvider implements PortalProvider
 		
 		if(new Permissable(p).canConfigure())
 		{
+			if(!l.hasWormhole())
+			{
+				notifMessage(p, C.RED + "Unable to Configure", C.RED + "There must be a destination portal to configure.");
+				return false;
+			}
+			
 			if(conf.contains(l))
 			{
-				errorMessage(p, C.RED + "Unable to Configure", C.YELLOW + "Someone else is configuring this portal.");
+				notifMessage(p, C.RED + "Unable to Configure", C.RED + "Someone else is configuring this portal.");
 				return false;
 			}
 			
