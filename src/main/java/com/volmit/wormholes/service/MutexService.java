@@ -51,6 +51,7 @@ import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.portal.RemotePortal;
 import com.volmit.wormholes.portal.Wormhole;
 import com.volmit.wormholes.projection.ArrivalVector;
+import com.volmit.wormholes.provider.AutomagicalProvider;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
 import com.volmit.wormholes.util.DB;
@@ -1251,6 +1252,11 @@ public class MutexService implements Listener
 				
 				blockChange(e.getBlock().getLocation(), i);
 			}
+		}
+		
+		if(Settings.AUTOBUILD_PORTALS && new Permissable(e.getPlayer()).canCreate() && W.isColorable(e.getBlock()))
+		{
+			((AutomagicalProvider) Wormholes.provider).constructPortal(e.getPlayer(), e.getBlock());
 		}
 	}
 	
