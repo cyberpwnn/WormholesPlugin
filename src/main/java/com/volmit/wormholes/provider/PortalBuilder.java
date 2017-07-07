@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.portal.PortalIdentity;
 import com.volmit.wormholes.portal.PortalKey;
@@ -43,7 +44,6 @@ public class PortalBuilder implements Listener
 		locks = new GSet<Player>();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void flush()
 	{
 		for(Player p : P.onlinePlayers())
@@ -104,8 +104,8 @@ public class PortalBuilder implements Listener
 					
 					while(it.hasNext())
 					{
-						ParticleEffect.CRIT_MAGIC.display(0.2f, 1, it.next().getLocation().clone().add(0.5, 0.5, 0.5), 32);
-						ParticleEffect.CRIT.display(0.2f, 1, it.next().getLocation().clone().add(0.5, 0.5, 0.5), 32);
+						ParticleEffect.CRIT_MAGIC.display(0.2f, 1, it.next().getLocation().clone().add(0.5, 0.5, 0.5), p);
+						ParticleEffect.CRIT.display(0.2f, 1, it.next().getLocation().clone().add(0.5, 0.5, 0.5), p);
 					}
 				}
 				
@@ -120,27 +120,7 @@ public class PortalBuilder implements Listener
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.35f, 0.45f).play(p);
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.35f, 0.55f).play(p);
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.65f, 0.65f).play(p);
-					
-					Cuboid c = idx.get(p).getA();
-					PortalIdentity pi = idx.get(p).getB();
-					Direction d = pi.getBack();
-					
-					for(Direction i : Direction.udnews())
-					{
-						if(i.getAxis().equals(d.getAxis()))
-						{
-							continue;
-						}
-						
-						Cuboid cface = c.getFace(i.f());
-						Iterator<Block> it = cface.iterator();
-						
-						while(it.hasNext())
-						{
-							Location l = it.next().getLocation();
-							p.sendBlockChange(l, Material.AIR, (byte) 0);
-						}
-					}
+					cancelSelect(p);
 				}
 				
 				idx.remove(p);
@@ -185,6 +165,7 @@ public class PortalBuilder implements Listener
 						cface.getCenter().getBlock().setType(Material.AIR);
 					}
 					
+					confirm(e.getPlayer());
 					new GSound(MSound.ANVIL_USE.bukkitSound(), 1f, 1.9f).play(e.getPlayer());
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 1.7f).play(e.getPlayer());
 					
@@ -196,6 +177,7 @@ public class PortalBuilder implements Listener
 					new GSound(MSound.ANVIL_LAND.bukkitSound(), 1f, 1.9f).play(e.getPlayer());
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 1.7f).play(e.getPlayer());
 					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 0.7f).play(e.getPlayer());
+					select(e.getPlayer());
 					locks.add(e.getPlayer());
 				}
 			}
@@ -320,5 +302,20 @@ public class PortalBuilder implements Listener
 	public int getSize(ItemStack is)
 	{
 		return is.getEnchantmentLevel(Enchantment.DURABILITY);
+	}
+	
+	public void select(Player p)
+	{
+		Wormholes.provider.notifMessage(p, C.GOLD + "Position Selected", C.YELLOW + "Left click to confirm & place");
+	}
+	
+	public void confirm(Player p)
+	{
+		Wormholes.provider.notifMessage(p, C.GOLD + "Frame Placed", C.YELLOW + " ");
+	}
+	
+	public void cancelSelect(Player p)
+	{
+		Wormholes.provider.notifMessage(p, C.GOLD + "Position Cancelled", C.YELLOW + " ");
 	}
 }
