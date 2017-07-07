@@ -54,101 +54,121 @@ public class ProjectionService implements Listener
 		if(!projecting && Settings.ENABLE_PROJECTIONS)
 		{
 			projecting = true;
-			
-			try
+			flushProjections();
+		}
+	}
+	
+	private void flushProjections()
+	{
+		try
+		{
+			new A()
 			{
-				new A()
+				@Override
+				public void async()
 				{
-					@Override
-					public void async()
+					try
 					{
-						try
+						Timer t = new Timer();
+						t.start();
+						
+						for(Portal po : Wormholes.host.getLocalPortals())
 						{
-							Timer t = new Timer();
-							t.start();
-							
-							for(Portal po : Wormholes.host.getLocalPortals())
+							if(((LocalPortal) po).getSided())
 							{
-								if(((LocalPortal) po).getSided())
-								{
-									continue;
-								}
-								
-								try
-								{
-									if(lastPort.containsKey(po))
-									{
-										for(Player i : lastPort.get(po).k())
-										{
-											if(!po.getPosition().getArea().contains(i.getLocation()))
-											{
-												lastPort.get(po).remove(i);
-												deproject((LocalPortal) po, i);
-											}
-										}
-									}
-									
-									for(Entity j : po.getPosition().getBoundingBox().getExiting())
-									{
-										if(j instanceof Player)
-										{
-											deproject((LocalPortal) po);
-										}
-									}
-									
-									if(po.getPosition().getArea().hasPlayers() && ((LocalPortal) po).getSettings().isProject() && ((LocalPortal) po).getMask().needsProjection())
-									{
-										project((LocalPortal) po);
-										Wormholes.pool.lock();
-										((LocalPortal) po).getMask().clear();
-										
-										try
-										{
-											if(M.ms() - lms > Settings.NETWORK_FLUSH_THRESHOLD)
-											{
-												lms = M.ms();
-												Wormholes.provider.getRasterer().flush();
-											}
-										}
-										
-										catch(Exception e)
-										{
-											
-										}
-									}
-								}
-								
-								catch(Exception e)
-								{
-									
-								}
+								continue;
 							}
 							
-							projecting = false;
+							try
+							{
+								deprojectStrays(po);
+								startProjection(po);
+							}
 							
-							t.stop();
-							TimingsService.asyn.get("mutex-handle").hit("projection-service", t.getTime());
-							Status.projectionTime = (double) t.getTime() / 1000000.0;
+							catch(Exception e)
+							{
+								
+							}
 						}
 						
-						catch(IllegalStateException e)
-						{
-							projecting = false;
-						}
+						projecting = false;
+						postProject(t);
 					}
-				};
-			}
-			
-			catch(IllegalStateException e)
+					
+					catch(IllegalStateException e)
+					{
+						projecting = false;
+					}
+				}
+			};
+		}
+		
+		catch(IllegalStateException e)
+		{
+			projecting = false;
+		}
+	}
+	
+	private void postProject(Timer t)
+	{
+		t.stop();
+		TimingsService.asyn.get("mutex-handle").hit("projection-service", t.getTime());
+		Status.projectionTime = (double) t.getTime() / 1000000.0;
+	}
+	
+	private void startProjection(Portal po)
+	{
+		if(po.getPosition().getArea().hasPlayers() && ((LocalPortal) po).getSettings().isProject() && ((LocalPortal) po).getMask().needsProjection())
+		{
+			project((LocalPortal) po);
+			Wormholes.pool.lock();
+			((LocalPortal) po).getMask().clear();
+			doProject();
+		}
+	}
+	
+	private void doProject()
+	{
+		try
+		{
+			if(M.ms() - lms > Settings.NETWORK_FLUSH_THRESHOLD)
 			{
-				projecting = false;
+				lms = M.ms();
+				Wormholes.provider.getRasterer().flush();
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+	}
+	
+	private void deprojectStrays(Portal po)
+	{
+		if(lastPort.containsKey(po))
+		{
+			for(Player i : lastPort.get(po).k())
+			{
+				if(!po.getPosition().getArea().contains(i.getLocation()))
+				{
+					lastPort.get(po).remove(i);
+					deproject((LocalPortal) po, i);
+				}
+			}
+		}
+		
+		for(Entity j : po.getPosition().getBoundingBox().getExiting())
+		{
+			if(j instanceof Player)
+			{
+				deproject((LocalPortal) po);
 			}
 		}
 	}
 	
 	public void deproject(LocalPortal p)
 	{
-		DB.d(this, "Deprojecting " + p.toString());
 		if(lastPort.containsKey(p))
 		{
 			for(Player i : lastPort.get(p).k())
@@ -164,7 +184,6 @@ public class ProjectionService implements Listener
 	
 	public void deproject(LocalPortal p, Player i)
 	{
-		DB.d(this, "Deprojecting " + p.toString() + " just for " + i.getName());
 		Iterator<Block> it = p.getPosition().getArea().iterator();
 		
 		while(it.hasNext())
@@ -178,20 +197,7 @@ public class ProjectionService implements Listener
 	
 	public void project(LocalPortal p)
 	{
-		if(Wormholes.registry.destroyQueue.contains(p))
-		{
-			for(Entity k : p.getPosition().getBoundingBox().getInside())
-			{
-				if(k instanceof Player)
-				{
-					Wormholes.provider.getRasterer().get((Player) k).dequeueAll();
-					Wormholes.provider.movePlayer((Player) k);
-				}
-			}
-			
-			Wormholes.registry.destroyQueue.remove(p);
-			return;
-		}
+		preDeconstruct(p);
 		
 		if(p.hasWormhole())
 		{
@@ -225,77 +231,101 @@ public class ProjectionService implements Listener
 				{
 					Viewport vIn = view.get(i);
 					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
-					boolean br = false;
-					
-					Wormholes.pool.queue(new Execution()
-					{
-						@Override
-						public void run()
-						{
-							for(Iterator<Block> it : vIn.getProjectionSet().iterator())
-							{
-								while(it.hasNext())
-								{
-									Block j = it.next();
-									
-									if(vIn.contains(j))
-									{
-										Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
-										Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
-										p.getIdentity().getFront().angle(vec, identity.getFront());
-										
-										MaterialBlock mb = map.get(vec);
-										
-										if(mb == null)
-										{
-											continue;
-										}
-										
-										Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
-									}
-									
-									Status.permutationsPerSecond++;
-								}
-							}
-						}
-					});
-					
-					Wormholes.pool.queue(new Execution()
-					{
-						@Override
-						public void run()
-						{
-							for(Iterator<Block> it : vOut.getProjectionSet().iterator())
-							{
-								while(it.hasNext())
-								{
-									Block j = it.next();
-									
-									if(vOut.getProjectionSet().contains(j) && !vIn.contains(j))
-									{
-										Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
-									}
-									
-									Status.permutationsPerSecond++;
-								}
-							}
-						}
-					});
-					
-					if(br)
-					{
-						continue;
-					}
-					
-					if(!lastPort.containsKey(p))
-					{
-						lastPort.put(p, new GMap<Player, Viewport>());
-					}
-					
-					lastPort.get(p).put(i, view.get(i));
+					queueViewIn(vIn, p, identity, map, i);
+					queueViewOut(vOut, vIn, i);
+					clearViewportBuffers(p, i, view);
 				}
 			}
 		}
+	}
+	
+	private void clearViewportBuffers(LocalPortal p, Player i, GMap<Player, Viewport> view)
+	{
+		if(!lastPort.containsKey(p))
+		{
+			lastPort.put(p, new GMap<Player, Viewport>());
+		}
+		
+		lastPort.get(p).put(i, view.get(i));
+	}
+	
+	private void preDeconstruct(Portal p)
+	{
+		if(Wormholes.registry.destroyQueue.contains(p))
+		{
+			for(Entity k : p.getPosition().getBoundingBox().getInside())
+			{
+				if(k instanceof Player)
+				{
+					Wormholes.provider.getRasterer().get((Player) k).dequeueAll();
+					Wormholes.provider.movePlayer((Player) k);
+				}
+			}
+			
+			Wormholes.registry.destroyQueue.remove(p);
+			return;
+		}
+	}
+	
+	private void queueViewOut(Viewport vOut, Viewport vIn, Player i)
+	{
+		Wormholes.pool.queue(new Execution()
+		{
+			@Override
+			public void run()
+			{
+				for(Iterator<Block> it : vOut.getProjectionSet().iterator())
+				{
+					while(it.hasNext())
+					{
+						Block j = it.next();
+						
+						if(vOut.getProjectionSet().contains(j) && !vIn.contains(j))
+						{
+							Wormholes.provider.getRasterer().dequeue(i, j.getLocation());
+						}
+						
+						Status.permutationsPerSecond++;
+					}
+				}
+			}
+		});
+	}
+	
+	private void queueViewIn(Viewport vIn, Portal p, PortalIdentity identity, GMap<Vector, MaterialBlock> map, Player i)
+	{
+		Wormholes.pool.queue(new Execution()
+		{
+			@Override
+			public void run()
+			{
+				for(Iterator<Block> it : vIn.getProjectionSet().iterator())
+				{
+					while(it.hasNext())
+					{
+						Block j = it.next();
+						
+						if(vIn.contains(j))
+						{
+							Vector dir = VectorMath.directionNoNormal(p.getPosition().getCenter(), j.getLocation());
+							Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+							p.getIdentity().getFront().angle(vec, identity.getFront());
+							
+							MaterialBlock mb = map.get(vec);
+							
+							if(mb == null)
+							{
+								continue;
+							}
+							
+							Wormholes.provider.getRasterer().queue(i, j.getLocation(), mb);
+						}
+						
+						Status.permutationsPerSecond++;
+					}
+				}
+			}
+		});
 	}
 	
 	public GMap<PortalKey, ProjectionPlane> getRemotePlanes()
