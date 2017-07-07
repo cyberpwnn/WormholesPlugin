@@ -161,12 +161,12 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			String title = im.getDisplayName();
 			Portal p = WAPI.getPortalLookingAt(e.getPlayer());
 			
-			if(p != null && p.getPosition().getCenter().distance(e.getPlayer().getLocation()) <= 5)
+			if(p != null && p.getPosition().getCenter().distance(e.getPlayer().getLocation()) <= 9)
 			{
 				if(new Permissable(e.getPlayer()).canConfigure())
 				{
 					p.updateDisplayName(title);
-					NMSX.sendActionBar(e.getPlayer(), C.GOLD + "Updated Portal Display Name: " + C.GRAY + title);
+					notifMessage(e.getPlayer(), C.GOLD + "Updated Portal Name", C.GRAY + "" + title);
 				}
 			}
 		}
@@ -319,7 +319,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				catch(InvalidPortalKeyException e1)
 				{
 					e.setCancelled(true);
-					errorMessage(e.getPlayer(), C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
+					notifMessage(e.getPlayer(), C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
 					
 					for(Block vc : new GList<Block>(cx.iterator()))
 					{
@@ -329,13 +329,13 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				
 				catch(InvalidPortalPositionException e1)
 				{
-					errorMessage(e.getPlayer(), C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
+					notifMessage(e.getPlayer(), C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
 				}
 				
 				catch(DuplicatePortalKeyException e1)
 				{
 					e.setCancelled(true);
-					errorMessage(e.getPlayer(), C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
+					notifMessage(e.getPlayer(), C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
 				}
 			}
 		};
