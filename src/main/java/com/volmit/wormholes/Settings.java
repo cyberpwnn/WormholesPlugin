@@ -37,6 +37,10 @@ public class Settings
 	@Comment("Should wormholes splash the console window on enable?")
 	public static boolean SPLASH = true;
 	
+	@CName("AUTOBUILD_PORTALS")
+	@Comment("Automatically light portals when the last color block is placed\nPermission is still needed for this to work.")
+	public static boolean AUTOBUILD_PORTALS = true;
+	
 	@CName("ENABLE_APERTURE")
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;
