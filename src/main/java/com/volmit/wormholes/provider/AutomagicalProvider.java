@@ -32,7 +32,6 @@ import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.Task;
-import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.Title;
 import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
@@ -190,17 +189,22 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			return;
 		}
 		
-		if(!new Permissable(e.getPlayer()).canCreate())
+		e.setCancelled(constructPortal(e.getPlayer(), e.getClickedBlock()));
+	}
+	
+	public boolean constructPortal(Player p, Block b)
+	{
+		if(!new Permissable(p).canCreate())
 		{
-			return;
+			return false;
 		}
 		
-		if(!W.isColored(e.getClickedBlock()))
+		if(!W.isColored(b))
 		{
-			return;
+			return false;
 		}
 		
-		Block block = e.getClickedBlock();
+		Block block = b;
 		int maxPortalSize = Settings.MAX_PORTAL_SIZE;
 		GList<Integer> maxBase = getBaseSqrt(maxPortalSize);
 		int setDist = -1;
@@ -266,7 +270,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		
 		if(!found)
 		{
-			return;
+			return false;
 		}
 		
 		found = false;
@@ -292,7 +296,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		
 		for(Direction i : dirs)
 		{
-			double dist = i.toVector().distance(e.getPlayer().getLocation().getDirection());
+			double dist = i.toVector().distance(p.getLocation().getDirection());
 			
 			if(dist < maxDist)
 			{
@@ -303,41 +307,37 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		
 		Direction md = finalDirection;
 		Cuboid cx = c;
-		e.setCancelled(true);
+		boolean[] cancel = {false};
 		
-		new TaskLater()
+		try
 		{
-			@Override
-			public void run()
+			LocalPortal po = createPortal(md, cx);
+			Wormholes.fx.created(po);
+			cancel[0] = true;
+		}
+		
+		catch(InvalidPortalKeyException e1)
+		{
+			cancel[0] = true;
+			notifMessage(p, C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
+			
+			for(Block vc : new GList<Block>(cx.iterator()))
 			{
-				try
-				{
-					LocalPortal p = createPortal(md, cx);
-					Wormholes.fx.created(p);
-				}
-				
-				catch(InvalidPortalKeyException e1)
-				{
-					e.setCancelled(true);
-					notifMessage(e.getPlayer(), C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
-					
-					for(Block vc : new GList<Block>(cx.iterator()))
-					{
-						ParticleEffect.BARRIER.display(0f, 1, vc.getLocation().clone().add(0.5, 0.5, 0.5), 32);
-					}
-				}
-				
-				catch(InvalidPortalPositionException e1)
-				{
-					notifMessage(e.getPlayer(), C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
-				}
-				
-				catch(DuplicatePortalKeyException e1)
-				{
-					e.setCancelled(true);
-					notifMessage(e.getPlayer(), C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
-				}
+				ParticleEffect.BARRIER.display(0f, 1, vc.getLocation().clone().add(0.5, 0.5, 0.5), 32);
 			}
-		};
+		}
+		
+		catch(InvalidPortalPositionException e1)
+		{
+			notifMessage(p, C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
+		}
+		
+		catch(DuplicatePortalKeyException e1)
+		{
+			cancel[0] = true;
+			notifMessage(p, C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
+		}
+		
+		return cancel[0];
 	}
 }
