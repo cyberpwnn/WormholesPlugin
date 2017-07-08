@@ -33,7 +33,7 @@ public class ShockEffect
 			@Override
 			public void play(Location l)
 			{
-				ParticleEffect.CRIT_MAGIC.display(0, 1, l, 28);
+				Jokester.swatch1(ParticleEffect.CRIT_MAGIC).display(0, 1, l, 28);
 			}
 		};
 	}

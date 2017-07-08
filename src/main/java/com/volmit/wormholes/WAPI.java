@@ -113,6 +113,11 @@ public class WAPI
 		};
 	}
 	
+	public static void resetVirtualChunk(Location l)
+	{
+		Wormholes.provider.getRasterer().wc(l);
+	}
+	
 	public static void updateProjection(Portal p)
 	{
 		for(Player i : p.getPosition().getArea().getPlayers())

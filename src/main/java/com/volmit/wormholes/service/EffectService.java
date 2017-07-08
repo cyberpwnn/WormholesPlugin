@@ -8,6 +8,7 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GSound;
+import com.volmit.wormholes.util.Jokester;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.ParticleEffect;
@@ -45,11 +46,11 @@ public class EffectService
 		Location lx = p.getPosition().getRandomKeyBlock().getLocation().clone().add(0.5, 0.5, 0.5);
 		Location lc = p.getPosition().getCenter().clone().add(0.5, 0.5, 0.5);
 		new ShockEffect(1f).play(lx, VectorMath.direction(lx, lc));
-		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 1.7f).play(lx);
-		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 1.4f).play(lx);
-		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 1.2f).play(lx);
-		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 1.6f).play(lx);
-		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, 0.5f).play(lx);
+		new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, 1.7f).play(lx);
+		new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, 1.4f).play(lx);
+		new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, 1.2f).play(lx);
+		new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, 1.6f).play(lx);
+		new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, 0.5f).play(lx);
 	}
 	
 	public void strikens(LocalPortal p)
@@ -71,17 +72,17 @@ public class EffectService
 					Location lx = i.getLocation().clone().add(0.5, 0.5, 0.5);
 					Location lc = p.getPosition().getCenter().clone().add(0.5, 0.5, 0.5);
 					new ShockEffect(1.3f).play(lx, VectorMath.direction(lx, lc));
-					new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, (float) (1.7 + (Math.random() * 0.2))).play(lx);
+					new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, (float) (1.7 + (Math.random() * 0.2))).play(lx);
 					
 					if(M.r(0.4))
 					{
-						new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, (float) (1.4 + (Math.random() * 0.5))).play(lx);
-						new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, (float) (1.2 + (Math.random() * 0.7))).play(lx);
+						new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, (float) (1.4 + (Math.random() * 0.5))).play(lx);
+						new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, (float) (1.2 + (Math.random() * 0.7))).play(lx);
 						
 						if(M.r(0.2))
 						{
-							new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, (float) (1.6 + (Math.random() * 0.3))).play(lx);
-							new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.1f, (float) (0.5 + (Math.random() * 0.5))).play(lx);
+							new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, (float) (1.6 + (Math.random() * 0.3))).play(lx);
+							new GSound(Jokester.sound2(MSound.AMBIENCE_THUNDER.bukkitSound()), 0.1f, (float) (0.5 + (Math.random() * 0.5))).play(lx);
 						}
 					}
 				}
@@ -112,26 +113,45 @@ public class EffectService
 	
 	public void ambient(LocalPortal p)
 	{
-		new GSound(MSound.PORTAL.bukkitSound(), 0.044f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		new GSound(Jokester.sound1(MSound.PORTAL.bukkitSound()), 0.044f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
 		
 		if(M.r(0.05))
 		{
-			new GSound(MSound.PORTAL_TRAVEL.bukkitSound(), 0.03f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+			ambrise(p);
+			new GSound(Jokester.sound2(MSound.PORTAL_TRAVEL.bukkitSound()), 0.03f, 0.1f + (float) Math.random() * 0.9f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
 		}
 		
 		if(M.r(0.07))
 		{
-			new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.12f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+			ambrise(p);
+			new GSound(Jokester.sound2(MSound.AMBIENCE_CAVE.bukkitSound()), 0.12f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
 		}
 		
 		if(M.r(0.09))
 		{
-			new GSound(MSound.ZOMBIE_WALK.bukkitSound(), 0.05f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+			ambrise(p);
+			new GSound(Jokester.sound2(MSound.ZOMBIE_WALK.bukkitSound()), 0.05f, 0.1f + (float) Math.random() * 0.3f).play(new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation());
+		}
+	}
+	
+	public void ambrise(LocalPortal p)
+	{
+		Location l = new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation().clone().add(0.5, 1, 0.5);
+		Jokester.swatch2(ParticleEffect.PORTAL).display(0.2f, (int) (1 + (Math.random() * 6)), l, 32);
+	}
+	
+	public void ambrisex(LocalPortal p)
+	{
+		if(M.r(0.06))
+		{
+			Location l = new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation().clone().add(0.5, 1, 0.5);
+			Jokester.swatch2(ParticleEffect.PORTAL).display(0.2f, (int) (1 + (Math.random() * 6)), l, 32);
 		}
 	}
 	
 	public void rise(LocalPortal p)
 	{
+		ambrisex(p);
 		Location l = new GList<Block>(p.getPosition().getPane().iterator()).pickRandom().getLocation().clone().add(0.5, 1, 0.5);
 		
 		if(M.r(0.7))
@@ -374,8 +394,8 @@ public class EffectService
 	public void destroyed(LocalPortal p)
 	{
 		new GSound(MSound.EXPLODE.bukkitSound(), 0.2f, 1.7f).play(p.getPosition().getCenter());
-		new GSound(MSound.EXPLODE.bukkitSound(), 0.2f, 1.1f).play(p.getPosition().getCenter());
-		new GSound(MSound.EXPLODE.bukkitSound(), 0.2f, 0.3f).play(p.getPosition().getCenter());
+		new GSound(Jokester.sound1(MSound.EXPLODE.bukkitSound()), 0.2f, 1.1f).play(p.getPosition().getCenter());
+		new GSound(Jokester.sound2(MSound.EXPLODE.bukkitSound()), 0.2f, 0.3f).play(p.getPosition().getCenter());
 		
 		for(int i = 0; i < 40; i++)
 		{

@@ -25,11 +25,11 @@ public class Status
 		avgPower.put(WAPI.getPowerPoolInfo().getUtilization());
 		avgWrk.put(WAPI.getWorkerPoolInfo().getUtilization());
 		inf = "";
-		inf += C.GOLD + "POW: " + C.WHITE + F.pc(avgPower.getAverage()) + " ";
-		inf += C.GOLD + "WRK: " + C.WHITE + F.pc(avgWrk.getAverage()) + " ";
-		inf += C.GOLD + "NET: " + C.WHITE + F.fileSize((long) avgBPS.getAverage()) + "/s ";
-		inf += C.GOLD + "PRJ: " + C.WHITE + F.f(projectionTime, 0) + "ms ";
-		inf += C.GOLD + "BNJ: " + C.WHITE + F.fileSize((long) avgBGY.getAverage()) + "/s ";
+		inf += C.GOLD + Lang.STATUS_POW + ": " + C.WHITE + F.pc(avgPower.getAverage()) + " ";
+		inf += C.GOLD + Lang.STATUS_WRK + ": " + C.WHITE + F.pc(avgWrk.getAverage()) + " ";
+		inf += C.GOLD + Lang.STATUS_NET + ": " + C.WHITE + F.fileSize((long) avgBPS.getAverage()) + "/s ";
+		inf += C.GOLD + Lang.STATUS_PRJ + ": " + C.WHITE + F.f(projectionTime, 0) + "ms ";
+		inf += C.GOLD + Lang.STATUS_BNJ + ": " + C.WHITE + F.fileSize((long) avgBGY.getAverage()) + "/s ";
 	}
 	
 	public static void reportPacket(long size)

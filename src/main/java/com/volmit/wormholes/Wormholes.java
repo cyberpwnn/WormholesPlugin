@@ -191,7 +191,7 @@ public class Wormholes extends ControllablePlugin
 	private void buildSubs()
 	{
 		DB.d(this, "Building Sub commands");
-		sub.add(new SubCommand("Lists all portals & links", "list", "li", "l")
+		sub.add(new SubCommand(Lang.DESCRIPTION_LIST, "list", "li", "l")
 		{
 			private void list(CommandSender p, String[] a)
 			{
@@ -228,21 +228,21 @@ public class Wormholes extends ControllablePlugin
 						}
 					}
 					
-					p.sendMessage(Info.hrn(host.getLocalPortals().size() + " Portals"));
+					p.sendMessage(Info.hrn(host.getLocalPortals().size() + " " + Lang.WORD_PORTALS));
 					
 					for(Portal i : host.getLocalPortals())
 					{
 						RTX r = new RTX();
-						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.GOLD, "Link: "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? "Mutex Link\n" : "Local Link\n" : "No Link\n"), new ColoredString(C.GOLD, "Polarity: "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
+						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.GOLD, Lang.WORD_LINK + ": "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? Lang.WORD_MUTEX + " " + Lang.WORD_LINK + "\n" : Lang.WORD_LOCAL + " " + Lang.WORD_LINK + "\n" : Lang.WORD_NO + " " + Lang.WORD_LINK + "\n"), new ColoredString(C.GOLD, Lang.WORD_POLARITY + ": "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
 						
 						if(i.getSided())
 						{
-							r.addText("Endpoint <", C.GRAY);
+							r.addText(Lang.WORD_ENDPOINT + " <", C.GRAY);
 						}
 						
 						else
 						{
-							r.addText("Portal <", C.GRAY);
+							r.addText(Lang.WORD_PORTAL + " <", C.GRAY);
 						}
 						
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getU()));
@@ -256,8 +256,8 @@ public class Wormholes extends ControllablePlugin
 							r.addText("(" + i.getDisplayName() + ")", C.WHITE);
 						}
 						
-						r.addTextFireHoverCommand(" [TP]", new RTEX(new ColoredString(C.GREEN, "Teleport to this portal")), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
-						r.addTextFireHoverCommand(" [DELETE]", new RTEX(new ColoredString(C.RED, "DELETE to this portal")), "/w list -dl " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.RED);
+						r.addTextFireHoverCommand(" [" + Lang.WORD_TP.toUpperCase() + "]", new RTEX(new ColoredString(C.GREEN, Lang.DESCRIPTION_TELEPORT)), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
+						r.addTextFireHoverCommand(" [" + Lang.WORD_DELETE.toUpperCase() + "]", new RTEX(new ColoredString(C.RED, Lang.DESCRIPTION_DELETE)), "/w list -dl " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.RED);
 						r.tellRawTo((Player) p);
 					}
 					
@@ -266,7 +266,7 @@ public class Wormholes extends ControllablePlugin
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 			
@@ -286,30 +286,30 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
-		sub.add(new SubCommand("Pull internal timings data", "timings", "t", "perf")
+		sub.add(new SubCommand(Lang.DESCRIPTION_TIMINGS, "timings", "t", "perf")
 		{
 			private void list(CommandSender p)
 			{
 				if(new Permissable(p).canList())
 				{
-					p.sendMessage(Info.hrn("Worker Threads"));
+					p.sendMessage(Info.hrn(Lang.WORD_WORKER + " " + Lang.WORD_THREADS));
 					
-					p.sendMessage(C.GOLD + "Threads: " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
-					p.sendMessage(C.GOLD + "Utilization: " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.GOLD + "Effective TPS: " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
+					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
+					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
 					
-					p.sendMessage(Info.hrn("POWER Threads"));
+					p.sendMessage(Info.hrn(Lang.WORD_POWER + " " + Lang.WORD_THREADS));
 					
-					p.sendMessage(C.GOLD + "Threads: " + C.WHITE + WAPI.getPowerPool().getThreadCount());
-					p.sendMessage(C.GOLD + "Utilization: " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.GOLD + "Effective TPS: " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
+					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getPowerPool().getThreadCount());
+					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
+					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
 					
-					p.sendMessage(Info.hrn("Sync"));
+					p.sendMessage(Info.hrn(Lang.WORD_SYNC));
 					for(String i : TimingsService.root.toLines(0, 2))
 					{
 						p.sendMessage(i);
 					}
-					p.sendMessage(Info.hrn("Async"));
+					p.sendMessage(Info.hrn(Lang.WORD_ASYNC));
 					
 					for(String i : TimingsService.asyn.toLines(0, 2))
 					{
@@ -321,7 +321,7 @@ public class Wormholes extends ControllablePlugin
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 			
@@ -338,18 +338,18 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
-		sub.add(new SubCommand("Version Information", "version", "v", "ver")
+		sub.add(new SubCommand(Lang.DESCRIPTION_VERSION, "version", "v", "ver")
 		{
 			private void v(CommandSender p)
 			{
 				if(new Permissable(p).canList())
 				{
-					p.sendMessage(C.GOLD + "Running " + C.WHITE + Wormholes.this.getDescription().getVersion());
+					p.sendMessage(C.GOLD + Lang.WORD_RUNNING + " " + C.WHITE + Wormholes.this.getDescription().getVersion());
 				}
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 			
@@ -366,12 +366,12 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
-		sub.add(new SubCommand("Get a Portal Building Wand", "wand", "w", "wan")
+		sub.add(new SubCommand(Lang.DESCRIPTION_WAND, "wand", "w", "wan")
 		{
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
-				p.sendMessage(C.RED + "Ingame only.");
+				p.sendMessage(C.RED + Lang.DESCRIPTION_INGAMEONLY);
 			}
 			
 			@Override
@@ -384,25 +384,25 @@ public class Wormholes extends ControllablePlugin
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 		});
 		
-		sub.add(new SubCommand("System Information", "platform", "plat", "pl")
+		sub.add(new SubCommand(Lang.DESCRIPTION_SYSTEM, "platform", "plat", "pl")
 		{
 			private void v(CommandSender p)
 			{
 				if(new Permissable(p).canReload())
 				{
-					p.sendMessage("MCV: " + Bukkit.getVersion());
-					p.sendMessage("APV: " + Bukkit.getBukkitVersion());
-					p.sendMessage("LPV: " + instance.getDescription().getVersion());
+					p.sendMessage(Lang.STATUS_MCV + ": " + Bukkit.getVersion());
+					p.sendMessage(Lang.STATUS_APV + ": " + Bukkit.getBukkitVersion());
+					p.sendMessage(Lang.STATUS_LPV + ": " + instance.getDescription().getVersion());
 				}
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 			
@@ -419,12 +419,12 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 		
-		sub.add(new SubCommand("Realtime sample information", "debug", "db", "vb")
+		sub.add(new SubCommand(Lang.DESCRIPTION_DEBUG, "debug", "db", "vb")
 		{
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
-				p.sendMessage("Ingame Only");
+				p.sendMessage(Info.TAG + Lang.DESCRIPTION_INGAMEONLY);
 			}
 			
 			@Override
@@ -445,24 +445,24 @@ public class Wormholes extends ControllablePlugin
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 		});
 		
-		sub.add(new SubCommand("Reloads Wormholes & Configs", "reload", "reset")
+		sub.add(new SubCommand(Lang.DESCRIPTION_RELOAD, "reload", "reset")
 		{
 			public void go(CommandSender p)
 			{
 				if(new Permissable(p).canReload())
 				{
 					doReload();
-					p.sendMessage(Info.TAG + "All Wormholes & Configs Reloaded");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_RELOADED);
 				}
 				
 				else
 				{
-					p.sendMessage(Info.TAG + "No Permission");
+					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 			

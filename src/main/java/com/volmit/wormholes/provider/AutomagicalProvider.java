@@ -9,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.WAPI;
@@ -165,7 +166,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 				if(new Permissable(e.getPlayer()).canConfigure())
 				{
 					p.updateDisplayName(title);
-					notifMessage(e.getPlayer(), C.GOLD + "Updated Portal Name", C.GRAY + "" + title);
+					notifMessage(e.getPlayer(), C.GOLD + Lang.DESCRIPTION_UPDATENAME, C.GRAY + "" + title);
 				}
 			}
 		}
@@ -313,13 +314,17 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		{
 			LocalPortal po = createPortal(md, cx);
 			Wormholes.fx.created(po);
+			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterUp());
+			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterDown());
+			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterLeft());
+			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterRight());
 			cancel[0] = true;
 		}
 		
 		catch(InvalidPortalKeyException e1)
 		{
 			cancel[0] = true;
-			notifMessage(p, C.RED + "Invalid Portal Key", C.RED + e1.getMessage());
+			notifMessage(p, C.RED + Lang.DESCRIPTION_INVALIDKEY, C.RED + e1.getMessage());
 			
 			for(Block vc : new GList<Block>(cx.iterator()))
 			{
@@ -329,13 +334,13 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		
 		catch(InvalidPortalPositionException e1)
 		{
-			notifMessage(p, C.RED + "Invalid Portal Position", C.RED + e1.getMessage());
+			notifMessage(p, C.RED + Lang.DESCRIPTION_INVALIDPOS, C.RED + e1.getMessage());
 		}
 		
 		catch(DuplicatePortalKeyException e1)
 		{
 			cancel[0] = true;
-			notifMessage(p, C.RED + "Duplicate Portal Key", C.RED + e1.getMessage());
+			notifMessage(p, C.RED + Lang.DESCRIPTION_DUPEKEY, C.RED + e1.getMessage());
 		}
 		
 		return cancel[0];

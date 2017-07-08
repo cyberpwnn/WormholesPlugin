@@ -13,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
@@ -275,12 +276,12 @@ public class PortalBuilder implements Listener
 	
 	public GList<String> lore()
 	{
-		return new GList<String>().qadd(C.GOLD + "Shift + Scroll: " + C.GRAY + "Change portal size").qadd(C.GOLD + "Left Click: " + C.GRAY + "Place frame");
+		return new GList<String>().qadd(C.GOLD + Lang.DESCRIPTION_SHIFTSCROLL + ": " + C.GRAY + Lang.DESCRIPTION_CHANGESIZE).qadd(C.GOLD + Lang.DESCRIPTION_LEFTCLICK + ": " + C.GRAY + Lang.DESCRIPTION_PLACEFRAME);
 	}
 	
 	public String nameForSize(int size)
 	{
-		return C.GOLD + "Portal Wand " + C.DARK_GRAY + " Size: " + C.GOLD + C.UNDERLINE + size;
+		return C.GOLD + Lang.DESCRIPTION_PORTALWAND + " " + C.DARK_GRAY + " " + Lang.WORD_SIZE + ": " + C.GOLD + C.UNDERLINE + size;
 	}
 	
 	public boolean isWand(ItemStack is)
@@ -306,16 +307,16 @@ public class PortalBuilder implements Listener
 	
 	public void select(Player p)
 	{
-		Wormholes.provider.notifMessage(p, C.GOLD + "Position Selected", C.YELLOW + "Left click to confirm & place");
+		Wormholes.provider.notifMessage(p, C.GOLD + Lang.DESCRIPTION_POSSELECT, C.YELLOW + Lang.DESCRIPTION_LEFTCLICKCONFIRM);
 	}
 	
 	public void confirm(Player p)
 	{
-		Wormholes.provider.notifMessage(p, C.GOLD + "Frame Placed", C.YELLOW + " ");
+		Wormholes.provider.notifMessage(p, C.GOLD + Lang.DESCRIPTION_FRAMEPLACED, C.YELLOW + " ");
 	}
 	
 	public void cancelSelect(Player p)
 	{
-		Wormholes.provider.notifMessage(p, C.GOLD + "Position Cancelled", C.YELLOW + " ");
+		Wormholes.provider.notifMessage(p, C.GOLD + Lang.DESCRIPTION_POSCANCEL, C.YELLOW + " ");
 	}
 }
