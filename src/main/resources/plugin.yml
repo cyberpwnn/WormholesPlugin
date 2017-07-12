@@ -7,3 +7,36 @@ author: Volmit Software
 commands: 
   wormhole: 
     aliases: [w, worm, whole, wormh, wormholes, portal, portals, wh]
+permissions:
+  wormholes.*:
+    description: Gives access to all Wormholes permissions
+    default: op
+    children:
+      wormholes.reload: true
+      wormholes.list: true
+      wormholes.create: true
+      wormholes.destroy: true
+      wormholes.build: true
+      wormholes.configure: true
+      wormholes.use: true
+  wormholes.reload:
+    description: Gives access to reload
+    default: op
+  wormholes.list:
+    description: Gives access to list
+    default: op
+  wormholes.create:
+    description: Gives access to create
+    default: op
+  wormholes.destroy:
+    description: Gives access to destroy
+    default: op
+  wormholes.build:
+    description: Gives access to build
+    default: op
+  wormholes.configure:
+    description: Gives access to configure
+    default: op
+  wormholes.use:
+    description: Gives access to use
+    default: true
