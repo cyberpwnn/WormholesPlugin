@@ -39,7 +39,7 @@ public class Settings
 	
 	@CName("AUTOBUILD_PORTALS")
 	@Comment("Automatically light portals when the last color block is placed\nPermission is still needed for this to work.")
-	public static boolean AUTOBUILD_PORTALS = true;
+	public static boolean AUTOBUILD_PORTALS = false;
 	
 	@CName("ENABLE_APERTURE")
 	@Comment("Should Wormholes project entities from the other side?")
