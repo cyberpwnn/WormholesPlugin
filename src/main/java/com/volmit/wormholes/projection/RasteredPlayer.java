@@ -11,6 +11,7 @@ import com.volmit.wormholes.chunk.NMSChunk11;
 import com.volmit.wormholes.chunk.NMSChunk12;
 import com.volmit.wormholes.chunk.NMSChunk19;
 import com.volmit.wormholes.chunk.VirtualChunk;
+import com.volmit.wormholes.exception.NMSChunkFailureException;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.VersionBukkit;
@@ -95,7 +96,35 @@ public class RasteredPlayer
 				return;
 			}
 			
-			prepareChunks();
+			if(Settings.USE_LIGHTMAPS && !VersionBukkit.wc())
+			{
+				try
+				{
+					prepareChunks();
+				}
+				
+				catch(NMSChunkFailureException e)
+				{
+					System.out.println("Error: " + e.getMessage());
+					System.out.println("==========================================");
+					System.out.println("WARNING: Wormholes failed to use");
+					System.out.println("chunk map packets to send data to");
+					System.out.println("players. This may have been a one-time");
+					System.out.println("issue, however wormholes will revert");
+					System.out.println("to using a safer but slower method of");
+					System.out.println("sending chunk packets.");
+					System.out.println("------------------------------------------");
+					System.out.println("Your configuration has not been modified");
+					System.out.println("this internal change will be forgotten");
+					System.out.println("upon the plugin's reload.");
+					System.out.println("------------------------------------------");
+					System.out.println("To use the safer method, change");
+					System.out.println("USE_LIGHTMAPS to false in exp config.yml");
+					System.out.println("==========================================");
+					Settings.USE_LIGHTMAPS = false;
+					prepareChunks();
+				}
+			}
 		}
 		
 		catch(Throwable e)
@@ -112,7 +141,7 @@ public class RasteredPlayer
 		}
 	}
 	
-	private int prepareChunks()
+	private int prepareChunks() throws NMSChunkFailureException
 	{
 		GMap<Chunk, RasteredChunk> preparedChunks = new GMap<Chunk, RasteredChunk>();
 		
