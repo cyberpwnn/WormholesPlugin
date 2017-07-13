@@ -4,6 +4,8 @@ import java.util.Arrays;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+
+import com.volmit.wormholes.exception.NMSChunkFailureException;
 import com.volmit.wormholes.util.MaterialBlock;
 
 public abstract class NMSChunk implements VirtualChunk
@@ -14,10 +16,12 @@ public abstract class NMSChunk implements VirtualChunk
 	protected byte[][] blockLight;
 	protected int[] heightMap;
 	protected boolean[] modifiedSections;
+	protected String version;
 	
-	public NMSChunk(Chunk bukkitChunk)
+	public NMSChunk(Chunk bukkitChunk, String version)
 	{
 		this.bukkitChunk = bukkitChunk;
+		this.version = version;
 		blockData = new int[16][];
 		skyLight = new byte[16][];
 		blockLight = new byte[16][];
@@ -47,7 +51,7 @@ public abstract class NMSChunk implements VirtualChunk
 		Arrays.fill(blockLight[sect], (byte) 0);
 	}
 	
-	public abstract void pack();
+	public abstract void pack() throws NMSChunkFailureException;
 	
 	public void markModification(int x, int y, int z)
 	{
@@ -179,5 +183,10 @@ public abstract class NMSChunk implements VirtualChunk
 	public Chunk getChunk()
 	{
 		return bukkitChunk;
+	}
+	
+	public String toString()
+	{
+		return "NMSC::" + version + "::" + bukkitChunk.getWorld().getName() + "::" + bukkitChunk.getX() + "," + bukkitChunk.getZ();
 	}
 }
