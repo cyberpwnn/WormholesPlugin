@@ -14,6 +14,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
+import com.volmit.wormholes.exception.NMSChunkFailureException;
+
 import net.minecraft.server.v1_9_R2.Block;
 import net.minecraft.server.v1_9_R2.ChunkSection;
 import net.minecraft.server.v1_9_R2.DataBits;
@@ -24,42 +26,50 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 {
 	private net.minecraft.server.v1_9_R2.Chunk nmsChunk;
 	
-	public NMSChunk19(Chunk bukkitChunk)
+	public NMSChunk19(Chunk bukkitChunk) throws NMSChunkFailureException
 	{
-		super(bukkitChunk);
+		super(bukkitChunk, "1_9_R2");
 		
 		nmsChunk = ((CraftChunk) getChunk()).getHandle();
 		pack();
 	}
 	
 	@Override
-	public void pack()
+	public void pack() throws NMSChunkFailureException
 	{
-		for(ChunkSection i : nmsChunk.getSections())
+		try
 		{
-			if(i == null)
+			for(ChunkSection i : nmsChunk.getSections())
 			{
-				continue;
-			}
-			
-			for(int j = 0; j < 16; j++)
-			{
-				for(int k = 0; k < 16; k++)
+				if(i == null)
 				{
-					for(int l = 0; l < 16; l++)
+					continue;
+				}
+				
+				for(int j = 0; j < 16; j++)
+				{
+					for(int k = 0; k < 16; k++)
 					{
-						IBlockData ibd = i.getBlocks().a(j, k, l);
-						int id = Block.getId(ibd.getBlock());
-						byte data = (byte) ibd.getBlock().toLegacyData(ibd);
-						setSect(i.getYPosition() >> 4, j, k, l, id, data);
-						skyLight[i.getYPosition() >> 4] = i.getSkyLightArray().asBytes();
-						blockLight[i.getYPosition() >> 4] = i.getEmittedLightArray().asBytes();
+						for(int l = 0; l < 16; l++)
+						{
+							IBlockData ibd = i.getBlocks().a(j, k, l);
+							int id = Block.getId(ibd.getBlock());
+							byte data = (byte) ibd.getBlock().toLegacyData(ibd);
+							setSect(i.getYPosition() >> 4, j, k, l, id, data);
+							skyLight[i.getYPosition() >> 4] = i.getSkyLightArray().asBytes();
+							blockLight[i.getYPosition() >> 4] = i.getEmittedLightArray().asBytes();
+						}
 					}
 				}
 			}
+			
+			heightMap = Arrays.copyOf(nmsChunk.heightMap, nmsChunk.heightMap.length);
 		}
 		
-		heightMap = Arrays.copyOf(nmsChunk.heightMap, nmsChunk.heightMap.length);
+		catch(Exception e)
+		{
+			throw new NMSChunkFailureException("Failed to pack data for " + this.toString(), e);
+		}
 	}
 	
 	@Override
