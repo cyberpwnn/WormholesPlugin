@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.volmit</groupId>
 	<artifactId>Wormholes</artifactId>
-	<version>1.3p</version>
+	<version>1.5p</version>
 	<name>Wormholes</name>
 	<description>See what's on the other side.</description>
 	<properties>
@@ -49,8 +49,8 @@
 				<configuration>
 					<executable>${ct.libs}/scripts/distribute.bat</executable>
 					<arguments>
-						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-original-${project.version}.jar</argument>
 						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-${project.version}.jar</argument>
+						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-obfuscated${project.version}.jar</argument>
 						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\mapping-${project.version}.txt</argument>
 					</arguments>
 				</configuration>
