@@ -57,6 +57,11 @@ public class Settings
 	@Comment("The max distance a portal will start raycasting players to determine velocity intersections.")
 	public static int MAX_VELOCITY_CAPTURE_RANGE = 36;
 	
+	@CName("USE_OLD_RENDER_METHOD")
+	@Experimental
+	@Comment("Use the old rendering method (slower, but slightly safer)")
+	public static boolean USE_OLD_RENDER_METHOD = false;
+	
 	@CName("MAX_PORTAL_SIZE")
 	@CMax(33)
 	@CMin(3)
