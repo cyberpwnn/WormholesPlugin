@@ -96,31 +96,15 @@ public class RasteredPlayer
 				return;
 			}
 			
-			if(Settings.USE_LIGHTMAPS && !VersionBukkit.wc())
+			try
 			{
-				try
+				prepareChunks();
+			}
+			
+			catch(NMSChunkFailureException e)
+			{
+				if(Settings.USE_LIGHTMAPS)
 				{
-					prepareChunks();
-				}
-				
-				catch(NMSChunkFailureException e)
-				{
-					System.out.println("Error: " + e.getMessage());
-					System.out.println("==========================================");
-					System.out.println("WARNING: Wormholes failed to use");
-					System.out.println("chunk map packets to send data to");
-					System.out.println("players. This may have been a one-time");
-					System.out.println("issue, however wormholes will revert");
-					System.out.println("to using a safer but slower method of");
-					System.out.println("sending chunk packets.");
-					System.out.println("------------------------------------------");
-					System.out.println("Your configuration has not been modified");
-					System.out.println("this internal change will be forgotten");
-					System.out.println("upon the plugin's reload.");
-					System.out.println("------------------------------------------");
-					System.out.println("To use the safer method, change");
-					System.out.println("USE_LIGHTMAPS to false in exp config.yml");
-					System.out.println("==========================================");
 					Settings.USE_LIGHTMAPS = false;
 					prepareChunks();
 				}
@@ -129,7 +113,7 @@ public class RasteredPlayer
 		
 		catch(Throwable e)
 		{
-			e.printStackTrace();
+			
 		}
 	}
 	
