@@ -238,8 +238,19 @@ public class ProjectionService implements Listener
 				{
 					Viewport vIn = view.get(i);
 					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
-					renderStage(i, p, map, vIn, vOut);
-					clearViewportBuffers(p, i, view);
+					
+					if(Settings.USE_OLD_RENDER_METHOD)
+					{
+						queueViewIn(vIn, p, identity, map, i);
+						queueViewOut(vOut, vIn, i);
+					}
+					
+					else
+					{
+						renderStage(i, p, map, vIn, vOut);
+					}
+					
+					clearVRBuffers(p, i, view);
 				}
 			}
 		}
@@ -258,7 +269,7 @@ public class ProjectionService implements Listener
 	
 	private void renderStage(Player player, Portal portal, GMap<Vector, MaterialBlock> dimension, Viewport dialate, Viewport erode)
 	{
-		if(!lock.hasVRM(portal, player) || (!lock.getVRM(portal, player).getDialater().equals(dialate) || !lock.getVRM(portal, player).getEroder().equals(erode)))
+		if(!lock.hasVRM(portal, player) || (!lock.getVRM(portal, player).getDialater().equals(dialate) || !lock.getVRM(portal, player).getEroder().equals(erode) || lock.getVRM(portal, player).isComplete()))
 		{
 			VRM vrm = createVRM(portal, player, dialate, erode, dimension);
 			lock.putVRM(portal, player, vrm);
@@ -267,7 +278,7 @@ public class ProjectionService implements Listener
 		lock.getVRM(portal, player).renderAll();
 	}
 	
-	private void clearViewportBuffers(LocalPortal p, Player i, GMap<Player, Viewport> view)
+	private void clearVRBuffers(LocalPortal p, Player i, GMap<Player, Viewport> view)
 	{
 		if(!lastPort.containsKey(p))
 		{
