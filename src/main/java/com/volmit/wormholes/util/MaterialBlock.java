@@ -2,6 +2,7 @@ package com.volmit.wormholes.util;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 
 /**
@@ -37,8 +38,9 @@ public class MaterialBlock
 	
 	public MaterialBlock(Location location)
 	{
-		material = location.getBlock().getType();
-		data = location.getBlock().getData();
+		Block b = location.getBlock();
+		material = b.getType();
+		data = b.getData();
 	}
 	
 	public MaterialBlock()
