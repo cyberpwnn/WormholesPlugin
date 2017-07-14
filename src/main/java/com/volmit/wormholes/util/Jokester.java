@@ -129,7 +129,7 @@ public enum Jokester
 			return CHRISTMAS;
 		}
 		
-		return Jokester.SPECIAL;
+		return null;
 	}
 	
 	private static boolean isValentinesDay()
