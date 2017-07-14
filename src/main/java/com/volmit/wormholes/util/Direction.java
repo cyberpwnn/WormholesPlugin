@@ -81,7 +81,7 @@ public enum Direction
 	{
 		calculatePermutations();
 		
-		for(GBiset<Direction, Direction> i : permute.k())
+		for(GBiset<Direction, Direction> i : permute.keySet())
 		{
 			if(i.getA().equals(this) && i.getB().equals(d))
 			{
