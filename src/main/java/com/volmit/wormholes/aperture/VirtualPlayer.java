@@ -381,22 +381,30 @@ public class VirtualPlayer
 	
 	private void sendEntityEquipment(ItemStack item, ItemSlot slot)
 	{
-		if(VersionBukkit.get().equals(VersionBukkit.V8))
+		try
 		{
-			sendEntityEquipment18(item, slot);
-			return;
+			if(VersionBukkit.get().equals(VersionBukkit.V8))
+			{
+				sendEntityEquipment18(item, slot);
+				return;
+			}
+			
+			WrapperPlayServerEntityEquipment w = new WrapperPlayServerEntityEquipment();
+			w.setEntityID(id);
+			
+			if(!(item == null || item.getType().equals(Material.AIR)))
+			{
+				w.setItem(item);
+			}
+			
+			w.setSlot(slot);
+			w.sendPacket(viewer);
 		}
 		
-		WrapperPlayServerEntityEquipment w = new WrapperPlayServerEntityEquipment();
-		w.setEntityID(id);
-		
-		if(!(item == null || item.getType().equals(Material.AIR)))
+		catch(Exception e)
 		{
-			w.setItem(item);
+			
 		}
-		
-		w.setSlot(slot);
-		w.sendPacket(viewer);
 	}
 	
 	private void sendEntityMetadataSneaking(boolean sneaking)
