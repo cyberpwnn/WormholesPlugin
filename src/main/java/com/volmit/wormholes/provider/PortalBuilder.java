@@ -53,7 +53,7 @@ public class PortalBuilder implements Listener
 			{
 				if(!new Permissable(p).canBuild())
 				{
-					return;
+					continue;
 				}
 				
 				if(locks.contains(p) && idx.containsKey(p))
