@@ -338,7 +338,7 @@ public enum C
 		this.code = code;
 		this.intCode = intCode;
 		this.isFormat = isFormat;
-		this.toString = new String(new char[] {COLOR_CHAR, code});
+		toString = new String(new char[] {COLOR_CHAR, code});
 	}
 	
 	public net.md_5.bungee.api.ChatColor asBungee()
@@ -489,6 +489,7 @@ public enum C
 		return DyeColor.BLACK;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public static String chatToHex(ChatColor clr)
 	{
 		if(chatHexMap.containsKey(clr))

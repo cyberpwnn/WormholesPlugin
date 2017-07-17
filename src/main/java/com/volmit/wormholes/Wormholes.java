@@ -197,7 +197,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				if(new Permissable(p).canList())
 				{
-					if(a.length == 2)
+					if(a.length == 2 && !host.getLocalPortals().isEmpty())
 					{
 						if(a[0].equalsIgnoreCase("-tp"))
 						{

@@ -1,5 +1,7 @@
 package com.volmit.wormholes.portal;
 
+import java.util.List;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
@@ -87,11 +89,26 @@ public class LocalPortal implements Portal
 		}
 	}
 	
-	@Override
-	public void update()
+	public List<Chunk> getChunks()
 	{
-		checkKey();
+		return getPosition().getArea().getChunks();
+	}
+	
+	private boolean validateChunks()
+	{
+		for(Chunk i : getChunks())
+		{
+			if(!i.isLoaded())
+			{
+				return false;
+			}
+		}
 		
+		return true;
+	}
+	
+	private void doSave()
+	{
 		if(!saved)
 		{
 			if(hasValidKey())
@@ -100,57 +117,56 @@ public class LocalPortal implements Portal
 				saved = true;
 			}
 		}
-		
-		if(hasWormhole())
+	}
+	
+	private void doLink()
+	{
+		if(!hasHadWormhole)
 		{
-			if(!hasHadWormhole)
+			hasHadWormhole = true;
+			Wraith.callEvent(new WormholeLinkEvent(this, getWormhole().getDestination()));
+		}
+	}
+	
+	private void doPortalTick()
+	{
+		if(!sided)
+		{
+			if(M.r(0.9))
 			{
-				hasHadWormhole = true;
-				Wraith.callEvent(new WormholeLinkEvent(this, getWormhole().getDestination()));
+				Wormholes.fx.rise(this);
 			}
 			
-			if(!sided)
+			if(M.r(0.07))
 			{
-				if(M.r(0.9))
+				Wormholes.fx.ambient(this);
+			}
+			
+			checkFrame();
+			GList<Player> ac = getPosition().getActivation().getPlayers();
+			
+			for(Player i : ac)
+			{
+				if(!activatedEntities.contains(i) && isPlayerLookingAt(i))
 				{
-					Wormholes.fx.rise(this);
+					activatedEntities.add(i);
+					Wraith.callEvent(new PortalActivatePlayerEvent(this, i));
 				}
-				
-				if(M.r(0.07))
+			}
+			
+			for(Player i : activatedEntities.copy())
+			{
+				if(!ac.contains(i) && activatedEntities.contains(i))
 				{
-					Wormholes.fx.ambient(this);
-				}
-				
-				checkFrame();
-				GList<Player> ac = getPosition().getActivation().getPlayers();
-				
-				for(Player i : ac)
-				{
-					if(!activatedEntities.contains(i) && isPlayerLookingAt(i))
-					{
-						activatedEntities.add(i);
-						Wraith.callEvent(new PortalActivatePlayerEvent(this, i));
-					}
-				}
-				
-				for(Player i : activatedEntities.copy())
-				{
-					if(!ac.contains(i) && activatedEntities.contains(i))
-					{
-						activatedEntities.remove(i);
-						Wraith.callEvent(new PortalDeactivatePlayerEvent(this, i));
-					}
+					activatedEntities.remove(i);
+					Wraith.callEvent(new PortalDeactivatePlayerEvent(this, i));
 				}
 			}
 		}
-		
-		else if(hasHadWormhole)
-		{
-			hasHadWormhole = false;
-			Wormholes.projector.deproject(this);
-			Wraith.callEvent(new WormholeUnlinkEvent(this));
-		}
-		
+	}
+	
+	private void samplePlane()
+	{
 		if(!plane.hasContent())
 		{
 			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical());
@@ -160,6 +176,38 @@ public class LocalPortal implements Portal
 				specialUpdate();
 			}
 		}
+	}
+	
+	private void doUnlink()
+	{
+		hasHadWormhole = false;
+		Wormholes.projector.deproject(this);
+		Wraith.callEvent(new WormholeUnlinkEvent(this));
+	}
+	
+	@Override
+	public void update()
+	{
+		if(!validateChunks())
+		{
+			return;
+		}
+		
+		checkKey();
+		doSave();
+		
+		if(hasWormhole())
+		{
+			doLink();
+			doPortalTick();
+		}
+		
+		else if(hasHadWormhole)
+		{
+			doUnlink();
+		}
+		
+		samplePlane();
 	}
 	
 	public void showHologram(Player p, Hologram h)
@@ -787,6 +835,47 @@ public class LocalPortal implements Portal
 		return sided;
 	}
 	
+	private void wipeKey()
+	{
+		Wormholes.projector.deproject(this);
+		DB.d(this, "Wipe Key " + toString());
+		getPosition().getCenterDown().getBlock().setType(Material.AIR);
+		getPosition().getCenterUp().getBlock().setType(Material.AIR);
+		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
+		getPosition().getCenterRight().getBlock().setType(Material.AIR);
+	}
+	
+	private void retouchKey()
+	{
+		PortalKey k = getKey();
+		
+		if(!W.isColorable(getPosition().getCenterDown().getBlock()))
+		{
+			getPosition().getCenterDown().getBlock().setType(Material.WOOL);
+		}
+		
+		if(!W.isColorable(getPosition().getCenterUp().getBlock()))
+		{
+			getPosition().getCenterUp().getBlock().setType(Material.WOOL);
+		}
+		
+		if(!W.isColorable(getPosition().getCenterLeft().getBlock()))
+		{
+			getPosition().getCenterLeft().getBlock().setType(Material.WOOL);
+		}
+		
+		if(!W.isColorable(getPosition().getCenterRight().getBlock()))
+		{
+			getPosition().getCenterRight().getBlock().setType(Material.WOOL);
+		}
+		
+		W.setColor(getPosition().getCenterDown().getBlock(), k.getD());
+		W.setColor(getPosition().getCenterUp().getBlock(), k.getU());
+		W.setColor(getPosition().getCenterLeft().getBlock(), k.getL());
+		W.setColor(getPosition().getCenterRight().getBlock(), k.getR());
+		DB.d(this, "Recolor " + toString());
+	}
+	
 	@Override
 	public void setSided(Boolean sided)
 	{
@@ -794,47 +883,15 @@ public class LocalPortal implements Portal
 		
 		if(sided)
 		{
-			Wormholes.projector.deproject(this);
-			DB.d(this, "Wipe Key " + toString());
-			getPosition().getCenterDown().getBlock().setType(Material.AIR);
-			getPosition().getCenterUp().getBlock().setType(Material.AIR);
-			getPosition().getCenterLeft().getBlock().setType(Material.AIR);
-			getPosition().getCenterRight().getBlock().setType(Material.AIR);
+			wipeKey();
 		}
 		
 		else
 		{
-			PortalKey k = getKey();
-			
-			if(!W.isColorable(getPosition().getCenterDown().getBlock()))
-			{
-				getPosition().getCenterDown().getBlock().setType(Material.WOOL);
-			}
-			
-			if(!W.isColorable(getPosition().getCenterUp().getBlock()))
-			{
-				getPosition().getCenterUp().getBlock().setType(Material.WOOL);
-			}
-			
-			if(!W.isColorable(getPosition().getCenterLeft().getBlock()))
-			{
-				getPosition().getCenterLeft().getBlock().setType(Material.WOOL);
-			}
-			
-			if(!W.isColorable(getPosition().getCenterRight().getBlock()))
-			{
-				getPosition().getCenterRight().getBlock().setType(Material.WOOL);
-			}
-			
-			W.setColor(getPosition().getCenterDown().getBlock(), k.getD());
-			W.setColor(getPosition().getCenterUp().getBlock(), k.getU());
-			W.setColor(getPosition().getCenterLeft().getBlock(), k.getL());
-			W.setColor(getPosition().getCenterRight().getBlock(), k.getR());
-			DB.d(this, "Recolor " + toString());
+			retouchKey();
 		}
 		
-		Wormholes.provider.wipe(this);
-		Wormholes.provider.save(this);
+		save();
 	}
 	
 	@Override

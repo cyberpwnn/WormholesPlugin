@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.volmit</groupId>
 	<artifactId>Wormholes</artifactId>
-	<version>1.5.1p</version>
+	<version>1.5.3p</version>
 	<name>Wormholes</name>
 	<description>See what's on the other side.</description>
 	<properties>
@@ -33,35 +33,60 @@
 					<finalName>${project.name}</finalName>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>runbatchfile</id>
-						<phase>package</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<executable>${ct.libs}/scripts/distribute.bat</executable>
-					<arguments>
-						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-${project.version}.jar</argument>
-						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-obfuscated${project.version}.jar</argument>
-						<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\mapping-${project.version}.txt</argument>
-					</arguments>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<profiles>
 		<profile>
 			<id>development</id>
 			<build>
-
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>runbatchfile</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${ct.libs}/scripts/dev.bat</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>runbatchfile</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${ct.libs}/scripts/obf.bat</executable>
+							<arguments>
+								<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-${project.version}.jar</argument>
+								<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\${project.name}-obfuscated${project.version}.jar</argument>
+								<argument>C:\Users\cyberpwn\Documents\development\workspace\WormholesPlugin\release\mapping-${project.version}.txt</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
 			</build>
 		</profile>
 	</profiles>

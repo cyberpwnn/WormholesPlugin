@@ -16,7 +16,6 @@ import com.volmit.wormholes.chunk.VirtualChunk;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.VersionBukkit;
-import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
 
 public class RasteredChunk
@@ -138,18 +137,7 @@ public class RasteredChunk
 			}
 		}
 		
-		int dist = 0;
-		
-		try
-		{
-			dist = W.chunkDistance(p.getLocation().getChunk(), p.getLocation().getWorld().getChunkAt(x, z));
-		}
-		
-		catch(Exception e)
-		{
-			
-		}
-		
+		int dist = 1;
 		int size = 8 + (inf.size() * 12);
 		int sv = inf.size();
 		w.setRecords(inf.toArray(new MultiBlockChangeInfo[inf.size()]));
