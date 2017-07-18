@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
@@ -163,22 +164,6 @@ public class EffectService
 		}
 		
 		GList<Vector> vxz = new GList<Vector>().qadd(p.getIdentity().getUp().toVector()).qadd(p.getIdentity().getDown().toVector()).qadd(p.getIdentity().getLeft().toVector()).qadd(p.getIdentity().getRight().toVector());
-		int k = 1;
-		
-		if(M.r(0.7))
-		{
-			k++;
-			
-			if(M.r(0.4))
-			{
-				k++;
-				
-				if(M.r(0.2))
-				{
-					k++;
-				}
-			}
-		}
 		
 		for(int i = 0; i < 8; i++)
 		{
@@ -189,22 +174,7 @@ public class EffectService
 				vx.add(vxz.pickRandom());
 			}
 			
-			ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 1f, l, 32);
-			
-			if(k > 1)
-			{
-				ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 3f, l, 32);
-				
-				if(k > 2)
-				{
-					ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 5f, l, 32);
-					
-					if(k > 3)
-					{
-						ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 7f, l, 32);
-					}
-				}
-			}
+			Settings.getAmbientParticle().display(0, 1, l, 32);
 		}
 	}
 	
@@ -221,22 +191,6 @@ public class EffectService
 		}
 		
 		GList<Vector> vxz = new GList<Vector>().qadd(p.getIdentity().getUp().toVector()).qadd(p.getIdentity().getDown().toVector()).qadd(p.getIdentity().getLeft().toVector()).qadd(p.getIdentity().getRight().toVector());
-		int k = 1;
-		
-		if(M.r(0.7))
-		{
-			k++;
-			
-			if(M.r(0.4))
-			{
-				k++;
-				
-				if(M.r(0.2))
-				{
-					k++;
-				}
-			}
-		}
 		
 		for(int i = 0; i < 40; i++)
 		{
@@ -247,22 +201,7 @@ public class EffectService
 				vx.add(vxz.pickRandom());
 			}
 			
-			ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 1f, l, 32);
-			
-			if(k > 1)
-			{
-				ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 3f, l, 32);
-				
-				if(k > 2)
-				{
-					ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 5f, l, 32);
-					
-					if(k > 3)
-					{
-						ParticleEffect.SUSPENDED_DEPTH.display(vx.clone().normalize(), 7f, l, 32);
-					}
-				}
-			}
+			Settings.getAmbientParticle().display(0, 1, l, 32);
 		}
 	}
 	
@@ -295,19 +234,19 @@ public class EffectService
 				vx.add(vxz.pickRandom());
 			}
 			
-			ParticleEffect.CRIT.display(vx.clone().normalize(), 0.5f, l, 32);
+			Settings.getRippleDenyParticle().display(vx.clone().normalize(), 0.5f, l, 32);
 			
 			if(k > 1)
 			{
-				ParticleEffect.CRIT.display(vx.clone().normalize(), 1f, l, 32);
+				Settings.getRippleDenyParticle().display(vx.clone().normalize(), 1f, l, 32);
 				
 				if(k > 2)
 				{
-					ParticleEffect.CRIT.display(vx.clone().normalize(), 1.5f, l, 32);
+					Settings.getRippleDenyParticle().display(vx.clone().normalize(), 1.5f, l, 32);
 					
 					if(k > 3)
 					{
-						ParticleEffect.CRIT.display(vx.clone().normalize(), 2.0f, l, 32);
+						Settings.getRippleDenyParticle().display(vx.clone().normalize(), 2.0f, l, 32);
 					}
 				}
 			}
@@ -343,19 +282,19 @@ public class EffectService
 				vx.add(vxz.pickRandom());
 			}
 			
-			ParticleEffect.CRIT_MAGIC.display(vx.clone().normalize(), 0.5f, l, 32);
+			Settings.getRippleParticle().display(vx.clone().normalize(), 0.5f, l, 32);
 			
 			if(k > 1)
 			{
-				ParticleEffect.CRIT_MAGIC.display(vx.clone().normalize(), 1f, l, 32);
+				Settings.getRippleParticle().display(vx.clone().normalize(), 1f, l, 32);
 				
 				if(k > 2)
 				{
-					ParticleEffect.CRIT_MAGIC.display(vx.clone().normalize(), 1.5f, l, 32);
+					Settings.getRippleParticle().display(vx.clone().normalize(), 1.5f, l, 32);
 					
 					if(k > 3)
 					{
-						ParticleEffect.CRIT_MAGIC.display(vx.clone().normalize(), 2.0f, l, 32);
+						Settings.getRippleParticle().display(vx.clone().normalize(), 2.0f, l, 32);
 					}
 				}
 			}

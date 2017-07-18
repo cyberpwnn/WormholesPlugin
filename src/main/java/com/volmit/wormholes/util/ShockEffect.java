@@ -2,6 +2,7 @@ package com.volmit.wormholes.util;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import com.volmit.wormholes.Settings;
 
 public class ShockEffect
 {
@@ -33,7 +34,7 @@ public class ShockEffect
 			@Override
 			public void play(Location l)
 			{
-				Jokester.swatch1(ParticleEffect.CRIT_MAGIC).display(0, 1, l, 28);
+				Jokester.swatch1(Settings.getLightningParticle()).display(0, 1, l, 28);
 			}
 		};
 	}

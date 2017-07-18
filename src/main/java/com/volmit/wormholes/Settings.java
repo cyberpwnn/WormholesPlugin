@@ -10,6 +10,8 @@ import com.volmit.wormholes.config.Experimental;
 import com.volmit.wormholes.util.Comment;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.ParticleEffect.ParticleProperty;
 
 public class Settings
 {
@@ -45,6 +47,10 @@ public class Settings
 	@Comment("Should Wormholes project entities from the other side?")
 	public static boolean ENABLE_APERTURE = true;
 	
+	@CName("WAND_DEFAULT_MATERIAL")
+	@Comment("The default frame material for placing frames with the wand")
+	public static String WAND_DEFAULT_MATERIAL = "COAL_BLOCK";
+	
 	@CName("SKIN_CACHE_PURGE_THRESHOLD")
 	@CMax(10000)
 	@CMin(1)
@@ -74,6 +80,34 @@ public class Settings
 	@Experimental
 	@Comment("Modify the interval in which entities are updated, sent through bungee, and sent to players\nMust be 1 or higher")
 	public static int APERTURE_MAX_SPEED = 2;
+	
+	@CName("APERTURE_SLOWDOWN_AMOUNT")
+	@CMin(3)
+	@CMax(10)
+	@Experimental
+	@Comment("The slowdown is addedto the aperture max speed when the threshold is reached.")
+	public static int APERTURE_SLOWDOWN_AMOUNT = 5;
+	
+	@CName("APERTURE_SLOWDOWN_THRESHOLD")
+	@CMin(4)
+	@CMax(30)
+	@Experimental
+	@Comment("The ammount of entities/players projected threshold\nIf the count is higher than this, the slowdown is applied")
+	public static int APERTURE_SLOWDOWN_THRESHOLD = 10;
+	
+	@CName("APERTURE_ICE_AMOUNT")
+	@CMin(7)
+	@CMax(11)
+	@Experimental
+	@Comment("The slowdown is addedto the aperture max speed when the threshold is reached.")
+	public static int APERTURE_ICE_AMOUNT = 8;
+	
+	@CName("APERTURE_ICE_THRESHOLD")
+	@CMin(8)
+	@CMax(35)
+	@Experimental
+	@Comment("The ammount of entities/players projected threshold\nIf the count is higher than this, the slowdown is applied")
+	public static int APERTURE_ICE_THRESHOLD = 50;
 	
 	@CName("USE_LIGHTMAPS")
 	@Comment("Send skylight chunk maps instead of multiple block changes for block projections to counteract client hitching due to lighting issues\nNote, this can cause loss of emitted light (such as torches etc) in and around the portal projection.")
@@ -191,6 +225,108 @@ public class Settings
 	@Experimental
 	@Comment("Time Threshold in milliseconds to poll for servers and online status.\nEnsure it is at least half the time of the push threshold.")
 	public static int NETWORK_POLL_THRESHOLD = 1000;
+	
+	@CName("PARTICLE_TYPE_LIGHTNING")
+	@Comment("Particle Effect used for making lightning\nParticle Types: https://volmit.com/docs/particle-types/")
+	public static String PARTICLE_TYPE_LIGHTNING = "CRIT_MAGIC";
+	
+	@CName("PARTICLE_TYPE_AMBIENT")
+	@Comment("Particle Effect used for making ambient meshes\nParticle Types: https://volmit.com/docs/particle-types/")
+	public static String PARTICLE_TYPE_AMBIENT = "SUSPENDED_DEPTH";
+	
+	@CName("PARTICLE_TYPE_RIPPLE")
+	@Comment("Particle Effect used for making teleport ripples\nParticle Types: https://volmit.com/docs/directional-particle-types/")
+	public static String PARTICLE_TYPE_RIPPLE = "CRIT_MAGIC";
+	
+	@CName("PARTICLE_TYPE_DENY_RIPPLE")
+	@Comment("Particle Effect used for making deny ripples\nParticle Types: https://volmit.com/docs/directional-particle-types/")
+	public static String PARTICLE_TYPE_DENY_RIPPLE = "CRIT";
+	
+	public static ParticleEffect getLightningParticle()
+	{
+		try
+		{
+			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_LIGHTNING);
+			
+			if(p != null)
+			{
+				return p;
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		return ParticleEffect.CRIT_MAGIC;
+	}
+	
+	public static ParticleEffect getAmbientParticle()
+	{
+		try
+		{
+			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_AMBIENT);
+			
+			if(p != null)
+			{
+				return p;
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		return ParticleEffect.SUSPENDED_DEPTH;
+	}
+	
+	public static ParticleEffect getRippleParticle()
+	{
+		try
+		{
+			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_RIPPLE);
+			
+			if(p != null)
+			{
+				if(p.hasProperty(ParticleProperty.DIRECTIONAL))
+				{
+					return p;
+				}
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		return ParticleEffect.CRIT_MAGIC;
+	}
+	
+	public static ParticleEffect getRippleDenyParticle()
+	{
+		try
+		{
+			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_DENY_RIPPLE);
+			
+			if(p != null)
+			{
+				if(p.hasProperty(ParticleProperty.DIRECTIONAL))
+				{
+					return p;
+				}
+			}
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		return ParticleEffect.CRIT;
+	}
 	
 	public static DataCluster getConfig()
 	{
