@@ -123,8 +123,11 @@ public class Wormholes extends ControllablePlugin
 			host.flush();
 			provider.flush();
 			projector.flush();
+			int s = aperture.size();
+			int mxs = Settings.APERTURE_MAX_SPEED + (s > Settings.APERTURE_SLOWDOWN_THRESHOLD ? Settings.APERTURE_SLOWDOWN_AMOUNT : 0);
+			mxs = s > Settings.APERTURE_ICE_THRESHOLD ? mxs + Settings.APERTURE_ICE_AMOUNT : mxs;
 			
-			if(TICK.tick % Settings.APERTURE_MAX_SPEED == 0)
+			if(TICK.tick % mxs == 0)
 			{
 				aperture.flush();
 				entity.flush();
