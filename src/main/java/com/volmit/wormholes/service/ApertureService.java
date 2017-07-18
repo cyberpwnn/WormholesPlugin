@@ -310,4 +310,9 @@ public class ApertureService
 	{
 		return blacklisted;
 	}
+	
+	public int size()
+	{
+		return Wormholes.entity.size();
+	}
 }
