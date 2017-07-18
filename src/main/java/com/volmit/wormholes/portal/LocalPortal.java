@@ -75,6 +75,16 @@ public class LocalPortal implements Portal
 		ip = getPosition().getIPane();
 	}
 	
+	public GList<Player> getPlayers()
+	{
+		return getPosition().getArea().getPlayers();
+	}
+	
+	public int getPlayerCount()
+	{
+		return getPlayers().size();
+	}
+	
 	public void checkKey()
 	{
 		if(sided)
