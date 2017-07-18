@@ -21,6 +21,7 @@ import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.network.Transmission;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.DB;
+import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
@@ -363,47 +364,54 @@ public class EntityService implements Listener
 	
 	public void flush()
 	{
-		Timer t = new Timer();
-		t.start();
-		
-		for(Player i : entities.k())
+		Wormholes.pool.queue(new Execution()
 		{
-			if(!i.isOnline())
+			@Override
+			public void run()
 			{
-				entities.remove(i);
-				continue;
-			}
-			
-			for(Portal j : entities.get(i).k())
-			{
-				if(j.getSided())
-				{
-					continue;
-				}
+				Timer t = new Timer();
+				t.start();
 				
-				if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
+				for(Player i : entities.k())
 				{
-					for(VEntity k : entities.get(i).get(j).copy())
+					if(!i.isOnline())
 					{
-						if(!aentities.get(i).get(j).contains(k.getId()))
+						entities.remove(i);
+						continue;
+					}
+					
+					for(Portal j : entities.get(i).k())
+					{
+						if(j.getSided())
 						{
-							DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
-							k.despawn();
-							entities.get(i).get(j).remove(k);
+							continue;
 						}
 						
-						else
+						if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
 						{
-							k.flush();
-							aentities.get(i).get(j).remove(k.getId());
+							for(VEntity k : entities.get(i).get(j).copy())
+							{
+								if(!aentities.get(i).get(j).contains(k.getId()))
+								{
+									DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
+									k.despawn();
+									entities.get(i).get(j).remove(k);
+								}
+								
+								else
+								{
+									k.flush();
+									aentities.get(i).get(j).remove(k.getId());
+								}
+							}
 						}
 					}
 				}
+				
+				t.stop();
+				TimingsService.root.get("capture-manager").get("aperture-service").hit("entity-service", t.getTime());
 			}
-		}
-		
-		t.stop();
-		TimingsService.root.get("capture-manager").get("aperture-service").hit("entity-service", t.getTime());
+		});
 	}
 	
 	public void set(Player p, Portal i, RemoteInstance ri, Location l)
@@ -469,5 +477,20 @@ public class EntityService implements Listener
 	{
 		flush();
 		flush();
+	}
+	
+	public int size()
+	{
+		int x = entities.size();
+		
+		for(Player i : entities.k())
+		{
+			for(Portal j : entities.get(i).k())
+			{
+				x += entities.get(i).get(j).size();
+			}
+		}
+		
+		return x;
 	}
 }
