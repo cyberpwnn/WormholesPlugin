@@ -41,4 +41,24 @@ public abstract class RootedHud extends BaseHud
 			close();
 		}
 	}
+	
+	public Location getTrack()
+	{
+		return track;
+	}
+	
+	public double getMaxDist()
+	{
+		return maxDist;
+	}
+	
+	public void setTrack(Location track)
+	{
+		this.track = track;
+	}
+	
+	public void setMaxDist(double maxDist)
+	{
+		this.maxDist = maxDist;
+	}
 }

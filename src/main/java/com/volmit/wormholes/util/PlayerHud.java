@@ -8,6 +8,8 @@ public abstract class PlayerHud extends BaseHud
 {
 	private boolean closeOnMove;
 	private Location last;
+	private Location in;
+	private double maxDist;
 	
 	public PlayerHud(Player player, boolean closeOnMove)
 	{
@@ -15,6 +17,8 @@ public abstract class PlayerHud extends BaseHud
 		
 		this.closeOnMove = closeOnMove;
 		last = null;
+		in = player.getLocation();
+		maxDist = 3.4;
 	}
 	
 	public PlayerHud(Player player)
@@ -42,7 +46,10 @@ public abstract class PlayerHud extends BaseHud
 			{
 				if(!player.getLocation().getBlock().getLocation().equals(last.getBlock().getLocation()))
 				{
-					close();
+					if(player.getLocation().distanceSquared(in) > maxDist)
+					{
+						close();
+					}
 				}
 			}
 			
