@@ -4,7 +4,6 @@ import java.util.Arrays;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
-
 import com.volmit.wormholes.exception.NMSChunkFailureException;
 import com.volmit.wormholes.util.MaterialBlock;
 
@@ -29,6 +28,10 @@ public abstract class NMSChunk implements VirtualChunk
 		modifiedSections = new boolean[16];
 		clearChunk();
 	}
+	
+	public abstract void setSkyLight(int x, int y, int z, int value);
+	
+	public abstract void setBlockLight(int x, int y, int z, int value);
 	
 	public void clearChunk()
 	{
@@ -81,8 +84,40 @@ public abstract class NMSChunk implements VirtualChunk
 	@Override
 	public void set(int x, int y, int z, int id, byte data)
 	{
+		if(blockData[getSection(y)][getIndex(x, y, z)] == getCombined(0, 0) && getActualHeight(x, z) == y)
+		{
+			int k = 1;
+			
+			while(!get(x, y - k, z).getMaterial().equals(Material.AIR) && y - k > 0)
+			{
+				k++;
+			}
+			
+			setHeight(x, z, y - k);
+		}
+		
+		if(blockData[getSection(y)][getIndex(x, y, z)] != getCombined(0, 0) && getActualHeight(x, z) < y)
+		{
+			setHeight(x, z, y);
+		}
+		
+		if(getActualHeight(x, z) <= y)
+		{
+			setSkyLight(x, y, z, 15);
+		}
+		
 		blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
 		markModification(x, y, z);
+	}
+	
+	public void setHeight(int x, int z, int h)
+	{
+		heightMap[z << 4 | x] = h;
+	}
+	
+	public int getActualHeight(int x, int z)
+	{
+		return heightMap[z << 4 | x];
 	}
 	
 	public void setSect(int sect, int x, int y, int z, int id, byte data)
@@ -185,6 +220,7 @@ public abstract class NMSChunk implements VirtualChunk
 		return bukkitChunk;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return "NMSC::" + version + "::" + bukkitChunk.getWorld().getName() + "::" + bukkitChunk.getX() + "," + bukkitChunk.getZ();

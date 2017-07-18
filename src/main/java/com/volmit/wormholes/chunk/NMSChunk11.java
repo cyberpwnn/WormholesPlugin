@@ -20,6 +20,7 @@ import net.minecraft.server.v1_11_R1.ChunkSection;
 import net.minecraft.server.v1_11_R1.DataBits;
 import net.minecraft.server.v1_11_R1.IBlockData;
 import net.minecraft.server.v1_11_R1.MathHelper;
+import net.minecraft.server.v1_11_R1.NibbleArray;
 
 public class NMSChunk11 extends NMSChunk implements VirtualChunk
 {
@@ -31,6 +32,20 @@ public class NMSChunk11 extends NMSChunk implements VirtualChunk
 		
 		nmsChunk = ((CraftChunk) getChunk()).getHandle();
 		pack();
+	}
+	
+	@Override
+	public void setSkyLight(int x, int y, int z, int value)
+	{
+		NibbleArray ni = new NibbleArray(skyLight[getSection(y)]);
+		ni.a(x, y & 15, z, value);
+	}
+	
+	@Override
+	public void setBlockLight(int x, int y, int z, int value)
+	{
+		NibbleArray ni = new NibbleArray(blockLight[getSection(y)]);
+		ni.a(x, y & 15, z, value);
 	}
 	
 	@Override
@@ -67,7 +82,7 @@ public class NMSChunk11 extends NMSChunk implements VirtualChunk
 		
 		catch(Exception e)
 		{
-			throw new NMSChunkFailureException("Failed to pack data for " + this.toString(), e);
+			throw new NMSChunkFailureException("Failed to pack data for " + toString(), e);
 		}
 	}
 	

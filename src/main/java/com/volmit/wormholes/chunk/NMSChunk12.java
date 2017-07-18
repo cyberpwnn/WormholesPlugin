@@ -15,12 +15,12 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.volmit.wormholes.exception.NMSChunkFailureException;
-
 import net.minecraft.server.v1_12_R1.Block;
 import net.minecraft.server.v1_12_R1.ChunkSection;
 import net.minecraft.server.v1_12_R1.DataBits;
 import net.minecraft.server.v1_12_R1.IBlockData;
 import net.minecraft.server.v1_12_R1.MathHelper;
+import net.minecraft.server.v1_12_R1.NibbleArray;
 
 public class NMSChunk12 extends NMSChunk implements VirtualChunk
 {
@@ -68,7 +68,7 @@ public class NMSChunk12 extends NMSChunk implements VirtualChunk
 		
 		catch(Exception e)
 		{
-			throw new NMSChunkFailureException("Failed to pack data for " + this.toString(), e);
+			throw new NMSChunkFailureException("Failed to pack data for " + toString(), e);
 		}
 	}
 	
@@ -87,6 +87,20 @@ public class NMSChunk12 extends NMSChunk implements VirtualChunk
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void setSkyLight(int x, int y, int z, int value)
+	{
+		NibbleArray ni = new NibbleArray(skyLight[getSection(y)]);
+		ni.a(x, y & 15, z, value);
+	}
+	
+	@Override
+	public void setBlockLight(int x, int y, int z, int value)
+	{
+		NibbleArray ni = new NibbleArray(blockLight[getSection(y)]);
+		ni.a(x, y & 15, z, value);
 	}
 	
 	public void write(PacketContainer packet) throws IOException
