@@ -28,9 +28,11 @@ import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.MSound;
+import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PlayerScrollEvent;
+import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
 
 public class PortalBuilder implements Listener
@@ -129,6 +131,7 @@ public class PortalBuilder implements Listener
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
@@ -156,11 +159,19 @@ public class PortalBuilder implements Listener
 						
 						Cuboid cface = c.getFace(i.f());
 						Iterator<Block> it = cface.iterator();
+						MaterialBlock mb = new MaterialBlock(Material.COAL_BLOCK);
+						MaterialBlock mx = W.getMaterialBlock(Settings.WAND_DEFAULT_MATERIAL);
+						
+						if(mx == null)
+						{
+							mx = mb;
+						}
 						
 						while(it.hasNext())
 						{
 							Location l = it.next().getLocation();
-							l.getBlock().setType(Material.COAL_BLOCK);
+							l.getBlock().setType(mx.getMaterial());
+							l.getBlock().setData(mx.getData());
 						}
 						
 						cface.getCenter().getBlock().setType(Material.AIR);
