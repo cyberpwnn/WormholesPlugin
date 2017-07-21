@@ -1,12 +1,10 @@
 package com.volmit.wormholes.projection;
 
 import java.util.Iterator;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalIdentity;
@@ -17,18 +15,18 @@ import com.volmit.wormholes.util.VectorMath;
 
 public class ViewportRendererPortal extends ViewportRendererBase
 {
-	public ViewportRendererPortal(Player player, Portal portal, Viewport view, RenderStage stage, RenderMode mode, GMap<Vector, MaterialBlock> dimension) 
+	public ViewportRendererPortal(Player player, Portal portal, Viewport view, RenderStage stage, RenderMode mode, GMap<Vector, MaterialBlock> dimension)
 	{
 		super(player, portal, view, stage, mode, dimension);
 	}
 	
-	public ViewportRendererPortal(Player player, PortalIdentity ida, PortalIdentity idb, Viewport view, RenderStage stage, RenderMode mode, GMap<Vector, MaterialBlock> dimension, Location focii) 
+	public ViewportRendererPortal(Player player, PortalIdentity ida, PortalIdentity idb, Viewport view, RenderStage stage, RenderMode mode, GMap<Vector, MaterialBlock> dimension, Location focii)
 	{
 		super(player, ida, idb, view, stage, mode, dimension, focii);
 	}
-
+	
 	@Override
-	public void render() 
+	public void render()
 	{
 		if(stage.hasNextStage())
 		{
@@ -39,27 +37,35 @@ public class ViewportRendererPortal extends ViewportRendererBase
 			
 			while(it.hasNext())
 			{
-				Block b = it.next();
-				Location l = b.getLocation();
-				
-				if(mode.equals(RenderMode.DIALATE))
+				try
 				{
-					Vector dir = VectorMath.directionNoNormal(focii, l);
-					Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
-					ida.getFront().angle(vec, idb.getFront());
-					MaterialBlock mb = dimension.get(vec);
+					Block b = it.next();
+					Location l = b.getLocation();
 					
-					if(mb == null)
+					if(mode.equals(RenderMode.DIALATE))
 					{
-						continue;
+						Vector dir = VectorMath.directionNoNormal(focii, l);
+						Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+						ida.getFront().angle(vec, idb.getFront());
+						MaterialBlock mb = dimension.get(vec);
+						
+						if(mb == null)
+						{
+							continue;
+						}
+						
+						Wormholes.provider.getRasterer().queue(player, l, mb);
 					}
 					
-					Wormholes.provider.getRasterer().queue(player, l, mb);
+					else if(mode.equals(RenderMode.ERODE))
+					{
+						rast.dequeue(player, l);
+					}
 				}
 				
-				else if(mode.equals(RenderMode.ERODE))
+				catch(Exception e)
 				{
-					rast.dequeue(player, l);
+					
 				}
 			}
 		}

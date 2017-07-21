@@ -84,26 +84,34 @@ public abstract class NMSChunk implements VirtualChunk
 	@Override
 	public void set(int x, int y, int z, int id, byte data)
 	{
-		if(blockData[getSection(y)][getIndex(x, y, z)] == getCombined(0, 0) && getActualHeight(x, z) == y)
+		try
 		{
-			int k = 1;
-			
-			while(!get(x, y - k, z).getMaterial().equals(Material.AIR) && y - k > 0)
+			if(blockData[getSection(y)][getIndex(x, y, z)] == getCombined(0, 0) && getActualHeight(x, z) == y)
 			{
-				k++;
+				int k = 1;
+				
+				while(!get(x, y - k, z).getMaterial().equals(Material.AIR) && y - k > 1)
+				{
+					k++;
+				}
+				
+				setHeight(x, z, y - k);
 			}
 			
-			setHeight(x, z, y - k);
+			if(blockData[getSection(y)][getIndex(x, y, z)] != getCombined(0, 0) && getActualHeight(x, z) < y)
+			{
+				setHeight(x, z, y);
+			}
+			
+			if(getActualHeight(x, z) <= y)
+			{
+				setSkyLight(x, y, z, 15);
+			}
 		}
 		
-		if(blockData[getSection(y)][getIndex(x, y, z)] != getCombined(0, 0) && getActualHeight(x, z) < y)
+		catch(Exception e)
 		{
-			setHeight(x, z, y);
-		}
-		
-		if(getActualHeight(x, z) <= y)
-		{
-			setSkyLight(x, y, z, 15);
+			
 		}
 		
 		blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
@@ -147,12 +155,20 @@ public abstract class NMSChunk implements VirtualChunk
 	@Override
 	public int getId(int x, int y, int z)
 	{
-		if(blockData[getSection(y)] == null)
+		try
+		{
+			if(blockData[getSection(y)] == null)
+			{
+				return 0;
+			}
+			
+			return getId(blockData[getSection(y)][getIndex(x, y, z)]);
+		}
+		
+		catch(Exception e)
 		{
 			return 0;
 		}
-		
-		return getId(blockData[getSection(y)][getIndex(x, y, z)]);
 	}
 	
 	@Override

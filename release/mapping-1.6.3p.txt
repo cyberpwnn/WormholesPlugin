@@ -285,30 +285,30 @@ com.volmit.wormholes.aperture.EntityHider -> com.volmit.wormholes.src.k:
     35:83:void <init>(org.bukkit.plugin.Plugin,com.volmit.wormholes.aperture.EntityHider$Policy) -> <init>
     99:106:boolean setVisibility(org.bukkit.entity.Player,int,boolean) -> a
     125:131:boolean setMembership(org.bukkit.entity.Player,int,boolean) -> b
-    146:146:boolean getMembership(org.bukkit.entity.Player,int) -> a
-    160:162:boolean isVisible(org.bukkit.entity.Player,int) -> b
-    176:182:void removeEntity(org.bukkit.entity.Entity,boolean) -> a
-    192:193:void removePlayer(org.bukkit.entity.Player) -> removePlayer
-    202:202:org.bukkit.event.Listener constructBukkit() -> Q
-    237:237:com.comphenix.protocol.events.PacketAdapter constructProtocol(org.bukkit.plugin.Plugin) -> a
-    266:273:boolean toggleEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> a
-    288:296:boolean showEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> b
-    310:328:boolean hideEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> c
-    347:349:boolean canSee(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> d
-    354:356:void validate(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> e
-    365:365:com.volmit.wormholes.aperture.EntityHider$Policy getPolicy() -> R
-    370:376:void close() -> close
+    148:153:boolean getMembership(org.bukkit.entity.Player,int) -> a
+    168:170:boolean isVisible(org.bukkit.entity.Player,int) -> b
+    184:190:void removeEntity(org.bukkit.entity.Entity,boolean) -> a
+    200:201:void removePlayer(org.bukkit.entity.Player) -> removePlayer
+    210:210:org.bukkit.event.Listener constructBukkit() -> Q
+    245:245:com.comphenix.protocol.events.PacketAdapter constructProtocol(org.bukkit.plugin.Plugin) -> a
+    274:281:boolean toggleEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> a
+    296:304:boolean showEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> b
+    318:336:boolean hideEntity(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> c
+    355:357:boolean canSee(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> d
+    362:364:void validate(org.bukkit.entity.Player,org.bukkit.entity.Entity) -> e
+    373:373:com.volmit.wormholes.aperture.EntityHider$Policy getPolicy() -> R
+    378:384:void close() -> close
     33:33:int[] $SWITCH_TABLE$com$volmit$wormholes$aperture$EntityHider$Policy() -> S
 com.volmit.wormholes.aperture.EntityHider$1 -> com.volmit.wormholes.src.k$1:
     com.volmit.wormholes.aperture.EntityHider this$0 -> bQ
-    1:202:void <init>(com.volmit.wormholes.aperture.EntityHider) -> <init>
-    207:208:void onEntityDeath(org.bukkit.event.entity.EntityDeathEvent) -> a
-    213:217:void onChunkUnload(org.bukkit.event.world.ChunkUnloadEvent) -> a
-    222:223:void onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent) -> a
+    1:210:void <init>(com.volmit.wormholes.aperture.EntityHider) -> <init>
+    215:216:void onEntityDeath(org.bukkit.event.entity.EntityDeathEvent) -> a
+    221:225:void onChunkUnload(org.bukkit.event.world.ChunkUnloadEvent) -> a
+    230:231:void onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent) -> a
 com.volmit.wormholes.aperture.EntityHider$2 -> com.volmit.wormholes.src.k$2:
     com.volmit.wormholes.aperture.EntityHider this$0 -> bQ
-    1:237:void <init>(com.volmit.wormholes.aperture.EntityHider,org.bukkit.plugin.Plugin,com.comphenix.protocol.PacketType[]) -> <init>
-    242:248:void onPacketSending(com.comphenix.protocol.events.PacketEvent) -> onPacketSending
+    1:245:void <init>(com.volmit.wormholes.aperture.EntityHider,org.bukkit.plugin.Plugin,com.comphenix.protocol.PacketType[]) -> <init>
+    250:256:void onPacketSending(com.comphenix.protocol.events.PacketEvent) -> onPacketSending
 com.volmit.wormholes.aperture.EntityHider$Policy -> com.volmit.wormholes.src.k$a:
     com.volmit.wormholes.aperture.EntityHider$Policy WHITELIST -> bR
     com.volmit.wormholes.aperture.EntityHider$Policy BLACKLIST -> bS

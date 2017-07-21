@@ -196,7 +196,7 @@ public class Settings
 	@CMax(40128)
 	@Experimental
 	@Comment("The max packet size in bytes.\nLower values will force wormholes to send more packets\nIncreasing this could cause bungeecord to reject the packet.")
-	public static int NETWORK_MAX_PACKET_SIZE = 40000;
+	public static int NETWORK_MAX_PACKET_SIZE = 32750;
 	
 	@CName("NETWORK_COMPRESSION_LEVEL")
 	@CMin(1)

@@ -61,12 +61,25 @@ public class RasteredSystem
 	
 	public void queue(Player p, Location l, MaterialBlock mb)
 	{
-		if(!rasteredPlayers.containsKey(p))
+		try
 		{
-			rasteredPlayers.put(p, new RasteredPlayer(p));
+			if(!rasteredPlayers.containsKey(p))
+			{
+				rasteredPlayers.put(p, new RasteredPlayer(p));
+			}
+			
+			if(l == null || mb == null || p == null || !rasteredPlayers.containsKey(p))
+			{
+				return;
+			}
+			
+			rasteredPlayers.get(p).queue(l, mb);
 		}
 		
-		rasteredPlayers.get(p).queue(l, mb);
+		catch(Exception e)
+		{
+			
+		}
 	}
 	
 	public RasteredPlayer get(Player p)
