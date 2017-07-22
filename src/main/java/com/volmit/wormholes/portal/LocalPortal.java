@@ -813,10 +813,22 @@ public class LocalPortal implements Portal
 		DB.d(this, "Destroy EFXC " + toString());
 		Wormholes.fx.destroyed(this);
 		DB.d(this, "Wipe key " + toString());
-		getPosition().getCenterDown().getBlock().setType(Material.AIR);
-		getPosition().getCenterUp().getBlock().setType(Material.AIR);
-		getPosition().getCenterLeft().getBlock().setType(Material.AIR);
-		getPosition().getCenterRight().getBlock().setType(Material.AIR);
+		
+		if(Settings.WORMHOLES_DROP_KEY_ON_BREAK)
+		{
+			getPosition().getCenterDown().getBlock().breakNaturally();
+			getPosition().getCenterUp().getBlock().breakNaturally();
+			getPosition().getCenterLeft().getBlock().breakNaturally();
+			getPosition().getCenterRight().getBlock().breakNaturally();
+		}
+		
+		else
+		{
+			getPosition().getCenterDown().getBlock().setType(Material.AIR);
+			getPosition().getCenterUp().getBlock().setType(Material.AIR);
+			getPosition().getCenterLeft().getBlock().setType(Material.AIR);
+			getPosition().getCenterRight().getBlock().setType(Material.AIR);
+		}
 	}
 	
 	public Boolean getHasHadWormhole()
@@ -849,6 +861,7 @@ public class LocalPortal implements Portal
 	{
 		Wormholes.projector.deproject(this);
 		DB.d(this, "Wipe Key " + toString());
+		
 		getPosition().getCenterDown().getBlock().setType(Material.AIR);
 		getPosition().getCenterUp().getBlock().setType(Material.AIR);
 		getPosition().getCenterLeft().getBlock().setType(Material.AIR);

@@ -111,7 +111,7 @@ public class Timed
 	
 	public void hit(Timed t)
 	{
-		for(Timed i : getTimers())
+		for(Timed i : getTimers().copy())
 		{
 			if(t.getId().equals(i.getId()))
 			{

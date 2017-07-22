@@ -107,15 +107,15 @@ public abstract class NMSChunk implements VirtualChunk
 			{
 				setSkyLight(x, y, z, 15);
 			}
+			
+			blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
+			markModification(x, y, z);
 		}
 		
 		catch(Exception e)
 		{
 			
 		}
-		
-		blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
-		markModification(x, y, z);
 	}
 	
 	public void setHeight(int x, int z, int h)

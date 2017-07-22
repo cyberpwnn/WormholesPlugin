@@ -104,7 +104,7 @@ public class Settings
 	
 	@CName("APERTURE_ICE_THRESHOLD")
 	@CMin(8)
-	@CMax(35)
+	@CMax(60)
 	@Experimental
 	@Comment("The ammount of entities/players projected threshold\nIf the count is higher than this, the slowdown is applied")
 	public static int APERTURE_ICE_THRESHOLD = 50;
@@ -113,6 +113,10 @@ public class Settings
 	@Comment("Send skylight chunk maps instead of multiple block changes for block projections to counteract client hitching due to lighting issues\nNote, this can cause loss of emitted light (such as torches etc) in and around the portal projection.")
 	@Experimental
 	public static boolean USE_LIGHTMAPS = true;
+	
+	@CName("WORMHOLES_DROP_KEY_ON_BREAK")
+	@Comment("Drop key blocks as item drops when portal is broken")
+	public static boolean WORMHOLES_DROP_KEY_ON_BREAK = true;
 	
 	@CName("WORMHOLE_WORKER_THREADS")
 	@CMax(16)
