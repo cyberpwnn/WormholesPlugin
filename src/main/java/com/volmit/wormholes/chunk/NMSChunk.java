@@ -4,6 +4,7 @@ import java.util.Arrays;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.exception.NMSChunkFailureException;
 import com.volmit.wormholes.util.MaterialBlock;
 
@@ -86,30 +87,13 @@ public abstract class NMSChunk implements VirtualChunk
 	{
 		try
 		{
-			if(blockData[getSection(y)][getIndex(x, y, z)] == getCombined(0, 0) && getActualHeight(x, z) == y)
-			{
-				int k = 1;
-				
-				while(!get(x, y - k, z).getMaterial().equals(Material.AIR) && y - k > 1)
-				{
-					k++;
-				}
-				
-				setHeight(x, z, y - k);
-			}
+			blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
+			markModification(x, y, z);
 			
-			if(blockData[getSection(y)][getIndex(x, y, z)] != getCombined(0, 0) && getActualHeight(x, z) < y)
-			{
-				setHeight(x, z, y);
-			}
-			
-			if(getActualHeight(x, z) <= y)
+			if(Settings.FULL_BRIGHT_PROJECTIONS && id != 0)
 			{
 				setSkyLight(x, y, z, 15);
 			}
-			
-			blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
-			markModification(x, y, z);
 		}
 		
 		catch(Exception e)

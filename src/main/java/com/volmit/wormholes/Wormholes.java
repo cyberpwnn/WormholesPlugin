@@ -380,9 +380,9 @@ public class Wormholes extends ControllablePlugin
 			@Override
 			public void cp(Player p, String[] args)
 			{
-				if(new Permissable(p).canBuild())
+				if(new Permissable(p).canWand())
 				{
-					provider.getBuilder().giveWand(p, 3);
+					provider.getBuilder().giveWand(p, 5);
 				}
 				
 				else

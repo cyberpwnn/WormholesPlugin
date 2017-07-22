@@ -174,8 +174,8 @@ public class ApertureService
 							
 							if(ap != null)
 							{
-								GMap<Vector, RemoteInstance> r = ap.remap(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
-								GMap<Vector, Vector> rl = ap.remapLook(i.getIdentity().getFront(), i.getWormhole().getDestination().getIdentity().getFront());
+								GMap<Vector, RemoteInstance> r = ap.remap(i.getWormhole().getDestination().getIdentity().getFront(), i.getIdentity().getFront());
+								GMap<Vector, Vector> rl = ap.remapLook(i.getWormhole().getDestination().getIdentity().getFront(), i.getIdentity().getFront());
 								
 								for(Vector k : r.k())
 								{

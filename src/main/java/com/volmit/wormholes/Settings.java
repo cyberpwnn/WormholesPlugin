@@ -51,6 +51,10 @@ public class Settings
 	@Comment("The default frame material for placing frames with the wand")
 	public static String WAND_DEFAULT_MATERIAL = "COAL_BLOCK";
 	
+	@CName("WAND_ENABLED")
+	@Comment("Set this to false to disable portal wands")
+	public static boolean WAND_ENABLED = true;
+	
 	@CName("SKIN_CACHE_PURGE_THRESHOLD")
 	@CMax(10000)
 	@CMin(1)
@@ -67,6 +71,11 @@ public class Settings
 	@Experimental
 	@Comment("Use the old rendering method (slower, but slightly safer)")
 	public static boolean USE_OLD_RENDER_METHOD = false;
+	
+	@CName("FULL_BRIGHT_PROJECTIONS")
+	@Experimental
+	@Comment("Brighten the projections to max skylight levels.")
+	public static boolean FULL_BRIGHT_PROJECTIONS = true;
 	
 	@CName("MAX_PORTAL_SIZE")
 	@CMax(33)

@@ -49,11 +49,16 @@ public class PortalBuilder implements Listener
 	
 	public void flush()
 	{
+		if(!Settings.WAND_ENABLED)
+		{
+			return;
+		}
+		
 		for(Player p : P.onlinePlayers())
 		{
 			if(isHoldingWand(p))
 			{
-				if(!new Permissable(p).canBuild())
+				if(!new Permissable(p).canWand())
 				{
 					continue;
 				}
@@ -135,9 +140,14 @@ public class PortalBuilder implements Listener
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
+		if(!Settings.WAND_ENABLED)
+		{
+			return;
+		}
+		
 		if(isHoldingWand(e.getPlayer()))
 		{
-			if(!new Permissable(e.getPlayer()).canBuild())
+			if(!new Permissable(e.getPlayer()).canWand())
 			{
 				return;
 			}
@@ -199,6 +209,11 @@ public class PortalBuilder implements Listener
 	@EventHandler
 	public void on(PlayerScrollEvent e)
 	{
+		if(!Settings.WAND_ENABLED)
+		{
+			return;
+		}
+		
 		if(e.getPlayer().isSneaking() && isHoldingWand(e.getPlayer()))
 		{
 			e.getPlayer().getInventory().setHeldItemSlot(e.getFrom());
@@ -217,6 +232,11 @@ public class PortalBuilder implements Listener
 	
 	public void changeSize(Player p, int amt)
 	{
+		if(!Settings.WAND_ENABLED)
+		{
+			return;
+		}
+		
 		if(isHoldingWand(p))
 		{
 			int size = getSize(p);
@@ -267,6 +287,12 @@ public class PortalBuilder implements Listener
 	
 	public void giveWand(Player p, int size)
 	{
+		if(!Settings.WAND_ENABLED)
+		{
+			p.sendMessage(C.RED + "Portal Wands disabled.");
+			return;
+		}
+		
 		ItemStack is = p.getItemInHand();
 		
 		if(isHoldingWand(p))

@@ -21,6 +21,7 @@ public class Info
 	public static String PERM_BUILD = "wormholes.build";
 	public static String PERM_CONFIGURE = "wormholes.configure";
 	public static String PERM_USE = "wormholes.use";
+	public static String PERM_WAND = "wormholes.wand";
 	public static String HR = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 75);
 	public static String HRN = C.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28) + ChatColor.RESET + C.GOLD + "  %s  " + C.DARK_GRAY + ChatColor.STRIKETHROUGH + StringUtils.repeat(" ", 28);
 	public static TextMap r = null;

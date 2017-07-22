@@ -148,7 +148,7 @@ public class EntityHider implements Listener
 			return observerEntityMap.contains(observer.getEntityId(), entityID);
 		}
 		
-		catch(Exception e)
+		catch(UnsupportedOperationException e)
 		{
 			return false;
 		}
