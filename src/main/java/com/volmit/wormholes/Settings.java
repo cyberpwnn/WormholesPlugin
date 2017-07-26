@@ -19,6 +19,14 @@ public class Settings
 	@Comment("Just send the player and let the other server handle where to spawn the player")
 	public static boolean BUNGEECORD_SEND_ONLY = false;
 	
+	@CName("ENABLE_PARTICLES")
+	@Comment("Toggle this to toggle particles")
+	public static boolean ENABLE_PARTICLES = true;
+	
+	@CName("ENABLE_SOUND")
+	@Comment("Toggle this to toggle sounds")
+	public static boolean ENABLE_SOUND = true;
+	
 	@CName("ALLOW_ENTITIY_TYPES")
 	@Comment("Allowed entity types. (bungeecord portals cannot support entities)")
 	public static ArrayList<String> ALLOW_ENTITIY_TYPES = new GList<String>();

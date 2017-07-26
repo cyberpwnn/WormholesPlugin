@@ -307,26 +307,34 @@ public class EntityService implements Listener
 		GList<VEntity> vx = new GList<VEntity>();
 		int idx = RemoteInstance.create(e).getRemoteId();
 		
-		for(Player i : entities.k())
+		try
 		{
-			for(Portal j : entities.get(i).k())
+			for(Player i : entities.k())
 			{
-				try
+				for(Portal j : entities.get(i).k())
 				{
-					for(VEntity k : entities.get(i).get(j))
+					try
 					{
-						if(k.getId() == idx)
+						for(VEntity k : entities.get(i).get(j))
 						{
-							vx.add(k);
+							if(k.getId() == idx)
+							{
+								vx.add(k);
+							}
 						}
 					}
-				}
-				
-				catch(Exception ex)
-				{
 					
+					catch(Exception ex)
+					{
+						
+					}
 				}
 			}
+		}
+		
+		catch(Exception xe)
+		{
+			
 		}
 		
 		return vx;

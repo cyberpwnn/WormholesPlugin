@@ -5,12 +5,12 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import com.volmit.wormholes.Settings;
 
 /**
  * A GSound can play a sound
  * 
  * @author cyberpwn
- *
  */
 public class GSound implements Audible
 {
@@ -65,8 +65,8 @@ public class GSound implements Audible
 	public GSound(String sound)
 	{
 		this.sound = sound;
-		this.volume = 1f;
-		this.pitch = 1f;
+		volume = 1f;
+		pitch = 1f;
 	}
 	
 	/**
@@ -92,8 +92,8 @@ public class GSound implements Audible
 	public GSound(Sound iSound)
 	{
 		this.iSound = iSound;
-		this.volume = 1f;
-		this.pitch = 1f;
+		volume = 1f;
+		pitch = 1f;
 	}
 	
 	public void prePlay()
@@ -109,8 +109,14 @@ public class GSound implements Audible
 	 * @param l
 	 *            the location
 	 */
+	@Override
 	public void play(Player p, Location l)
 	{
+		if(!Settings.ENABLE_SOUND)
+		{
+			return;
+		}
+		
 		prePlay();
 		
 		if(iSound != null)
@@ -132,14 +138,21 @@ public class GSound implements Audible
 	 * @param p
 	 *            the player
 	 */
+	@Override
 	public void play(Player p)
 	{
+		if(!Settings.ENABLE_SOUND)
+		{
+			return;
+		}
+		
 		play(p, p.getLocation());
 	}
 	
 	/**
 	 * clone it
 	 */
+	@Override
 	public Audible clone()
 	{
 		return new GSound(iSound, sound, volume, pitch);
@@ -151,8 +164,14 @@ public class GSound implements Audible
 	 * @param l
 	 *            the location
 	 */
+	@Override
 	public void play(Location l)
 	{
+		if(!Settings.ENABLE_SOUND)
+		{
+			return;
+		}
+		
 		prePlay();
 		
 		if(iSound != null)
@@ -176,8 +195,14 @@ public class GSound implements Audible
 	 * @param v
 	 *            the vector related to the players location
 	 */
+	@Override
 	public void play(Player p, Vector v)
 	{
+		if(!Settings.ENABLE_SOUND)
+		{
+			return;
+		}
+		
 		prePlay();
 		
 		Location l = p.getLocation().clone().add(v);
@@ -242,6 +267,7 @@ public class GSound implements Audible
 	 * 
 	 * @return the volume
 	 */
+	@Override
 	public Float getVolume()
 	{
 		return volume;
@@ -253,6 +279,7 @@ public class GSound implements Audible
 	 * @param volume
 	 *            the volume
 	 */
+	@Override
 	public void setVolume(Float volume)
 	{
 		this.volume = volume;
@@ -263,6 +290,7 @@ public class GSound implements Audible
 	 * 
 	 * @return the pitch
 	 */
+	@Override
 	public Float getPitch()
 	{
 		return pitch;
@@ -274,6 +302,7 @@ public class GSound implements Audible
 	 * @param pitch
 	 *            the pitch
 	 */
+	@Override
 	public void setPitch(Float pitch)
 	{
 		this.pitch = pitch;
