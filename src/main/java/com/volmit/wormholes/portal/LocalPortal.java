@@ -4,6 +4,7 @@ import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -24,6 +25,8 @@ import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.service.MutexService;
+import com.volmit.wormholes.util.A;
+import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
@@ -33,6 +36,7 @@ import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.Hologram;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.RayTrace;
+import com.volmit.wormholes.util.TICK;
 import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.W;
@@ -55,6 +59,8 @@ public class LocalPortal implements Portal
 	protected String displayName;
 	protected GMap<Player, Hologram> holograms;
 	protected GList<Player> activatedEntities;
+	protected GList<Location> rtpQueue;
+	protected long age;
 	
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
@@ -73,6 +79,8 @@ public class LocalPortal implements Portal
 		holograms = new GMap<Player, Hologram>();
 		activatedEntities = new GList<Player>();
 		ip = getPosition().getIPane();
+		age = 0;
+		rtpQueue = new GList<Location>();
 	}
 	
 	public GList<Player> getPlayers()
@@ -203,8 +211,10 @@ public class LocalPortal implements Portal
 			return;
 		}
 		
+		age++;
 		checkKey();
 		doSave();
+		handleRtp();
 		
 		if(hasWormhole())
 		{
@@ -218,6 +228,153 @@ public class LocalPortal implements Portal
 		}
 		
 		samplePlane();
+	}
+	
+	private void wipeRtp()
+	{
+		if(getSettings().isRandomTp() && hasWormhole() && getWormhole().getDestination().getSided())
+		{
+			Wormholes.provider.destroyPortal((LocalPortal) getWormhole().getDestination());
+		}
+	}
+	
+	private void handleRtp()
+	{
+		if(getSettings().isRandomTp())
+		{
+			if(!hasWormhole())
+			{
+				if(!rtpQueue.isEmpty())
+				{
+					Location l = rtpQueue.pop();
+					Direction d = Direction.N;
+					
+					if(getIdentity().getAxis().equals(Axis.Y))
+					{
+						d = getIdentity().getFront();
+					}
+					
+					else
+					{
+						d = Direction.news().pickRandom();
+					}
+					
+					int osiz = getPosition().getPane().getSizeY();
+					int size = (osiz - 1) / 2;
+					
+					Location base = l.clone().add(new Vector(0, size, 0));
+					Cuboid c = new Cuboid(base);
+					
+					for(Axis i : Axis.values())
+					{
+						if(!i.equals(d.getAxis()))
+						{
+							c = c.e(i, size);
+						}
+					}
+					
+					PortalIdentity pi = new PortalIdentity(d, getKey());
+					PortalPosition pp = new PortalPosition(pi, c);
+					
+					try
+					{
+						LocalPortal lx = Wormholes.provider.createPortal(pi, pp);
+						lx.setSided(true);
+						getProjectionPlane().wipe();
+						lx.getProjectionPlane().wipe();
+					}
+					
+					catch(InvalidPortalKeyException e)
+					{
+						
+					}
+					
+					catch(InvalidPortalPositionException e)
+					{
+						
+					}
+					
+					catch(DuplicatePortalKeyException e)
+					{
+						
+					}
+				}
+			}
+			
+			if(rtpQueue.size() < Settings.RTP_MAX_PREQUEUE)
+			{
+				if(TICK.tick % Settings.RTP_SEARCH_INTERVAL == 0)
+				{
+					findRTPLocation();
+				}
+			}
+		}
+	}
+	
+	public void clearRTPCache()
+	{
+		rtpQueue.clear();
+		wipeRtp();
+	}
+	
+	private void findRTPLocation()
+	{
+		Runnable r = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				int min = getSettings().getRtpMinDist();
+				int max = getSettings().getRtpDist();
+				Vector direction = Vector.getRandom().subtract(Vector.getRandom());
+				direction.multiply(min + (double) (Math.random() * (double) (max - min)));
+				Location l = getPosition().getCenter().clone().add(direction);
+				
+				for(int i = 256; i > 0; i--)
+				{
+					try
+					{
+						Location b = l.clone();
+						b.setY(i);
+						
+						Material m = b.getBlock().getType();
+						Material k = b.getBlock().getRelative(BlockFace.UP).getType();
+						Material v = b.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType();
+						
+						if(m.isSolid() && k.equals(Material.AIR) && v.equals(Material.AIR) && !b.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).isLiquid() && !b.getBlock().getRelative(BlockFace.UP).isLiquid() && !b.getBlock().isLiquid())
+						{
+							if(getSettings().getRtpBiome().equals("ALL_BIOMES") || b.getBlock().getBiome().toString().equals(getSettings().getRtpBiome()))
+							{
+								rtpQueue.add(b.clone().add(new Vector(0, 1, 0)));
+								break;
+							}
+						}
+					}
+					
+					catch(Exception e)
+					{
+						break;
+					}
+				}
+			}
+		};
+		
+		if(Settings.RTP_FORCE_ASYNC_SEARCH)
+		{
+			new A()
+			{
+				@Override
+				public void async()
+				{
+					r.run();
+				}
+			};
+		}
+		
+		else
+		{
+			r.run();
+		}
 	}
 	
 	public void showHologram(Player p, Hologram h)
@@ -403,6 +560,7 @@ public class LocalPortal implements Portal
 		
 		getService().addThrottle(i);
 		w.push(i, v);
+		wipeRtp();
 		DB.d(this, "Send " + i.getUniqueId() + " #" + toString());
 	}
 	
@@ -949,5 +1107,35 @@ public class LocalPortal implements Portal
 	public String toString()
 	{
 		return "LocalPortal: " + getKey().toString() + "";
+	}
+	
+	public boolean wasJustCreated()
+	{
+		return age < 2;
+	}
+	
+	public Cuboid getIp()
+	{
+		return ip;
+	}
+	
+	public GMap<Player, Hologram> getHolograms()
+	{
+		return holograms;
+	}
+	
+	public GList<Player> getActivatedEntities()
+	{
+		return activatedEntities;
+	}
+	
+	public GList<Location> getRtpQueue()
+	{
+		return rtpQueue;
+	}
+	
+	public long getAge()
+	{
+		return age;
 	}
 }

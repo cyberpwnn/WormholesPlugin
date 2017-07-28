@@ -46,6 +46,13 @@ public class ProjectionPlane
 		return omap(from, to).get(init);
 	}
 	
+	public void wipe()
+	{
+		mapping.clear();
+		remapCache.clear();
+		ormapCache.clear();
+	}
+	
 	public GMap<Vector, Vector> omap(Direction from, Direction to)
 	{
 		return ormapCache.get(new GBiset<Direction, Direction>(from, to));

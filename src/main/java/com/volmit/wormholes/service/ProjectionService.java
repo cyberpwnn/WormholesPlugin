@@ -29,6 +29,7 @@ import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MaterialBlock;
+import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
@@ -79,27 +80,49 @@ public class ProjectionService implements Listener
 						Timer t = new Timer();
 						t.start();
 						
-						for(Portal po : Wormholes.host.getLocalPortals())
+						new TaskLater()
 						{
-							if(((LocalPortal) po).getSided())
+							@Override
+							public void run()
 							{
-								continue;
-							}
-							
-							try
-							{
-								deprojectStrays(po);
-								startProjection(po);
-							}
-							
-							catch(Exception e)
-							{
+								for(Portal po : Wormholes.host.getLocalPortals())
+								{
+									if(((LocalPortal) po).getSided())
+									{
+										continue;
+									}
+									
+									try
+									{
+										new A()
+										{
+											
+											@Override
+											public void async()
+											{
+												deprojectStrays(po);
+											}
+										};
+										startProjection(po);
+									}
+									
+									catch(Exception e)
+									{
+										
+									}
+								}
 								
+								new A()
+								{
+									@Override
+									public void async()
+									{
+										projecting = false;
+										postProject(t);
+									}
+								};
 							}
-						}
-						
-						projecting = false;
-						postProject(t);
+						};
 					}
 					
 					catch(IllegalStateException e)
@@ -127,10 +150,17 @@ public class ProjectionService implements Listener
 	{
 		if(po.getPosition().getArea().hasPlayers() && ((LocalPortal) po).getSettings().isProject() && ((LocalPortal) po).getMask().needsProjection())
 		{
-			project((LocalPortal) po);
-			Wormholes.pool.lock();
-			((LocalPortal) po).getMask().clear();
-			doProject();
+			new A()
+			{
+				@Override
+				public void async()
+				{
+					project((LocalPortal) po);
+					Wormholes.pool.lock();
+					((LocalPortal) po).getMask().clear();
+					doProject();
+				}
+			};
 		}
 	}
 	

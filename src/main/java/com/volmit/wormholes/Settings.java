@@ -27,6 +27,37 @@ public class Settings
 	@Comment("Toggle this to toggle sounds")
 	public static boolean ENABLE_SOUND = true;
 	
+	@Experimental
+	@CName("RTP_SEARCH_INTERVAL")
+	@CMin(2)
+	@CMax(40)
+	@Comment("If not forcing async, setting this too low will hit the timings pretty hard.")
+	public static int RTP_SEARCH_INTERVAL = 20;
+	
+	@CName("RTP_DEFAULT_MIN_DISTANCE")
+	@CMin(0)
+	@CMax(Integer.MAX_VALUE / 2)
+	@Comment("Define the default minimum distance for rtp portals")
+	public static int RTP_DEFAULT_MIN_DISTANCE = 1000;
+	
+	@CName("RTP_DEFAULT_MAX_DISTANCE")
+	@CMin(1)
+	@CMax(Integer.MAX_VALUE)
+	@Comment("Define the default maximum distance for rtp portals")
+	public static int RTP_DEFAULT_MAX_DISTANCE = 8000;
+	
+	@Experimental
+	@CName("RTP_FORCE_ASYNC_SEARCH")
+	@Comment("Force async searching. WARNING: Can crash the server when using a custom generator, but it's much faster!")
+	public static boolean RTP_FORCE_ASYNC_SEARCH = false;
+	
+	@Experimental
+	@CName("RTP_MAX_PREQUEUE")
+	@CMin(2)
+	@CMax(32)
+	@Comment("Wormholes automatically caches new pending locations in case a lot of entities/players enter at the same time.")
+	public static int RTP_MAX_PREQUEUE = 3;
+	
 	@CName("ALLOW_ENTITIY_TYPES")
 	@Comment("Allowed entity types. (bungeecord portals cannot support entities)")
 	public static ArrayList<String> ALLOW_ENTITIY_TYPES = new GList<String>();

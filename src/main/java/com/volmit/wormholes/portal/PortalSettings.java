@@ -9,10 +9,54 @@ public class PortalSettings
 	private String customName = "null";
 	private boolean hasCustomName = false;
 	private boolean allowEntities = Settings.ALLOW_ENTITIES;
+	private boolean randomTp = false;
+	private int rtpDist = Settings.RTP_DEFAULT_MAX_DISTANCE;
+	private int rtpMinDist = Settings.RTP_DEFAULT_MIN_DISTANCE;
+	private String rtpBiome = "ALL_BIOMES";
+	
+	public void setRtpBiome(String rtpBiome)
+	{
+		this.rtpBiome = rtpBiome;
+	}
+	
+	public String getRtpBiome()
+	{
+		return rtpBiome;
+	}
 	
 	public PortalSettings()
 	{
 		
+	}
+	
+	public int getRtpMinDist()
+	{
+		return rtpMinDist;
+	}
+	
+	public void setRtpMinDist(int rtpMinDist)
+	{
+		this.rtpMinDist = rtpMinDist;
+	}
+	
+	public boolean isRandomTp()
+	{
+		return randomTp;
+	}
+	
+	public void setRandomTp(boolean randomTp)
+	{
+		this.randomTp = randomTp;
+	}
+	
+	public int getRtpDist()
+	{
+		return rtpDist;
+	}
+	
+	public void setRtpDist(int rtpDist)
+	{
+		this.rtpDist = rtpDist;
 	}
 	
 	public boolean isProject()

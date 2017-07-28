@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.Wormholes;
@@ -21,6 +22,7 @@ import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalIdentity;
 import com.volmit.wormholes.portal.PortalKey;
 import com.volmit.wormholes.portal.PortalPosition;
+import com.volmit.wormholes.portal.PortalSettings;
 import com.volmit.wormholes.portal.RemotePortal;
 import com.volmit.wormholes.projection.BoundingBox;
 import com.volmit.wormholes.projection.NulledViewport;
@@ -33,6 +35,7 @@ import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSound;
@@ -43,6 +46,7 @@ import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.PlayerHud;
 import com.volmit.wormholes.util.TXT;
 import com.volmit.wormholes.util.TaskLater;
+import com.volmit.wormholes.util.TextInput;
 import com.volmit.wormholes.util.Title;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.W;
@@ -248,6 +252,10 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("l", p.getSettings().isProject());
 			cc.set("m", p.getSettings().isHasCustomName());
 			cc.set("n", p.getSettings().getCustomName());
+			cc.set("q", p.getSettings().isRandomTp());
+			cc.set("r", p.getSettings().getRtpDist());
+			cc.set("s", p.getSettings().getRtpMinDist());
+			cc.set("t", p.getSettings().getRtpBiome());
 			cc.set("o", p.getSided() ? 1 : 0);
 			cc.set("p", p.getDisplayName());
 			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
@@ -281,6 +289,10 @@ public abstract class BaseProvider implements PortalProvider
 					lp.getSettings().setProject(cc.getBoolean("l"));
 					lp.getSettings().setHasCustomName(cc.getBoolean("m"));
 					lp.getSettings().setCustomName(cc.getString("n"));
+					lp.getSettings().setRandomTp(cc.getBoolean("q"));
+					lp.getSettings().setRtpDist(cc.getInt("r"));
+					lp.getSettings().setRtpMinDist(cc.getInt("s"));
+					lp.getSettings().setRtpBiome(cc.getString("t"));
 					lp.setSided(sided);
 					lp.updateDisplayName(cc.getString("p"));
 					i.delete();
@@ -311,14 +323,13 @@ public abstract class BaseProvider implements PortalProvider
 			return false;
 		}
 		
+		if(l.wasJustCreated())
+		{
+			return false;
+		}
+		
 		if(new Permissable(p).canConfigure())
 		{
-			if(!l.hasWormhole())
-			{
-				notifMessage(p, C.RED + "Unable to Configure", C.RED + "There must be a destination portal to configure.");
-				return false;
-			}
-			
 			if(conf.contains(l))
 			{
 				notifMessage(p, C.RED + "Unable to Configure", C.RED + "Someone else is configuring this portal.");
@@ -337,6 +348,8 @@ public abstract class BaseProvider implements PortalProvider
 			
 			new TaskLater(2)
 			{
+				boolean d = l.hasWormhole();
+				
 				@Override
 				public void run()
 				{
@@ -406,6 +419,26 @@ public abstract class BaseProvider implements PortalProvider
 								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
+							else if(s.startsWith("Target Biome: "))
+							{
+								s = "Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
+							}
+							
+							else if(s.startsWith("Random Teleport: "))
+							{
+								s = "Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
+							}
+							
+							else if(s.startsWith("Max Distance: "))
+							{
+								s = "RTP Max Distance: " + C.WHITE + F.f(l.getSettings().getRtpDist());
+							}
+							
+							else if(s.startsWith("Min Distance: "))
+							{
+								s = "RTP Min Distance: " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
+							}
+							
 							else if(s.startsWith("Project Entities: "))
 							{
 								s = "Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
@@ -443,6 +476,26 @@ public abstract class BaseProvider implements PortalProvider
 							if(s.startsWith("Entities: "))
 							{
 								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
+							}
+							
+							else if(s.startsWith("Target Biome: "))
+							{
+								s = "Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
+							}
+							
+							else if(s.startsWith("Random Teleport: "))
+							{
+								s = "Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
+							}
+							
+							else if(s.startsWith("Max Distance: "))
+							{
+								s = "RTP Max Distance: " + C.WHITE + F.f(l.getSettings().getRtpDist());
+							}
+							
+							else if(s.startsWith("Min Distance: "))
+							{
+								s = "RTP Min Distance: " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
 							}
 							
 							else if(s.startsWith("Project Entities: "))
@@ -496,6 +549,164 @@ public abstract class BaseProvider implements PortalProvider
 								update();
 							}
 							
+							if(selection.startsWith("Random Teleport: "))
+							{
+								l.getSettings().setRandomTp(!l.getSettings().isRandomTp());
+								update();
+								l.save();
+								l.clearRTPCache();
+							}
+							
+							if(selection.startsWith("Target Biome: "))
+							{
+								close();
+								
+								Hud biomelist = new PlayerHud(p, true)
+								{
+									@Override
+									public void onUpdate()
+									{
+										
+									}
+									
+									@Override
+									public void onSelect(String selection, int slot)
+									{
+										new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 1.6f).play(p);
+									}
+									
+									@Override
+									public void onOpen()
+									{
+										new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+									}
+									
+									@Override
+									public String onEnable(String s)
+									{
+										return C.GOLD + "> " + C.RED + s + C.GOLD + " <";
+									}
+									
+									@Override
+									public String onDisable(String s)
+									{
+										return C.GRAY + s;
+									}
+									
+									@Override
+									public void onClose()
+									{
+										new GSound(MSound.ENDERDRAGON_WINGS.bukkitSound(), 0.3f, 0.9f).play(p);
+									}
+									
+									@Override
+									public void onClick(Click c, Player p, String selection, int slot, Hud h)
+									{
+										new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
+										close();
+										l.getSettings().setRtpBiome(selection);
+										l.save();
+										configure(l, p);
+										l.clearRTPCache();
+									}
+								};
+								
+								GList<String> opv = new GList<String>();
+								opv.add(TXT.line(C.GOLD, 5) + C.GRAY + " Biomes " + TXT.line(C.GOLD, 5));
+								opv.add("ALL_BIOMES");
+								
+								for(Biome i : Biome.values())
+								{
+									opv.add(i.toString());
+								}
+								
+								biomelist.setContents(opv);
+								((BaseHud) biomelist).setHasTitle(true);
+								biomelist.open();
+							}
+							
+							if(selection.startsWith("Min Distance: "))
+							{
+								p.sendMessage(C.GOLD + "Please Type the number you wish to set in chat.");
+								
+								new TextInput(p, l.getSettings(), l)
+								{
+									@Override
+									public void onResponse(Player p, String response, Object... o)
+									{
+										try
+										{
+											LocalPortal l = (LocalPortal) o[1];
+											PortalSettings ps = (PortalSettings) o[0];
+											Integer d = Integer.valueOf(response);
+											
+											if(d < 0)
+											{
+												p.sendMessage(C.RED + "Distance must be 0 or higher.");
+											}
+											
+											if(d >= ps.getRtpDist())
+											{
+												p.sendMessage(C.RED + "Distance must be less than " + ps.getRtpDist() + "(rtp max distance)");
+											}
+											
+											ps.setRtpMinDist(d);
+											l.save();
+											l.clearRTPCache();
+											Wormholes.provider.notifMessage(p, C.GOLD + "Min Distance Set", C.GOLD + "RTP Min Distance: " + C.WHITE + ps.getRtpMinDist());
+										}
+										
+										catch(NumberFormatException e)
+										{
+											p.sendMessage(C.RED + response + " is not an integer.");
+										}
+									}
+								};
+								
+								close();
+							}
+							
+							if(selection.startsWith("Max Distance: "))
+							{
+								p.sendMessage(C.GOLD + "Please Type the number you wish to set in chat.");
+								
+								new TextInput(p, l.getSettings(), l)
+								{
+									@Override
+									public void onResponse(Player p, String response, Object... o)
+									{
+										try
+										{
+											LocalPortal l = (LocalPortal) o[1];
+											PortalSettings ps = (PortalSettings) o[0];
+											Integer d = Integer.valueOf(response);
+											
+											if(d < 1)
+											{
+												p.sendMessage(C.RED + "Distance must be 1 or higher.");
+											}
+											
+											if(d <= ps.getRtpMinDist())
+											{
+												p.sendMessage(C.RED + "Distance must be greater than " + ps.getRtpMinDist() + "(rtp min distance)");
+											}
+											
+											ps.setRtpDist(d);
+											l.save();
+											l.clearRTPCache();
+											Wormholes.provider.notifMessage(p, C.GOLD + "Max Distance Set", C.GOLD + "RTP Max Distance: " + C.WHITE + ps.getRtpDist());
+										}
+										
+										catch(NumberFormatException e)
+										{
+											p.sendMessage(C.RED + response + " is not an integer.");
+										}
+									}
+								};
+								
+								close();
+							}
+							
 							if(selection.startsWith("Set Uni-Directional"))
 							{
 								if(l.hasWormhole())
@@ -512,6 +723,7 @@ public abstract class BaseProvider implements PortalProvider
 								}
 								
 								update();
+								l.clearRTPCache();
 							}
 							
 							if(selection.startsWith("Project Entities"))
@@ -608,7 +820,7 @@ public abstract class BaseProvider implements PortalProvider
 								};
 								
 								GList<String> opv = new GList<String>();
-								opv.add("Are You Sure?");
+								opv.add(TXT.line(C.GOLD, 5) + C.GRAY + " Destroy? " + TXT.line(C.GOLD, 5));
 								opv.add("YES");
 								opv.add("NO");
 								confirm.setContents(opv);
@@ -623,17 +835,7 @@ public abstract class BaseProvider implements PortalProvider
 						}
 					};
 					
-					GList<String> op = new GList<String>();
-					op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Options " + TXT.line(C.GOLD, 5));
-					op.add("Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
-					op.add("Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
-					op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
-					op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Actions " + TXT.line(C.GOLD, 5));
-					op.add("Reverse Polarity");
-					op.add("Set Uni-Directional");
-					op.add("Destroy");
-					op.add("Exit");
-					hud.setContent(op);
+					handleHud(hud, d, l);
 					hud.open();
 				}
 			};
@@ -642,6 +844,44 @@ public abstract class BaseProvider implements PortalProvider
 		}
 		
 		return false;
+	}
+	
+	private void handleHud(PlayerHud h, boolean d, LocalPortal l)
+	{
+		GList<String> op = new GList<String>();
+		
+		if(d)
+		{
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Options " + TXT.line(C.GOLD, 5));
+			op.add("Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
+			op.add("Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Actions " + TXT.line(C.GOLD, 5));
+			op.add("Set Uni-Directional");
+			op.add("Reverse Polarity");
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
+			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
+			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
+			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Other " + TXT.line(C.GOLD, 5));
+			op.add("Destroy");
+			op.add("Exit");
+		}
+		
+		else
+		{
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
+			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
+			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
+			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Other " + TXT.line(C.GOLD, 5));
+			op.add("Destroy");
+			op.add("Exit");
+		}
+		
+		h.setContent(op);
 	}
 	
 	@Override
