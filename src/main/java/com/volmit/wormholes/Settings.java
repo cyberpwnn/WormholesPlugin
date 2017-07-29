@@ -34,6 +34,12 @@ public class Settings
 	@Comment("If not forcing async, setting this too low will hit the timings pretty hard.")
 	public static int RTP_SEARCH_INTERVAL = 20;
 	
+	@CName("RTP_AUTO_REFRESH_INTERVAL")
+	@CMin(50)
+	@CMax(1200)
+	@Comment("Portal Auto Refresh interval (in ticks)")
+	public static int RTP_AUTO_REFRESH_INTERVAL = 200;
+	
 	@CName("RTP_DEFAULT_MIN_DISTANCE")
 	@CMin(0)
 	@CMax(Integer.MAX_VALUE / 2)

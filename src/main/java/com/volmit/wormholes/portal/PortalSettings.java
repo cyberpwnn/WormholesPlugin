@@ -13,6 +13,17 @@ public class PortalSettings
 	private int rtpDist = Settings.RTP_DEFAULT_MAX_DISTANCE;
 	private int rtpMinDist = Settings.RTP_DEFAULT_MIN_DISTANCE;
 	private String rtpBiome = "ALL_BIOMES";
+	private boolean rtpRefresh = false;
+	
+	public boolean isRtpRefresh()
+	{
+		return rtpRefresh;
+	}
+	
+	public void setRtpRefresh(boolean rtpRefresh)
+	{
+		this.rtpRefresh = rtpRefresh;
+	}
 	
 	public void setRtpBiome(String rtpBiome)
 	{

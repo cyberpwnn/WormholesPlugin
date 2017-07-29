@@ -235,6 +235,7 @@ public class LocalPortal implements Portal
 		if(getSettings().isRandomTp() && hasWormhole() && getWormhole().getDestination().getSided())
 		{
 			Wormholes.provider.destroyPortal((LocalPortal) getWormhole().getDestination());
+			
 		}
 	}
 	
@@ -298,6 +299,14 @@ public class LocalPortal implements Portal
 					{
 						
 					}
+				}
+			}
+			
+			else if(getWormhole().getDestination().getSided())
+			{
+				if(!rtpQueue.isEmpty() && getSettings().isRtpRefresh() && TICK.tick % Settings.RTP_AUTO_REFRESH_INTERVAL == 0)
+				{
+					wipeRtp();
 				}
 			}
 			

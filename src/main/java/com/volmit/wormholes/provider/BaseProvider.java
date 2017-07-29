@@ -256,6 +256,7 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("r", p.getSettings().getRtpDist());
 			cc.set("s", p.getSettings().getRtpMinDist());
 			cc.set("t", p.getSettings().getRtpBiome());
+			cc.set("u", p.getSettings().isRtpRefresh());
 			cc.set("o", p.getSided() ? 1 : 0);
 			cc.set("p", p.getDisplayName());
 			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
@@ -293,6 +294,7 @@ public abstract class BaseProvider implements PortalProvider
 					lp.getSettings().setRtpDist(cc.getInt("r"));
 					lp.getSettings().setRtpMinDist(cc.getInt("s"));
 					lp.getSettings().setRtpBiome(cc.getString("t"));
+					lp.getSettings().setRtpRefresh(cc.getBoolean("u"));
 					lp.setSided(sided);
 					lp.updateDisplayName(cc.getString("p"));
 					i.delete();
@@ -419,6 +421,11 @@ public abstract class BaseProvider implements PortalProvider
 								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
+							else if(s.startsWith("Auto Refresh: "))
+							{
+								s = "Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
+							}
+							
 							else if(s.startsWith("Target Biome: "))
 							{
 								s = "Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
@@ -476,6 +483,11 @@ public abstract class BaseProvider implements PortalProvider
 							if(s.startsWith("Entities: "))
 							{
 								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
+							}
+							
+							else if(s.startsWith("Auto Refresh: "))
+							{
+								s = "Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
 							else if(s.startsWith("Target Biome: "))
@@ -555,6 +567,13 @@ public abstract class BaseProvider implements PortalProvider
 								update();
 								l.save();
 								l.clearRTPCache();
+							}
+							
+							if(selection.startsWith("Auto Refresh: "))
+							{
+								l.getSettings().setRtpRefresh(!l.getSettings().isRtpRefresh());
+								update();
+								l.save();
 							}
 							
 							if(selection.startsWith("Target Biome: "))
@@ -861,6 +880,7 @@ public abstract class BaseProvider implements PortalProvider
 			op.add("Reverse Polarity");
 			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
 			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add("Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
 			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
 			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
 			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
@@ -873,6 +893,7 @@ public abstract class BaseProvider implements PortalProvider
 		{
 			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
 			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add("Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
 			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
 			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
 			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());

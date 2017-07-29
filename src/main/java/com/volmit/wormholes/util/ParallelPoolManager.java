@@ -1,5 +1,6 @@
 package com.volmit.wormholes.util;
 
+import java.util.ConcurrentModificationException;
 import java.util.Queue;
 
 public class ParallelPoolManager
@@ -119,27 +120,35 @@ public class ParallelPoolManager
 	
 	private void updateThreadInformation()
 	{
-		if(threads.isEmpty())
+		try
 		{
-			return;
+			if(threads.isEmpty())
+			{
+				return;
+			}
+			
+			double ticksPerSecond = 0;
+			int queuedSize = 0;
+			double utilization = 0;
+			
+			for(ParallelThread ph : threads.copy())
+			{
+				ticksPerSecond += ph.getInfo().getTicksPerSecondAverage();
+				queuedSize += ph.getQueue().size();
+				utilization += ph.getInfo().getUtilization();
+			}
+			
+			utilization /= threads.size();
+			ticksPerSecond /= threads.size();
+			getAverageInfo().setTicksPerSecond(ticksPerSecond);
+			getAverageInfo().setQueuedSize(queuedSize);
+			getAverageInfo().setUtilization(utilization);
 		}
 		
-		double ticksPerSecond = 0;
-		int queuedSize = 0;
-		double utilization = 0;
-		
-		for(ParallelThread ph : threads.copy())
+		catch(ConcurrentModificationException e)
 		{
-			ticksPerSecond += ph.getInfo().getTicksPerSecondAverage();
-			queuedSize += ph.getQueue().size();
-			utilization += ph.getInfo().getUtilization();
+			
 		}
-		
-		utilization /= threads.size();
-		ticksPerSecond /= threads.size();
-		getAverageInfo().setTicksPerSecond(ticksPerSecond);
-		getAverageInfo().setQueuedSize(queuedSize);
-		getAverageInfo().setUtilization(utilization);
 	}
 	
 	private ParallelThread nextThread()

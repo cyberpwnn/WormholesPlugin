@@ -325,13 +325,25 @@ public class M
 	public static double avg(GList<Double> doubles)
 	{
 		double a = 0.0;
+		int d = 0;
 		
-		for(double i : doubles.copy())
+		try
 		{
-			a += i;
+			for(double i : doubles.copy())
+			{
+				a += i;
+				d++;
+			}
+			
+			return a / (double) d;
 		}
 		
-		return a / doubles.size();
+		catch(Exception e)
+		{
+			
+		}
+		
+		return a / (double) d;
 	}
 	
 	/**
