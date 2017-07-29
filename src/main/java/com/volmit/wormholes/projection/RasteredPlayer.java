@@ -33,6 +33,14 @@ public class RasteredPlayer
 		virtualChunks = new GMap<Chunk, VirtualChunk>();
 	}
 	
+	public void trickLight()
+	{
+		for(Chunk i : virtualChunks.keySet())
+		{
+			virtualChunks.get(i).trickLight(p);
+		}
+	}
+	
 	public void wc(Location c)
 	{
 		if(virtualChunks.containsKey(c.getChunk()))

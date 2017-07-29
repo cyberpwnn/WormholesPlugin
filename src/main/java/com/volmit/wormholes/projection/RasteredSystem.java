@@ -23,6 +23,14 @@ public class RasteredSystem
 		rasteredPlayers = new GMap<Player, RasteredPlayer>();
 	}
 	
+	public void doLight()
+	{
+		for(Player i : rasteredPlayers.keySet())
+		{
+			rasteredPlayers.get(i).trickLight();
+		}
+	}
+	
 	public void wc(Location c)
 	{
 		for(Player i : rasteredPlayers.k())
@@ -186,6 +194,8 @@ public class RasteredSystem
 				rasteredPlayers.remove(i);
 			}
 		}
+		
+		doLight();
 		
 		t.stop();
 		TimingsService.asyn.get("mutex-handle").hit("raster-service", t.getTime());

@@ -26,4 +26,6 @@ public interface VirtualChunk
 	public Chunk getChunk();
 	
 	public void send(Player p);
+	
+	public void trickLight(Player p);
 }

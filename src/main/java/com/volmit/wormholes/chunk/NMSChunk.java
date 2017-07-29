@@ -4,9 +4,13 @@ import java.util.Arrays;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import com.comphenix.protocol.wrappers.BlockPosition;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.exception.NMSChunkFailureException;
 import com.volmit.wormholes.util.MaterialBlock;
+import com.volmit.wormholes.wrapper.WrapperPlayServerBlockChange;
 
 public abstract class NMSChunk implements VirtualChunk
 {
@@ -43,6 +47,16 @@ public abstract class NMSChunk implements VirtualChunk
 		
 		clearModificationMark();
 		Arrays.fill(heightMap, 0);
+	}
+	
+	@Override
+	public void trickLight(Player p)
+	{
+		MaterialBlock mb = get(8, getActualHeight(8, 8) - 1, 8);
+		WrapperPlayServerBlockChange w2 = new WrapperPlayServerBlockChange();
+		w2.setBlockData(WrappedBlockData.createData(mb.getMaterial(), mb.getData()));
+		w2.setLocation(new BlockPosition((bukkitChunk.getX() << 4) + 8, getActualHeight(8, 8) - 1, (bukkitChunk.getZ() << 4) + 8));
+		w2.sendPacket(p);
 	}
 	
 	public void clearSection(int sect)
@@ -89,6 +103,11 @@ public abstract class NMSChunk implements VirtualChunk
 		{
 			blockData[getSection(y)][getIndex(x, y, z)] = getCombined(id, data);
 			markModification(x, y, z);
+			
+			if(getActualHeight(x, z) < y)
+			{
+				setHeight(x, z, y);
+			}
 			
 			if(Settings.FULL_BRIGHT_PROJECTIONS && id != 0)
 			{
