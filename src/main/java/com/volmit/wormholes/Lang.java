@@ -103,6 +103,9 @@ public class Lang
 	@CName("DESCRIPTION_POSCANCEL")
 	public static String DESCRIPTION_POSCANCEL = "Position Cancelled";
 	
+	@CName("DESCRIPTION_WIPEHOLO")
+	public static String DESCRIPTION_WIPEHOLO = "Remove dead holograms within 6 blocks of you.";
+	
 	@CName("WORD_PORTALS")
 	public static String WORD_PORTALS = "Portals";
 	

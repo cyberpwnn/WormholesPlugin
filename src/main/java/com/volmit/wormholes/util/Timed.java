@@ -111,15 +111,23 @@ public class Timed
 	
 	public void hit(Timed t)
 	{
-		for(Timed i : getTimers().copy())
+		try
 		{
-			if(t.getId().equals(i.getId()))
+			for(Timed i : getTimers().copy())
 			{
-				i.setTime((i.getTime() + i.getTime() + t.getTime()) / 3);
-				return;
+				if(t.getId().equals(i.getId()))
+				{
+					i.setTime((i.getTime() + i.getTime() + t.getTime()) / 3);
+					return;
+				}
 			}
+			
+			getTimers().add(t);
 		}
 		
-		getTimers().add(t);
+		catch(Exception e)
+		{
+			
+		}
 	}
 }

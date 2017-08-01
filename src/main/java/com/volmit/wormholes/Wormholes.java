@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import com.volmit.wormholes.config.Permissable;
@@ -24,6 +25,7 @@ import com.volmit.wormholes.service.PortalRegistry;
 import com.volmit.wormholes.service.ProjectionService;
 import com.volmit.wormholes.service.SkinService;
 import com.volmit.wormholes.service.TimingsService;
+import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.ControllablePlugin;
@@ -366,6 +368,41 @@ public class Wormholes extends ControllablePlugin
 			public void cp(Player p, String[] args)
 			{
 				v(p);
+			}
+		});
+		
+		sub.add(new SubCommand(Lang.DESCRIPTION_WIPEHOLO, "wipeholo", "wipeh")
+		{
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				p.sendMessage(Info.TAG + Lang.DESCRIPTION_INGAMEONLY);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				if(new Permissable(p).canDestroy())
+				{
+					int m = 0;
+					Area a = new Area(p.getLocation(), 6);
+					
+					for(Entity i : a.getNearbyEntities())
+					{
+						if(i instanceof ArmorStand)
+						{
+							ArmorStand s = (ArmorStand) i;
+							
+							if(!s.isVisible())
+							{
+								m++;
+								s.remove();
+							}
+						}
+					}
+					
+					p.sendMessage(Info.TAG + C.GRAY + "Removed " + m + " Hologram Objects");
+				}
 			}
 		});
 		

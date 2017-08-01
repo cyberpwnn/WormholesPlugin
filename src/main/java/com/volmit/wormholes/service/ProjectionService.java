@@ -244,43 +244,51 @@ public class ProjectionService implements Listener
 			
 			if(plane.hasContent())
 			{
-				GMap<Player, Viewport> view = Wormholes.provider.getViewport(p);
-				GMap<Vector, MaterialBlock> map = plane.remap(identity.getFront(), p.getIdentity().getFront());
-				
-				if(map.isEmpty() || map.size() < 250)
+				try
 				{
-					if(!p.isWormholeMutex())
+					GMap<Player, Viewport> view = Wormholes.provider.getViewport(p);
+					GMap<Vector, MaterialBlock> map = plane.remap(identity.getFront(), p.getIdentity().getFront());
+					
+					if(map.isEmpty() || map.size() < 250)
 					{
-						plane.getMapping().clear();
-						plane.getRemapCache().clear();
-						plane.getOrmapCache().clear();
+						if(!p.isWormholeMutex())
+						{
+							plane.getMapping().clear();
+							plane.getRemapCache().clear();
+							plane.getOrmapCache().clear();
+						}
+						
+						return;
 					}
 					
-					return;
+					if(view.isEmpty())
+					{
+						return;
+					}
+					
+					for(Player i : view.k())
+					{
+						Viewport vIn = view.get(i);
+						Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
+						
+						if(Settings.USE_OLD_RENDER_METHOD)
+						{
+							queueViewIn(vIn, p, identity, map, i);
+							queueViewOut(vOut, vIn, i);
+						}
+						
+						else
+						{
+							renderStage(i, p, map, vIn, vOut);
+						}
+						
+						clearVRBuffers(p, i, view);
+					}
 				}
 				
-				if(view.isEmpty())
+				catch(Exception e)
 				{
-					return;
-				}
-				
-				for(Player i : view.k())
-				{
-					Viewport vIn = view.get(i);
-					Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
 					
-					if(Settings.USE_OLD_RENDER_METHOD)
-					{
-						queueViewIn(vIn, p, identity, map, i);
-						queueViewOut(vOut, vIn, i);
-					}
-					
-					else
-					{
-						renderStage(i, p, map, vIn, vOut);
-					}
-					
-					clearVRBuffers(p, i, view);
 				}
 			}
 		}

@@ -1101,6 +1101,11 @@ public class MutexService implements Listener
 	
 	public void dequeueAll()
 	{
+		for(Entity i : EntityHologram.lock)
+		{
+			i.remove();
+		}
+		
 		for(Portal i : getLocalPortals())
 		{
 			Wormholes.projector.deproject((LocalPortal) i);
