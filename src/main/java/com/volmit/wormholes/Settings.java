@@ -27,6 +27,16 @@ public class Settings
 	@Comment("Toggle this to toggle sounds")
 	public static boolean ENABLE_SOUND = true;
 	
+	@CName("WAND_COOLDOWN")
+	@CMin(5)
+	@CMax(100)
+	@Comment("In Ticks, Prevent block spam from portal wands (quickly at least)")
+	public static int WAND_COOLDOWN = 36;
+	
+	@CName("SHOW_TIPS")
+	@Comment("Show tips to people who can create and configure wormholes")
+	public static boolean SHOW_TIPS = true;
+	
 	@Experimental
 	@CName("RTP_SEARCH_INTERVAL")
 	@CMin(2)
@@ -51,6 +61,12 @@ public class Settings
 	@CMax(Integer.MAX_VALUE)
 	@Comment("Define the default maximum distance for rtp portals")
 	public static int RTP_DEFAULT_MAX_DISTANCE = 8000;
+	
+	@CName("PORTAL_COOLDOWN")
+	@CMin(0)
+	@CMax(102400)
+	@Comment("The time (in ticks) a player must wait to use any portal after using any portal.")
+	public static int PORTAL_COOLDOWN = 100;
 	
 	@Experimental
 	@CName("RTP_FORCE_ASYNC_SEARCH")
@@ -275,7 +291,7 @@ public class Settings
 	@CMax(5000)
 	@Experimental
 	@Comment("Time Threshold in milliseconds to push excess queue packets to players")
-	public static int NETWORK_FLUSH_THRESHOLD = 750;
+	public static int NETWORK_FLUSH_THRESHOLD = 250;
 	
 	@CName("NETWORK_POLL_THRESHOLD")
 	@CMin(100)

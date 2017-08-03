@@ -287,6 +287,16 @@ public class Wormholes extends ControllablePlugin
 			@Override
 			public void cp(Player p, String[] args)
 			{
+				if(args.length == 1 && args[0].equalsIgnoreCase("-hidetips"))
+				{
+					if(new Permissable(p).canList())
+					{
+						Wormholes.provider.ignoreTips(p);
+						p.sendMessage(Info.TAG + "Tips will no longer show up for you.");
+						return;
+					}
+				}
+				
 				list(p, args);
 			}
 		});

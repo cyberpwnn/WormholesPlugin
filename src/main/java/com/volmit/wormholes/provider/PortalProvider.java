@@ -25,6 +25,14 @@ public interface PortalProvider
 	
 	public void save(LocalPortal p);
 	
+	public void tipWand(Player p);
+	
+	public void tipCreate(Player p);
+	
+	public void tipConfig(Player p);
+	
+	public void ignoreTips(Player p);
+	
 	public LocalPortal createPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException;
 	
 	public boolean hasMoved(Player p);
@@ -50,4 +58,10 @@ public interface PortalProvider
 	public void dfs();
 	
 	public void dfd();
+	
+	public void markLast(Player p);
+	
+	public boolean canTeleport(Player p);
+	
+	public int getTicksLeftBeforeTeleport(Player p);
 }

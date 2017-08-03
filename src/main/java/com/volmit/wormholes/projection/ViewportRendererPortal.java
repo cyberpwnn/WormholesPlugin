@@ -42,7 +42,7 @@ public class ViewportRendererPortal extends ViewportRendererBase
 					Block b = it.next();
 					Location l = b.getLocation();
 					
-					if(mode.equals(RenderMode.DIALATE))
+					if(mode.equals(RenderMode.DIALATE) && view.contains(l))
 					{
 						Vector dir = VectorMath.directionNoNormal(focii, l);
 						Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));

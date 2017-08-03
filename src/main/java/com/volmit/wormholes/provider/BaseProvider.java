@@ -11,6 +11,8 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.Tips;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.event.WormholeCreateEvent;
@@ -31,6 +33,7 @@ import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.BaseHud;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Click;
+import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
@@ -44,6 +47,8 @@ import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.PlayerHud;
+import com.volmit.wormholes.util.RTEX;
+import com.volmit.wormholes.util.RTX;
 import com.volmit.wormholes.util.TXT;
 import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.TextInput;
@@ -60,6 +65,7 @@ public abstract class BaseProvider implements PortalProvider
 	private long lastms = M.ms();
 	protected GList<Player> debug;
 	protected PortalBuilder builder;
+	private GMap<Player, Long> lastTeleport;
 	
 	public BaseProvider()
 	{
@@ -69,6 +75,37 @@ public abstract class BaseProvider implements PortalProvider
 		conf = new GList<Portal>();
 		debug = new GList<Player>();
 		builder = new PortalBuilder();
+		lastTeleport = new GMap<Player, Long>();
+	}
+	
+	@Override
+	public void markLast(Player p)
+	{
+		if(new Permissable(p).canReload())
+		{
+			return;
+		}
+		
+		lastTeleport.put(p, M.ms());
+	}
+	
+	@Override
+	public boolean canTeleport(Player p)
+	{
+		return getTicksLeftBeforeTeleport(p) < 1;
+	}
+	
+	@Override
+	public int getTicksLeftBeforeTeleport(Player p)
+	{
+		if(!lastTeleport.contains(p))
+		{
+			return 0;
+		}
+		
+		int k = Settings.PORTAL_COOLDOWN - ((int) (M.ms() - lastTeleport.get(p)) / 50);
+		
+		return k < 0 ? 0 : k;
 	}
 	
 	public void dedebug(Player p)
@@ -77,6 +114,89 @@ public abstract class BaseProvider implements PortalProvider
 		{
 			debug.remove(p);
 		}
+	}
+	
+	@Override
+	public void ignoreTips(Player p)
+	{
+		File f = new File(Wormholes.instance.getDataFolder(), "ignored");
+		f.mkdirs();
+		File i = new File(f, p.getUniqueId() + ".ig");
+		
+		try
+		{
+			i.createNewFile();
+		}
+		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isIgnored(Player p)
+	{
+		File f = new File(Wormholes.instance.getDataFolder(), "ignored");
+		f.mkdirs();
+		File i = new File(f, p.getUniqueId() + ".ig");
+		return i.exists();
+	}
+	
+	@Override
+	public void tipWand(Player p)
+	{
+		if(!Settings.SHOW_TIPS || isIgnored(p))
+		{
+			return;
+		}
+		
+		RTX r = new RTX();
+		r.addText("[", C.DARK_GRAY);
+		r.addText("W", C.GOLD);
+		r.addText("]", C.DARK_GRAY);
+		r.addText(": ", C.GRAY);
+		r.addText(new GList<String>(Tips.ON_WAND).pickRandom(), C.GRAY);
+		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.tellRawTo(p);
+		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
+	}
+	
+	@Override
+	public void tipConfig(Player p)
+	{
+		if(!Settings.SHOW_TIPS || isIgnored(p))
+		{
+			return;
+		}
+		
+		RTX r = new RTX();
+		r.addText("[", C.DARK_GRAY);
+		r.addText("W", C.GOLD);
+		r.addText("]", C.DARK_GRAY);
+		r.addText(": ", C.GRAY);
+		r.addText(new GList<String>(Tips.ON_CONFIGURE).pickRandom(), C.GRAY);
+		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.tellRawTo(p);
+		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
+	}
+	
+	@Override
+	public void tipCreate(Player p)
+	{
+		if(!Settings.SHOW_TIPS || isIgnored(p))
+		{
+			return;
+		}
+		
+		RTX r = new RTX();
+		r.addText("[", C.DARK_GRAY);
+		r.addText("W", C.GOLD);
+		r.addText("]", C.DARK_GRAY);
+		r.addText(": ", C.GRAY);
+		r.addText(new GList<String>(Tips.ON_CREATE).pickRandom(), C.GRAY);
+		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.tellRawTo(p);
+		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
 	}
 	
 	public void debug(Player p)
@@ -355,6 +475,7 @@ public abstract class BaseProvider implements PortalProvider
 				@Override
 				public void run()
 				{
+					tipConfig(p);
 					PlayerHud hud = new PlayerHud(p, true)
 					{
 						@Override

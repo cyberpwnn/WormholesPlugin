@@ -44,12 +44,12 @@ public class Viewport
 		
 		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6 + dfd; i++)
 		{
-			Location ma = getIris().clone().add(va.clone().multiply(i));
-			Location mb = getIris().clone().add(vb.clone().multiply(i));
+			Location ma = getIris().clone().add(va.clone().multiply(i)).clone();
+			Location mb = getIris().clone().add(vb.clone().multiply(i)).clone();
 			
 			set.add(new Cuboid(ma, mb));
 			
-			if(set.contains(portal.getPosition().getCenter()))
+			if(set.contains(portal.getPosition().getCenter().clone().add(0.5, 0.5, 0.5)) && set.contains(portal.getPosition().getCenter()))
 			{
 				set.clear();
 			}
@@ -68,22 +68,17 @@ public class Viewport
 			return false;
 		}
 		
-		return set.contains(l);
+		return set.contains(l.clone().add(0.5, 0.5, 0.5)) && set.contains(l.clone().add(1, 1, 1)) && set.contains(l.clone().add(0, 0, 0)) && set.contains(l.clone().add(1, 1, 0)) && set.contains(l.clone().add(1, 0, 0)) && set.contains(l.clone().add(0, 0, 1)) && set.contains(l.clone().add(0, 1, 1)) && set.contains(l.clone().add(1, 0, 1)) && set.contains(l.clone().add(0, 1, 0));
 	}
 	
 	public boolean contains(Block l)
 	{
-		if(portal.getPosition().getPane().contains(l))
-		{
-			return false;
-		}
-		
-		return set.contains(l);
+		return contains(l.getLocation());
 	}
 	
 	public Location getIris()
 	{
-		return p.getLocation().clone().add(0, 1.7, 0);
+		return p.getLocation().clone().add(0, 1.7, 0).getBlock().getLocation();
 	}
 	
 	public Player getP()

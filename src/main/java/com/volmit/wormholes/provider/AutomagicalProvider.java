@@ -319,6 +319,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterLeft());
 			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterRight());
 			cancel[0] = true;
+			tipCreate(p);
 		}
 		
 		catch(InvalidPortalKeyException e1)

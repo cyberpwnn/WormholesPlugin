@@ -3,10 +3,13 @@ package com.volmit.wormholes.service;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.util.DB;
+import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.Jokester;
@@ -109,7 +112,24 @@ public class EffectService
 	
 	public Vector throwBackVector(Entity l, LocalPortal p)
 	{
-		return p.getThrowDirection(l.getLocation()).toVector().clone().add(VectorMath.reverse(l.getVelocity()));
+		if(l instanceof Player)
+		{
+			Direction v = Direction.getDirection(Wormholes.host.getActualVector((Player) l).clone().normalize());
+			Direction x = p.getIdentity().getFront();
+			Vector c = v.reverse().toVector();
+			c.multiply(0.74);
+			
+			return c;
+		}
+		
+		else
+		{
+			Direction v = Direction.getDirection(l.getLocation().getDirection().clone().normalize());
+			Vector c = v.reverse().toVector();
+			c.multiply(0.64);
+			
+			return c;
+		}
 	}
 	
 	public void ambient(LocalPortal p)

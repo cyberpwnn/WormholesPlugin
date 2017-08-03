@@ -24,9 +24,11 @@ import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
+import com.volmit.wormholes.provider.PortalProvider;
 import com.volmit.wormholes.service.MutexService;
 import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.Axis;
+import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
@@ -565,6 +567,21 @@ public class LocalPortal implements Portal
 			{
 				return;
 			}
+		}
+		
+		if(i instanceof Player)
+		{
+			PortalProvider p = Wormholes.provider;
+			Player a = (Player) i;
+			
+			if(!p.canTeleport(a) && !((p.getTicksLeftBeforeTeleport(a) / 20 + "s").toString().equals("0s")))
+			{
+				throwBack(a);
+				p.notifMessage(a, C.GOLD + "Cooldown Active: " + C.LIGHT_PURPLE + (p.getTicksLeftBeforeTeleport(a) / 20 + "s"), C.GOLD + "You must wait before teleporting.");
+				return;
+			}
+			
+			p.markLast(a);
 		}
 		
 		getService().addThrottle(i);

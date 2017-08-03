@@ -32,19 +32,23 @@ import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PlayerScrollEvent;
+import com.volmit.wormholes.util.TaskLater;
 import com.volmit.wormholes.util.W;
 import com.volmit.wormholes.util.Wraith;
+import com.volmit.wormholes.wrapper.WrapperPlayServerSetCooldown;
 
 public class PortalBuilder implements Listener
 {
 	private GMap<Player, GBiset<Cuboid, PortalIdentity>> idx;
 	private GSet<Player> locks;
+	private GSet<Player> slock;
 	
 	public PortalBuilder()
 	{
 		Wraith.registerListener(this);
 		idx = new GMap<Player, GBiset<Cuboid, PortalIdentity>>();
 		locks = new GSet<Player>();
+		slock = new GSet<Player>();
 	}
 	
 	public void flush()
@@ -125,9 +129,9 @@ public class PortalBuilder implements Listener
 				if(locks.contains(p))
 				{
 					locks.remove(p);
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.35f, 0.45f).play(p);
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.35f, 0.55f).play(p);
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.65f, 0.65f).play(p);
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.15f, 0.45f).play(p);
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.15f, 0.55f).play(p);
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.15f, 0.65f).play(p);
 					cancelSelect(p);
 				}
 				
@@ -147,6 +151,11 @@ public class PortalBuilder implements Listener
 		
 		if(isHoldingWand(e.getPlayer()))
 		{
+			if(slock.contains(e.getPlayer()))
+			{
+				return;
+			}
+			
 			if(!new Permissable(e.getPlayer()).canWand())
 			{
 				return;
@@ -188,17 +197,42 @@ public class PortalBuilder implements Listener
 					}
 					
 					confirm(e.getPlayer());
-					new GSound(MSound.ANVIL_USE.bukkitSound(), 1f, 1.9f).play(e.getPlayer());
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 1.7f).play(e.getPlayer());
+					
+					try
+					{
+						WrapperPlayServerSetCooldown w = new WrapperPlayServerSetCooldown();
+						w.setItem(Material.BLAZE_ROD);
+						w.setTicks(Settings.WAND_COOLDOWN);
+						w.sendPacket(e.getPlayer());
+						slock.add(e.getPlayer());
+						
+						new TaskLater(Settings.WAND_COOLDOWN)
+						{
+							
+							@Override
+							public void run()
+							{
+								slock.remove(e.getPlayer());
+							}
+						};
+					}
+					
+					catch(Exception ex)
+					{
+						
+					}
+					
+					new GSound(MSound.ANVIL_USE.bukkitSound(), 0.2f, 1.9f).play(e.getPlayer());
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.5f, 1.7f).play(e.getPlayer());
 					
 					locks.remove(e.getPlayer());
 				}
 				
 				else
 				{
-					new GSound(MSound.ANVIL_LAND.bukkitSound(), 1f, 1.9f).play(e.getPlayer());
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 1.7f).play(e.getPlayer());
-					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 1f, 0.7f).play(e.getPlayer());
+					new GSound(MSound.ANVIL_LAND.bukkitSound(), 0.3f, 1.9f).play(e.getPlayer());
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.2f, 1.7f).play(e.getPlayer());
+					new GSound(MSound.HORSE_ARMOR.bukkitSound(), 0.3f, 0.7f).play(e.getPlayer());
 					select(e.getPlayer());
 					locks.add(e.getPlayer());
 				}
@@ -298,16 +332,19 @@ public class PortalBuilder implements Listener
 		if(isHoldingWand(p))
 		{
 			p.setItemInHand(getWand(size));
+			new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 1.9f).play(p);
 		}
 		
 		else if(is == null || is.getType().equals(Material.AIR))
 		{
 			p.setItemInHand(getWand(size));
+			Wormholes.provider.tipWand(p);
 		}
 		
 		else
 		{
 			p.getInventory().addItem(getWand(size));
+			Wormholes.provider.tipWand(p);
 		}
 	}
 	
