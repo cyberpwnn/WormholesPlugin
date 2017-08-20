@@ -115,7 +115,6 @@ public class EffectService
 		if(l instanceof Player)
 		{
 			Direction v = Direction.getDirection(Wormholes.host.getActualVector((Player) l).clone().normalize());
-			Direction x = p.getIdentity().getFront();
 			Vector c = v.reverse().toVector();
 			c.multiply(0.74);
 			
