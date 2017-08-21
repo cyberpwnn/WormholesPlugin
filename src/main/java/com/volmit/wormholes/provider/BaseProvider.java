@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Tips;
 import com.volmit.wormholes.Wormholes;
@@ -156,7 +157,7 @@ public abstract class BaseProvider implements PortalProvider
 		r.addText("]", C.DARK_GRAY);
 		r.addText(": ", C.GRAY);
 		r.addText(new GList<String>(Tips.ON_WAND).pickRandom(), C.GRAY);
-		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.addTextFireHoverCommand(" [" + Lang.BUTTON_HIDETIPS + "]", new RTEX(new ColoredString(C.GRAY, Lang.DESCRIPTION_HIDETIPS)), "/w list -hidetips", C.WHITE);
 		r.tellRawTo(p);
 		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
 	}
@@ -175,7 +176,7 @@ public abstract class BaseProvider implements PortalProvider
 		r.addText("]", C.DARK_GRAY);
 		r.addText(": ", C.GRAY);
 		r.addText(new GList<String>(Tips.ON_CONFIGURE).pickRandom(), C.GRAY);
-		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.addTextFireHoverCommand(" [" + Lang.BUTTON_HIDETIPS + "]", new RTEX(new ColoredString(C.GRAY, Lang.DESCRIPTION_HIDETIPS)), "/w list -hidetips", C.WHITE);
 		r.tellRawTo(p);
 		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
 	}
@@ -194,7 +195,7 @@ public abstract class BaseProvider implements PortalProvider
 		r.addText("]", C.DARK_GRAY);
 		r.addText(": ", C.GRAY);
 		r.addText(new GList<String>(Tips.ON_CREATE).pickRandom(), C.GRAY);
-		r.addTextFireHoverCommand(" [HIDE TIPS]", new RTEX(new ColoredString(C.GRAY, "Click to hide tips for just you.")), "/w list -hidetips", C.WHITE);
+		r.addTextFireHoverCommand(" [" + Lang.BUTTON_HIDETIPS + "]", new RTEX(new ColoredString(C.GRAY, Lang.DESCRIPTION_HIDETIPS)), "/w list -hidetips", C.WHITE);
 		r.tellRawTo(p);
 		new GSound(MSound.CHICKEN_EGG_POP.bukkitSound(), 0.5f, 1.7f).play(p);
 	}
@@ -454,7 +455,7 @@ public abstract class BaseProvider implements PortalProvider
 		{
 			if(conf.contains(l))
 			{
-				notifMessage(p, C.RED + "Unable to Configure", C.RED + "Someone else is configuring this portal.");
+				notifMessage(p, C.RED + Lang.DESCRIPTION_UNABLETOCONFIGURE, C.RED + Lang.DESCRIPTION_SOMEONEELSECONFIGURING);
 				return false;
 			}
 			
@@ -491,39 +492,39 @@ public abstract class BaseProvider implements PortalProvider
 							
 							String s = selection;
 							
-							if(s.startsWith("Entities"))
+							if(s.startsWith(Lang.MENU_ENTITIES))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Toggle the permission for entities to use this portal");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_ENTITIES);
 							}
 							
-							else if(s.startsWith("Project Entities"))
+							else if(s.startsWith(Lang.MENU_APERTURE))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Toggle entity projections");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_APERTURE);
 							}
 							
-							else if(s.startsWith("Project Blocks"))
+							else if(s.startsWith(Lang.MENU_PROJECT))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Toggle block projections");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_PROJECT);
 							}
 							
-							else if(s.startsWith("Reverse Polarity"))
+							else if(s.startsWith(Lang.MENU_REVERSE))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Reverse the 'front facing' direction of this portal.");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_POLARITY);
 							}
 							
-							else if(s.equalsIgnoreCase("Destroy"))
+							else if(s.equalsIgnoreCase(Lang.MENU_DESTROY))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Destroy this portal?");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_DESTROYPORTAL);
 							}
 							
-							else if(s.equalsIgnoreCase("Exit"))
+							else if(s.equalsIgnoreCase(Lang.MENU_EXIT))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Exit this menu (or just walk away from it)");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_EXIT);
 							}
 							
-							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							else if(s.equalsIgnoreCase(Lang.MENU_SET + " " + Lang.MENU_UNIDIRECTIONAL))
 							{
-								NMSX.sendActionBar(p, C.YELLOW + "Setting portals to omni-directional will hide the destination.");
+								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_DIRECTIONAL);
 							}
 						}
 						
@@ -537,61 +538,61 @@ public abstract class BaseProvider implements PortalProvider
 						@Override
 						public String onEnable(String s)
 						{
-							if(s.startsWith("Entities: "))
+							if(s.startsWith(Lang.MENU_ENTITIES + ": "))
 							{
-								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
+								s = Lang.MENU_ENTITIES + ": " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
-							else if(s.startsWith("Auto Refresh: "))
+							else if(s.startsWith(Lang.MENU_MENU_RTP_AUTOREFRESH + ": "))
 							{
-								s = "Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_MENU_RTP_AUTOREFRESH + ": " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Target Biome: "))
+							else if(s.startsWith(Lang.MENU_RTP_TARGET + ": "))
 							{
-								s = "Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
+								s = Lang.MENU_RTP_TARGET + ": " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
 							}
 							
-							else if(s.startsWith("Random Teleport: "))
+							else if(s.startsWith(Lang.MENU_RTP_RANDOMTP + ": "))
 							{
-								s = "Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_RTP_RANDOMTP + ": " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Max Distance: "))
+							else if(s.startsWith(Lang.MENU_RTP_MAX + ": "))
 							{
-								s = "RTP Max Distance: " + C.WHITE + F.f(l.getSettings().getRtpDist());
+								s = Lang.MENU_RTP_MAX + ": " + C.WHITE + F.f(l.getSettings().getRtpDist());
 							}
 							
-							else if(s.startsWith("Min Distance: "))
+							else if(s.startsWith(Lang.MENU_RTP_MIN + ": "))
 							{
-								s = "RTP Min Distance: " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
+								s = Lang.MENU_RTP_MIN + ": " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
 							}
 							
-							else if(s.startsWith("Project Entities: "))
+							else if(s.startsWith(Lang.MENU_APERTURE + ": "))
 							{
-								s = "Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_APERTURE + ": " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Project Blocks: "))
+							else if(s.startsWith(Lang.MENU_PROJECT + ": "))
 							{
-								s = "Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_PROJECT + ": " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.equalsIgnoreCase("Destroy"))
+							else if(s.equalsIgnoreCase(Lang.MENU_DESTROY))
 							{
-								s = C.RED + s + " Portal";
+								s = C.RED + s + " " + Lang.WORD_PORTAL;
 							}
 							
-							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							else if(s.equalsIgnoreCase(Lang.MENU_SET + " " + Lang.MENU_UNIDIRECTIONAL))
 							{
 								if(l.hasWormhole() && l.isWormholeMutex() && ((RemotePortal) l.getWormhole().getDestination()).getWait())
 								{
-									s = C.DARK_GRAY + "Please Wait...";
+									s = C.DARK_GRAY + Lang.DESCRIPTION_PLEASEWAIT;
 								}
 								
 								else
 								{
-									s = "Set " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.LIGHT_PURPLE + "Bi-Directional" : C.GOLD + "Uni-Directional");
+									s = Lang.MENU_SET + " " + C.GREEN + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? C.LIGHT_PURPLE + Lang.MENU_BIDIRECTIONAL : C.GOLD + Lang.MENU_UNIDIRECTIONAL);
 								}
 							}
 							
@@ -601,54 +602,54 @@ public abstract class BaseProvider implements PortalProvider
 						@Override
 						public String onDisable(String s)
 						{
-							if(s.startsWith("Entities: "))
+							if(s.startsWith(Lang.MENU_ENTITIES + ": "))
 							{
-								s = "Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
+								s = Lang.MENU_ENTITIES + ": " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied");
 							}
 							
-							else if(s.startsWith("Auto Refresh: "))
+							else if(s.startsWith(Lang.MENU_MENU_RTP_AUTOREFRESH + ": "))
 							{
-								s = "Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_MENU_RTP_AUTOREFRESH + ": " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Target Biome: "))
+							else if(s.startsWith(Lang.MENU_RTP_TARGET + ": "))
 							{
-								s = "Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
+								s = Lang.MENU_RTP_TARGET + ": " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome();
 							}
 							
-							else if(s.startsWith("Random Teleport: "))
+							else if(s.startsWith(Lang.MENU_RTP_RANDOMTP + ": "))
 							{
-								s = "Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_RTP_RANDOMTP + ": " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Max Distance: "))
+							else if(s.startsWith(Lang.MENU_RTP_MAX + ": "))
 							{
-								s = "RTP Max Distance: " + C.WHITE + F.f(l.getSettings().getRtpDist());
+								s = Lang.MENU_RTP_MAX + ": " + C.WHITE + F.f(l.getSettings().getRtpDist());
 							}
 							
-							else if(s.startsWith("Min Distance: "))
+							else if(s.startsWith(Lang.MENU_RTP_MIN + ": "))
 							{
-								s = "RTP Min Distance: " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
+								s = Lang.MENU_RTP_MIN + ": " + C.WHITE + F.f(l.getSettings().getRtpMinDist());
 							}
 							
-							else if(s.startsWith("Project Entities: "))
+							else if(s.startsWith(Lang.MENU_APERTURE + ": "))
 							{
-								s = "Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_APERTURE + ": " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.startsWith("Project Blocks: "))
+							else if(s.startsWith(Lang.MENU_PROJECT + ": "))
 							{
-								s = "Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
+								s = Lang.MENU_PROJECT + ": " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF");
 							}
 							
-							else if(s.equalsIgnoreCase("Set Uni-Directional"))
+							else if(s.equalsIgnoreCase(Lang.MENU_SET + " " + Lang.MENU_UNIDIRECTIONAL))
 							{
-								s = "Set " + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? "Bi-Directional" : "Uni-Directional");
+								s = Lang.MENU_SET + " " + (l.hasWormhole() && l.getWormhole().getDestination().getSided() ? Lang.MENU_BIDIRECTIONAL : Lang.MENU_UNIDIRECTIONAL);
 							}
 							
-							else if(s.equalsIgnoreCase("Destroy"))
+							else if(s.equalsIgnoreCase(Lang.MENU_DESTROY))
 							{
-								s = s + " Portal";
+								s = s + " " + Lang.WORD_PORTAL;
 							}
 							
 							return C.GRAY + s;
@@ -676,13 +677,13 @@ public abstract class BaseProvider implements PortalProvider
 							
 							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
 							
-							if(selection.startsWith("Entities"))
+							if(selection.startsWith(Lang.MENU_ENTITIES))
 							{
 								l.getSettings().setAllowEntities(!l.getSettings().isAllowEntities());
 								update();
 							}
 							
-							if(selection.startsWith("Random Teleport: "))
+							if(selection.startsWith(Lang.MENU_RTP_RANDOMTP + ": "))
 							{
 								l.getSettings().setRandomTp(!l.getSettings().isRandomTp());
 								update();
@@ -690,14 +691,14 @@ public abstract class BaseProvider implements PortalProvider
 								l.clearRTPCache();
 							}
 							
-							if(selection.startsWith("Auto Refresh: "))
+							if(selection.startsWith(Lang.MENU_MENU_RTP_AUTOREFRESH + ": "))
 							{
 								l.getSettings().setRtpRefresh(!l.getSettings().isRtpRefresh());
 								update();
 								l.save();
 							}
 							
-							if(selection.startsWith("Target Biome: "))
+							if(selection.startsWith(Lang.MENU_RTP_TARGET + ": "))
 							{
 								close();
 								
@@ -765,7 +766,7 @@ public abstract class BaseProvider implements PortalProvider
 								biomelist.open();
 							}
 							
-							if(selection.startsWith("Min Distance: "))
+							if(selection.startsWith(Lang.MENU_RTP_MIN + ": "))
 							{
 								p.sendMessage(C.GOLD + "Please Type the number you wish to set in chat.");
 								
@@ -806,7 +807,7 @@ public abstract class BaseProvider implements PortalProvider
 								close();
 							}
 							
-							if(selection.startsWith("Max Distance: "))
+							if(selection.startsWith(Lang.MENU_RTP_MAX + ": "))
 							{
 								p.sendMessage(C.GOLD + "Please Type the number you wish to set in chat.");
 								
@@ -847,7 +848,7 @@ public abstract class BaseProvider implements PortalProvider
 								close();
 							}
 							
-							if(selection.startsWith("Set Uni-Directional"))
+							if(selection.startsWith(Lang.MENU_SET + " " + Lang.MENU_UNIDIRECTIONAL))
 							{
 								if(l.hasWormhole())
 								{
@@ -866,13 +867,13 @@ public abstract class BaseProvider implements PortalProvider
 								l.clearRTPCache();
 							}
 							
-							if(selection.startsWith("Project Entities"))
+							if(selection.startsWith(Lang.MENU_APERTURE))
 							{
 								l.getSettings().setAparture(!l.getSettings().isAparture());
 								update();
 							}
 							
-							if(selection.startsWith("Reverse Polarity"))
+							if(selection.startsWith(Lang.MENU_REVERSE))
 							{
 								close();
 								Wormholes.projector.deproject(l);
@@ -887,7 +888,7 @@ public abstract class BaseProvider implements PortalProvider
 								};
 							}
 							
-							if(selection.startsWith("Project Blocks"))
+							if(selection.startsWith(Lang.MENU_PROJECT))
 							{
 								l.getSettings().setProject(!l.getSettings().isProject());
 								
@@ -899,7 +900,7 @@ public abstract class BaseProvider implements PortalProvider
 								update();
 							}
 							
-							if(selection.startsWith("Destroy"))
+							if(selection.startsWith(Lang.MENU_DESTROY))
 							{
 								close();
 								
@@ -960,7 +961,7 @@ public abstract class BaseProvider implements PortalProvider
 								};
 								
 								GList<String> opv = new GList<String>();
-								opv.add(TXT.line(C.GOLD, 5) + C.GRAY + " Destroy? " + TXT.line(C.GOLD, 5));
+								opv.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_DESTROY + "? " + TXT.line(C.GOLD, 5));
 								opv.add("YES");
 								opv.add("NO");
 								confirm.setContents(opv);
@@ -968,7 +969,7 @@ public abstract class BaseProvider implements PortalProvider
 								confirm.open();
 							}
 							
-							if(selection.equalsIgnoreCase("Exit"))
+							if(selection.equalsIgnoreCase(Lang.MENU_EXIT))
 							{
 								close();
 							}
@@ -992,35 +993,35 @@ public abstract class BaseProvider implements PortalProvider
 		
 		if(d)
 		{
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Options " + TXT.line(C.GOLD, 5));
-			op.add("Entities: " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
-			op.add("Project Entities: " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add("Project Blocks: " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Actions " + TXT.line(C.GOLD, 5));
-			op.add("Set Uni-Directional");
-			op.add("Reverse Polarity");
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
-			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add("Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
-			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
-			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Other " + TXT.line(C.GOLD, 5));
-			op.add("Destroy");
-			op.add("Exit");
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_OPTIONS + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_ENTITIES + ": " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
+			op.add(Lang.MENU_APERTURE + ": " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(Lang.MENU_PROJECT + ": " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_ACTIONS + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_SET + " " + Lang.MENU_UNIDIRECTIONAL);
+			op.add(Lang.MENU_REVERSE);
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_RANDOM_TP + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_RTP_RANDOMTP + ": " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(Lang.MENU_MENU_RTP_AUTOREFRESH + ": " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(Lang.MENU_RTP_MAX + ": " + C.GOLD + F.f(l.getSettings().getRtpDist()));
+			op.add(Lang.MENU_RTP_MIN + ": " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
+			op.add(Lang.MENU_RTP_TARGET + ": " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_OTHER + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_DESTROY);
+			op.add(Lang.MENU_EXIT);
 		}
 		
 		else
 		{
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Random TP " + TXT.line(C.GOLD, 5));
-			op.add("Random Teleport: " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add("Auto Refresh: " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
-			op.add("Max Distance: " + C.GOLD + F.f(l.getSettings().getRtpDist()));
-			op.add("Min Distance: " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
-			op.add("Target Biome: " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
-			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " Other " + TXT.line(C.GOLD, 5));
-			op.add("Destroy");
-			op.add("Exit");
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_RANDOM_TP + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_RTP_RANDOMTP + ": " + (l.getSettings().isRandomTp() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(Lang.MENU_MENU_RTP_AUTOREFRESH + ": " + (l.getSettings().isRtpRefresh() ? C.GREEN + "ON" : C.RED + "OFF"));
+			op.add(Lang.MENU_RTP_MAX + ": " + C.GOLD + F.f(l.getSettings().getRtpDist()));
+			op.add(Lang.MENU_RTP_MIN + ": " + C.GOLD + F.f(l.getSettings().getRtpMinDist()));
+			op.add(Lang.MENU_RTP_TARGET + ": " + (l.getSettings().getRtpBiome().equals("ALL_BIOMES") ? C.GOLD : C.LIGHT_PURPLE) + l.getSettings().getRtpBiome());
+			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_OTHER + " " + TXT.line(C.GOLD, 5));
+			op.add(Lang.MENU_DESTROY);
+			op.add(Lang.MENU_EXIT);
 		}
 		
 		h.setContent(op);

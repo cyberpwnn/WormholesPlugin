@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.AperturePlane;
@@ -577,7 +578,7 @@ public class LocalPortal implements Portal
 			if(!p.canTeleport(a) && !((p.getTicksLeftBeforeTeleport(a) / 20 + "s").toString().equals("0s")))
 			{
 				throwBack(a);
-				p.notifMessage(a, C.GOLD + "Cooldown Active: " + C.LIGHT_PURPLE + (p.getTicksLeftBeforeTeleport(a) / 20 + "s"), C.GOLD + "You must wait before teleporting.");
+				p.notifMessage(a, C.GOLD + Lang.DESCRIPTION_COOLDOWNACTIVE + ": " + C.LIGHT_PURPLE + (p.getTicksLeftBeforeTeleport(a) / 20 + "s"), C.GOLD + Lang.DESCRIPTION_WAITFORTELEPORT);
 				return;
 			}
 			

@@ -1,6 +1,8 @@
 package com.volmit.wormholes;
 
+import java.lang.reflect.Field;
 import com.volmit.wormholes.config.CName;
+import com.volmit.wormholes.util.DataCluster;
 
 public class Lang
 {
@@ -106,6 +108,45 @@ public class Lang
 	@CName("DESCRIPTION_WIPEHOLO")
 	public static String DESCRIPTION_WIPEHOLO = "Remove dead holograms within 6 blocks of you.";
 	
+	@CName("DESCRIPTION_COOLDOWNACTIVE")
+	public static String DESCRIPTION_COOLDOWNACTIVE = "Cooldown Active";
+	
+	@CName("DESCRIPTION_WAITFORTELEPORT")
+	public static String DESCRIPTION_WAITFORTELEPORT = "You must wait before teleporting.";
+	
+	@CName("DESCRIPTION_HIDETIPS")
+	public static String DESCRIPTION_HIDETIPS = "Click to hide tips for just you.";
+	
+	@CName("DESCRIPTION_PLEASEWAIT")
+	public static String DESCRIPTION_PLEASEWAIT = "Please Wait...";
+	
+	@CName("DESCRIPTION_UNABLETOCONFIGURE")
+	public static String DESCRIPTION_UNABLETOCONFIGURE = "Unable to Configure";
+	
+	@CName("DESCRIPTION_SOMEONEELSECONFIGURING")
+	public static String DESCRIPTION_SOMEONEELSECONFIGURING = "Someone else is configuring this portal.";
+	
+	@CName("DESCRIPTION_MENU_ENTITIES")
+	public static String DESCRIPTION_MENU_ENTITIES = "Toggle the permission for entities to use this portal";
+	
+	@CName("DESCRIPTION_MENU_APERTURE")
+	public static String DESCRIPTION_MENU_APERTURE = "Toggle entity projections";
+	
+	@CName("DESCRIPTION_MENU_PROJECT")
+	public static String DESCRIPTION_MENU_PROJECT = "Toggle block projections";
+	
+	@CName("DESCRIPTION_MENU_POLARITY")
+	public static String DESCRIPTION_MENU_POLARITY = "Reverse the 'front facing' direction of this portal.";
+	
+	@CName("DESCRIPTION_MENU_DESTROYPORTAL")
+	public static String DESCRIPTION_MENU_DESTROYPORTAL = "Destroy this portal?";
+	
+	@CName("DESCRIPTION_MENU_EXIT")
+	public static String DESCRIPTION_MENU_EXIT = "Exit this menu (or just walk away from it)";
+	
+	@CName("DESCRIPTION_MENU_DIRECTIONAL")
+	public static String DESCRIPTION_MENU_DIRECTIONAL = "Setting portals to omni-directional will hide the destination.";
+	
 	@CName("WORD_PORTALS")
 	public static String WORD_PORTALS = "Portals";
 	
@@ -162,4 +203,116 @@ public class Lang
 	
 	@CName("WORD_RUNNING")
 	public static String WORD_RUNNING = "Running";
+	
+	@CName("BUTTON_HIDETIPS")
+	public static String BUTTON_HIDETIPS = "HIDE TIPS";
+	
+	@CName("MENU_ENTITIES")
+	public static String MENU_ENTITIES = "Entities";
+	
+	@CName("MENU_APERTURE")
+	public static String MENU_APERTURE = "Project Entities";
+	
+	@CName("MENU_PROJECT")
+	public static String MENU_PROJECT = "Project Blocks";
+	
+	@CName("MENU_REVERSE")
+	public static String MENU_REVERSE = "Reverse Polarity";
+	
+	@CName("MENU_DESTROY")
+	public static String MENU_DESTROY = "Destroy";
+	
+	@CName("MENU_EXIT")
+	public static String MENU_EXIT = "Exit";
+	
+	@CName("MENU_SET")
+	public static String MENU_SET = "Set";
+	
+	@CName("MENU_UNIDIRECTIONAL")
+	public static String MENU_UNIDIRECTIONAL = "Uni-Directional";
+	
+	@CName("MENU_BIDIRECTIONAL")
+	public static String MENU_BIDIRECTIONAL = "Bi-Directional";
+	
+	@CName("MENU_RTP_AUTOREFRESH")
+	public static String MENU_MENU_RTP_AUTOREFRESH = "Auto Refresh";
+	
+	@CName("MENU_RTP_RANDOMTP")
+	public static String MENU_RTP_RANDOMTP = "Random Teleport";
+	
+	@CName("MENU_RTP_TARGET")
+	public static String MENU_RTP_TARGET = "Target Biome";
+	
+	@CName("MENU_RTP_MAX")
+	public static String MENU_RTP_MAX = "Max Distance";
+	
+	@CName("MENU_RTP_MIN")
+	public static String MENU_RTP_MIN = "Min Distance";
+	
+	@CName("MENU_RANDOM_TP")
+	public static String MENU_RANDOM_TP = "Random TP";
+	
+	@CName("MENU_OPTIONS")
+	public static String MENU_OPTIONS = "Options";
+	
+	@CName("MENU_ACTIONS")
+	public static String MENU_ACTIONS = "Actions";
+	
+	@CName("MENU_OTHER")
+	public static String MENU_OTHER = "Other";
+	
+	public static DataCluster getConfig()
+	{
+		DataCluster cc = new DataCluster();
+		
+		for(Field i : Lang.class.getDeclaredFields())
+		{
+			try
+			{
+				CName n = i.getAnnotation(CName.class);
+				
+				if(n != null)
+				{
+					String name = n.value().toLowerCase().replaceAll("_", ".");
+					Object value = i.get(null);
+					
+					cc.trySet("lang." + name, value, "Default: '" + value.toString() + "'");
+				}
+				
+			}
+			
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return cc;
+	}
+	
+	public static void setConfig(DataCluster cc)
+	{
+		for(Field i : Lang.class.getDeclaredFields())
+		{
+			try
+			{
+				CName n = i.getAnnotation(CName.class);
+				
+				if(n != null)
+				{
+					String name = i.getName().toLowerCase().replaceAll("_", ".");
+					
+					if(cc.contains("lang." + name))
+					{
+						i.set(null, cc.getAbstract("lang." + name));
+					}
+				}
+			}
+			
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 }

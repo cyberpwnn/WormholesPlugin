@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.FileUtils;
+import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.DB;
@@ -101,6 +102,7 @@ public class IOService
 			Wormholes.instance.getDataFolder().mkdirs();
 			doConfigBasic();
 			doConfigExperimental();
+			doConfigLang();
 			Settings.chkConfig();
 		}
 		
@@ -133,6 +135,31 @@ public class IOService
 		
 		new YAMLDataOutput().save(def, f);
 		Settings.setConfig(def);
+	}
+	
+	public void doConfigLang() throws IOException
+	{
+		File f = new File(Wormholes.instance.getDataFolder(), "lang.yml");
+		DataCluster def = Lang.getConfig();
+		DataCluster lod = new DataCluster();
+		
+		if(!f.exists())
+		{
+			f.createNewFile();
+		}
+		
+		new YAMLDataInput().load(lod, f);
+		
+		for(String i : def.keys())
+		{
+			if(lod.contains(i))
+			{
+				def.trySet(i, lod.getAbstract(i), def.getComment(i));
+			}
+		}
+		
+		new YAMLDataOutput().save(def, f);
+		Lang.setConfig(def);
 	}
 	
 	public void doConfigExperimental() throws IOException
