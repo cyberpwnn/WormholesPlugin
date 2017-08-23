@@ -31,6 +31,7 @@ import com.volmit.wormholes.projection.BoundingBox;
 import com.volmit.wormholes.projection.NulledViewport;
 import com.volmit.wormholes.projection.RasteredSystem;
 import com.volmit.wormholes.projection.Viewport;
+import com.volmit.wormholes.util.AnvilText;
 import com.volmit.wormholes.util.BaseHud;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Click;
@@ -48,6 +49,7 @@ import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.PlayerHud;
+import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.RTEX;
 import com.volmit.wormholes.util.RTX;
 import com.volmit.wormholes.util.TXT;
@@ -497,6 +499,11 @@ public abstract class BaseProvider implements PortalProvider
 								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_ENTITIES);
 							}
 							
+							if(s.startsWith("Change Name"))
+							{
+								NMSX.sendActionBar(p, C.YELLOW + "Change Portal Name");
+							}
+							
 							else if(s.startsWith(Lang.MENU_APERTURE))
 							{
 								NMSX.sendActionBar(p, C.YELLOW + Lang.DESCRIPTION_MENU_APERTURE);
@@ -676,6 +683,19 @@ public abstract class BaseProvider implements PortalProvider
 							}
 							
 							new GSound(MSound.WOOD_CLICK.bukkitSound(), 0.3f, 0.8f).play(p);
+							
+							if(selection.startsWith("Change Name"))
+							{
+								AnvilText.getText(p, l.getDisplayName(), new RString()
+								{
+									@Override
+									public void onComplete(String text)
+									{
+										notifMessage(p, F.color(text), C.GOLD + "Name Set!");
+										l.updateDisplayName(text);
+									}
+								});
+							}
 							
 							if(selection.startsWith(Lang.MENU_ENTITIES))
 							{
@@ -994,6 +1014,7 @@ public abstract class BaseProvider implements PortalProvider
 		if(d)
 		{
 			op.add(TXT.line(C.GOLD, 5) + C.GRAY + " " + Lang.MENU_OPTIONS + " " + TXT.line(C.GOLD, 5));
+			op.add("Change Name");
 			op.add(Lang.MENU_ENTITIES + ": " + (l.getSettings().isAllowEntities() ? C.GREEN + "Allowed" : C.RED + "Denied"));
 			op.add(Lang.MENU_APERTURE + ": " + (l.getSettings().isAparture() ? C.GREEN + "ON" : C.RED + "OFF"));
 			op.add(Lang.MENU_PROJECT + ": " + (l.getSettings().isProject() ? C.GREEN + "ON" : C.RED + "OFF"));

@@ -441,7 +441,7 @@ public class LocalPortal implements Portal
 		{
 			if(i instanceof Player)
 			{
-				if(new Permissable(((Player) i)).canUse())
+				if(new Permissable(((Player) i)).canUse(this))
 				{
 					send(i, w, ic);
 				}

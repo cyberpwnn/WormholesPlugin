@@ -22,16 +22,19 @@ import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
+import com.volmit.wormholes.util.AnvilText;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.Task;
 import com.volmit.wormholes.util.Title;
 import com.volmit.wormholes.util.W;
@@ -320,6 +323,15 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterRight());
 			cancel[0] = true;
 			tipCreate(p);
+			AnvilText.getText(p, "&4Name", new RString()
+			{
+				@Override
+				public void onComplete(String text)
+				{
+					notifMessage(p, F.color(text), C.GOLD + "Name Set!");
+					po.updateDisplayName(text);
+				}
+			});
 		}
 		
 		catch(InvalidPortalKeyException e1)

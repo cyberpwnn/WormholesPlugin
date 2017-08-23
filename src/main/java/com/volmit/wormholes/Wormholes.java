@@ -25,6 +25,7 @@ import com.volmit.wormholes.service.PortalRegistry;
 import com.volmit.wormholes.service.ProjectionService;
 import com.volmit.wormholes.service.SkinService;
 import com.volmit.wormholes.service.TimingsService;
+import com.volmit.wormholes.util.AnvilText;
 import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
@@ -36,6 +37,7 @@ import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.QueueMode;
+import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.RTEX;
 import com.volmit.wormholes.util.RTX;
 import com.volmit.wormholes.util.SYM;
@@ -258,7 +260,7 @@ public class Wormholes extends ControllablePlugin
 						
 						if(i.hasDisplayName())
 						{
-							r.addText("(" + i.getDisplayName() + ")", C.WHITE);
+							r.addText("(" + F.color(i.getDisplayName()) + C.WHITE + ")", C.WHITE);
 						}
 						
 						r.addTextFireHoverCommand(" [" + Lang.WORD_TP.toUpperCase() + "]", new RTEX(new ColoredString(C.GREEN, Lang.DESCRIPTION_TELEPORT)), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
@@ -436,6 +438,28 @@ public class Wormholes extends ControllablePlugin
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
+			}
+		});
+		
+		sub.add(new SubCommand(Lang.DESCRIPTION_WAND, "test", "tt", "tx")
+		{
+			@Override
+			public void cs(CommandSender p, String[] args)
+			{
+				p.sendMessage(C.RED + Lang.DESCRIPTION_INGAMEONLY);
+			}
+			
+			@Override
+			public void cp(Player p, String[] args)
+			{
+				AnvilText.getText(p, "&4Portal", new RString()
+				{
+					@Override
+					public void onComplete(String text)
+					{
+						p.sendMessage("Portal name set to " + text);
+					}
+				});
 			}
 		});
 		
