@@ -1,6 +1,8 @@
 package com.volmit.wormholes;
 
 import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.VortexBus;
 import com.volmit.wormholes.portal.LocalPortal;
@@ -29,11 +32,13 @@ import com.volmit.wormholes.util.AnvilText;
 import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
+import com.volmit.wormholes.util.CommandScript;
 import com.volmit.wormholes.util.ControllablePlugin;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
+import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.P;
 import com.volmit.wormholes.util.ParallelPoolManager;
 import com.volmit.wormholes.util.QueueMode;
@@ -67,13 +72,15 @@ public class Wormholes extends ControllablePlugin
 	public static ParallelPoolManager pool;
 	private SubGroup sub;
 	private DB dispatcher;
-	
+	public GMap<String, CommandScript> scripts;
+
 	@Override
 	public void onStart()
 	{
 		DB.rdebug = new File(getDataFolder(), "debug").exists();
 		DB.d(this, "Starting Wormholes");
 		instance = this;
+		scripts = new GMap<String, CommandScript>();
 		Direction.calculatePermutations();
 		io = new IOService();
 		pool = new ParallelPoolManager("Power Thread", Settings.WORMHOLE_POWER_THREADS, QueueMode.ROUND_ROBIN);
@@ -95,9 +102,55 @@ public class Wormholes extends ControllablePlugin
 		dispatcher = new DB("Wormholes");
 		Info.buildBlocks();
 		DB.d(this, "Initial Startup Complete");
+		loadCommandScripts();
 		Info.splash();
 	}
-	
+
+	public void loadCommandScripts()
+	{
+		File f = new File(getDataFolder(), "command-scripts");
+		f.mkdirs();
+		genCommandScripts();
+
+		for(File i : f.listFiles())
+		{
+			if(i.isFile() && i.getName().endsWith(".json"))
+			{
+				CommandScript cs = new CommandScript();
+
+				try
+				{
+					cs.load(i);
+					scripts.put(i.getName(), cs);
+				}
+
+				catch(IOException e)
+				{
+					System.out.println("INVALID JSON # " + i.getAbsolutePath());
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void genCommandScripts()
+	{
+		File f = new File(getDataFolder(), "command-scripts");
+		CommandScript s = new CommandScript();
+		s.getCommands().add("say params are $player $portal $x $y $z");
+		s.getCommands().add("say multiple commands allowed");
+
+		try
+		{
+			s.write(new File(f, "example-script.json"));
+		}
+
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void onStop()
 	{
@@ -107,7 +160,7 @@ public class Wormholes extends ControllablePlugin
 		{
 			((LocalPortal) i).clearHolograms();
 		}
-		
+
 		DB.d(this, "Dequeue Host");
 		Status.fdq = true;
 		host.dequeueAll();
@@ -117,7 +170,7 @@ public class Wormholes extends ControllablePlugin
 		entity.shutdown();
 		DB.d(this, "Shut down");
 	}
-	
+
 	@Override
 	public void onTick()
 	{
@@ -130,18 +183,18 @@ public class Wormholes extends ControllablePlugin
 			int s = aperture.size();
 			int mxs = Settings.APERTURE_MAX_SPEED + (s > Settings.APERTURE_SLOWDOWN_THRESHOLD ? Settings.APERTURE_SLOWDOWN_AMOUNT : 0);
 			mxs = s > Settings.APERTURE_ICE_THRESHOLD ? mxs + Settings.APERTURE_ICE_AMOUNT : mxs;
-			
+
 			if(TICK.tick % mxs == 0)
 			{
 				aperture.flush();
 				entity.flush();
 			}
-			
+
 			if(TICK.tick % Settings.CHUNK_SEND_RATE == 0)
 			{
 				provider.getRasterer().flushRasterQueue();
 			}
-			
+
 			if(TICK.tick % 20 == 0)
 			{
 				Status.avgBPS.put(Status.packetBytesPerSecond);
@@ -153,34 +206,34 @@ public class Wormholes extends ControllablePlugin
 				Status.avgBGY.put(Status.bgg);
 				Status.bgg = 0;
 			}
-			
+
 			if(TICK.tick % Settings.WORMHOLE_IDLE_FLUSH == 0)
 			{
 				for(Player i : P.onlinePlayers())
 				{
 					provider.movePlayer(i);
-					
+
 					for(Portal j : registry.getLocalPortals())
 					{
 						((LocalPortal) j).getMask().sched(i);
 					}
 				}
 			}
-			
+
 			if(TICK.tick % Settings.WORMHOLE_SKIN_FLUSH == 0)
 			{
 				skin.flush();
 			}
-			
+
 			Status.sample();
 		}
-		
+
 		catch(Throwable e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void doReload()
 	{
 		Status.fdq = true;
@@ -194,7 +247,7 @@ public class Wormholes extends ControllablePlugin
 		Bukkit.getPluginManager().disablePlugin(Wormholes.instance);
 		Bukkit.getPluginManager().enablePlugin(Wormholes.instance);
 	}
-	
+
 	private void buildSubs()
 	{
 		DB.d(this, "Building Sub commands");
@@ -218,7 +271,7 @@ public class Wormholes extends ControllablePlugin
 							((Player) p).teleport(v.clone().add(por.getIdentity().getFront().toVector().clone()));
 							return;
 						}
-						
+
 						if(a[0].equalsIgnoreCase("-dl"))
 						{
 							if(new Permissable(p).canDestroy())
@@ -234,49 +287,49 @@ public class Wormholes extends ControllablePlugin
 							}
 						}
 					}
-					
+
 					p.sendMessage(Info.hrn(host.getLocalPortals().size() + " " + Lang.WORD_PORTALS));
-					
+
 					for(Portal i : host.getLocalPortals())
 					{
 						RTX r = new RTX();
 						RTEX b = new RTEX(new ColoredString(C.dyeToChat(i.getKey().getU()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getD()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getL()), SYM.SHAPE_SQUARE + ""), new ColoredString(C.dyeToChat(i.getKey().getR()), SYM.SHAPE_SQUARE + "\n"), new ColoredString(C.GOLD, Lang.WORD_LINK + ": "), new ColoredString(C.WHITE, i.hasWormhole() ? i.isWormholeMutex() ? Lang.WORD_MUTEX + " " + Lang.WORD_LINK + "\n" : Lang.WORD_LOCAL + " " + Lang.WORD_LINK + "\n" : Lang.WORD_NO + " " + Lang.WORD_LINK + "\n"), new ColoredString(C.GOLD, Lang.WORD_POLARITY + ": "), new ColoredString(C.WHITE, i.getIdentity().getFront().toString()));
-						
+
 						if(i.getSided())
 						{
 							r.addText(Lang.WORD_ENDPOINT + " <", C.GRAY);
 						}
-						
+
 						else
 						{
 							r.addText(Lang.WORD_PORTAL + " <", C.GRAY);
 						}
-						
+
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getU()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getD()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getL()));
 						r.addTextHover(SYM.SHAPE_SQUARE + "", b, C.dyeToChat(i.getKey().getR()));
 						r.addText("> ", C.GRAY);
-						
+
 						if(i.hasDisplayName())
 						{
 							r.addText("(" + F.color(i.getDisplayName()) + C.WHITE + ")", C.WHITE);
 						}
-						
+
 						r.addTextFireHoverCommand(" [" + Lang.WORD_TP.toUpperCase() + "]", new RTEX(new ColoredString(C.GREEN, Lang.DESCRIPTION_TELEPORT)), "/w list -tp " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.GREEN);
 						r.addTextFireHoverCommand(" [" + Lang.WORD_DELETE.toUpperCase() + "]", new RTEX(new ColoredString(C.RED, Lang.DESCRIPTION_DELETE)), "/w list -dl " + i.getPosition().getCenter().getWorld().getName() + "," + i.getPosition().getCenter().getBlockX() + "," + i.getPosition().getCenter().getBlockY() + "," + i.getPosition().getCenter().getBlockZ(), C.RED);
 						r.tellRawTo((Player) p);
 					}
-					
+
 					p.sendMessage(Info.hr());
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
-			
+
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
@@ -285,7 +338,7 @@ public class Wormholes extends ControllablePlugin
 					p.sendMessage(i.getKey().toString());
 				}
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -298,11 +351,11 @@ public class Wormholes extends ControllablePlugin
 						return;
 					}
 				}
-				
+
 				list(p, args);
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_TIMINGS, "timings", "t", "perf")
 		{
 			private void list(CommandSender p)
@@ -310,51 +363,51 @@ public class Wormholes extends ControllablePlugin
 				if(new Permissable(p).canList())
 				{
 					p.sendMessage(Info.hrn(Lang.WORD_WORKER + " " + Lang.WORD_THREADS));
-					
+
 					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
 					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
 					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
-					
+
 					p.sendMessage(Info.hrn(Lang.WORD_POWER + " " + Lang.WORD_THREADS));
-					
+
 					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getPowerPool().getThreadCount());
 					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
 					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
-					
+
 					p.sendMessage(Info.hrn(Lang.WORD_SYNC));
 					for(String i : TimingsService.root.toLines(0, 2))
 					{
 						p.sendMessage(i);
 					}
 					p.sendMessage(Info.hrn(Lang.WORD_ASYNC));
-					
+
 					for(String i : TimingsService.asyn.toLines(0, 2))
 					{
 						p.sendMessage(i);
 					}
-					
+
 					p.sendMessage(Info.HR);
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
-			
+
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
 				list(p);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
 				list(p);
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_VERSION, "version", "v", "ver")
 		{
 			private void v(CommandSender p)
@@ -363,26 +416,26 @@ public class Wormholes extends ControllablePlugin
 				{
 					p.sendMessage(C.GOLD + Lang.WORD_RUNNING + " " + C.WHITE + Wormholes.this.getDescription().getVersion());
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
-			
+
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
 				v(p);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
 				v(p);
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_WIPEHOLO, "wipeholo", "wipeh")
 		{
 			@Override
@@ -390,7 +443,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				p.sendMessage(Info.TAG + Lang.DESCRIPTION_INGAMEONLY);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -398,13 +451,13 @@ public class Wormholes extends ControllablePlugin
 				{
 					int m = 0;
 					Area a = new Area(p.getLocation(), 6);
-					
+
 					for(Entity i : a.getNearbyEntities())
 					{
 						if(i instanceof ArmorStand)
 						{
 							ArmorStand s = (ArmorStand) i;
-							
+
 							if(!s.isVisible())
 							{
 								m++;
@@ -412,12 +465,12 @@ public class Wormholes extends ControllablePlugin
 							}
 						}
 					}
-					
+
 					p.sendMessage(Info.TAG + C.GRAY + "Removed " + m + " Hologram Objects");
 				}
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_WAND, "wand", "w", "wan")
 		{
 			@Override
@@ -425,7 +478,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				p.sendMessage(C.RED + Lang.DESCRIPTION_INGAMEONLY);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -433,14 +486,14 @@ public class Wormholes extends ControllablePlugin
 				{
 					provider.getBuilder().giveWand(p, 5);
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_WAND, "test", "tt", "tx")
 		{
 			@Override
@@ -448,7 +501,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				p.sendMessage(C.RED + Lang.DESCRIPTION_INGAMEONLY);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -462,7 +515,7 @@ public class Wormholes extends ControllablePlugin
 				});
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_SYSTEM, "platform", "plat", "pl")
 		{
 			private void v(CommandSender p)
@@ -473,26 +526,26 @@ public class Wormholes extends ControllablePlugin
 					p.sendMessage(Lang.STATUS_APV + ": " + Bukkit.getBukkitVersion());
 					p.sendMessage(Lang.STATUS_LPV + ": " + instance.getDescription().getVersion());
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
-			
+
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
 				v(p);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
 				v(p);
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_DEBUG, "debug", "db", "vb")
 		{
 			@Override
@@ -500,7 +553,7 @@ public class Wormholes extends ControllablePlugin
 			{
 				p.sendMessage(Info.TAG + Lang.DESCRIPTION_INGAMEONLY);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -510,20 +563,20 @@ public class Wormholes extends ControllablePlugin
 					{
 						((BaseProvider) provider).dedebug(p);
 					}
-					
+
 					else
 					{
 						((BaseProvider) provider).debug(p);
 					}
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
 		});
-		
+
 		sub.add(new SubCommand(Lang.DESCRIPTION_RELOAD, "reload", "reset")
 		{
 			public void go(CommandSender p)
@@ -533,19 +586,19 @@ public class Wormholes extends ControllablePlugin
 					doReload();
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_RELOADED);
 				}
-				
+
 				else
 				{
 					p.sendMessage(Info.TAG + Lang.DESCRIPTION_NOPERMISSION);
 				}
 			}
-			
+
 			@Override
 			public void cs(CommandSender p, String[] args)
 			{
 				go(p);
 			}
-			
+
 			@Override
 			public void cp(Player p, String[] args)
 			{
@@ -553,96 +606,96 @@ public class Wormholes extends ControllablePlugin
 			}
 		});
 	}
-	
+
 	@Override
 	public void onConstruct()
 	{
-		
+
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		if(cmd.getName().equalsIgnoreCase("wormhole"))
 		{
 			sub.hit(sender, args);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public static Wormholes getInstance()
 	{
 		return instance;
 	}
-	
+
 	public static VortexBus getBus()
 	{
 		return bus;
 	}
-	
+
 	public static MutexService getHost()
 	{
 		return host;
 	}
-	
+
 	public static PortalProvider getProvider()
 	{
 		return provider;
 	}
-	
+
 	public static PortalRegistry getRegistry()
 	{
 		return registry;
 	}
-	
+
 	public static ApertureService getAperture()
 	{
 		return aperture;
 	}
-	
+
 	public static ProjectionService getProjector()
 	{
 		return projector;
 	}
-	
+
 	public static TimingsService getTimings()
 	{
 		return timings;
 	}
-	
+
 	public static EntityService getEntity()
 	{
 		return entity;
 	}
-	
+
 	public static SkinService getSkin()
 	{
 		return skin;
 	}
-	
+
 	public static IOService getIo()
 	{
 		return io;
 	}
-	
+
 	public static EffectService getFx()
 	{
 		return fx;
 	}
-	
+
 	public static ParallelPoolManager getPool()
 	{
 		return pool;
 	}
-	
+
 	public SubGroup getSub()
 	{
 		return sub;
 	}
-	
+
 	public DB getDispatcher()
 	{
 		return dispatcher;
