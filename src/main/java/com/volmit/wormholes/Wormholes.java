@@ -104,6 +104,7 @@ public class Wormholes extends ControllablePlugin
 		DB.d(this, "Initial Startup Complete");
 		loadCommandScripts();
 		Info.splash();
+		new BStats(this);
 	}
 
 	public void loadCommandScripts()

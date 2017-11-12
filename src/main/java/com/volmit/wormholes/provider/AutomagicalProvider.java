@@ -9,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
@@ -22,19 +23,16 @@ import com.volmit.wormholes.exception.InvalidPortalKeyException;
 import com.volmit.wormholes.exception.InvalidPortalPositionException;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
-import com.volmit.wormholes.util.AnvilText;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
-import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.NMSX;
 import com.volmit.wormholes.util.ParticleEffect;
-import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.Task;
 import com.volmit.wormholes.util.Title;
 import com.volmit.wormholes.util.W;
@@ -43,24 +41,24 @@ import com.volmit.wormholes.util.Wraith;
 public class AutomagicalProvider extends BaseProvider implements Listener
 {
 	private GMap<Portal, GList<Player>> msd;
-	
+
 	public AutomagicalProvider()
 	{
 		Wraith.registerListener(this);
 		msd = new GMap<Portal, GList<Player>>();
 	}
-	
+
 	@Override
 	public void onFlush()
 	{
 		Status.sample();
-		
+
 		for(Player i : debug)
 		{
 			NMSX.sendActionBar(i, Status.inf);
 		}
 	}
-	
+
 	@EventHandler
 	public void on(PortalActivatePlayerEvent e)
 	{
@@ -68,22 +66,22 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		{
 			return;
 		}
-		
+
 		if(Wormholes.host.isThrottled(e.getPlayer()))
 		{
 			return;
 		}
-		
+
 		if(!msd.containsKey(e.getPortal()))
 		{
 			msd.put(e.getPortal(), new GList<Player>());
 		}
-		
+
 		if(msd.get(e.getPortal()).contains(e.getPlayer()))
 		{
 			return;
 		}
-		
+
 		Title t = new Title();
 		t.setFadeIn(7);
 		t.setFadeOut(67);
@@ -99,7 +97,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.3f, 0.3f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
 		new GSound(MSound.AMBIENCE_CAVE.bukkitSound(), 0.12f, 1.7f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
 		new GSound(MSound.AMBIENCE_THUNDER.bukkitSound(), 0.32f, 0.34f).play(e.getPlayer(), e.getPortal().getPosition().getCenter());
-		
+
 		new Task(0)
 		{
 			@Override
@@ -110,7 +108,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 					msd.get(e.getPortal()).remove(e.getPlayer());
 					cancel();
 				}
-				
+
 				if(!e.getPortal().getPosition().getArea().contains(e.getPlayer().getLocation()))
 				{
 					msd.get(e.getPortal()).remove(e.getPlayer());
@@ -119,13 +117,13 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			}
 		};
 	}
-	
+
 	@EventHandler
 	public void on(PortalDeactivatePlayerEvent e)
 	{
-		
+
 	}
-	
+
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
@@ -147,23 +145,23 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 					}
 				}
 			}
-			
+
 			return;
 		}
-		
+
 		ItemStack is = e.getPlayer().getItemInHand();
-		
+
 		if(is == null || is.getType().equals(Material.AIR))
 		{
 			return;
 		}
-		
+
 		if(is.getType().equals(Material.NAME_TAG))
 		{
 			ItemMeta im = is.getItemMeta();
 			String title = im.getDisplayName();
 			Portal p = WAPI.getPortalLookingAt(e.getPlayer());
-			
+
 			if(p != null && p.getPosition().getCenter().distance(e.getPlayer().getLocation()) <= 9)
 			{
 				if(new Permissable(e.getPlayer()).canConfigure())
@@ -174,7 +172,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void ona(PlayerInteractEvent e)
 	{
@@ -182,32 +180,32 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		{
 			return;
 		}
-		
+
 		if(e.getPlayer().getItemInHand() == null)
 		{
 			return;
 		}
-		
+
 		if(!e.getPlayer().getItemInHand().getType().equals(Material.FLINT_AND_STEEL))
 		{
 			return;
 		}
-		
+
 		e.setCancelled(constructPortal(e.getPlayer(), e.getClickedBlock()));
 	}
-	
+
 	public boolean constructPortal(Player p, Block b)
 	{
 		if(!new Permissable(p).canCreate())
 		{
 			return false;
 		}
-		
+
 		if(!W.isColored(b))
 		{
 			return false;
 		}
-		
+
 		Block block = b;
 		int maxPortalSize = Settings.MAX_PORTAL_SIZE;
 		GList<Integer> maxBase = getBaseSqrt(maxPortalSize);
@@ -219,33 +217,33 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		boolean found = false;
 		Direction finalDirection = null;
 		Cuboid c = null;
-		
+
 		for(Direction i : Direction.udnews())
 		{
 			for(int j : maxBase)
 			{
 				Block bCheck = block.getLocation().clone().add(i.toVector().clone().multiply(j + 1)).getBlock();
-				
+
 				if(W.isColored(bCheck))
 				{
 					initialD = i;
 					setDist = j;
 					blockCenter = block.getLocation().clone().add(i.toVector().clone().multiply((j + 1) / 2)).getBlock();
-					
+
 					for(Direction k : Direction.udnews())
 					{
 						if(k.equals(initialD) || k.equals(initialD.reverse()))
 						{
 							continue;
 						}
-						
+
 						Block bCheck2 = blockCenter.getLocation().clone().add(k.toVector().clone().multiply((j + 1) / 2)).getBlock();
-						
+
 						if(W.isColored(bCheck2))
 						{
 							altD = k;
 							Block bCheck3 = bCheck2.getLocation().clone().add(k.reverse().toVector().clone().multiply(j + 1)).getBlock();
-							
+
 							if(W.isColored(bCheck2) && W.isColored(bCheck3))
 							{
 								GList<Direction> dirs = Direction.udnews();
@@ -257,7 +255,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 								found = true;
 							}
 						}
-						
+
 						if(found)
 						{
 							break;
@@ -265,54 +263,54 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 					}
 				}
 			}
-			
+
 			if(found)
 			{
 				break;
 			}
 		}
-		
+
 		if(!found)
 		{
 			return false;
 		}
-		
+
 		found = false;
-		
+
 		c = new Cuboid(blockCenter.getLocation());
-		
+
 		for(Axis i : Axis.values())
 		{
 			if(i.equals(axis))
 			{
 				continue;
 			}
-			
+
 			c = c.e(i, (setDist + 1) / 2);
 		}
-		
+
 		GList<Direction> dirs = Direction.udnews();
 		dirs.remove(initialD);
 		dirs.remove(initialD.reverse());
 		dirs.remove(altD);
 		dirs.remove(altD.reverse());
 		double maxDist = Double.MAX_VALUE;
-		
+
 		for(Direction i : dirs)
 		{
 			double dist = i.toVector().distance(p.getLocation().getDirection());
-			
+
 			if(dist < maxDist)
 			{
 				maxDist = dist;
 				finalDirection = i;
 			}
 		}
-		
+
 		Direction md = finalDirection;
 		Cuboid cx = c;
 		boolean[] cancel = {false};
-		
+
 		try
 		{
 			LocalPortal po = createPortal(md, cx);
@@ -323,39 +321,30 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 			Wormholes.provider.getRasterer().wc(po.getPosition().getCenterRight());
 			cancel[0] = true;
 			tipCreate(p);
-			AnvilText.getText(p, "&4Name", new RString()
-			{
-				@Override
-				public void onComplete(String text)
-				{
-					notifMessage(p, F.color(text), C.GOLD + "Name Set!");
-					po.updateDisplayName(text);
-				}
-			});
 		}
-		
+
 		catch(InvalidPortalKeyException e1)
 		{
 			cancel[0] = true;
 			notifMessage(p, C.RED + Lang.DESCRIPTION_INVALIDKEY, C.RED + e1.getMessage());
-			
+
 			for(Block vc : new GList<Block>(cx.iterator()))
 			{
 				ParticleEffect.BARRIER.display(0f, 1, vc.getLocation().clone().add(0.5, 0.5, 0.5), 32);
 			}
 		}
-		
+
 		catch(InvalidPortalPositionException e1)
 		{
 			notifMessage(p, C.RED + Lang.DESCRIPTION_INVALIDPOS, C.RED + e1.getMessage());
 		}
-		
+
 		catch(DuplicatePortalKeyException e1)
 		{
 			cancel[0] = true;
 			notifMessage(p, C.RED + Lang.DESCRIPTION_DUPEKEY, C.RED + e1.getMessage());
 		}
-		
+
 		return cancel[0];
 	}
 }

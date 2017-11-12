@@ -201,32 +201,31 @@ public enum MSound
 	VILLAGER_IDLE("VILLAGER_IDLE", "ENTITY_VILLAGER_AMBIENT"),
 	VILLAGER_NO("VILLAGER_NO", "ENTITY_VILLAGER_NO"),
 	VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES");
-	
+
 	private String pre19sound;
 	private String post19sound;
 	private Sound resolvedSound = null;
-	
+
 	MSound(String pre19sound, String post19sound)
 	{
 		this.pre19sound = pre19sound;
 		this.post19sound = post19sound;
 	}
-	
+
 	public Sound bukkitSound()
 	{
 		if(resolvedSound != null)
 		{
 			return resolvedSound;
 		}
-		
+
 		try
 		{
 			return resolvedSound = Sound.valueOf(post19sound);
 		}
-		
+
 		catch(IllegalArgumentException e)
 		{
-			//Try 1.8 sound
 			return resolvedSound = Sound.valueOf(pre19sound);
 		}
 	}
