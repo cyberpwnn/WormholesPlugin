@@ -2,36 +2,32 @@ package com.volmit.wormholes.chunk;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.v1_9_R2.CraftChunk;
+import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.entity.Player;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.volmit.wormholes.exception.NMSChunkFailureException;
+import com.volmit.wormholes.util.GList;
 
-import net.minecraft.server.v1_9_R2.Block;
-import net.minecraft.server.v1_9_R2.ChunkSection;
-import net.minecraft.server.v1_9_R2.DataBits;
-import net.minecraft.server.v1_9_R2.IBlockData;
-import net.minecraft.server.v1_9_R2.MathHelper;
-import net.minecraft.server.v1_9_R2.NibbleArray;
+import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.ChunkSection;
+import net.minecraft.server.v1_8_R3.IBlockData;
+import net.minecraft.server.v1_8_R3.MathHelper;
+import net.minecraft.server.v1_8_R3.NibbleArray;
 
-public class NMSChunk19 extends NMSChunk implements VirtualChunk
+public class NMSChunk18 extends NMSChunk implements VirtualChunk
 {
-	private net.minecraft.server.v1_9_R2.Chunk nmsChunk;
+	private net.minecraft.server.v1_8_R3.Chunk nmsChunk;
 
-	public NMSChunk19(Chunk bukkitChunk) throws NMSChunkFailureException
+	public NMSChunk18(Chunk bukkitChunk) throws NMSChunkFailureException
 	{
-		super(bukkitChunk, "1_9_R2");
+		super(bukkitChunk, "1_8_R3");
 
 		nmsChunk = ((CraftChunk) getChunk()).getHandle();
 		pack();
@@ -55,12 +51,13 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 					{
 						for(int l = 0; l < 16; l++)
 						{
-							IBlockData ibd = i.getBlocks().a(j, k, l);
+
+							IBlockData ibd = i.getType(j, k, l);
 							int id = Block.getId(ibd.getBlock());
 							byte data = (byte) ibd.getBlock().toLegacyData(ibd);
 							setSect(i.getYPosition() >> 4, j, k, l, id, data);
-							skyLight[i.getYPosition() >> 4] = i.getSkyLightArray().asBytes();
-							blockLight[i.getYPosition() >> 4] = i.getEmittedLightArray().asBytes();
+							skyLight[i.getYPosition() >> 4] = i.getSkyLightArray().a();
+							blockLight[i.getYPosition() >> 4] = i.getEmittedLightArray().a();
 						}
 					}
 				}
@@ -111,6 +108,7 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 		StructureModifier<Integer> ints = packet.getIntegers();
 		StructureModifier<byte[]> byteArray = packet.getByteArrays();
 		StructureModifier<Boolean> bools = packet.getBooleans();
+
 		ints.write(0, getX());
 		ints.write(1, getZ());
 		bools.write(0, false);
@@ -128,10 +126,10 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 				continue;
 			}
 
-			int num = MathHelper.d(Block.REGISTRY_ID.a());
+			int num = MathHelper.d(new GList<IBlockData>(Block.d.iterator()).size());
 			nm.write(num);
 			nm.writeVarInt(0);
-			DataBits bits = new DataBits(num, 4096);
+			DataBits18 bits = new DataBits18(num, 4096);
 			bits.a(0, 0);
 
 			for(int j = 0; j < 4096; j++)
@@ -156,7 +154,6 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 		}
 
 		byteArray.write(0, boas.toByteArray());
-		packet.getModifier().withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getNBTBaseClass(), BukkitConverters.getNbtConverter())).write(0, new ArrayList<>());
 		nm.close();
 	}
 }

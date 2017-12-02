@@ -7,15 +7,17 @@ public class ParallelThread extends Thread
 {
 	private Queue<Execution> queue;
 	private ThreadInformation info;
-	
+	private boolean working;
+
 	public ParallelThread(String key, int id)
 	{
 		queue = new ConcurrentLinkedQueue<Execution>();
 		info = new ThreadInformation(id);
 		setPriority(MAX_PRIORITY);
 		setName("Wormhole " + key + " " + id);
+		working = false;
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -40,19 +42,23 @@ public class ParallelThread extends Thread
 				info.setUtilization(1.0 - (info.getTicksPerSecond() / 20.0));
 				info.setTick(info.getTick() + 1);
 			}
-			
+
 			catch(InterruptedException e)
 			{
+				working = false;
 				System.out.println("Shutting Down " + getName());
 			}
-			
+
 			catch(Exception e)
 			{
+				working = false;
 				e.printStackTrace();
 			}
 		}
+
+		working = false;
 	}
-	
+
 	private void conditionallySleep(double diff) throws InterruptedException
 	{
 		if(info.getTick() >= TICK.tick)
@@ -60,46 +66,54 @@ public class ParallelThread extends Thread
 			Thread.sleep((long) diff);
 		}
 	}
-	
+
 	private void execute(Execution e)
 	{
 		try
 		{
 			e.run();
 		}
-		
+
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void execute()
 	{
+		working = true;
 		while(!queue.isEmpty())
 		{
 			if(interrupted())
 			{
+				working = false;
 				System.out.println("Parallel Thread " + info.getId() + " Interrupted mid-execution");
 				return;
 			}
-			
+
 			execute(queue.poll());
 		}
+		working = false;
 	}
-	
+
 	public void queue(Execution e)
 	{
 		queue.offer(e);
 	}
-	
+
 	public Queue<Execution> getQueue()
 	{
 		return queue;
 	}
-	
+
 	public ThreadInformation getInfo()
 	{
 		return info;
+	}
+
+	public boolean isWorking()
+	{
+		return working;
 	}
 }

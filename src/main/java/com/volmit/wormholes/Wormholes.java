@@ -52,6 +52,7 @@ import com.volmit.wormholes.util.TICK;
 import com.volmit.wormholes.util.TickHandle;
 import com.volmit.wormholes.util.TickHandler;
 import com.volmit.wormholes.util.Ticked;
+import com.volmit.wormholes.util.Wraith;
 
 @Ticked(0)
 @TickHandle(TickHandler.SYNCED)
@@ -177,6 +178,8 @@ public class Wormholes extends ControllablePlugin
 	{
 		try
 		{
+			pool.tickSyncQueue();
+			Wraith.poolManager.tickSyncQueue();
 			bus.flush();
 			host.flush();
 			provider.flush();
@@ -208,7 +211,7 @@ public class Wormholes extends ControllablePlugin
 				Status.bgg = 0;
 			}
 
-			if(TICK.tick % Settings.WORMHOLE_IDLE_FLUSH == 0)
+			if(TICK.tick % (int) (Settings.WORMHOLE_IDLE_FLUSH) == 0)
 			{
 				for(Player i : P.onlinePlayers())
 				{

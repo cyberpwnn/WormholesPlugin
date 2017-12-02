@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.Portal;
@@ -17,14 +18,14 @@ public class Viewport
 	private Player p;
 	private Portal portal;
 	private ProjectionSet set;
-	
+
 	public Viewport(Player p, Portal portal)
 	{
 		this.p = p;
 		this.portal = portal;
 		set = new ProjectionSet();
 	}
-	
+
 	public void wipe()
 	{
 		for(Block i : set.getBlocks())
@@ -32,7 +33,7 @@ public class Viewport
 			Wormholes.provider.getRasterer().dequeue(p, i.getLocation());
 		}
 	}
-	
+
 	public void rebuild()
 	{
 		set = new ProjectionSet();
@@ -40,57 +41,69 @@ public class Viewport
 		Location lb = portal.getPosition().getCornerUR();
 		Vector va = VectorMath.direction(getIris(), la);
 		Vector vb = VectorMath.direction(getIris(), lb);
-		Integer dfd = (int) getIris().clone().distance(portal.getPosition().getCenter());
-		
-		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6 + dfd; i++)
+		boolean f = false;
+		int kf = 0;
+
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS * 3; i++)
 		{
 			Location ma = getIris().clone().add(va.clone().multiply(i)).clone();
 			Location mb = getIris().clone().add(vb.clone().multiply(i)).clone();
-			
+
 			set.add(new Cuboid(ma, mb));
-			
-			if(set.contains(portal.getPosition().getCenter().clone().add(0.5, 0.5, 0.5)) && set.contains(portal.getPosition().getCenter()))
+
+			if(f)
 			{
+				kf++;
+
+				if(kf > Settings.PROJECTION_SAMPLE_RADIUS + 2)
+				{
+					break;
+				}
+			}
+
+			if(set.contains(portal.getPosition().getCenter()))
+			{
+				f = true;
 				set.clear();
 			}
 		}
 	}
-	
+
 	public GList<Entity> getEntities()
 	{
 		return set.getEntities();
 	}
-	
+
 	public boolean contains(Location l)
 	{
 		if(portal.getPosition().getPane().contains(l))
 		{
 			return false;
 		}
-		
-		return set.contains(l.clone().add(0.5, 0.5, 0.5)) && set.contains(l.clone().add(1, 1, 1)) && set.contains(l.clone().add(0, 0, 0)) && set.contains(l.clone().add(1, 1, 0)) && set.contains(l.clone().add(1, 0, 0)) && set.contains(l.clone().add(0, 0, 1)) && set.contains(l.clone().add(0, 1, 1)) && set.contains(l.clone().add(1, 0, 1)) && set.contains(l.clone().add(0, 1, 0));
+
+		return set.contains(l) || set.contains(l.clone().add(0.5, 0.5, 0.5));
 	}
-	
+
 	public boolean contains(Block l)
 	{
 		return contains(l.getLocation());
 	}
-	
+
 	public Location getIris()
 	{
-		return p.getLocation().clone().add(0, 1.7, 0).getBlock().getLocation();
+		return p.getLocation().clone().getBlock().getLocation().clone().add(0.5, 1.7, 0.5);
 	}
-	
+
 	public Player getP()
 	{
 		return p;
 	}
-	
+
 	public Portal getPortal()
 	{
 		return portal;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -101,7 +114,7 @@ public class Viewport
 		result = prime * result + ((set == null) ? 0 : set.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -140,7 +153,7 @@ public class Viewport
 		{
 			return false;
 		}
-		
+
 		if(set == null)
 		{
 			if(other.set != null)
@@ -154,46 +167,46 @@ public class Viewport
 		}
 		return true;
 	}
-	
+
 	public ProjectionSet getProjectionSet()
 	{
 		return set;
 	}
-	
+
 	public Location getLA()
 	{
 		return portal.getPosition().getCornerDL();
 	}
-	
+
 	public Location getLB()
 	{
 		return portal.getPosition().getCornerUR();
 	}
-	
+
 	public ProjectionSet betweenThisAnd(Viewport p, Portal por)
 	{
 		Location iris = p.getIris();
 		Location la = p.getLA();
 		Location lb = getLB();
-		
+
 		ProjectionSet set = new ProjectionSet();
 		Vector va = VectorMath.direction(iris, la);
 		Vector vb = VectorMath.direction(iris, lb);
 		Integer dfd = (int) iris.clone().distance(portal.getPosition().getCenter());
-		
+
 		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS + 6 + dfd; i++)
 		{
 			Location ma = iris.clone().add(va.clone().multiply(i));
 			Location mb = iris.clone().add(vb.clone().multiply(i));
-			
+
 			set.add(new Cuboid(ma, mb));
-			
+
 			if(set.contains(portal.getPosition().getCenter()))
 			{
 				set.clear();
 			}
 		}
-		
+
 		return set;
 	}
 }

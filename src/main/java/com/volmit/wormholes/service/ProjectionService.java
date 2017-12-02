@@ -31,7 +31,7 @@ import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MaterialBlock;
-import com.volmit.wormholes.util.TaskLater;
+import com.volmit.wormholes.util.S;
 import com.volmit.wormholes.util.Timer;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
@@ -82,10 +82,10 @@ public class ProjectionService implements Listener
 						Timer t = new Timer();
 						t.start();
 
-						new TaskLater()
+						new S()
 						{
 							@Override
-							public void run()
+							public void sync()
 							{
 								for(Portal po : Wormholes.host.getLocalPortals())
 								{
@@ -98,13 +98,13 @@ public class ProjectionService implements Listener
 									{
 										new A()
 										{
-
 											@Override
 											public void async()
 											{
 												deprojectStrays(po);
 											}
 										};
+
 										startProjection(po);
 									}
 
@@ -158,7 +158,6 @@ public class ProjectionService implements Listener
 				public void async()
 				{
 					project((LocalPortal) po);
-					Wormholes.pool.lock();
 					((LocalPortal) po).getMask().clear();
 					doProject();
 				}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import org.bukkit.material.MaterialData;
 
 /**
  * Cuboids
- * 
+ *
  * @author cyberpwn
  */
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable
@@ -26,10 +27,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	protected final String worldName;
 	protected int x1, y1, z1;
 	protected int x2, y2, z2;
-	
+
 	/**
-	 * Construct a Cuboid given two Location objects which represent any two
-	 * corners of the Cuboid.
+	 * Construct a Cuboid given two Location objects which represent any two corners
+	 * of the Cuboid.
 	 *
 	 * @param l1
 	 *            one of the corners
@@ -42,7 +43,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		{
 			throw new IllegalArgumentException("locations must be on the same world");
 		}
-		
+
 		worldName = l1.getWorld().getName();
 		x1 = Math.min(l1.getBlockX(), l2.getBlockX());
 		y1 = Math.min(l1.getBlockY(), l2.getBlockY());
@@ -51,7 +52,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		y2 = Math.max(l1.getBlockY(), l2.getBlockY());
 		z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
 	}
-	
+
 	public int depth(Axis a)
 	{
 		switch(a)
@@ -63,13 +64,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			case Z:
 				return z2 - z1;
 		}
-		
+
 		return -1;
 	}
-	
+
 	/**
 	 * Set the locations
-	 * 
+	 *
 	 * @param l1
 	 *            a
 	 * @param l2
@@ -84,12 +85,12 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		y2 = Math.max(l1.getBlockY(), l2.getBlockY());
 		z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
 	}
-	
+
 	public boolean hasPlayers()
 	{
 		return !getPlayers().isEmpty();
 	}
-	
+
 	public GList<Player> getPlayers()
 	{
 		return new GList<Player>(new GListAdapter<Entity, Player>()
@@ -101,16 +102,16 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				{
 					return (Player) from;
 				}
-				
+
 				return null;
 			}
 		}.adapt(getEntities()));
 	}
-	
+
 	public GList<Entity> getEntities()
 	{
 		GList<Entity> entities = new GList<Entity>();
-		
+
 		try
 		{
 			for(Chunk i : getChunks())
@@ -121,32 +122,32 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.87))))
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.75))))
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.5))))
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.25))))
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.15))))
 					{
 						entities.add(j);
 					}
-					
+
 					else if(contains(j.getLocation().add(j.getVelocity().clone().multiply(0.05))))
 					{
 						entities.add(j);
@@ -154,15 +155,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				}
 			}
 		}
-		
+
 		catch(Exception e)
 		{
-			
+
 		}
-		
+
 		return entities;
 	}
-	
+
 	/**
 	 * Construct a one-block Cuboid at the given Location of the Cuboid.
 	 *
@@ -173,17 +174,17 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		this(l1, l1);
 	}
-	
+
 	public Cuboid e(Direction d, int amt)
 	{
 		return expand(d.f(), amt);
 	}
-	
+
 	public Cuboid e(Axis d, int amt)
 	{
 		return e(Direction.getDirection(d.positive()), amt).e(Direction.getDirection(d.negative()), amt);
 	}
-	
+
 	/**
 	 * Copy constructor.
 	 *
@@ -194,7 +195,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		this(other.getWorld().getName(), other.x1, other.y1, other.z1, other.x2, other.y2, other.z2);
 	}
-	
+
 	/**
 	 * Construct a Cuboid in the given World and xyz co-ordinates
 	 *
@@ -223,7 +224,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		this.z1 = Math.min(z1, z2);
 		this.z2 = Math.max(z1, z2);
 	}
-	
+
 	/**
 	 * Construct a Cuboid in the given world name and xyz co-ordinates.
 	 *
@@ -252,7 +253,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		this.z1 = Math.min(z1, z2);
 		this.z2 = Math.max(z1, z2);
 	}
-	
+
 	public Cuboid(Map<String, Object> map)
 	{
 		worldName = (String) map.get("worldName");
@@ -263,7 +264,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		z1 = (Integer) map.get("z1");
 		z2 = (Integer) map.get("z2");
 	}
-	
+
 	@Override
 	public Map<String, Object> serialize()
 	{
@@ -277,12 +278,12 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		map.put("z2", z2);
 		return map;
 	}
-	
+
 	public Cuboid flatten(int level)
 	{
 		return new Cuboid(getWorld(), x1, level, z1, x2, level, z2);
 	}
-	
+
 	/**
 	 * Get the Location of the lower northeast corner of the Cuboid (minimum XYZ
 	 * co-ordinates).
@@ -293,7 +294,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return new Location(getWorld(), x1, y1, z1);
 	}
-	
+
 	/**
 	 * Get the Location of the upper southwest corner of the Cuboid (maximum XYZ
 	 * co-ordinates).
@@ -304,7 +305,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return new Location(getWorld(), x2, y2, z2);
 	}
-	
+
 	/**
 	 * Get the the centre of the Cuboid
 	 *
@@ -317,7 +318,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		int z1 = getUpperZ() + 1;
 		return new Location(getWorld(), getLowerX() + (x1 - getLowerX()) / 2.0, getLowerY() + (y1 - getLowerY()) / 2.0, getLowerZ() + (z1 - getLowerZ()) / 2.0);
 	}
-	
+
 	/**
 	 * Get the Cuboid's world.
 	 *
@@ -334,7 +335,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 		return world;
 	}
-	
+
 	/**
 	 * Get the size of this Cuboid along the X axis
 	 *
@@ -344,7 +345,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return (x2 - x1) + 1;
 	}
-	
+
 	/**
 	 * Get the size of this Cuboid along the Y axis
 	 *
@@ -354,7 +355,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return (y2 - y1) + 1;
 	}
-	
+
 	/**
 	 * Get the size of this Cuboid along the Z axis
 	 *
@@ -364,17 +365,17 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return (z2 - z1) + 1;
 	}
-	
+
 	/**
 	 * Get the cuboid dimensions
-	 * 
+	 *
 	 * @return the dimensions
 	 */
 	public Dimension getDimension()
 	{
 		return new Dimension(getSizeX(), getSizeY(), getSizeZ());
 	}
-	
+
 	/**
 	 * Get the minimum X co-ordinate of this Cuboid
 	 *
@@ -384,7 +385,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return x1;
 	}
-	
+
 	/**
 	 * Get the minimum Y co-ordinate of this Cuboid
 	 *
@@ -394,7 +395,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return y1;
 	}
-	
+
 	/**
 	 * Get the minimum Z co-ordinate of this Cuboid
 	 *
@@ -404,7 +405,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return z1;
 	}
-	
+
 	/**
 	 * Get the maximum X co-ordinate of this Cuboid
 	 *
@@ -414,7 +415,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return x2;
 	}
-	
+
 	/**
 	 * Get the maximum Y co-ordinate of this Cuboid
 	 *
@@ -424,7 +425,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return y2;
 	}
-	
+
 	/**
 	 * Get the maximum Z co-ordinate of this Cuboid
 	 *
@@ -434,7 +435,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return z2;
 	}
-	
+
 	/**
 	 * Get the Blocks at the eight corners of the Cuboid.
 	 *
@@ -454,12 +455,11 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		res[7] = w.getBlockAt(x2, y2, z2);
 		return res;
 	}
-	
+
 	/**
 	 * Expand the Cuboid in the given direction by the given amount. Negative
-	 * amounts will shrink the Cuboid in the given direction. Shrinking a
-	 * cuboid's face past the opposite face is not an error and will return a
-	 * valid Cuboid.
+	 * amounts will shrink the Cuboid in the given direction. Shrinking a cuboid's
+	 * face past the opposite face is not an error and will return a valid Cuboid.
 	 *
 	 * @param dir
 	 *            the direction in which to expand
@@ -487,7 +487,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				throw new IllegalArgumentException("invalid direction " + dir);
 		}
 	}
-	
+
 	/**
 	 * Shift the Cuboid in the given direction by the given amount.
 	 *
@@ -501,13 +501,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return expand(dir, amount).expand(dir.opposite(), -amount);
 	}
-	
+
 	/**
 	 * Outset (grow) the Cuboid in the given direction by the given amount.
 	 *
 	 * @param dir
-	 *            the direction in which to outset (must be Horizontal,
-	 *            Vertical, or Both)
+	 *            the direction in which to outset (must be Horizontal, Vertical, or
+	 *            Both)
 	 * @param amount
 	 *            the number of blocks by which to outset
 	 * @return a new Cuboid outset by the given direction and amount
@@ -531,14 +531,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 		return c;
 	}
-	
+
 	/**
 	 * Inset (shrink) the Cuboid in the given direction by the given amount.
 	 * Equivalent to calling outset() with a negative amount.
 	 *
 	 * @param dir
-	 *            the direction in which to inset (must be Horizontal, Vertical,
-	 *            or Both)
+	 *            the direction in which to inset (must be Horizontal, Vertical, or
+	 *            Both)
 	 * @param amount
 	 *            the number of blocks by which to inset
 	 * @return a new Cuboid inset by the given direction and amount
@@ -547,7 +547,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return outset(dir, -amount);
 	}
-	
+
 	/**
 	 * Return true if the point at (x,y,z) is contained within this Cuboid.
 	 *
@@ -563,7 +563,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return x >= x1 && x <= x2 && y >= y1 && y <= y2 && z >= z1 && z <= z2;
 	}
-	
+
 	/**
 	 * Check if the given Block is contained within this Cuboid.
 	 *
@@ -575,7 +575,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return contains(b.getX(), b.getY(), b.getZ());
 	}
-	
+
 	/**
 	 * Check if the given Location is contained within this Cuboid.
 	 *
@@ -587,7 +587,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return worldName.equals(l.getWorld().getName()) && contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	}
-	
+
 	/**
 	 * Get the volume of this Cuboid.
 	 *
@@ -597,10 +597,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return getSizeX() * getSizeY() * getSizeZ();
 	}
-	
+
 	/**
-	 * Get the average light level of all empty (air) blocks in the Cuboid.
-	 * Returns 0 if there are no empty blocks.
+	 * Get the average light level of all empty (air) blocks in the Cuboid. Returns
+	 * 0 if there are no empty blocks.
 	 *
 	 * @return the average light level of this Cuboid
 	 */
@@ -618,7 +618,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 		return n > 0 ? (byte) (total / n) : 0;
 	}
-	
+
 	/**
 	 * Contract the Cuboid, returning a Cuboid with any air around the edges
 	 * removed, just large enough to include all non-air blocks.
@@ -629,11 +629,11 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return this.contract(CuboidDirection.Down).contract(CuboidDirection.South).contract(CuboidDirection.East).contract(CuboidDirection.Up).contract(CuboidDirection.North).contract(CuboidDirection.West);
 	}
-	
+
 	/**
-	 * Contract the Cuboid in the given direction, returning a new Cuboid which
-	 * has no exterior empty space. E.g. a direction of Down will push the top
-	 * face downwards as much as possible.
+	 * Contract the Cuboid in the given direction, returning a new Cuboid which has
+	 * no exterior empty space. E.g. a direction of Down will push the top face
+	 * downwards as much as possible.
 	 *
 	 * @param dir
 	 *            the direction in which to contract
@@ -684,7 +684,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				throw new IllegalArgumentException("Invalid direction " + dir);
 		}
 	}
-	
+
 	/**
 	 * Get the Cuboid representing the face of this Cuboid. The resulting Cuboid
 	 * will be one block thick in the axis perpendicular to the requested face.
@@ -713,7 +713,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				throw new IllegalArgumentException("Invalid direction " + dir);
 		}
 	}
-	
+
 	/**
 	 * Check if the Cuboid contains only blocks of the given type
 	 *
@@ -732,14 +732,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Get the Cuboid big enough to hold both this Cuboid and the given one.
 	 *
 	 * @param other
 	 *            the other Cuboid to include
-	 * @return a new Cuboid large enough to hold this Cuboid and the given
-	 *         Cuboid
+	 * @return a new Cuboid large enough to hold this Cuboid and the given Cuboid
 	 */
 	public Cuboid getBoundingCuboid(Cuboid other)
 	{
@@ -747,17 +746,17 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		{
 			return this;
 		}
-		
+
 		int xMin = Math.min(getLowerX(), other.getLowerX());
 		int yMin = Math.min(getLowerY(), other.getLowerY());
 		int zMin = Math.min(getLowerZ(), other.getLowerZ());
 		int xMax = Math.max(getUpperX(), other.getUpperX());
 		int yMax = Math.max(getUpperY(), other.getUpperY());
 		int zMax = Math.max(getUpperZ(), other.getUpperZ());
-		
+
 		return new Cuboid(worldName, xMin, yMin, zMin, xMax, yMax, zMax);
 	}
-	
+
 	/**
 	 * Get a block relative to the lower NE point of the Cuboid.
 	 *
@@ -773,11 +772,11 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return getWorld().getBlockAt(x1 + x, y1 + y, z1 + z);
 	}
-	
+
 	/**
-	 * Get a block relative to the lower NE point of the Cuboid in the given
-	 * World. This version of getRelativeBlock() should be used if being called
-	 * many times, to avoid excessive calls to getWorld().
+	 * Get a block relative to the lower NE point of the Cuboid in the given World.
+	 * This version of getRelativeBlock() should be used if being called many times,
+	 * to avoid excessive calls to getWorld().
 	 *
 	 * @param w
 	 *            the World
@@ -793,7 +792,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return w.getBlockAt(x1 + x, y1 + y, z1 + z);
 	}
-	
+
 	/**
 	 * Get a list of the chunks which are fully or partially contained in this
 	 * cuboid.
@@ -803,7 +802,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	public List<Chunk> getChunks()
 	{
 		List<Chunk> res = new ArrayList<Chunk>();
-		
+
 		World w = getWorld();
 		int x1 = getLowerX() & ~0xf;
 		int x2 = getUpperX() & ~0xf;
@@ -818,7 +817,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Set all the blocks within the Cuboid to the given block ID and data byte.
 	 *
@@ -836,7 +835,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			b.setTypeIdAndData(blockId, data, false);
 		}
 	}
-	
+
 	/**
 	 * Set all the blocks within the Cuboid to the given MaterialData, using a
 	 * MassBlockUpdate object for fast updates.
@@ -846,13 +845,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	 * @param mbu
 	 *            the MassBlockUpdate object
 	 */
-	
+
 	/**
 	 * Reset the light level of all blocks within this Cuboid.
 	 */
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
@@ -860,9 +860,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return new CuboidIterator(getWorld(), x1, y1, z1, x2, y2, z2);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
@@ -870,9 +871,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return new Cuboid(this);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -880,14 +882,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 	{
 		return "Cuboid: " + worldName + "," + x1 + "," + y1 + "," + z1 + "=>" + x2 + "," + y2 + "," + z2;
 	}
-	
+
 	public class CuboidIterator implements Iterator<Block>
 	{
 		private World w;
 		private int baseX, baseY, baseZ;
 		private int x, y, z;
 		private int sizeX, sizeY, sizeZ;
-		
+
 		public CuboidIterator(World w, int x1, int y1, int z1, int x2, int y2, int z2)
 		{
 			this.w = w;
@@ -899,13 +901,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			sizeZ = Math.abs(z2 - z1) + 1;
 			x = y = z = 0;
 		}
-		
+
 		@Override
 		public boolean hasNext()
 		{
 			return x < sizeX && y < sizeY && z < sizeZ;
 		}
-		
+
 		@Override
 		public Block next()
 		{
@@ -921,17 +923,17 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			}
 			return b;
 		}
-		
+
 		@Override
 		public void remove()
 		{
 			// nop
 		}
 	}
-	
+
 	public enum CuboidDirection
 	{
-		
+
 		North,
 		East,
 		South,
@@ -942,7 +944,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		Vertical,
 		Both,
 		Unknown;
-		
+
 		public CuboidDirection opposite()
 		{
 			switch(this)
@@ -970,7 +972,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			}
 		}
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -985,7 +987,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		result = prime * result + z2;
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -993,19 +995,19 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		{
 			return true;
 		}
-		
+
 		if(obj == null)
 		{
 			return false;
 		}
-		
+
 		if(getClass() != obj.getClass())
 		{
 			return false;
 		}
-		
+
 		Cuboid other = (Cuboid) obj;
-		
+
 		if(worldName == null)
 		{
 			if(other.worldName != null)
@@ -1013,42 +1015,42 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 				return false;
 			}
 		}
-		
+
 		else if(!worldName.equals(other.worldName))
 		{
 			return false;
 		}
-		
+
 		if(x1 != other.x1)
 		{
 			return false;
 		}
-		
+
 		if(x2 != other.x2)
 		{
 			return false;
 		}
-		
+
 		if(y1 != other.y1)
 		{
 			return false;
 		}
-		
+
 		if(y2 != other.y2)
 		{
 			return false;
 		}
-		
+
 		if(z1 != other.z1)
 		{
 			return false;
 		}
-		
+
 		if(z2 != other.z2)
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 }
