@@ -24,7 +24,7 @@ public enum VersionBukkit
 
 	public static boolean wc()
 	{
-		if(get().equals(V7))
+		if(get().equals(V8))
 		{
 			return true;
 		}

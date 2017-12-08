@@ -34,7 +34,7 @@ import org.json.simple.JSONObject;
  *
  * Check out https://bStats.org/ to learn more about bStats!
  */
-public class BStatsf// TODO YOU NEED TO FINISH 1.8 CHUNK MAPS OR UNDO THEM
+public class BStats
 {
 
 	// The version of this bStats class

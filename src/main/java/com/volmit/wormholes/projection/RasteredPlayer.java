@@ -11,7 +11,6 @@ import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.chunk.NMSChunk10;
 import com.volmit.wormholes.chunk.NMSChunk11;
 import com.volmit.wormholes.chunk.NMSChunk12;
-import com.volmit.wormholes.chunk.NMSChunk18;
 import com.volmit.wormholes.chunk.NMSChunk19;
 import com.volmit.wormholes.chunk.VirtualChunk;
 import com.volmit.wormholes.exception.NMSChunkFailureException;
@@ -167,11 +166,6 @@ public class RasteredPlayer
 				else if(VersionBukkit.get().equals(VersionBukkit.V9))
 				{
 					cx = new NMSChunk19(c);
-				}
-
-				else if(VersionBukkit.get().equals(VersionBukkit.V8))
-				{
-					cx = new NMSChunk18(c);
 				}
 
 				if(cx != null)
