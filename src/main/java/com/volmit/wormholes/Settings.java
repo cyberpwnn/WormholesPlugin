@@ -64,6 +64,12 @@ public class Settings
 	@Comment("Define the default maximum distance for rtp portals")
 	public static int RTP_DEFAULT_MAX_DISTANCE = 8000;
 
+	@CName("RTP_ALLOW_CAVES")
+	@CMin(1)
+	@CMax(Integer.MAX_VALUE)
+	@Comment("Prevent or allow caves by checking for skylight")
+	public static boolean RTP_ALLOW_CAVES = true;
+
 	@CName("PORTAL_COOLDOWN")
 	@CMin(0)
 	@CMax(102400)

@@ -116,7 +116,6 @@ public class RasteredPlayer
 				if(Settings.USE_LIGHTMAPS)
 				{
 					System.out.println("WAS USING LMAPS BUT FAILED");
-					e.printStackTrace();
 					Settings.USE_LIGHTMAPS = false;
 					prepareChunks();
 				}
@@ -125,7 +124,7 @@ public class RasteredPlayer
 
 		catch(Throwable e)
 		{
-			e.printStackTrace();
+
 		}
 	}
 

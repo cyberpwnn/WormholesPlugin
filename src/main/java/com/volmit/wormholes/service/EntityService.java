@@ -1,6 +1,7 @@
 package com.volmit.wormholes.service;
 
 import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+
 import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.RemoteInstance;
@@ -35,7 +37,7 @@ public class EntityService implements Listener
 {
 	private GMap<Player, GMap<Portal, GList<VEntity>>> entities;
 	private GMap<Player, GMap<Portal, GSet<Integer>>> aentities;
-	
+
 	public EntityService()
 	{
 		DB.d(this, "Starting Entity Service");
@@ -43,14 +45,14 @@ public class EntityService implements Listener
 		aentities = new GMap<Player, GMap<Portal, GSet<Integer>>>();
 		Wraith.registerListener(this);
 	}
-	
+
 	@EventHandler
 	public void on(InventoryClickEvent e)
 	{
 		Player p = (Player) e.getWhoClicked();
 		uinv(p);
 	}
-	
+
 	public void uinv(Player p)
 	{
 		new TaskLater()
@@ -60,16 +62,16 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = p.getItemInHand();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				boolean b = false;
-				
+
 				for(VEntity i : getAllEntitiesAs(p))
 				{
 					if(i.getVp().setMainHand(is))
@@ -77,14 +79,14 @@ public class EntityService implements Listener
 						b = true;
 					}
 				}
-				
+
 				if(b)
 				{
 					dispatchAction(p.getEntityId(), "hand/" + mb.toString());
 				}
 			}
 		};
-		
+
 		new TaskLater()
 		{
 			@SuppressWarnings("deprecation")
@@ -92,16 +94,16 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = p.getInventory().getHelmet();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				boolean b = false;
-				
+
 				for(VEntity i : getAllEntitiesAs(p))
 				{
 					if(i.getVp().setHelmet(is))
@@ -109,14 +111,14 @@ public class EntityService implements Listener
 						b = true;
 					}
 				}
-				
+
 				if(b)
 				{
 					dispatchAction(p.getEntityId(), "ihelm/" + mb.toString());
 				}
 			}
 		};
-		
+
 		new TaskLater()
 		{
 			@SuppressWarnings("deprecation")
@@ -124,16 +126,16 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = p.getInventory().getChestplate();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				boolean b = false;
-				
+
 				for(VEntity i : getAllEntitiesAs(p))
 				{
 					if(i.getVp().setChestplate(is))
@@ -141,14 +143,14 @@ public class EntityService implements Listener
 						b = true;
 					}
 				}
-				
+
 				if(b)
 				{
 					dispatchAction(p.getEntityId(), "ichest/" + mb.toString());
 				}
 			}
 		};
-		
+
 		new TaskLater()
 		{
 			@SuppressWarnings("deprecation")
@@ -156,16 +158,16 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = p.getInventory().getLeggings();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				boolean b = false;
-				
+
 				for(VEntity i : getAllEntitiesAs(p))
 				{
 					if(i.getVp().setLeggings(is))
@@ -173,14 +175,14 @@ public class EntityService implements Listener
 						b = true;
 					}
 				}
-				
+
 				if(b)
 				{
 					dispatchAction(p.getEntityId(), "ilegs/" + mb.toString());
 				}
 			}
 		};
-		
+
 		new TaskLater()
 		{
 			@SuppressWarnings("deprecation")
@@ -188,16 +190,16 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = p.getInventory().getBoots();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				boolean b = false;
-				
+
 				for(VEntity i : getAllEntitiesAs(p))
 				{
 					if(i.getVp().setBoots(is))
@@ -205,7 +207,7 @@ public class EntityService implements Listener
 						b = true;
 					}
 				}
-				
+
 				if(b)
 				{
 					dispatchAction(p.getEntityId(), "iboots/" + mb.toString());
@@ -213,7 +215,7 @@ public class EntityService implements Listener
 			}
 		};
 	}
-	
+
 	@EventHandler
 	public void on(PlayerScrollEvent e)
 	{
@@ -224,24 +226,24 @@ public class EntityService implements Listener
 			public void run()
 			{
 				ItemStack is = e.getPlayer().getItemInHand();
-				
+
 				if(is == null)
 				{
 					is = new ItemStack(Material.AIR, 1, (short) 0, (byte) 0);
 				}
-				
+
 				MaterialBlock mb = new MaterialBlock(is.getType(), is.getData().getData() < 0 ? 0 : is.getData().getData());
-				
+
 				for(VEntity i : getAllEntitiesAs(e.getPlayer()))
 				{
 					i.getVp().setMainHand(is);
 				}
-				
+
 				dispatchAction(e.getPlayer().getEntityId(), "hand/" + mb.toString());
 			}
 		};
 	}
-	
+
 	@EventHandler
 	public void on(PlayerToggleSneakEvent e)
 	{
@@ -249,10 +251,10 @@ public class EntityService implements Listener
 		{
 			i.setSneaking(e.isSneaking());
 		}
-		
+
 		dispatchAction(e.getPlayer().getEntityId(), e.isSneaking() ? "sneak" : "unsneak");
 	}
-	
+
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
@@ -260,15 +262,15 @@ public class EntityService implements Listener
 		{
 			return;
 		}
-		
+
 		for(VEntity i : getAllEntitiesAs(e.getPlayer()))
 		{
 			i.swingArm();
 		}
-		
+
 		dispatchAction(e.getPlayer().getEntityId(), "swn");
 	}
-	
+
 	@EventHandler
 	public void on(EntityDamageEvent e)
 	{
@@ -276,23 +278,23 @@ public class EntityService implements Listener
 		{
 			i.takeDamage();
 		}
-		
+
 		if(e.getEntity() instanceof Player)
 		{
 			dispatchAction(e.getEntity().getEntityId(), "dmg");
 		}
 	}
-	
+
 	public void dispatchAction(int id, String action)
 	{
 		GSet<String> servers = new GSet<String>();
 		DB.d(this, "Dispatch Action: " + id + " -> " + action);
-		
+
 		for(Portal i : WAPI.getRemotePortals())
 		{
 			servers.add(i.getServer());
 		}
-		
+
 		for(String i : servers)
 		{
 			Transmission t = new Transmission(Wormholes.bus.getServerName(), i, "action");
@@ -301,12 +303,12 @@ public class EntityService implements Listener
 			t.send();
 		}
 	}
-	
+
 	public GList<VEntity> getAllEntitiesAs(Entity e)
 	{
 		GList<VEntity> vx = new GList<VEntity>();
 		int idx = RemoteInstance.create(e).getRemoteId();
-		
+
 		try
 		{
 			for(Player i : entities.k())
@@ -323,28 +325,28 @@ public class EntityService implements Listener
 							}
 						}
 					}
-					
+
 					catch(Exception ex)
 					{
-						
+
 					}
 				}
 			}
 		}
-		
+
 		catch(Exception xe)
 		{
-			
+
 		}
-		
+
 		return vx;
 	}
-	
+
 	public GList<VEntity> getAllPlayersAs(int eid)
 	{
 		GList<VEntity> vx = new GList<VEntity>();
 		int idx = 2097800 + eid;
-		
+
 		for(Player i : entities.k())
 		{
 			for(Portal j : entities.get(i).k())
@@ -359,17 +361,17 @@ public class EntityService implements Listener
 						}
 					}
 				}
-				
+
 				catch(Exception ex)
 				{
-					
+
 				}
 			}
 		}
-		
+
 		return vx;
 	}
-	
+
 	public void flush()
 	{
 		Wormholes.pool.queue(new Execution()
@@ -379,7 +381,7 @@ public class EntityService implements Listener
 			{
 				Timer t = new Timer();
 				t.start();
-				
+
 				for(Player i : entities.k())
 				{
 					if(!i.isOnline())
@@ -387,14 +389,14 @@ public class EntityService implements Listener
 						entities.remove(i);
 						continue;
 					}
-					
+
 					for(Portal j : entities.get(i).k())
 					{
 						if(j.getSided())
 						{
 							continue;
 						}
-						
+
 						if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
 						{
 							for(VEntity k : entities.get(i).get(j).copy())
@@ -405,7 +407,7 @@ public class EntityService implements Listener
 									k.despawn();
 									entities.get(i).get(j).remove(k);
 								}
-								
+
 								else
 								{
 									k.flush();
@@ -415,13 +417,13 @@ public class EntityService implements Listener
 						}
 					}
 				}
-				
+
 				t.stop();
 				TimingsService.root.get("capture-manager").get("aperture-service").hit("entity-service", t.getTime());
 			}
 		});
 	}
-	
+
 	public void set(Player p, Portal i, RemoteInstance ri, Location l)
 	{
 		try
@@ -430,24 +432,24 @@ public class EntityService implements Listener
 			{
 				entities.put(p, new GMap<Portal, GList<VEntity>>());
 			}
-			
+
 			if(!entities.get(p).containsKey(i))
 			{
 				entities.get(p).put(i, new GList<VEntity>());
 			}
-			
+
 			if(!aentities.containsKey(p))
 			{
 				aentities.put(p, new GMap<Portal, GSet<Integer>>());
 			}
-			
+
 			if(!aentities.get(p).containsKey(i))
 			{
 				aentities.get(p).put(i, new GSet<Integer>());
 			}
-			
+
 			aentities.get(p).get(i).add(ri.getRemoteId());
-			
+
 			for(VEntity e : entities.get(p).get(i).copy())
 			{
 				if(ri.getRemoteId() == e.getId())
@@ -455,18 +457,18 @@ public class EntityService implements Listener
 					e.teleport(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
 					e.flush();
 					uinv(p);
-					
+
 					return;
 				}
 			}
-			
+
 			UUID id = UUID.randomUUID();
-			
+
 			if(ri instanceof RemotePlayer)
 			{
 				id = ((RemotePlayer) ri).getUuid();
 			}
-			
+
 			VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
 			DB.d(this, "Spawn Virtual Entity: " + ve.getType() + " <> " + ve.getUuid());
 			ve.spawn();
@@ -474,23 +476,23 @@ public class EntityService implements Listener
 			uinv(p);
 			entities.get(p).get(i).add(ve);
 		}
-		
+
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void shutdown()
 	{
 		flush();
 		flush();
 	}
-	
+
 	public int size()
 	{
 		int x = entities.size();
-		
+
 		for(Player i : entities.k())
 		{
 			for(Portal j : entities.get(i).k())
@@ -498,7 +500,7 @@ public class EntityService implements Listener
 				x += entities.get(i).get(j).size();
 			}
 		}
-		
+
 		return x;
 	}
 }

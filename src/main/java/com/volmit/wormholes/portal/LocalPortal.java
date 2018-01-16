@@ -361,6 +361,14 @@ public class LocalPortal implements Portal
 						{
 							if(getSettings().getRtpBiome().equals("ALL_BIOMES") || b.getBlock().getBiome().toString().equals(getSettings().getRtpBiome()))
 							{
+								if(!Settings.RTP_ALLOW_CAVES)
+								{
+									if(b.getBlock().getLightFromSky() < 11)
+									{
+										break;
+									}
+								}
+
 								rtpQueue.add(b.clone().add(new Vector(0, 1, 0)));
 								break;
 							}
