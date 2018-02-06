@@ -28,8 +28,9 @@ public class ViewportRendererPortal extends ViewportRendererBase
 	}
 
 	@Override
-	public void render()
+	public int render()
 	{
+		int k = 0;
 		if(stage.hasNextStage())
 		{
 			int s = stage.getCurrentStage();
@@ -57,11 +58,13 @@ public class ViewportRendererPortal extends ViewportRendererBase
 						}
 
 						Wormholes.provider.getRasterer().queue(player, l, mb);
+						k++;
 					}
 
 					else if(mode.equals(RenderMode.ERODE))
 					{
 						rast.dequeue(player, l);
+						k++;
 					}
 				}
 
@@ -71,5 +74,7 @@ public class ViewportRendererPortal extends ViewportRendererBase
 				}
 			}
 		}
+
+		return k;
 	}
 }

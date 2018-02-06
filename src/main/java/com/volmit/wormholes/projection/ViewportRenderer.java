@@ -1,6 +1,6 @@
 package com.volmit.wormholes.projection;
 
-public interface ViewportRenderer 
+public interface ViewportRenderer
 {
-	public void render();
+	public int render();
 }

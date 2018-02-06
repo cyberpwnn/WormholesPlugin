@@ -3,16 +3,18 @@ package com.volmit.wormholes.util;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
  * Math
- * 
+ *
  * @author cyberpwn
  */
 public class M
@@ -20,10 +22,10 @@ public class M
 	private static final int precision = 128;
 	private static final int modulus = 360 * precision;
 	private static final float[] sin = new float[modulus];
-	
+
 	/**
 	 * Evaluates an expression using javascript engine and returns the double
-	 * 
+	 *
 	 * @param expression
 	 *            the mathimatical expression
 	 * @return the double result
@@ -34,13 +36,13 @@ public class M
 	{
 		ScriptEngineManager mgr = new ScriptEngineManager();
 		ScriptEngine scriptEngine = mgr.getEngineByName("JavaScript");
-		
+
 		return Double.valueOf(scriptEngine.eval(expression).toString());
 	}
-	
+
 	/**
 	 * Get true or false based on random percent
-	 * 
+	 *
 	 * @param d
 	 *            between 0 and 1
 	 * @return true if true
@@ -51,17 +53,17 @@ public class M
 		{
 			return Math.random() < 0.5;
 		}
-		
+
 		return Math.random() < d;
 	}
-	
+
 	/**
 	 * Evaluates an expression using javascript engine and returns the double
 	 * result. This can take variable parameters, so you need to define them.
 	 * Parameters are defined as $[0-9]. For example evaluate("4$0/$1", 1, 2);
 	 * This makes the expression (4x1)/2 == 2. Keep note that you must use 0-9,
 	 * you cannot skip, or start at a number other than 0.
-	 * 
+	 *
 	 * @param expression
 	 *            the expression with variables
 	 * @param args
@@ -77,25 +79,25 @@ public class M
 		for(int i = 0; i < args.length; i++)
 		{
 			String current = "$" + i;
-			
+
 			if(expression.contains(current))
 			{
 				expression = expression.replaceAll(Matcher.quoteReplacement(current), args[i] + "");
 			}
 		}
-		
+
 		return evaluate(expression);
 	}
-	
+
 	public static Block highestBlock(Location l, int shuf, int st)
 	{
 		int y = st;
 		Block b = null;
-		
+
 		while(y > 0)
 		{
 			y -= shuf;
-			
+
 			if(new Location(l.getWorld(), l.getX(), y, l.getZ()).getBlock().getType().equals(Material.AIR))
 			{
 				if(shuf > 1)
@@ -103,7 +105,7 @@ public class M
 					b = highestBlock(l, 1, y + shuf);
 					break;
 				}
-				
+
 				else
 				{
 					b = new Location(l.getWorld(), l.getX(), y, l.getZ()).getBlock();
@@ -111,14 +113,14 @@ public class M
 				}
 			}
 		}
-		
+
 		return b;
 	}
-	
+
 	/**
 	 * Get the ticks per second from a time in nanoseconds, the rad can be used
 	 * for multiple ticks
-	 * 
+	 *
 	 * @param ns
 	 *            the time in nanoseconds
 	 * @param rad
@@ -129,10 +131,10 @@ public class M
 	{
 		return (20.0 * (ns / 50000000.0)) / rad;
 	}
-	
+
 	/**
 	 * Get the number of ticks from a time in nanoseconds
-	 * 
+	 *
 	 * @param ns
 	 *            the nanoseconds
 	 * @return the amount of ticks
@@ -141,10 +143,10 @@ public class M
 	{
 		return (ns / 50000000.0);
 	}
-	
+
 	/**
 	 * Get roman numeral representation of the int
-	 * 
+	 *
 	 * @param num
 	 *            the int
 	 * @return the numerals
@@ -152,7 +154,7 @@ public class M
 	public static String toRoman(int num)
 	{
 		LinkedHashMap<String, Integer> roman_numerals = new LinkedHashMap<String, Integer>();
-		
+
 		roman_numerals.put("M", 1000);
 		roman_numerals.put("CM", 900);
 		roman_numerals.put("D", 500);
@@ -166,23 +168,23 @@ public class M
 		roman_numerals.put("V", 5);
 		roman_numerals.put("IV", 4);
 		roman_numerals.put("I", 1);
-		
+
 		String res = "";
-		
+
 		for(Map.Entry<String, Integer> entry : roman_numerals.entrySet())
 		{
 			int matches = num / entry.getValue();
-			
+
 			res += repeat(entry.getKey(), matches);
 			num = num % entry.getValue();
 		}
-		
+
 		return res;
 	}
-	
+
 	/**
 	 * Repeat a string
-	 * 
+	 *
 	 * @param s
 	 *            the string
 	 * @param n
@@ -195,25 +197,25 @@ public class M
 		{
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
-		
+
 		for(int i = 0; i < n; i++)
 		{
 			sb.append(s);
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	public static int rand(int f, int t)
 	{
 		return f + (int) (Math.random() * ((t - f) + 1));
 	}
-	
+
 	/**
 	 * Get the number representation from roman numerals.
-	 * 
+	 *
 	 * @param number
 	 *            the roman number
 	 * @return the int representation
@@ -224,100 +226,100 @@ public class M
 		{
 			return 0;
 		}
-		
+
 		number = number.toUpperCase();
-		
+
 		if(number.startsWith("M"))
 		{
 			return 1000 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("CM"))
 		{
 			return 900 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("D"))
 		{
 			return 500 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("CD"))
 		{
 			return 400 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("C"))
 		{
 			return 100 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("XC"))
 		{
 			return 90 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("L"))
 		{
 			return 50 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("XL"))
 		{
 			return 40 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("X"))
 		{
 			return 10 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("IX"))
 		{
 			return 9 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("V"))
 		{
 			return 5 + fromRoman(number.substring(1));
 		}
-		
+
 		if(number.startsWith("IV"))
 		{
 			return 4 + fromRoman(number.substring(2));
 		}
-		
+
 		if(number.startsWith("I"))
 		{
 			return 1 + fromRoman(number.substring(1));
 		}
-		
+
 		return 0;
 	}
-	
+
 	/**
 	 * Get system Nanoseconds
-	 * 
+	 *
 	 * @return nanoseconds (current)
 	 */
 	public static long ns()
 	{
 		return System.nanoTime();
 	}
-	
+
 	/**
 	 * Get the current millisecond time
-	 * 
+	 *
 	 * @return milliseconds
 	 */
 	public static long ms()
 	{
 		return System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * Average a list of doubles
-	 * 
+	 *
 	 * @param doubles
 	 *            the doubles
 	 * @return the average
@@ -326,7 +328,7 @@ public class M
 	{
 		double a = 0.0;
 		int d = 0;
-		
+
 		try
 		{
 			for(double i : doubles.copy())
@@ -334,21 +336,21 @@ public class M
 				a += i;
 				d++;
 			}
-			
+
 			return a / (double) d;
 		}
-		
+
 		catch(Exception e)
 		{
-			
+
 		}
-		
+
 		return a / (double) d;
 	}
-	
+
 	/**
 	 * Cull a list of doubles
-	 * 
+	 *
 	 * @param doubles
 	 *            the doubles
 	 * @param limit
@@ -361,10 +363,10 @@ public class M
 			doubles.remove(0);
 		}
 	}
-	
+
 	/**
 	 * An alternative method of distance calculation
-	 * 
+	 *
 	 * @param a
 	 *            the first location
 	 * @param b
@@ -375,11 +377,11 @@ public class M
 	{
 		return Double.longBitsToDouble(((Double.doubleToLongBits(a.distanceSquared(b)) - (1l << 52)) >> 1) + (1l << 61));
 	}
-	
+
 	/**
 	 * Check if a location is within a given range of another without using sqrt
 	 * functions
-	 * 
+	 *
 	 * @param center
 	 *            the center (first position)
 	 * @param check
@@ -393,10 +395,10 @@ public class M
 	{
 		return Area.within(center, check, radius);
 	}
-	
+
 	/**
 	 * Fast sin function
-	 * 
+	 *
 	 * @param a
 	 *            the number
 	 * @return the sin
@@ -405,10 +407,10 @@ public class M
 	{
 		return sinLookup((int) (a * precision + 0.5f));
 	}
-	
+
 	/**
 	 * Fast cos function
-	 * 
+	 *
 	 * @param a
 	 *            the number
 	 * @return the cos
@@ -417,10 +419,10 @@ public class M
 	{
 		return sinLookup((int) ((a + 90f) * precision + 0.5f));
 	}
-	
+
 	/**
 	 * Biggest number
-	 * 
+	 *
 	 * @param ints
 	 *            the numbers
 	 * @return the biggest one
@@ -428,7 +430,7 @@ public class M
 	public static int max(int... ints)
 	{
 		int max = Integer.MIN_VALUE;
-		
+
 		for(int i : ints)
 		{
 			if(i > max)
@@ -436,13 +438,28 @@ public class M
 				max = i;
 			}
 		}
-		
+
 		return max;
 	}
-	
+
+	public static double max(double... ints)
+	{
+		double max = Double.MIN_VALUE;
+
+		for(double i : ints)
+		{
+			if(i > max)
+			{
+				max = i;
+			}
+		}
+
+		return max;
+	}
+
 	/**
 	 * Smallest number
-	 * 
+	 *
 	 * @param ints
 	 *            the numbers
 	 * @return the smallest one
@@ -450,7 +467,7 @@ public class M
 	public static int min(int... ints)
 	{
 		int min = Integer.MAX_VALUE;
-		
+
 		for(int i : ints)
 		{
 			if(i < min)
@@ -458,13 +475,28 @@ public class M
 				min = i;
 			}
 		}
-		
+
 		return min;
 	}
-	
+
+	public static double min(double... ints)
+	{
+		double min = Double.MAX_VALUE;
+
+		for(double i : ints)
+		{
+			if(i < min)
+			{
+				min = i;
+			}
+		}
+
+		return min;
+	}
+
 	/**
 	 * is the number "is" within from-to
-	 * 
+	 *
 	 * @param from
 	 *            the lower end
 	 * @param to
@@ -477,7 +509,7 @@ public class M
 	{
 		return is >= from && is <= to;
 	}
-	
+
 	static
 	{
 		for(int i = 0; i < sin.length; i++)
@@ -485,7 +517,7 @@ public class M
 			sin[i] = (float) Math.sin((i * Math.PI) / (precision * 180));
 		}
 	}
-	
+
 	private static float sinLookup(int a)
 	{
 		return a >= 0 ? sin[a % (modulus)] : -sin[-a % (modulus)];

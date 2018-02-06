@@ -28,10 +28,12 @@ public class VRM implements ViewportRenderer
 	}
 
 	@Override
-	public void render()
+	public int render()
 	{
-		eroder.render();
-		dialater.render();
+		int k = 0;
+		k += eroder.render();
+		k += dialater.render();
+		return k;
 	}
 
 	public boolean isComplete()
@@ -55,32 +57,22 @@ public class VRM implements ViewportRenderer
 		int c = ((ViewportRendererPortal) dialater).stage.getCurrentStage();
 		int s = m - c;
 		int diff = Math.abs(((ViewportRendererPortal) dialater).stage.getMaxStage() - ((ViewportRendererPortal) eroder).stage.getMaxStage());
-
-		for(int i = 0; i < s + diff + 1; i++)
+		Wormholes.pool.queue(new Execution()
 		{
-			Wormholes.pool.queue(new Execution()
+			@Override
+			public void run()
 			{
-				@Override
-				public void run()
+				for(int i = 0; i < s + diff + 1; i++)
 				{
 					eroder.render();
 				}
-			});
-		}
 
-		Wormholes.pool.lock();
-
-		for(int i = 0; i < s + diff + 1; i++)
-		{
-			Wormholes.pool.queue(new Execution()
-			{
-				@Override
-				public void run()
+				for(int i = 0; i < s + diff + 1; i++)
 				{
 					dialater.render();
 				}
-			});
-		}
+			}
+		});
 
 		Wormholes.pool.lock();
 	}

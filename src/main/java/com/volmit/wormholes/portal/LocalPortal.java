@@ -242,7 +242,6 @@ public class LocalPortal implements Portal
 		if(getSettings().isRandomTp() && hasWormhole() && getWormhole().getDestination().getSided())
 		{
 			Wormholes.provider.destroyPortal((LocalPortal) getWormhole().getDestination());
-
 		}
 	}
 
