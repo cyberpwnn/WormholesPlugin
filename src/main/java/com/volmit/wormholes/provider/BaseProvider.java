@@ -356,6 +356,11 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void save(LocalPortal p)
 	{
+		if(p.getSided() && p.hasWormhole() && p.getWormhole().getDestination() instanceof LocalPortal && ((LocalPortal) p.getWormhole().getDestination()).getSettings().isRandomTp())
+		{
+			return;
+		}
+
 		if(Wormholes.host.isKeyValidAlready(p.getKey()))
 		{
 			DataCluster cc = new DataCluster();
@@ -425,6 +430,22 @@ public abstract class BaseProvider implements PortalProvider
 					lp.setSided(sided);
 					lp.updateDisplayName(cc.getString("p"));
 					i.delete();
+					if(lp.hasWormhole() && cc.getBoolean("q"))
+					{
+						if(lp.getWormhole().getDestination() instanceof LocalPortal)
+						{
+							new TaskLater()
+							{
+
+								@Override
+								public void run()
+								{
+									lp.getSettings().setRandomTp(true);
+									((LocalPortal) lp.getWormhole().getDestination()).destroy();
+								}
+							};
+						}
+					}
 				}
 
 				catch(Exception e)

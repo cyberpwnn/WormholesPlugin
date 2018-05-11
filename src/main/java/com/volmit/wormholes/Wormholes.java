@@ -2,6 +2,7 @@ package com.volmit.wormholes;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -158,8 +159,20 @@ public class Wormholes extends ControllablePlugin
 	{
 		DB.d(this, "Stopping Wormholes");
 		DB.d(this, "Clearing Portals");
+
+		File f = new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k");
+
+		if(f.exists())
+		{
+			for(File i : f.listFiles())
+			{
+				i.delete();
+			}
+		}
+
 		for(Portal i : host.getLocalPortals())
 		{
+			provider.save((LocalPortal) i);
 			((LocalPortal) i).clearHolograms();
 		}
 
@@ -194,10 +207,7 @@ public class Wormholes extends ControllablePlugin
 				entity.flush();
 			}
 
-			if(TICK.tick % Settings.CHUNK_SEND_RATE == 0)
-			{
-				provider.getRasterer().flushRasterQueue();
-			}
+			provider.getRasterer().flushRasterQueue();
 
 			if(TICK.tick % 20 == 0)
 			{
@@ -211,7 +221,7 @@ public class Wormholes extends ControllablePlugin
 				Status.bgg = 0;
 			}
 
-			if(TICK.tick % (int) (Settings.WORMHOLE_IDLE_FLUSH) == 0)
+			if(TICK.tick % 20 == 0)
 			{
 				for(Player i : P.onlinePlayers())
 				{

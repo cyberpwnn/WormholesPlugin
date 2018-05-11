@@ -57,6 +57,7 @@ public class VRM implements ViewportRenderer
 		int c = ((ViewportRendererPortal) dialater).stage.getCurrentStage();
 		int s = m - c;
 		int diff = Math.abs(((ViewportRendererPortal) dialater).stage.getMaxStage() - ((ViewportRendererPortal) eroder).stage.getMaxStage());
+
 		Wormholes.pool.queue(new Execution()
 		{
 			@Override
@@ -73,7 +74,5 @@ public class VRM implements ViewportRenderer
 				}
 			}
 		});
-
-		Wormholes.pool.lock();
 	}
 }
