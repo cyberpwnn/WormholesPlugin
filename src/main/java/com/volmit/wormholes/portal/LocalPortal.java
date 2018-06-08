@@ -1,6 +1,7 @@
 package com.volmit.wormholes.portal;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -68,9 +69,11 @@ public class LocalPortal implements Portal
 	protected GList<Player> activatedEntities;
 	protected GList<Location> rtpQueue;
 	protected long age;
+	protected UUID id;
 
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
+		id = UUID.randomUUID();
 		saved = false;
 		hasBeenValid = true;
 		hasHadWormhole = false;
@@ -88,6 +91,96 @@ public class LocalPortal implements Portal
 		ip = getPosition().getIPane();
 		age = 0;
 		rtpQueue = new GList<Location>();
+	}
+
+	public UUID getId()
+	{
+		return id;
+	}
+
+	public void setId(UUID id)
+	{
+		this.id = id;
+	}
+
+	public void setIp(Cuboid ip)
+	{
+		this.ip = ip;
+	}
+
+	public void setIdentity(PortalIdentity identity)
+	{
+		this.identity = identity;
+	}
+
+	public void setPosition(PortalPosition position)
+	{
+		this.position = position;
+	}
+
+	public void setPlane(ProjectionPlane plane)
+	{
+		this.plane = plane;
+	}
+
+	public void setServer(String server)
+	{
+		this.server = server;
+	}
+
+	public void setHasBeenValid(Boolean hasBeenValid)
+	{
+		this.hasBeenValid = hasBeenValid;
+	}
+
+	public void setHasHadWormhole(Boolean hasHadWormhole)
+	{
+		this.hasHadWormhole = hasHadWormhole;
+	}
+
+	public void setApature(AperturePlane apature)
+	{
+		this.apature = apature;
+	}
+
+	public void setSaved(Boolean saved)
+	{
+		this.saved = saved;
+	}
+
+	public void setSettings(PortalSettings settings)
+	{
+		this.settings = settings;
+	}
+
+	public void setMask(ProjectionMask mask)
+	{
+		this.mask = mask;
+	}
+
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
+	}
+
+	public void setHolograms(GMap<Player, Hologram> holograms)
+	{
+		this.holograms = holograms;
+	}
+
+	public void setActivatedEntities(GList<Player> activatedEntities)
+	{
+		this.activatedEntities = activatedEntities;
+	}
+
+	public void setRtpQueue(GList<Location> rtpQueue)
+	{
+		this.rtpQueue = rtpQueue;
+	}
+
+	public void setAge(long age)
+	{
+		this.age = age;
 	}
 
 	public GList<Player> getPlayers()
@@ -1064,7 +1157,7 @@ public class LocalPortal implements Portal
 		return sided;
 	}
 
-	private void wipeKey()
+	public void wipeKey()
 	{
 		Wormholes.projector.deproject(this);
 		DB.d(this, "Wipe Key " + toString());
@@ -1186,5 +1279,10 @@ public class LocalPortal implements Portal
 	public long getAge()
 	{
 		return age;
+	}
+
+	public String getVID()
+	{
+		return id.toString();
 	}
 }

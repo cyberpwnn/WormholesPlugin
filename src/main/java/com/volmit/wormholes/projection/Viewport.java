@@ -44,7 +44,7 @@ public class Viewport
 		boolean f = false;
 		int kf = 0;
 
-		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS * 3; i++)
+		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS * 4; i++)
 		{
 			Location ma = getIris().clone().add(va.clone().multiply(i)).clone();
 			Location mb = getIris().clone().add(vb.clone().multiply(i)).clone();

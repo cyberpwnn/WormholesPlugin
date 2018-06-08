@@ -55,7 +55,7 @@ public class VRM implements ViewportRenderer
 	{
 		int m = Math.max(((ViewportRendererPortal) dialater).stage.getMaxStage(), ((ViewportRendererPortal) eroder).stage.getMaxStage());
 		int c = ((ViewportRendererPortal) dialater).stage.getCurrentStage();
-		int s = m - c;
+		int s = m - c - 1;
 		int diff = Math.abs(((ViewportRendererPortal) dialater).stage.getMaxStage() - ((ViewportRendererPortal) eroder).stage.getMaxStage());
 
 		Wormholes.pool.queue(new Execution()

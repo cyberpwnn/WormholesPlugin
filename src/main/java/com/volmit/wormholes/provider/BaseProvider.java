@@ -389,8 +389,8 @@ public abstract class BaseProvider implements PortalProvider
 			cc.set("u", p.getSettings().isRtpRefresh());
 			cc.set("o", p.getSided() ? 1 : 0);
 			cc.set("p", p.getDisplayName());
-			cc.set("q", p.getSettings().getConfig());
-			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), UUID.randomUUID().toString() + ".k"));
+			cc.set("x", p.getSettings().getConfig());
+			Wormholes.io.save(cc, new File(new File(Wormholes.instance.getDataFolder(), "data"), p.getVID() + ".k"));
 		}
 	}
 
@@ -406,8 +406,8 @@ public abstract class BaseProvider implements PortalProvider
 			{
 				try
 				{
+					System.out.println("Loading " + i.getName());
 					DataCluster cc = Wormholes.io.load(i);
-					Boolean sided = cc.getInt("o") == 1 ? true : false;
 					World w = Bukkit.getWorld(cc.getString("g"));
 					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
 					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
@@ -416,19 +416,28 @@ public abstract class BaseProvider implements PortalProvider
 					PortalKey k = PortalKey.fromSName(cc.getString("i"));
 					k.applyToCuboid(c, d);
 					LocalPortal lp = createPortal(d, c);
+					lp.setId(UUID.fromString(i.getName().replace(".k", "")));
 					lp.getSettings().setAllowEntities(cc.getBoolean("j"));
 					lp.getSettings().setAparture(cc.getBoolean("k"));
 					lp.getSettings().setProject(cc.getBoolean("l"));
 					lp.getSettings().setHasCustomName(cc.getBoolean("m"));
 					lp.getSettings().setCustomName(cc.getString("n"));
-					lp.getSettings().setRandomTp(cc.getBoolean("q"));
+					lp.getSettings().setRandomTp(cc.contains("q") ? cc.getBoolean("q") : false);
 					lp.getSettings().setRtpDist(cc.getInt("r"));
 					lp.getSettings().setRtpMinDist(cc.getInt("s"));
 					lp.getSettings().setRtpBiome(cc.getString("t"));
 					lp.getSettings().setRtpRefresh(cc.getBoolean("u"));
-					lp.getSettings().setConfig(cc.getString("q") == null ? "null" : cc.getString("q"));
-					lp.setSided(sided);
+					lp.getSettings().setConfig(cc.getString("x") == null ? "null" : cc.getString("x"));
 					lp.updateDisplayName(cc.getString("p"));
+					boolean side = cc.getInt("o") == 1;
+
+					if(side)
+					{
+						System.out.println("LOADED SIDED");
+						lp.wipeKey();
+						lp.setSided(true);
+					}
+
 					i.delete();
 					if(lp.hasWormhole() && cc.getBoolean("q"))
 					{
@@ -436,7 +445,6 @@ public abstract class BaseProvider implements PortalProvider
 						{
 							new TaskLater()
 							{
-
 								@Override
 								public void run()
 								{
@@ -450,6 +458,7 @@ public abstract class BaseProvider implements PortalProvider
 
 				catch(Exception e)
 				{
+					e.printStackTrace();
 					i.delete();
 
 					try
