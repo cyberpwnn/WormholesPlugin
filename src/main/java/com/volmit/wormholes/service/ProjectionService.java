@@ -41,7 +41,6 @@ public class ProjectionService implements Listener
 	private Boolean projecting;
 	private Long tpl;
 	private GMap<Portal, GMap<Player, Viewport>> lastPort;
-	private GMap<Portal, GMap<Player, Integer>> lastPos;
 	private RenderMesh mesh;
 	private long lms;
 	private VRMLock lock;
@@ -53,7 +52,6 @@ public class ProjectionService implements Listener
 		projecting = false;
 		tpl = M.ms();
 		lastPort = new GMap<Portal, GMap<Player, Viewport>>();
-		lastPos = new GMap<Portal, GMap<Player, Integer>>();
 		mesh = new RenderMesh();
 		Wraith.registerListener(this);
 		lms = M.ms();
@@ -254,27 +252,8 @@ public class ProjectionService implements Listener
 						return;
 					}
 
-					if(!lastPos.containsKey(p))
-					{
-						lastPos.put(p, new GMap<Player, Integer>());
-					}
-
 					for(Player i : view.k())
 					{
-						int pos = i.getLocation().getBlockX() * -1251 + (i.getLocation().getBlockY() * 1303) + (i.getLocation().getBlockZ() + 12742);
-
-						if(!lastPos.get(p).containsKey(i))
-						{
-							lastPos.get(p).put(i, pos);
-						}
-
-						else if(lastPos.get(p).get(i) == i.getLocation().getBlockX() * -1251 + (i.getLocation().getBlockY() * 1303) + (i.getLocation().getBlockZ() + 12742))
-						{
-							return;
-						}
-
-						lastPos.get(p).put(i, pos);
-
 						Viewport vIn = view.get(i);
 						Viewport vOut = lastPort.containsKey(p) && lastPort.get(p).containsKey(i) ? lastPort.get(p).get(i) : new NulledViewport(i, p);
 
