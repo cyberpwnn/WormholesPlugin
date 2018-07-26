@@ -397,23 +397,31 @@ public class EntityService implements Listener
 							continue;
 						}
 
-						if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
+						try
 						{
-							for(VEntity k : entities.get(i).get(j).copy())
+							if(aentities.containsKey(i) && aentities.get(i).containsKey(j))
 							{
-								if(!aentities.get(i).get(j).contains(k.getId()))
+								for(VEntity k : entities.get(i).get(j).copy())
 								{
-									DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
-									k.despawn();
-									entities.get(i).get(j).remove(k);
-								}
+									if(!aentities.get(i).get(j).contains(k.getId()))
+									{
+										DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
+										k.despawn();
+										entities.get(i).get(j).remove(k);
+									}
 
-								else
-								{
-									k.flush();
-									aentities.get(i).get(j).remove(k.getId());
+									else
+									{
+										k.flush();
+										aentities.get(i).get(j).remove(k.getId());
+									}
 								}
 							}
+						}
+
+						catch(Exception e)
+						{
+
 						}
 					}
 				}

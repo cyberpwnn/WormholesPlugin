@@ -13,7 +13,6 @@ import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.event.WormholePushEntityEvent;
 import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.Direction;
-import com.volmit.wormholes.util.PE;
 import com.volmit.wormholes.util.VectorMath;
 import com.volmit.wormholes.util.Wraith;
 import com.volmit.wormholes.wrapper.WrapperPlayServerEntityVelocity;
@@ -70,7 +69,6 @@ public class LocalWormhole extends BaseWormhole
 		if(e.getType().equals(EntityType.PLAYER))
 		{
 			specialVelocity((Player) e, vx);
-			PE.BLINDNESS.a(7).d(25).apply((Player) e);
 		}
 
 		Area a = new Area(e.getLocation(), 12);
