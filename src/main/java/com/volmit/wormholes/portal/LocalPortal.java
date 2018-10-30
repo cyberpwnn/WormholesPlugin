@@ -70,9 +70,11 @@ public class LocalPortal implements Portal
 	protected GList<Location> rtpQueue;
 	protected long age;
 	protected UUID id;
+	protected UUID did;
 
 	public LocalPortal(PortalIdentity identity, PortalPosition position) throws InvalidPortalKeyException
 	{
+		did = UUID.randomUUID();
 		id = UUID.randomUUID();
 		saved = false;
 		hasBeenValid = true;
@@ -231,7 +233,7 @@ public class LocalPortal implements Portal
 		{
 			if(hasValidKey())
 			{
-				Wormholes.provider.save(this);
+				Wormholes.provider.savePortal(this);
 				saved = true;
 			}
 		}
@@ -1240,8 +1242,7 @@ public class LocalPortal implements Portal
 	@Override
 	public void save()
 	{
-		Wormholes.provider.wipe(this);
-		Wormholes.provider.save(this);
+		Wormholes.provider.savePortal(this);
 		DB.d(this, "Saved " + toString());
 	}
 
@@ -1284,5 +1285,17 @@ public class LocalPortal implements Portal
 	public String getVID()
 	{
 		return id.toString();
+	}
+
+	@Override
+	public UUID getDiskID()
+	{
+		return did;
+	}
+
+	@Override
+	public void setDiskID(UUID did)
+	{
+		this.did = did;
 	}
 }

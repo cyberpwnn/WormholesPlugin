@@ -53,6 +53,11 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
 	}
 
+	public Location randomLocation()
+	{
+		return new Location(getWorld(), M.rand(x1, x2), M.rand(y1, y2), M.rand(z1, z2));
+	}
+
 	public int depth(Axis a)
 	{
 		switch(a)
@@ -852,7 +857,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
@@ -863,7 +868,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
@@ -874,7 +879,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

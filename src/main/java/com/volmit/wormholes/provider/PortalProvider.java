@@ -1,5 +1,10 @@
 package com.volmit.wormholes.provider;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.UUID;
+
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 import com.volmit.wormholes.exception.DuplicatePortalKeyException;
@@ -24,6 +29,13 @@ public interface PortalProvider
 
 	public void loadAllPortals();
 
+	public LocalPortal loadPortal(UUID did) throws InvalidPortalKeyException, InvalidPortalPositionException, DuplicatePortalKeyException, FileNotFoundException, IOException, InvalidConfigurationException, Exception;
+
+	public boolean wipePortal(LocalPortal p);
+
+	public void savePortal(LocalPortal p);
+
+	@Deprecated
 	public void save(LocalPortal p);
 
 	public void tipWand(Player p);

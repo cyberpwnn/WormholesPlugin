@@ -8,21 +8,17 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.AperturePlane;
 import com.volmit.wormholes.aperture.BlacklistAperture;
-import com.volmit.wormholes.aperture.RemoteInstance;
 import com.volmit.wormholes.network.CL;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.portal.PortalKey;
-import com.volmit.wormholes.projection.Viewport;
 import com.volmit.wormholes.util.CustomGZIPOutputStream;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.DataCluster;
@@ -151,66 +147,71 @@ public class ApertureService
 					}
 				}
 
-				GMap<Portal, GMap<Player, Viewport>> lastPort = Wormholes.projector.getLastPort();
-
-				if(lastPort.containsKey(i) && i.hasWormhole())
-				{
-					for(Player j : lastPort.get(i).k())
-					{
-						for(Entity k : i.getPosition().getArea().getEntities())
-						{
-							try
-							{
-								if(lastPort.get(i).get(j).contains(k.getLocation()))
-								{
-									hideEntity(j, k);
-								}
-
-								else
-								{
-									showEntity(j, k);
-								}
-							}
-
-							catch(Exception e)
-							{
-
-							}
-						}
-
-						if(Settings.ENABLE_APERTURE)
-						{
-							AperturePlane ap = i.getWormhole().getDestination().getApature();
-
-							if(ap != null)
-							{
-								GMap<Vector, RemoteInstance> r = ap.remap(i.getWormhole().getDestination().getIdentity().getFront(), i.getIdentity().getFront());
-								GMap<Vector, Vector> rl = ap.remapLook(i.getWormhole().getDestination().getIdentity().getFront(), i.getIdentity().getFront());
-
-								for(Vector k : r.k())
-								{
-									try
-									{
-										Location l = i.getPosition().getCenter().clone().add(k);
-										RemoteInstance ri = r.get(k);
-
-										if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
-										{
-											l.setDirection(rl.get(k));
-
-											Wormholes.entity.set(j, i, ri, l);
-										}
-									}
-
-									catch(Exception e)
-									{
-
-									}
-								}
-							}
-						}
-					}
-				}
+				// GMap<Portal, GMap<Player, Viewport>> lastPort =
+				// Wormholes.projector.getLastPort();
+				//
+				// if(lastPort.containsKey(i) && i.hasWormhole())
+				// {
+				// for(Player j : lastPort.get(i).k())
+				// {
+				// for(Entity k : i.getPosition().getArea().getEntities())
+				// {
+				// try
+				// {
+				// if(lastPort.get(i).get(j).contains(k.getLocation()))
+				// {
+				// hideEntity(j, k);
+				// }
+				//
+				// else
+				// {
+				// showEntity(j, k);
+				// }
+				// }
+				//
+				// catch(Exception e)
+				// {
+				//
+				// }
+				// }
+				//
+				// if(Settings.ENABLE_APERTURE)
+				// {
+				// AperturePlane ap = i.getWormhole().getDestination().getApature();
+				//
+				// if(ap != null)
+				// {
+				// GMap<Vector, RemoteInstance> r =
+				// ap.remap(i.getWormhole().getDestination().getIdentity().getFront(),
+				// i.getIdentity().getFront());
+				// GMap<Vector, Vector> rl =
+				// ap.remapLook(i.getWormhole().getDestination().getIdentity().getFront(),
+				// i.getIdentity().getFront());
+				//
+				// for(Vector k : r.k())
+				// {
+				// try
+				// {
+				// Location l = i.getPosition().getCenter().clone().add(k);
+				// RemoteInstance ri = r.get(k);
+				//
+				// if(lastPort.get(i).get(j).contains(l) && j.getEntityId() != ri.getActualId())
+				// {
+				// l.setDirection(rl.get(k));
+				//
+				// Wormholes.entity.set(j, i, ri, l);
+				// }
+				// }
+				//
+				// catch(Exception e)
+				// {
+				//
+				// }
+				// }
+				// }
+				// }
+				// }
+				// }
 			}
 		}
 

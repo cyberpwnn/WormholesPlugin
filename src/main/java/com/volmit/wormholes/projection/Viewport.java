@@ -2,76 +2,37 @@ package com.volmit.wormholes.projection;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.Settings;
-import com.volmit.wormholes.Wormholes;
+import com.volmit.wormholes.geometry.Frustum;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.Cuboid;
-import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.VectorMath;
 
 public class Viewport
 {
+	private Frustum frustum;
 	private Player p;
 	private Portal portal;
-	private ProjectionSet set;
 
 	public Viewport(Player p, Portal portal)
 	{
 		this.p = p;
 		this.portal = portal;
-		set = new ProjectionSet();
+		rebuild();
 	}
 
-	public void wipe()
+	public Frustum getFrustum()
 	{
-		for(Block i : set.getBlocks())
-		{
-			Wormholes.provider.getRasterer().dequeue(p, i.getLocation());
-		}
+		return frustum;
 	}
 
 	public void rebuild()
 	{
-		set = new ProjectionSet();
-		Location la = portal.getPosition().getCornerDL();
-		Location lb = portal.getPosition().getCornerUR();
-		Vector va = VectorMath.direction(getIris(), la);
-		Vector vb = VectorMath.direction(getIris(), lb);
-		boolean f = false;
-		int kf = 0;
-
-		for(int i = 0; i < Settings.PROJECTION_SAMPLE_RADIUS * 4; i++)
-		{
-			Location ma = getIris().clone().add(va.clone().multiply(i)).clone();
-			Location mb = getIris().clone().add(vb.clone().multiply(i)).clone();
-
-			set.add(new Cuboid(ma, mb));
-
-			if(f)
-			{
-				kf++;
-
-				if(kf > Settings.PROJECTION_SAMPLE_RADIUS + 2)
-				{
-					break;
-				}
-			}
-
-			if(set.contains(portal.getPosition().getCenter()))
-			{
-				f = true;
-				set.clear();
-			}
-		}
-	}
-
-	public GList<Entity> getEntities()
-	{
-		return set.getEntities();
+		frustum = new Frustum(p.getEyeLocation(), portal.getPosition(), Settings.PROJECTION_SAMPLE_RADIUS);
 	}
 
 	public boolean contains(Location l)
@@ -81,7 +42,7 @@ public class Viewport
 			return false;
 		}
 
-		return set.contains(l) || set.contains(l.clone().add(0.5, 0.5, 0.5));
+		return frustum.intersects(l);
 	}
 
 	public boolean contains(Block l)
@@ -109,9 +70,9 @@ public class Viewport
 	{
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((frustum == null) ? 0 : frustum.hashCode());
 		result = prime * result + ((p == null) ? 0 : p.hashCode());
 		result = prime * result + ((portal == null) ? 0 : portal.hashCode());
-		result = prime * result + ((set == null) ? 0 : set.hashCode());
 		return result;
 	}
 
@@ -126,11 +87,22 @@ public class Viewport
 		{
 			return false;
 		}
-		if(getClass() != obj.getClass())
+		if(!(obj instanceof Viewport))
 		{
 			return false;
 		}
 		Viewport other = (Viewport) obj;
+		if(frustum == null)
+		{
+			if(other.frustum != null)
+			{
+				return false;
+			}
+		}
+		else if(!frustum.equals(other.frustum))
+		{
+			return false;
+		}
 		if(p == null)
 		{
 			if(other.p != null)
@@ -153,24 +125,7 @@ public class Viewport
 		{
 			return false;
 		}
-
-		if(set == null)
-		{
-			if(other.set != null)
-			{
-				return false;
-			}
-		}
-		else if(!set.equals(other.set))
-		{
-			return false;
-		}
 		return true;
-	}
-
-	public ProjectionSet getProjectionSet()
-	{
-		return set;
 	}
 
 	public Location getLA()
@@ -208,5 +163,10 @@ public class Viewport
 		}
 
 		return set;
+	}
+
+	public Direction getDirection()
+	{
+		return Direction.closest(VectorMath.direction(getIris(), getPortal().getPosition().getCenter()), getPortal().getIdentity().getFront(), getPortal().getIdentity().getBack());
 	}
 }

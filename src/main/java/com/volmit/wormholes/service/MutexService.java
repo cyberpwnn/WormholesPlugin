@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.WAPI;
@@ -238,7 +240,6 @@ public class MutexService implements Listener
 	{
 		((LocalPortal) portal).clearHolograms();
 		((LocalPortal) portal).destroy();
-		Wormholes.projector.getMesh().removePortal((LocalPortal) portal);
 		Wormholes.projector.deproject((LocalPortal) portal);
 		Wormholes.registry.localPortals.remove(portal);
 		Wormholes.provider.wipe((LocalPortal) portal);
@@ -247,7 +248,6 @@ public class MutexService implements Listener
 	public void removeLocalPortalReverse(Portal portal)
 	{
 		((LocalPortal) portal).clearHolograms();
-		Wormholes.projector.getMesh().removePortal((LocalPortal) portal);
 		Wormholes.projector.deproject((LocalPortal) portal);
 		Wormholes.registry.localPortals.remove(portal);
 		Wormholes.provider.wipe((LocalPortal) portal);

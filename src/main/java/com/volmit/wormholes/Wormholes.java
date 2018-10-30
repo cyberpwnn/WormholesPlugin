@@ -172,7 +172,7 @@ public class Wormholes extends ControllablePlugin
 
 		for(Portal i : host.getLocalPortals())
 		{
-			provider.save((LocalPortal) i);
+			provider.savePortal((LocalPortal) i);
 			((LocalPortal) i).clearHolograms();
 		}
 

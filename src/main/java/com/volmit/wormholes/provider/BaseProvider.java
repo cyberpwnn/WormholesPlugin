@@ -4,15 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.volmit.volume.bukkit.util.data.YAMLClusterPort;
 import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Tips;
@@ -290,67 +292,182 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void wipe(LocalPortal p)
 	{
-		if(Wormholes.host.isKeyValidAlready(p.getKey()))
+		try
 		{
-			File f = new File(Wormholes.instance.getDataFolder(), "data");
-			f.mkdirs();
+			portalFile(p.getDiskID()).delete();
+		}
 
-			for(File i : f.listFiles())
-			{
-				if(i.getName().endsWith(".k"))
-				{
-					try
-					{
-						DataCluster cc = Wormholes.io.load(i);
-						World w = Bukkit.getWorld(cc.getString("g"));
-						Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
-						Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
-						PortalKey k = PortalKey.fromSName(cc.getString("i"));
+		catch(Exception e)
+		{
 
-						if(k.equals(p.getKey()) && new Cuboid(a, b).equals(p.getPosition().getPane()))
-						{
-							i.delete();
-						}
-					}
-
-					catch(Exception e)
-					{
-
-					}
-				}
-			}
 		}
 	}
 
 	public void forceWipe(LocalPortal p)
 	{
-		File f = new File(Wormholes.instance.getDataFolder(), "data");
-		f.mkdirs();
-
-		for(File i : f.listFiles())
+		try
 		{
-			if(i.getName().endsWith(".k"))
+			portalFile(p.getDiskID()).delete();
+		}
+
+		catch(Exception e)
+		{
+
+		}
+	}
+
+	@Override
+	public boolean wipePortal(LocalPortal p)
+	{
+		try
+		{
+			return portalFile(p.getDiskID()).delete();
+		}
+
+		catch(Exception e)
+		{
+
+		}
+
+		return false;
+	}
+
+	public File portalFile(UUID did)
+	{
+		return new File(portalFolder(), did.toString() + ".json");
+	}
+
+	public File portalFolder()
+	{
+		return new File(Wormholes.instance.getDataFolder(), "portals");
+	}
+
+
+	@Override
+	public void savePortal(LocalPortal p)
+	{
+		if(p.getSided() && p.getSettings().isRandomTp())
+		{
+			return;
+		}
+
+		File f = portalFile(p.getDiskID());
+		f.getParentFile().mkdirs();
+		com.volmit.volume.cluster.DataCluster cc = new com.volmit.volume.cluster.DataCluster();
+		PortalKey k = p.getKey();
+		PortalPosition pos = p.getPosition();
+		Cuboid c = pos.getPane();
+		Direction d = pos.getIdentity().getBack();
+		cc.set("position.lower-x", c.getLowerX());
+		cc.set("position.lower-y", c.getLowerY());
+		cc.set("position.lower-z", c.getLowerZ());
+		cc.set("position.upper-x", c.getUpperX());
+		cc.set("position.upper-y", c.getUpperY());
+		cc.set("position.upper-z", c.getUpperZ());
+		cc.set("position.world", c.getWorld().getName());
+		cc.set("position.facing", d.ordinal());
+		cc.set("identity.key", k.getSName());
+		cc.set("identity.sided", p.getSided());
+		cc.set("identity.display-name", p.getDisplayName());
+		cc.set("identity.instance-id", p.getId().toString());
+		cc.set("identity.disk-id", p.getDiskID().toString());
+		cc.set("identity.has-custom-name", p.getSettings().isHasCustomName());
+		cc.set("settings.allow-entities", p.getSettings().isAllowEntities());
+		cc.set("settings.configuration", p.getSettings().getConfig());
+		cc.set("settings.use-aperture", p.getSettings().isAparture());
+		cc.set("settings.use-projections", p.getSettings().isProject());
+		cc.set("settings.rtp.enabled", p.getSettings().isRandomTp());
+		cc.set("settings.rtp.distance", p.getSettings().getRtpDist());
+		cc.set("settings.rtp.min-distance", p.getSettings().getRtpMinDist());
+		cc.set("settings.rtp.biome", p.getSettings().getRtpBiome());
+		cc.set("settings.rtp.auto-refresh", p.getSettings().isRtpRefresh());
+
+		try
+		{
+			new YAMLClusterPort().fromCluster(cc).save(f);
+		}
+
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public LocalPortal loadPortal(UUID did) throws Exception
+	{
+		File f = portalFile(did);
+		f.getParentFile().mkdirs();
+
+		if(!f.exists())
+		{
+			return null;
+		}
+
+		FileConfiguration fc = new YamlConfiguration();
+		fc.load(f);
+		com.volmit.volume.cluster.DataCluster cc = new YAMLClusterPort().toCluster(fc);
+
+		World w = Bukkit.getWorld(cc.getString("position.world"));
+		Location a = new Location(w, cc.getInt("position.lower-x"), cc.getInt("position.lower-y"), cc.getInt("position.lower-z"));
+		Location b = new Location(w, cc.getInt("position.upper-x"), cc.getInt("position.upper-y"), cc.getInt("position.upper-z"));
+		Direction d = Direction.values()[cc.getInt("position.facing")];
+		Cuboid c = new Cuboid(a, b);
+		PortalKey k = PortalKey.fromSName(cc.getString("identity.key"));
+		k.applyToCuboid(c, d);
+		LocalPortal lp = createPortal(d, c);
+		UUID toDelete = lp.getDiskID();
+		lp.setId(UUID.fromString(cc.getString("identity.instance-id")));
+		lp.getSettings().setAllowEntities(cc.getBoolean("settings.allow-entities"));
+		lp.getSettings().setAparture(cc.getBoolean("settings.use-aperture"));
+		lp.getSettings().setProject(cc.getBoolean("settings.use-projections"));
+		lp.getSettings().setHasCustomName(cc.getBoolean("identity.has-custom-name"));
+		lp.getSettings().setCustomName(cc.getString("identity.display-name"));
+		lp.getSettings().setRandomTp(cc.getBoolean("settings.rtp.enabled"));
+		lp.getSettings().setRtpDist(cc.getInt("settings.rtp.distance"));
+		lp.getSettings().setRtpMinDist(cc.getInt("settings.rtp.min-distance"));
+		lp.getSettings().setRtpBiome(cc.getString("settings.rtp.biome"));
+		lp.getSettings().setRtpRefresh(cc.getBoolean("settings.rtp.auto-refresh"));
+		lp.getSettings().setConfig(cc.getString("settings.configuration"));
+		lp.updateDisplayName(cc.getString("identity.display-name"));
+		lp.setDiskID(UUID.fromString(cc.getString("identity.disk-id")));
+
+		try
+		{
+			portalFile(toDelete).delete();
+		}
+
+		catch(Exception e)
+		{
+
+		}
+
+		boolean side = cc.getBoolean("identity.sided");
+
+		if(side)
+		{
+			System.out.println("LOADED SIDED");
+			lp.wipeKey();
+			lp.setSided(true);
+		}
+
+		if(lp.hasWormhole() && cc.getBoolean("settings.rtp.enabled"))
+		{
+			if(lp.getWormhole().getDestination() instanceof LocalPortal)
 			{
-				try
+				new TaskLater()
 				{
-					DataCluster cc = Wormholes.io.load(i);
-					World w = Bukkit.getWorld(cc.getString("g"));
-					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
-					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
-					PortalKey k = PortalKey.fromSName(cc.getString("i"));
-
-					if(k.equals(p.getKey()) && new Cuboid(a, b).equals(p.getPosition().getPane()))
+					@Override
+					public void run()
 					{
-						i.delete();
+						lp.getSettings().setRandomTp(true);
+						((LocalPortal) lp.getWormhole().getDestination()).destroy();
 					}
-				}
-
-				catch(Exception e)
-				{
-
-				}
+				};
 			}
 		}
+
+		return lp;
 	}
 
 	@Override
@@ -397,79 +514,23 @@ public abstract class BaseProvider implements PortalProvider
 	@Override
 	public void loadAllPortals()
 	{
-		File f = new File(Wormholes.instance.getDataFolder(), "data");
+		File f = portalFolder();
 		f.mkdirs();
 
 		for(File i : f.listFiles())
 		{
-			if(i.getName().endsWith(".k"))
+			if(i.isFile() && i.getName().endsWith(".json"))
 			{
+				UUID id = UUID.fromString(i.getName().split("\\Q.\\E")[0]);
+
 				try
 				{
-					System.out.println("Loading " + i.getName());
-					DataCluster cc = Wormholes.io.load(i);
-					World w = Bukkit.getWorld(cc.getString("g"));
-					Location a = new Location(w, cc.getInt("a"), cc.getInt("b"), cc.getInt("c"));
-					Location b = new Location(w, cc.getInt("d"), cc.getInt("e"), cc.getInt("f"));
-					Direction d = Direction.values()[cc.getInt("h")];
-					Cuboid c = new Cuboid(a, b);
-					PortalKey k = PortalKey.fromSName(cc.getString("i"));
-					k.applyToCuboid(c, d);
-					LocalPortal lp = createPortal(d, c);
-					lp.setId(UUID.fromString(i.getName().replace(".k", "")));
-					lp.getSettings().setAllowEntities(cc.getBoolean("j"));
-					lp.getSettings().setAparture(cc.getBoolean("k"));
-					lp.getSettings().setProject(cc.getBoolean("l"));
-					lp.getSettings().setHasCustomName(cc.getBoolean("m"));
-					lp.getSettings().setCustomName(cc.getString("n"));
-					lp.getSettings().setRandomTp(cc.contains("q") ? cc.getBoolean("q") : false);
-					lp.getSettings().setRtpDist(cc.getInt("r"));
-					lp.getSettings().setRtpMinDist(cc.getInt("s"));
-					lp.getSettings().setRtpBiome(cc.getString("t"));
-					lp.getSettings().setRtpRefresh(cc.getBoolean("u"));
-					lp.getSettings().setConfig(cc.getString("x") == null ? "null" : cc.getString("x"));
-					lp.updateDisplayName(cc.getString("p"));
-					boolean side = cc.getInt("o") == 1;
-
-					if(side)
-					{
-						System.out.println("LOADED SIDED");
-						lp.wipeKey();
-						lp.setSided(true);
-					}
-
-					i.delete();
-					if(lp.hasWormhole() && cc.getBoolean("q"))
-					{
-						if(lp.getWormhole().getDestination() instanceof LocalPortal)
-						{
-							new TaskLater()
-							{
-								@Override
-								public void run()
-								{
-									lp.getSettings().setRandomTp(true);
-									((LocalPortal) lp.getWormhole().getDestination()).destroy();
-								}
-							};
-						}
-					}
+					loadPortal(id);
 				}
 
 				catch(Exception e)
 				{
 					e.printStackTrace();
-					i.delete();
-
-					try
-					{
-						FileUtils.forceDelete(i);
-					}
-
-					catch(IOException e1)
-					{
-
-					}
 				}
 			}
 		}
