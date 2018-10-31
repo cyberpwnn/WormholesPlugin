@@ -8,9 +8,11 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
@@ -866,6 +868,25 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		return new CuboidIterator(getWorld(), x1, y1, z1, x2, y2, z2);
 	}
 
+	public Iterator<BlockSnapshot> iteratorSnapshot()
+	{
+		GMap<GChunk, ChunkSnapshot> ss = new GMap<GChunk, ChunkSnapshot>();
+
+		Cuboid cv = expand(CuboidDirection.Up, 17);
+		cv = cv.expand(CuboidDirection.Down, 17);
+		cv = cv.expand(CuboidDirection.North, 17);
+		cv = cv.expand(CuboidDirection.West, 17);
+		cv = cv.expand(CuboidDirection.South, 17);
+		cv = cv.expand(CuboidDirection.East, 17);
+
+		for(Chunk i : cv.getChunks())
+		{
+			ss.put(new GChunk(i), i.getChunkSnapshot(true, true, true));
+		}
+
+		return new CuboidSnapshotIterator(getWorld(), x1, y1, z1, x2, y2, z2, ss);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -934,6 +955,101 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		{
 			// nop
 		}
+	}
+
+	public class CuboidSnapshotIterator implements Iterator<BlockSnapshot>
+	{
+		private World w;
+		private int baseX, baseY, baseZ;
+		private int x, y, z;
+		private int sizeX, sizeY, sizeZ;
+		private GMap<GChunk, ChunkSnapshot> ss;
+
+		public CuboidSnapshotIterator(World w, int x1, int y1, int z1, int x2, int y2, int z2, GMap<GChunk, ChunkSnapshot> ss)
+		{
+			this.ss = ss;
+			this.w = w;
+			baseX = x1;
+			baseY = y1;
+			baseZ = z1;
+			sizeX = Math.abs(x2 - x1) + 1;
+			sizeY = Math.abs(y2 - y1) + 1;
+			sizeZ = Math.abs(z2 - z1) + 1;
+			x = y = z = 0;
+		}
+
+		@Override
+		public boolean hasNext()
+		{
+			return x < sizeX && y < sizeY && z < sizeZ;
+		}
+
+		private int c(int b)
+		{
+			return (b - ((b >> 4) << 4));
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public BlockSnapshot next()
+		{
+			int cx = c(baseX + x);
+			int cy = baseY + y;
+			int cz = c(baseZ + z);
+
+			Location l = new Location(w, baseX + x, cy, baseZ + z);
+			ChunkSnapshot s = ss.get(new GChunk(l));
+			BlockSnapshot sp = new BlockSnapshot();
+			sp.blocklight = s.getBlockEmittedLight(cx, cy, cz);
+			sp.skylight = s.getBlockSkyLight(cx, cy, cz);
+			sp.highest = s.getHighestBlockYAt(cx, cz);
+			sp.biome = s.getBiome(cx, cz);
+			sp.mb = new MaterialBlock(Material.getMaterial(s.getBlockTypeId(cx, cy, cz)), (byte) s.getBlockData(cx, cy, cz));
+			sp.l = l;
+			GList<BlockSnapshot> sg = new GList<BlockSnapshot>();
+
+			for(Direction d : Direction.udnews())
+			{
+				int dx = c(baseX + x + d.toVector().getBlockX());
+				int dy = M.max(0, M.min(256, baseY + y + d.toVector().getBlockY()));
+				int dz = c(baseZ + z + d.toVector().getBlockZ());
+				ChunkSnapshot a = ss.get(new GChunk(new Location(w, baseX + x + d.toVector().getBlockX(), dy, baseZ + z + d.toVector().getBlockZ())));
+				BlockSnapshot spx = new BlockSnapshot();
+				spx.mb = new MaterialBlock(Material.getMaterial(a.getBlockTypeId(dx, dy, dz)), (byte) a.getBlockData(dx, dy, dz));
+				sg.add(spx);
+			}
+
+			sp.nearby = sg;
+
+			if(++x >= sizeX)
+			{
+				x = 0;
+				if(++y >= sizeY)
+				{
+					y = 0;
+					++z;
+				}
+			}
+
+			return sp;
+		}
+
+		@Override
+		public void remove()
+		{
+			// nop
+		}
+	}
+
+	public class BlockSnapshot
+	{
+		public Location l;
+		public MaterialBlock mb;
+		public int highest;
+		public int skylight;
+		public int blocklight;
+		public GList<BlockSnapshot> nearby;
+		public Biome biome;
 	}
 
 	public enum CuboidDirection

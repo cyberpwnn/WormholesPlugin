@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-package gov.nasa.worldwind.geom;
+package com.volmit.wormholes.geometry;
 
 /**
  * Represents a volume enclosing one or more objects or collections of points. Primarily used to test intersections with
@@ -45,7 +45,7 @@ public interface Extent
      *
      * @return true if there is an intersection, false otherwise.
      */
-    boolean intersects(Frustum frustum);
+    boolean intersects(FrustumUtil frustum);
 
     /**
      * Determines whether or not <code>line</code> intersects this <code>Extent</code>. This method may be faster than
@@ -57,7 +57,7 @@ public interface Extent
      *
      * @return true if an intersection is found, false otherwise.
      */
-    boolean intersects(gov.nasa.worldwind.geom.Line line);
+    boolean intersects(com.volmit.wormholes.geometry.Line line);
 
     /**
      * Calculate whether or not this <code>Extent</code> is intersected by <code>plane</code>.
@@ -66,7 +66,7 @@ public interface Extent
      *
      * @return true if <code>plane</code> is found to intersect this <code>Extent</code>.
      */
-    boolean intersects(gov.nasa.worldwind.geom.Plane plane);
+    boolean intersects(com.volmit.wormholes.geometry.Plane plane);
 
     /**
      * Computes the effective radius of the extent relative to a specified plane.

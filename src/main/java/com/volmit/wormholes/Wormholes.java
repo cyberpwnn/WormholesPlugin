@@ -13,6 +13,10 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.volmit.volume.bukkit.VolumePlugin;
+import com.volmit.volume.bukkit.pawn.Start;
+import com.volmit.volume.bukkit.pawn.Stop;
+import com.volmit.volume.bukkit.pawn.Tick;
 import com.volmit.wormholes.config.Permissable;
 import com.volmit.wormholes.network.VortexBus;
 import com.volmit.wormholes.portal.LocalPortal;
@@ -34,15 +38,12 @@ import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.ColoredString;
 import com.volmit.wormholes.util.CommandScript;
-import com.volmit.wormholes.util.ControllablePlugin;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.EntityHologram;
 import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.P;
-import com.volmit.wormholes.util.ParallelPoolManager;
-import com.volmit.wormholes.util.QueueMode;
 import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.RTEX;
 import com.volmit.wormholes.util.RTX;
@@ -53,11 +54,10 @@ import com.volmit.wormholes.util.TICK;
 import com.volmit.wormholes.util.TickHandle;
 import com.volmit.wormholes.util.TickHandler;
 import com.volmit.wormholes.util.Ticked;
-import com.volmit.wormholes.util.Wraith;
 
 @Ticked(0)
 @TickHandle(TickHandler.SYNCED)
-public class Wormholes extends ControllablePlugin
+public class Wormholes extends VolumePlugin
 {
 	public static Wormholes instance;
 	public static VortexBus bus;
@@ -71,12 +71,11 @@ public class Wormholes extends ControllablePlugin
 	public static SkinService skin;
 	public static IOService io;
 	public static EffectService fx;
-	public static ParallelPoolManager pool;
 	private SubGroup sub;
 	private DB dispatcher;
 	public GMap<String, CommandScript> scripts;
 
-	@Override
+	@Start
 	public void onStart()
 	{
 		DB.rdebug = new File(getDataFolder(), "debug").exists();
@@ -85,7 +84,6 @@ public class Wormholes extends ControllablePlugin
 		scripts = new GMap<String, CommandScript>();
 		Direction.calculatePermutations();
 		io = new IOService();
-		pool = new ParallelPoolManager("Power Thread", Settings.WORMHOLE_POWER_THREADS, QueueMode.ROUND_ROBIN);
 		timings = new TimingsService();
 		Wormholes.instance.getServer().getMessenger().registerOutgoingPluginChannel(Wormholes.instance, "BungeeCord");
 		bus = new VortexBus();
@@ -100,7 +98,6 @@ public class Wormholes extends ControllablePlugin
 		sub = new SubGroup("w");
 		fx = new EffectService();
 		buildSubs();
-		pool.start();
 		dispatcher = new DB("Wormholes");
 		Info.buildBlocks();
 		DB.d(this, "Initial Startup Complete");
@@ -154,7 +151,7 @@ public class Wormholes extends ControllablePlugin
 		}
 	}
 
-	@Override
+	@Stop
 	public void onStop()
 	{
 		DB.d(this, "Stopping Wormholes");
@@ -180,19 +177,16 @@ public class Wormholes extends ControllablePlugin
 		Status.fdq = true;
 		host.dequeueAll();
 		DB.d(this, "Shut down power thread pool");
-		pool.shutdown();
 		DB.d(this, "Shut down entity service");
 		entity.shutdown();
 		DB.d(this, "Shut down");
 	}
 
-	@Override
+	@Tick
 	public void onTick()
 	{
 		try
 		{
-			pool.tickSyncQueue();
-			Wraith.poolManager.tickSyncQueue();
 			bus.flush();
 			host.flush();
 			provider.flush();
@@ -378,15 +372,9 @@ public class Wormholes extends ControllablePlugin
 				{
 					p.sendMessage(Info.hrn(Lang.WORD_WORKER + " " + Lang.WORD_THREADS));
 
-					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getWorkerPool().getThreadCount());
-					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getWorkerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getWorkerPoolInfo().getTicksPerSecond(), 2));
 
 					p.sendMessage(Info.hrn(Lang.WORD_POWER + " " + Lang.WORD_THREADS));
 
-					p.sendMessage(C.GOLD + Lang.WORD_THREADS + ": " + C.WHITE + WAPI.getPowerPool().getThreadCount());
-					p.sendMessage(C.GOLD + Lang.WORD_UTILIZATION + ": " + C.WHITE + F.pc(WAPI.getPowerPoolInfo().getUtilization(), 0));
-					p.sendMessage(C.GOLD + Lang.WORD_EFFECTIVETPS + ": " + C.WHITE + F.f(WAPI.getPowerPoolInfo().getTicksPerSecond(), 2));
 
 					p.sendMessage(Info.hrn(Lang.WORD_SYNC));
 					for(String i : TimingsService.root.toLines(0, 2))
@@ -622,12 +610,6 @@ public class Wormholes extends ControllablePlugin
 	}
 
 	@Override
-	public void onConstruct()
-	{
-
-	}
-
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		if(cmd.getName().equalsIgnoreCase("wormhole"))
@@ -698,11 +680,6 @@ public class Wormholes extends ControllablePlugin
 	public static EffectService getFx()
 	{
 		return fx;
-	}
-
-	public static ParallelPoolManager getPool()
-	{
-		return pool;
 	}
 
 	public SubGroup getSub()

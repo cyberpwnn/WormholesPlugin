@@ -22,7 +22,7 @@ public class RasteredWorld
 		{
 			for(Player i : world.getPlayers())
 			{
-				chunks.get(j).project(i);
+				chunks.get(j).projectOlder(i);
 			}
 			
 			chunks.remove(j);

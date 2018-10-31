@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.bukkit.Chunk;
+import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.entity.Player;
 
@@ -158,5 +159,23 @@ public class NMSChunk12 extends NMSChunk implements VirtualChunk
 		byteArray.write(0, boas.toByteArray());
 		packet.getModifier().withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getNBTBaseClass(), BukkitConverters.getNbtConverter())).write(0, new ArrayList<>());
 		nm.close();
+	}
+
+	@Override
+	public void setBlockLight(int i, int j, int k, byte block)
+	{
+		setBlockLight(i, j, k, (int) block);
+	}
+
+	@Override
+	public void setSkyLight(int i, int j, int k, byte sky)
+	{
+		setSkyLight(i, j, k, (int) sky);
+	}
+
+	@Override
+	public void setBiome(int i, int k, Biome biome)
+	{
+
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.bukkit.Chunk;
+import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.v1_9_R2.CraftChunk;
 import org.bukkit.entity.Player;
 
@@ -158,5 +159,26 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 		byteArray.write(0, boas.toByteArray());
 		packet.getModifier().withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getNBTBaseClass(), BukkitConverters.getNbtConverter())).write(0, new ArrayList<>());
 		nm.close();
+	}
+
+	@Override
+	public void setBlockLight(int i, int j, int k, byte block)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setSkyLight(int i, int j, int k, byte sky)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setBiome(int i, int k, Biome biome)
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

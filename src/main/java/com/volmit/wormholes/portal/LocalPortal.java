@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import com.volmit.volume.bukkit.task.A;
 import com.volmit.wormholes.Lang;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
@@ -31,7 +32,6 @@ import com.volmit.wormholes.projection.ProjectionMask;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.provider.PortalProvider;
 import com.volmit.wormholes.service.MutexService;
-import com.volmit.wormholes.util.A;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.CommandScript;
@@ -289,7 +289,7 @@ public class LocalPortal implements Portal
 	{
 		if(!plane.hasContent())
 		{
-			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical());
+			plane.sample(getPosition().getCenter().clone(), Settings.PROJECTION_SAMPLE_RADIUS, getIdentity().getFront().isVertical(), getId());
 
 			if(!sided)
 			{
@@ -482,7 +482,7 @@ public class LocalPortal implements Portal
 			new A()
 			{
 				@Override
-				public void async()
+				public void run()
 				{
 					r.run();
 				}

@@ -22,25 +22,42 @@ import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
 
 public class RasteredChunk
 {
+	private boolean mapped;
 	private int x;
 	private int z;
 	private MultiBlockChangeInfo[][][] mbi;
+	private BlockProperties[][][] mbp;
 	private World world;
 	private VirtualChunk cx;
 
 	public RasteredChunk(int x, int z, World world, VirtualChunk cx)
 	{
+		mapped = false;
 		this.world = world;
 		this.x = x;
 		this.z = z;
 		this.cx = cx;
-
 		mbi = new MultiBlockChangeInfo[16][256][16];
+		mbp = new BlockProperties[16][256][16];
 	}
 
 	public void flush()
 	{
 		mbi = new MultiBlockChangeInfo[16][256][16];
+		mbp = new BlockProperties[16][256][16];
+	}
+
+	public void put(int x, int y, int z, BlockProperties bp)
+	{
+		try
+		{
+			mbp[x - (this.x << 4)][y][z - (this.z << 4)] = bp;
+		}
+
+		catch(Exception e)
+		{
+
+		}
 	}
 
 	public void put(int x, int y, int z, MaterialBlock b)
@@ -69,16 +86,16 @@ public class RasteredChunk
 		}
 	}
 
-	public int project(Player p)
+	public int projectOlder(Player p)
 	{
 		if(VersionBukkit.wc() || !Settings.USE_LIGHTMAPS)
 		{
-			return projectOld(p);
+			return projectOldest(p);
 		}
 
 		if(cx == null)
 		{
-			return projectOld(p);
+			return projectOldest(p);
 		}
 
 		try
@@ -93,8 +110,21 @@ public class RasteredChunk
 						{
 							cx.set(i, j, k, new MaterialBlock(mbi[i][j][k]));
 						}
+
+						if(mbp[i][j][k] != null)
+						{
+							cx.setBlockLight(i, j, k, mbp[i][j][k].block);
+							cx.setSkyLight(i, j, k, mbp[i][j][k].sky);
+							cx.setBiome(i, k, mbp[i][j][k].biome);
+						}
 					}
 				}
+			}
+
+			if(!mapped)
+			{
+				mapped = true;
+				cx.trickLight(p);
 			}
 
 			cx.send(p);
@@ -109,7 +139,7 @@ public class RasteredChunk
 		return 0;
 	}
 
-	public int projectOld(Player p)
+	public int projectOldest(Player p)
 	{
 		WrapperPlayServerMultiBlockChange w = new WrapperPlayServerMultiBlockChange();
 		w.setChunk(new ChunkCoordIntPair(x, z));

@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-package gov.nasa.worldwind.geom;
+package com.volmit.wormholes.geometry;
 
 /**
  * Represents a <code>Plane</code> in Cartesian coordinates, defined by a normal vector to the plane and a signed scalar
@@ -234,7 +234,7 @@ public final class Plane
      * @param pb the second point of the line segment.
      *
      * @return The point of intersection with the plane. Null is returned if the segment does not instersect this plane.
-     *         {@link gov.nasa.worldwind.geom.Vec4#INFINITY} coincident with the plane.
+     *         {@link com.volmit.wormholes.geometry.Vec4#INFINITY} coincident with the plane.
      *
      * @throws IllegalArgumentException if either input point is null.
      */

@@ -23,6 +23,7 @@ public class Renderlet
 {
 	private Direction direction;
 	private Location initial;
+	private Cuboid viewport;
 	private int x;
 	private int y;
 	private int z;
@@ -32,6 +33,7 @@ public class Renderlet
 	private int mx;
 	private int my;
 	private int mz;
+	private int progress;
 	private boolean done;
 
 	/**
@@ -43,8 +45,10 @@ public class Renderlet
 	 */
 	public Renderlet(Cuboid viewport, Direction d, LocalPortal p)
 	{
+		this.viewport = viewport;
 		done = false;
-		direction = d;
+		progress = 0;
+		direction = d.reverse();
 		x = direction.equals(Direction.W) ? 0 : direction.equals(Direction.E) ? viewport.getSizeX() : 0;
 		y = direction.equals(Direction.D) ? 0 : direction.equals(Direction.U) ? viewport.getSizeY() : 0;
 		z = direction.equals(Direction.N) ? 0 : direction.equals(Direction.S) ? viewport.getSizeZ() : 0;
@@ -54,6 +58,9 @@ public class Renderlet
 		mx = x == 0 ? 1 : -1;
 		my = y == 0 ? 1 : -1;
 		mz = z == 0 ? 1 : -1;
+		ax = mx == 1 && ax == 0 ? viewport.getSizeX() : ax;
+		ay = my == 1 && ay == 0 ? viewport.getSizeY() : ay;
+		az = mz == 1 && az == 0 ? viewport.getSizeZ() : az;
 		initial = viewport.getLowerNE();
 	}
 
@@ -72,6 +79,11 @@ public class Renderlet
 	 */
 	public int render(int maximum, Callback<Location> locationCaller)
 	{
+		if(isDone())
+		{
+			return maximum;
+		}
+
 		int m = maximum;
 
 		virtualX: for(int i = getPrimary(); getPrimaryModifier() == 1 ? i < getPrimaryMax() : i >= getPrimaryMax(); i += getPrimaryModifier())
@@ -82,6 +94,7 @@ public class Renderlet
 				{
 					locationCaller.run(initial.clone().add(x, y, z));
 					modTertiary();
+					progress++;
 
 					if(--m <= 0)
 					{
@@ -90,9 +103,11 @@ public class Renderlet
 				}
 
 				modSecondary();
+				resetTertiary();
 			}
 
 			modPrimary();
+			resetSecondary();
 		}
 
 		if(m > 0)
@@ -101,6 +116,47 @@ public class Renderlet
 		}
 
 		return m;
+	}
+
+	public double getProgress()
+	{
+		return (double) progress / (double) viewport.volume();
+	}
+
+	private void resetSecondary()
+	{
+		switch(direction.getAxis())
+		{
+			case Z:
+				x = direction.equals(Direction.W) ? 0 : direction.equals(Direction.E) ? viewport.getSizeX() : 0;
+				break;
+			case X:
+				y = direction.equals(Direction.D) ? 0 : direction.equals(Direction.U) ? viewport.getSizeY() : 0;
+				break;
+			case Y:
+				z = direction.equals(Direction.N) ? 0 : direction.equals(Direction.S) ? viewport.getSizeZ() : 0;
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void resetTertiary()
+	{
+		switch(direction.getAxis())
+		{
+			case Y:
+				x = direction.equals(Direction.W) ? 0 : direction.equals(Direction.E) ? viewport.getSizeX() : 0;
+				break;
+			case Z:
+				y = direction.equals(Direction.D) ? 0 : direction.equals(Direction.U) ? viewport.getSizeY() : 0;
+				break;
+			case X:
+				z = direction.equals(Direction.N) ? 0 : direction.equals(Direction.S) ? viewport.getSizeZ() : 0;
+				break;
+			default:
+				break;
+		}
 	}
 
 	private int getPrimary()

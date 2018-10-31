@@ -24,6 +24,11 @@ public class ViewportLatch
 
 	public void update()
 	{
+		if(player.isSneaking())
+		{
+			return;
+		}
+
 		Location currentPosition = player.getLocation();
 
 		if(currentPosition.getBlockX() == lastPosition.getBlockX() && currentPosition.getBlockY() == lastPosition.getBlockY() && currentPosition.getBlockZ() == lastPosition.getBlockZ())
@@ -31,6 +36,8 @@ public class ViewportLatch
 			return;
 		}
 
+		lastPosition = currentPosition;
+		currentPosition = getPlayer().getLocation();
 		lastViewport = currentViewport;
 		currentViewport = new Viewport(player, portal);
 	}

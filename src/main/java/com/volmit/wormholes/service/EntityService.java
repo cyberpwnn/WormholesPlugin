@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.volmit.volume.bukkit.task.A;
 import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.RemoteInstance;
@@ -23,7 +24,6 @@ import com.volmit.wormholes.aperture.VEntity;
 import com.volmit.wormholes.network.Transmission;
 import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.DB;
-import com.volmit.wormholes.util.Execution;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
@@ -374,7 +374,7 @@ public class EntityService implements Listener
 
 	public void flush()
 	{
-		Wormholes.pool.queue(new Execution()
+		new A()
 		{
 			@Override
 			public void run()
@@ -429,7 +429,7 @@ public class EntityService implements Listener
 				t.stop();
 				TimingsService.root.get("capture-manager").get("aperture-service").hit("entity-service", t.getTime());
 			}
-		});
+		};
 	}
 
 	public void set(Player p, Portal i, RemoteInstance ri, Location l)

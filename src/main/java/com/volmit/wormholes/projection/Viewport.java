@@ -17,11 +17,13 @@ public class Viewport
 	private Frustum frustum;
 	private Player p;
 	private Portal portal;
+	private Location oldBase;
 
 	public Viewport(Player p, Portal portal)
 	{
 		this.p = p;
 		this.portal = portal;
+		oldBase = p.getEyeLocation().clone();
 		rebuild();
 	}
 
@@ -32,7 +34,7 @@ public class Viewport
 
 	public void rebuild()
 	{
-		frustum = new Frustum(p.getEyeLocation(), portal.getPosition(), Settings.PROJECTION_SAMPLE_RADIUS);
+		frustum = new Frustum(oldBase, portal.getPosition(), Settings.PROJECTION_SAMPLE_RADIUS);
 	}
 
 	public boolean contains(Location l)
@@ -42,7 +44,7 @@ public class Viewport
 			return false;
 		}
 
-		return frustum.intersects(l);
+		return frustum.contains(l);
 	}
 
 	public boolean contains(Block l)
@@ -168,5 +170,18 @@ public class Viewport
 	public Direction getDirection()
 	{
 		return Direction.closest(VectorMath.direction(getIris(), getPortal().getPosition().getCenter()), getPortal().getIdentity().getFront(), getPortal().getIdentity().getBack());
+	}
+
+	public Cuboid getCuboid()
+	{
+		return frustum.getRegion();
+	}
+
+	public Viewport extend(int i)
+	{
+		Viewport v = new Viewport(p, portal);
+		v.oldBase = oldBase.clone();
+		v.frustum = new Frustum(oldBase.clone(), portal.getPosition(), Settings.PROJECTION_SAMPLE_RADIUS + i);
+		return v;
 	}
 }

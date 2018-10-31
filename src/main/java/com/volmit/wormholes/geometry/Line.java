@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-package gov.nasa.worldwind.geom;
+package com.volmit.wormholes.geometry;
 
 /**
  * @author Tom Gaskins
@@ -93,7 +93,7 @@ public final class Line// Instances are immutable
         if (o == null || getClass() != o.getClass())
             return false;
 
-        final gov.nasa.worldwind.geom.Line line = (gov.nasa.worldwind.geom.Line) o;
+        final com.volmit.wormholes.geometry.Line line = (com.volmit.wormholes.geometry.Line) o;
 
         if (!direction.equals(line.direction))
             return false;
@@ -214,12 +214,12 @@ public final class Line// Instances are immutable
      *         returned segment is the portion of the original segment on that plane, clipped to the other frustum
      *         planes.
      */
-    public static Vec4[] clipToFrustum(Vec4 pa, Vec4 pb, Frustum frustum)
+    public static Vec4[] clipToFrustum(Vec4 pa, Vec4 pb, FrustumUtil frustum)
     {
         return clipToFrustum(pa, pb, frustum, 1);
     }
 
-    private static Vec4[] clipToFrustum(Vec4 pa, Vec4 pb, Frustum frustum, int maxRecursionCount)
+    private static Vec4[] clipToFrustum(Vec4 pa, Vec4 pb, FrustumUtil frustum, int maxRecursionCount)
     {
         if (pa == null || pb == null)
         {

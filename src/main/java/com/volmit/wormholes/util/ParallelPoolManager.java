@@ -4,6 +4,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.volmit.volume.math.Profiler;
+
 public class ParallelPoolManager
 {
 	private QueueMode mode;
@@ -21,9 +23,16 @@ public class ParallelPoolManager
 
 	public void tickSyncQueue()
 	{
+		Profiler pr = new Profiler();
+		pr.begin();
 		while(!squeue.isEmpty())
 		{
 			squeue.poll().run();
+
+			if(pr.getMilliseconds() > 7D)
+			{
+				break;
+			}
 		}
 	}
 

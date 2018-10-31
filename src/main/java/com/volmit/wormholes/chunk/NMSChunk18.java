@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.bukkit.Chunk;
+import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.entity.Player;
 
@@ -155,5 +156,26 @@ public class NMSChunk18 extends NMSChunk implements VirtualChunk
 
 		byteArray.write(0, boas.toByteArray());
 		nm.close();
+	}
+
+	@Override
+	public void setBlockLight(int i, int j, int k, byte block)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setSkyLight(int i, int j, int k, byte sky)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setBiome(int i, int k, Biome biome)
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

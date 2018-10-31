@@ -3,23 +3,22 @@ package com.volmit.wormholes.geometry;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import com.volmit.volume.lang.collections.GList;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Cuboid.CuboidDirection;
 import com.volmit.wormholes.util.VectorMath;
 
-import gov.nasa.worldwind.geom.Plane;
-import gov.nasa.worldwind.geom.Vec4;
-
 public class Frustum
 {
-	private Plane[] planes;
 	private Cuboid region;
 	private Cuboid clip;
-	private double diff;
+	private Location origin;
+	private GeoPolygonProc poly;
 
 	public Frustum(Location iris, PortalPosition pp, int rr)
 	{
+		origin = iris;
 		double distanceToPortal = iris.distance(pp.getCenter());
 		double range = rr + (rr / (distanceToPortal + 1));
 		Vector tl = VectorMath.direction(iris, pp.getCornerUL());
@@ -30,15 +29,8 @@ public class Frustum
 		Location ptr = pp.getCornerUR().clone().add(tr.multiply(range));
 		Location pbl = pp.getCornerDL().clone().add(bl.multiply(range));
 		Location pbr = pp.getCornerDR().clone().add(br.multiply(range));
-		Plane pBack = Plane.fromPoints(toVec4(ptl.toVector()), toVec4(ptr.toVector()), toVec4(pbr.toVector()));
-		Plane pFront = Plane.fromPoints(toVec4(pp.getCornerUL().toVector()), toVec4(pp.getCornerUR().toVector()), toVec4(pp.getCornerDR().toVector()));
-		Plane pTop = Plane.fromPoints(toVec4(pp.getCornerUL().toVector()), toVec4(ptl.toVector()), toVec4(ptr.toVector()));
-		Plane pBottom = Plane.fromPoints(toVec4(pp.getCornerDL().toVector()), toVec4(pbl.toVector()), toVec4(pbr.toVector()));
-		Plane pLeft = Plane.fromPoints(toVec4(pp.getCornerUL().toVector()), toVec4(ptl.toVector()), toVec4(pbl.toVector()));
-		Plane pRight = Plane.fromPoints(toVec4(pp.getCornerUR().toVector()), toVec4(ptr.toVector()), toVec4(pbr.toVector()));
-		planes = new Plane[] {pBack, pTop, pFront, pLeft, pRight, pBottom};
+		poly = new GeoPolygonProc(new GeoPolygon(new GList<GeoPoint>().qadd(nGeoPoint(ptl)).qadd(nGeoPoint(ptr)).qadd(nGeoPoint(pbl)).qadd(nGeoPoint(pbr)).qadd(nGeoPoint(pp.getCornerUL())).qadd(nGeoPoint(pp.getCornerUR())).qadd(nGeoPoint(pp.getCornerDL())).qadd(nGeoPoint(pp.getCornerDR()))));
 		region = new Cuboid(ptl, pp.getCornerDR()).getBoundingCuboid(new Cuboid(pbr, pp.getCornerUL()));
-		diff = Math.max(ptl.distance(pbr), pp.getCenter().distance(pbr)) * 1.5;
 
 		for(CuboidDirection i : CuboidDirection.values())
 		{
@@ -50,45 +42,20 @@ public class Frustum
 		}
 	}
 
-	public boolean intersects(Location l)
+	public boolean contains(Location l)
 	{
-		//@builder
-		return region.contains(l)
-				&& !clip.contains(l)
-				&& intersects(l, l.clone().add(0, diff, diff))
-				&& intersects(l, l.clone().add(diff, 0, diff))
-				&& intersects(l, l.clone().add(diff, diff, 0))
-				&& intersects(l, l.clone().add(0, 0, diff))
-				&& intersects(l, l.clone().add(diff, 0, 0))
-				&& intersects(l, l.clone().add(0, diff, 0))
-				&& intersects(l, l.clone().add(0, -diff, -diff))
-				&& intersects(l, l.clone().add(-diff, 0, -diff))
-				&& intersects(l, l.clone().add(-diff, -diff, 0))
-				&& intersects(l, l.clone().add(0, 0, -diff))
-				&& intersects(l, l.clone().add(-diff, 0, 0))
-				&& intersects(l, l.clone().add(0, -diff, 0))
-				&& intersects(l, l.clone().add(diff, diff, diff))
-				&& intersects(l, l.clone().add(-diff, -diff, -diff))
-				&& intersects(l, l.clone().add(-diff, diff, -diff))
-				&& intersects(l, l.clone().add(-diff, -diff, diff))
-				&& intersects(l, l.clone().add(diff, -diff, -diff))
-				&& intersects(l, l.clone().add(-diff, diff, diff))
-				&& intersects(l, l.clone().add(diff, -diff, diff))
-				&& intersects(l, l.clone().add(diff, diff, -diff));
-		//@done
+		GeoPoint p = nGeoPoint(l);
+		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
 	}
 
-	public boolean intersects(Location l, Location t)
+	public static GeoPoint toGeoPoint(Vector v)
 	{
-		for(Plane i : planes)
-		{
-			if(i.intersect(toVec4(l.toVector()), toVec4(t.toVector())) != null)
-			{
-				return true;
-			}
-		}
+		return new GeoPoint(v.getX(), v.getY(), v.getZ());
+	}
 
-		return false;
+	public static Location normalize(Location origin, Location loc)
+	{
+		return loc.clone().subtract(origin);
 	}
 
 	public static Vec4 toVec4(Vector v)
@@ -96,9 +63,14 @@ public class Frustum
 		return Vec4.fromArray3(new double[] {v.getX(), v.getY(), v.getZ()}, 0);
 	}
 
-	public Plane[] getPlanes()
+	public GeoPoint nGeoPoint(Location v)
 	{
-		return planes;
+		return toGeoPoint(normalize(origin, v).toVector());
+	}
+
+	public Vec4 nVec4(Location v)
+	{
+		return toVec4(normalize(origin, v).toVector());
 	}
 
 	public Cuboid getRegion()

@@ -1,6 +1,7 @@
 package com.volmit.wormholes.util;
 
 import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
@@ -22,14 +23,14 @@ import org.bukkit.util.Vector;
 
 /**
  * World utils
- * 
+ *
  * @author cyberpwn
  */
 public class W
 {
 	/**
 	 * Could this block be seen based on if there is air surrounding it or not?
-	 * 
+	 *
 	 * @param block
 	 *            the block
 	 * @return returns true if you could see this block ingame from a position
@@ -43,20 +44,20 @@ public class W
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static DyeColor getColor(Location l)
 	{
 		return getColor(l.getBlock());
 	}
-	
+
 	public static boolean isColorable(Block b)
 	{
 		return getColor(b) != null;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static DyeColor getColor(Block b)
 	{
@@ -64,7 +65,7 @@ public class W
 		{
 			return DyeColor.getByWoolData(b.getData());
 		}
-		
+
 		if(b.getType().toString().contains("_TERRACOTTA"))
 		{
 			for(DyeColor d : DyeColor.values())
@@ -75,10 +76,10 @@ public class W
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void setColor(Block b, DyeColor d)
 	{
@@ -88,7 +89,7 @@ public class W
 			{
 				b.setData(d.getWoolData());
 			}
-			
+
 			else if(b.getType().toString().contains("_TERRACOTTA"))
 			{
 				String type = d.toString() + "_GLAZED_TERRACOTTA";
@@ -99,10 +100,10 @@ public class W
 			}
 		}
 	}
-	
+
 	/**
 	 * Set the color of a peice of armor
-	 * 
+	 *
 	 * @param s
 	 *            the item stack
 	 * @param c
@@ -114,10 +115,10 @@ public class W
 		lam.setColor(c);
 		s.setItemMeta(lam);
 	}
-	
+
 	/**
 	 * Get the entity from the entity id
-	 * 
+	 *
 	 * @param entityId
 	 *            the entity id
 	 * @return the entity or null
@@ -134,13 +135,13 @@ public class W
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get the amount of the given item a player has
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param mb
@@ -151,7 +152,7 @@ public class W
 	public static int count(Player p, MaterialBlock mb)
 	{
 		int has = 0;
-		
+
 		for(ItemStack i : p.getInventory().getContents())
 		{
 			if(i != null)
@@ -162,14 +163,14 @@ public class W
 				}
 			}
 		}
-		
+
 		return has;
 	}
-	
+
 	/**
 	 * Check if the player has a certain amount of items in their inventory (or
 	 * more)
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param mb
@@ -182,10 +183,10 @@ public class W
 	{
 		return count(p, mb) >= amt;
 	}
-	
+
 	/**
 	 * Get the block coord for the given chunk (0-15)
-	 * 
+	 *
 	 * @param b
 	 *            the block
 	 * @return the coord
@@ -194,10 +195,10 @@ public class W
 	{
 		return b.getX() - (b.getChunk().getX() << 4);
 	}
-	
+
 	/**
 	 * Get the block coord for the given chunk (0-255)
-	 * 
+	 *
 	 * @param b
 	 *            the block
 	 * @return the coord
@@ -206,10 +207,10 @@ public class W
 	{
 		return b.getY();
 	}
-	
+
 	/**
 	 * Drop an experience orb
-	 * 
+	 *
 	 * @param location
 	 *            the location
 	 * @param xp
@@ -219,10 +220,10 @@ public class W
 	{
 		((ExperienceOrb) location.getWorld().spawn(location, ExperienceOrb.class)).setExperience(xp);
 	}
-	
+
 	/**
 	 * Get the block coord for the given chunk (0-15)
-	 * 
+	 *
 	 * @param b
 	 *            the block
 	 * @return the coord
@@ -231,10 +232,10 @@ public class W
 	{
 		return b.getZ() - (b.getChunk().getZ() << 4);
 	}
-	
+
 	/**
 	 * Take items from the player's inventory
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param mb
@@ -253,11 +254,11 @@ public class W
 			}
 		}
 	}
-	
+
 	/**
 	 * Calculates the so-called 'Manhatten Distance' between two locations<br>
 	 * This is the distance between two points without going diagonally
-	 * 
+	 *
 	 * @param b1
 	 *            location
 	 * @param b2
@@ -270,31 +271,31 @@ public class W
 	{
 		int d = Math.abs(b1.getBlockX() - b2.getBlockX());
 		d += Math.abs(b1.getBlockZ() - b2.getBlockZ());
-		
+
 		if(checkY)
 		{
 			d += Math.abs(b1.getBlockY() - b2.getBlockY());
 		}
-		
+
 		return d;
 	}
-	
+
 	public static GList<Location> news(Location location)
 	{
 		GList<Location> news = new GList<Location>();
-		
+
 		news.add(location.clone().add(1, 0, 0));
 		news.add(location.clone().add(0, 0, 1));
 		news.add(location.clone().add(-1, 0, 0));
 		news.add(location.clone().add(0, 0, -1));
-		
+
 		return news;
 	}
-	
+
 	/**
 	 * Calculates the so-called 'Manhatten Distance' between two blocks<br>
 	 * This is the distance between two points without going diagonally
-	 * 
+	 *
 	 * @param b1
 	 *            block
 	 * @param b2
@@ -307,18 +308,18 @@ public class W
 	{
 		int d = Math.abs(b1.getX() - b2.getX());
 		d += Math.abs(b1.getZ() - b2.getZ());
-		
+
 		if(checkY)
 		{
 			d += Math.abs(b1.getY() - b2.getY());
 		}
-		
+
 		return d;
 	}
-	
+
 	/**
 	 * Get all blocks from a chunk
-	 * 
+	 *
 	 * @param c
 	 *            the chunk
 	 * @return the blocks in the form of a list
@@ -327,10 +328,10 @@ public class W
 	{
 		return new GList<Block>(new Cuboid(c.getBlock(0, 0, 0).getLocation(), c.getBlock(15, 255, 15).getLocation()).iterator());
 	}
-	
+
 	/**
 	 * Get a list of chunklets from the given chunks (always 16)
-	 * 
+	 *
 	 * @param c
 	 *            the chunk
 	 * @return the 4x4 chunklets
@@ -338,7 +339,7 @@ public class W
 	public static GList<Chunklet> getChunklets(Chunk c)
 	{
 		GList<Chunklet> cx = new GList<Chunklet>();
-		
+
 		for(int i = 0; i < 16; i += 4)
 		{
 			for(int j = 0; j < 16; j += 4)
@@ -346,13 +347,13 @@ public class W
 				cx.add(new Chunklet(c.getBlock(i, 0, j).getLocation()));
 			}
 		}
-		
+
 		return cx;
 	}
-	
+
 	/**
 	 * Get a sync world from a possible async world
-	 * 
+	 *
 	 * @param world
 	 *            the world
 	 * @return the sync world
@@ -361,10 +362,10 @@ public class W
 	{
 		return Bukkit.getWorld(world.getName());
 	}
-	
+
 	/**
 	 * Get a list of chunklets from a list of chunks
-	 * 
+	 *
 	 * @param c
 	 *            the list of chunks
 	 * @return the list of chunklets with the size of (16 * c.size())
@@ -372,22 +373,22 @@ public class W
 	public static GList<Chunklet> getChunklets(GList<Chunk> c)
 	{
 		GList<Chunklet> cx = new GList<Chunklet>();
-		
+
 		for(Chunk i : c)
 		{
 			cx.add(getChunklets(i));
 		}
-		
+
 		return cx;
 	}
-	
+
 	/**
 	 * Tries to get a material from a string including meta (excluding it
 	 * implies 0)
 	 * </br>
 	 * </br>
 	 * 1, STONE, stone, 1:0 all would return STONE (byte = 0)
-	 * 
+	 *
 	 * @param s
 	 *            the input string
 	 * @return the MaterialBlock, NULL if it cannot parse.
@@ -399,75 +400,75 @@ public class W
 		Byte meta = (byte) 0;
 		String m = "0";
 		String b = "0";
-		
+
 		if(s.contains(":"))
 		{
 			m = s.split(":")[0];
 			b = s.split(":")[1];
 		}
-		
+
 		else
 		{
 			m = s;
 		}
-		
+
 		try
 		{
 			material = Material.getMaterial(Integer.valueOf(m));
-			
+
 			if(material == null)
 			{
 				try
 				{
 					material = Material.valueOf(m.toUpperCase());
-					
+
 					if(material == null)
 					{
 						return null;
 					}
 				}
-				
+
 				catch(Exception e)
 				{
 					return null;
 				}
 			}
 		}
-		
+
 		catch(Exception e)
 		{
 			try
 			{
 				material = Material.valueOf(m.toUpperCase());
-				
+
 				if(material == null)
 				{
 					return null;
 				}
 			}
-			
+
 			catch(Exception ex)
 			{
 				return null;
 			}
 		}
-		
+
 		try
 		{
 			meta = Integer.valueOf(b).byteValue();
 		}
-		
+
 		catch(Exception e)
 		{
 			meta = (byte) 0;
 		}
-		
+
 		return new MaterialBlock(material, meta);
 	}
-	
+
 	/**
 	 * Gets all the Blocks relative to a main block using multiple Block Faces
-	 * 
+	 *
 	 * @param main
 	 *            block
 	 * @param faces
@@ -480,20 +481,20 @@ public class W
 		{
 			return new Block[0];
 		}
-		
+
 		Block[] rval = new Block[faces.length];
-		
+
 		for(int i = 0; i < rval.length; i++)
 		{
 			rval[i] = main.getRelative(faces[i]);
 		}
-		
+
 		return rval;
 	}
-	
+
 	/**
 	 * Sets the Block type and data at once, then performs physics
-	 * 
+	 *
 	 * @param block
 	 *            to set the type and data of
 	 * @param type
@@ -505,10 +506,10 @@ public class W
 	{
 		setTypeAndData(block, type, data, true);
 	}
-	
+
 	/**
 	 * Sets the Block type and data at once
-	 * 
+	 *
 	 * @param block
 	 *            to set the type and data of
 	 * @param type
@@ -523,10 +524,10 @@ public class W
 	{
 		block.setTypeIdAndData(type.getId(), data.getData(), update);
 	}
-	
+
 	/**
 	 * Sets the Block type and data at once, then performs physics
-	 * 
+	 *
 	 * @param block
 	 *            to set the type and data of
 	 * @param type
@@ -538,10 +539,10 @@ public class W
 	{
 		setTypeAndRawData(block, type, data, true);
 	}
-	
+
 	/**
 	 * Sets the Block type and data at once
-	 * 
+	 *
 	 * @param block
 	 *            to set the type and data of
 	 * @param type
@@ -556,10 +557,10 @@ public class W
 	{
 		block.setTypeIdAndData(type.getId(), (byte) data, update);
 	}
-	
+
 	/**
 	 * Sets the Material Data for a Block
-	 * 
+	 *
 	 * @param block
 	 *            to set it for
 	 * @param materialData
@@ -570,10 +571,10 @@ public class W
 	{
 		block.setData(materialData.getData());
 	}
-	
+
 	/**
 	 * Sets the Material Data for a Block
-	 * 
+	 *
 	 * @param block
 	 *            to set it for
 	 * @param materialData
@@ -586,11 +587,11 @@ public class W
 	{
 		block.setData(materialData.getData(), doPhysics);
 	}
-	
+
 	/**
 	 * Gets the highest level of a type of potion from a list of potion effect
 	 * objects
-	 * 
+	 *
 	 * @param type
 	 *            the potion effect type
 	 * @param pots
@@ -602,7 +603,7 @@ public class W
 	public static int getHighestPotionLevel(PotionEffectType type, Collection<PotionEffect> pots)
 	{
 		int highest = 0;
-		
+
 		for(PotionEffect i : pots)
 		{
 			if(i.getType().equals(type) && i.getAmplifier() + 1 > highest)
@@ -610,13 +611,13 @@ public class W
 				highest = i.getAmplifier() + 1;
 			}
 		}
-		
+
 		return highest;
 	}
-	
+
 	/**
 	 * Chunk faces around a given chunk
-	 * 
+	 *
 	 * @param c
 	 *            the chunk
 	 * @return the surrounding 4 chunks
@@ -624,18 +625,18 @@ public class W
 	public static GList<Chunk> chunkFaces(Chunk c)
 	{
 		GList<Chunk> cx = new GList<Chunk>();
-		
+
 		cx.add(c.getWorld().getChunkAt(c.getX() + 1, c.getZ()));
 		cx.add(c.getWorld().getChunkAt(c.getX() - 1, c.getZ()));
 		cx.add(c.getWorld().getChunkAt(c.getX(), c.getZ() + 1));
 		cx.add(c.getWorld().getChunkAt(c.getX(), c.getZ() - 1));
-		
+
 		return cx;
 	}
-	
+
 	/**
 	 * Get all 6 blocks touching a given block
-	 * 
+	 *
 	 * @param b
 	 *            the block
 	 * @return the surrounding 6 blocks
@@ -643,20 +644,20 @@ public class W
 	public static GList<Block> blockFaces(Block b)
 	{
 		GList<Block> blocks = new GList<Block>();
-		
+
 		blocks.add(b.getRelative(BlockFace.UP));
 		blocks.add(b.getRelative(BlockFace.DOWN));
 		blocks.add(b.getRelative(BlockFace.NORTH));
 		blocks.add(b.getRelative(BlockFace.SOUTH));
 		blocks.add(b.getRelative(BlockFace.EAST));
 		blocks.add(b.getRelative(BlockFace.WEST));
-		
+
 		return blocks;
 	}
-	
+
 	/**
 	 * simulate a fall from a location
-	 * 
+	 *
 	 * @param from
 	 *            the location to fall from
 	 * @return the location where it would fall to
@@ -664,25 +665,25 @@ public class W
 	public static Location simulateFall(Location from)
 	{
 		int height = from.getBlockY();
-		
+
 		for(int i = height; i > 0; i--)
 		{
 			int check = i - 1;
-			
+
 			Material type = new Location(from.getWorld(), from.getBlockX(), check, from.getBlockZ()).getBlock().getType();
-			
+
 			if(!(type.equals(Material.AIR) || type.equals(Material.WATER) || type.equals(Material.STATIONARY_WATER) || type.equals(Material.LAVA) || type.equals(Material.STATIONARY_LAVA)))
 			{
 				return new Location(from.getWorld(), from.getBlockX(), check + 1, from.getBlockZ());
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get a radius area of chunks around a given chunk
-	 * 
+	 *
 	 * @param c
 	 *            the chunk center
 	 * @param rad
@@ -692,7 +693,7 @@ public class W
 	public static GList<Chunk> chunkRadius(Chunk c, int rad)
 	{
 		GList<Chunk> cx = new GList<Chunk>();
-		
+
 		for(int i = c.getX() - rad + 1; i < c.getX() + rad; i++)
 		{
 			for(int j = c.getZ() - rad + 1; j < c.getZ() + rad; j++)
@@ -700,15 +701,15 @@ public class W
 				cx.add(c.getWorld().getChunkAt(i, j));
 			}
 		}
-		
+
 		cx.add(c);
-		
+
 		return cx;
 	}
-	
+
 	/**
 	 * Get a radius area of blocks around a given chunk
-	 * 
+	 *
 	 * @param c
 	 *            the block center
 	 * @param rad
@@ -718,7 +719,7 @@ public class W
 	public static GList<Block> blockRadius(Block c, int rad)
 	{
 		GList<Block> cx = new GList<Block>();
-		
+
 		for(int i = c.getX() - rad + 1; i < c.getX() + rad; i++)
 		{
 			for(int j = c.getZ() - rad + 1; j < c.getZ() + rad; j++)
@@ -726,16 +727,16 @@ public class W
 				cx.add(c.getWorld().getBlockAt(i, c.getY(), j));
 			}
 		}
-		
+
 		cx.add(c);
-		
+
 		return cx;
 	}
-	
+
 	/**
 	 * Get an entity that the supplied entity (e) is looking at with a specific
 	 * range and offset
-	 * 
+	 *
 	 * @param e
 	 *            the entity
 	 * @param range
@@ -756,22 +757,22 @@ public class W
 		{
 			off = 1;
 		}
-		
+
 		if(range < 1)
 		{
 			range = 1;
 		}
-		
+
 		final Double doff = off;
 		final Entity[] result = new Entity[1];
-		
+
 		new RayTrace(e.getLocation().clone().add(0.5, 0.5, 0.5), e.getLocation().getDirection(), range, (double) 1)
 		{
 			@Override
 			public void onTrace(Location l)
 			{
 				Area a = new Area(l, doff);
-				
+
 				for(Entity i : a.getNearbyEntities())
 				{
 					if(!e.equals(i))
@@ -783,13 +784,13 @@ public class W
 				}
 			}
 		}.trace();
-		
+
 		return result[0];
 	}
-	
+
 	/**
 	 * Check if the given entity IS is looking at the given entity AT.
-	 * 
+	 *
 	 * @param is
 	 *            the entity
 	 * @param at
@@ -803,18 +804,18 @@ public class W
 	public static boolean isLookingAt(Entity is, Entity at, double range, double off)
 	{
 		Entity e = getEntityLookingAt(is, range, off);
-		
+
 		if(e == null)
 		{
 			return false;
 		}
-		
+
 		return e.equals(at);
 	}
-	
+
 	/**
 	 * Get the difference between two vectors (squared)
-	 * 
+	 *
 	 * @param a
 	 *            the first vector
 	 * @param b
@@ -825,12 +826,12 @@ public class W
 	{
 		return a.distanceSquared(b);
 	}
-	
+
 	public static int chunkDistance(Chunk chunk, Chunk chunkAt)
 	{
 		return (int) (100.0 * new Vector(chunk.getX(), 0, chunk.getZ()).distance(new Vector(chunkAt.getX(), 0, chunkAt.getZ())));
 	}
-	
+
 	public static boolean isColored(Block bCheck)
 	{
 		return getColor(bCheck) != null;

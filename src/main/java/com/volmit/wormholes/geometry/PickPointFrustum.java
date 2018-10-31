@@ -4,19 +4,19 @@
  * All Rights Reserved.
  */
 
-package gov.nasa.worldwind.geom;
+package com.volmit.wormholes.geometry;
 
 import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * A viewport aligned {@link gov.nasa.worldwind.geom.Frustum} that also stores the 2D screen rectangle that the {@link
- * gov.nasa.worldwind.geom.Frustum} contains.
+ * A viewport aligned {@link com.volmit.wormholes.geometry.FrustumUtil} that also stores the 2D screen rectangle that the {@link
+ * com.volmit.wormholes.geometry.FrustumUtil} contains.
  *
  * @author Jeff Addison
  * @version $Id$
  */
-public class PickPointFrustum extends Frustum
+public class PickPointFrustum extends FrustumUtil
 {
     private final Rectangle screenRect;
 
@@ -26,7 +26,7 @@ public class PickPointFrustum extends Frustum
      * @param frustum frustum to create the PickPointFrustum from
      * @param rect    screen rectangle to store with this frustum
      */
-    public PickPointFrustum(Frustum frustum, Rectangle rect)
+    public PickPointFrustum(FrustumUtil frustum, Rectangle rect)
     {
         super(frustum.getLeft(), frustum.getRight(), frustum.getBottom(), frustum.getTop(), frustum.getNear(),
             frustum.getFar());

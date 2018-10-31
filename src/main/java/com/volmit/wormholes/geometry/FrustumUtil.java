@@ -3,7 +3,7 @@
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
-package gov.nasa.worldwind.geom;
+package com.volmit.wormholes.geometry;
 
 /**
  * Represents a view frustum composed of six planes: left, right, bottom, top, near far.
@@ -13,7 +13,7 @@ package gov.nasa.worldwind.geom;
  * @author Tom Gaskins
  * @version $Id$
  */
-public class Frustum
+public class FrustumUtil
 {
     protected final Plane left;
     protected final Plane right;
@@ -25,7 +25,7 @@ public class Frustum
     protected final Plane[] allPlanes;
 
     /** Constructs a frustum two meters wide centered at the origin. Primarily used for testing. */
-    public Frustum()
+    public FrustumUtil()
     {
         this(
             new Plane(1, 0, 0, 1),  // Left
@@ -37,7 +37,7 @@ public class Frustum
     }
 
     /**
-     * Create a frustum from six {@link gov.nasa.worldwind.geom.Plane}s defining the frustum boundaries.
+     * Create a frustum from six {@link com.volmit.wormholes.geometry.Plane}s defining the frustum boundaries.
      * <p/>
      * None of the arguments may be null.
      *
@@ -50,7 +50,7 @@ public class Frustum
      *
      * @throws IllegalArgumentException if any argument is null.
      */
-    public Frustum(Plane left, Plane right, Plane bottom, Plane top, Plane near, Plane far)
+    public FrustumUtil(Plane left, Plane right, Plane bottom, Plane top, Plane near, Plane far)
     {
         if (left == null || right == null || bottom == null || top == null || near == null || far == null)
         {
@@ -146,7 +146,7 @@ public class Frustum
         if (obj == null || getClass() != obj.getClass())
             return false;
 
-        Frustum that = (Frustum) obj;
+        FrustumUtil that = (FrustumUtil) obj;
         return this.left.equals(that.left)
             && this.right.equals(that.right)
             && this.bottom.equals(that.bottom)
@@ -197,7 +197,7 @@ public class Frustum
      *
      * @throws IllegalArgumentException if the projection matrix is null.
      */
-    public static Frustum fromProjectionMatrix(Matrix projectionMatrix)
+    public static FrustumUtil fromProjectionMatrix(Matrix projectionMatrix)
     {
         //noinspection UnnecessaryLocalVariable
         Matrix m = projectionMatrix;
@@ -216,7 +216,7 @@ public class Frustum
         Plane nearPlane = new Plane(m.m41 + m.m31, m.m42 + m.m32, m.m43 + m.m33, m.m44 + m.m34).normalize();
         Plane farPlane = new Plane(m.m41 - m.m31, m.m42 - m.m32, m.m43 - m.m33, m.m44 - m.m34).normalize();
 
-        return new Frustum(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+        return new FrustumUtil(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
     }
 
     /**
@@ -235,7 +235,7 @@ public class Frustum
      * @throws IllegalArgumentException if fov is not in the range (0, 180), if either near or far are negative, or near
      *                                  is greater than or equal to far
      */
-    public static Frustum fromPerspective(Angle horizontalFieldOfView, int viewportWidth, int viewportHeight,
+    public static FrustumUtil fromPerspective(Angle horizontalFieldOfView, int viewportWidth, int viewportHeight,
         double near, double far)
     {
         if (horizontalFieldOfView == null)
@@ -267,7 +267,7 @@ public class Frustum
         Plane topPlane = new Plane(0d, 0d - focalLength / btLen, 0d - aspect / btLen, 0d);
         Plane nearPlane = new Plane(0d, 0d, 0d - 1d, 0d - near);
         Plane farPlane = new Plane(0d, 0d, 1d, far);
-        return new Frustum(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+        return new FrustumUtil(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
     }
 
     /**
@@ -284,7 +284,7 @@ public class Frustum
      * @throws IllegalArgumentException if the difference of any plane set (lright - left, top - bottom, far - near) is
      *                                  less than or equal to zero.
      */
-    public static Frustum fromPerspective(double width, double height, double near, double far)
+    public static FrustumUtil fromPerspective(double width, double height, double near, double far)
     {
         double farMinusNear = far - near;
         if (farMinusNear <= 0.0 || width <= 0.0 || height <= 0.0)
@@ -302,7 +302,7 @@ public class Frustum
         Plane topPlane = new Plane(0.0, -1.0, 0.0, height_over_2);
         Plane nearPlane = new Plane(0.0, 0.0, -1.0, (near < 0.0) ? near : -near);
         Plane farPlane = new Plane(0.0, 0.0, 1.0, (far < 0.0) ? -far : far);
-        return new Frustum(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+        return new FrustumUtil(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
     }
 
     /**
@@ -322,7 +322,7 @@ public class Frustum
      * @throws IllegalArgumentException if any of the vectors are null, if either near or far are negative, or near is
      *                                  greater than or equal to far
      */
-    public static Frustum fromPerspectiveVecs(Vec4 vTL, Vec4 vTR, Vec4 vBL, Vec4 vBR,
+    public static FrustumUtil fromPerspectiveVecs(Vec4 vTL, Vec4 vTR, Vec4 vBL, Vec4 vBR,
         double near, double far)
     {
         if (vTL == null || vTR == null || vBL == null || vBR == null)
@@ -351,7 +351,7 @@ public class Frustum
 
         Plane nearPlane = new Plane(0d, 0d, 0d - 1d, 0d - near);
         Plane farPlane = new Plane(0d, 0d, 1d, far);
-        return new Frustum(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+        return new FrustumUtil(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
     }
 
     // ============== Intersection Functions ======================= //
@@ -516,7 +516,7 @@ public class Frustum
      *
      * @throws IllegalArgumentException if the matrix is null.
      */
-    public Frustum transformBy(Matrix matrix)
+    public FrustumUtil transformBy(Matrix matrix)
     {
         if (matrix == null)
         {
@@ -531,7 +531,7 @@ public class Frustum
         Plane top = new Plane(this.top.getVector().transformBy4(matrix));
         Plane near = new Plane(this.near.getVector().transformBy4(matrix));
         Plane far = new Plane(this.far.getVector().transformBy4(matrix));
-        return new Frustum(left, right, bottom, top, near, far);
+        return new FrustumUtil(left, right, bottom, top, near, far);
     }
 
     /** Holds the eight corner points of a frustum. */
