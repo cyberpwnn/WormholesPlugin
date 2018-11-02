@@ -67,6 +67,7 @@ import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GQuadraset;
 import com.volmit.wormholes.util.GSound;
 import com.volmit.wormholes.util.JSONObject;
+import com.volmit.wormholes.util.Jokester;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.PlayerScrollEvent;
@@ -1156,7 +1157,7 @@ public class MutexService implements Listener
 						if(!canDestroy(e.getPlayer()))
 						{
 							e.setCancelled(true);
-							new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+							new GSound(Jokester.flip(MSound.BLAZE_HIT.bukkitSound()), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
 							Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 						}
 					}
@@ -1164,7 +1165,7 @@ public class MutexService implements Listener
 					else if(!canBuild(e.getPlayer()))
 					{
 						e.setCancelled(true);
-						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+						new GSound(Jokester.flip(MSound.BLAZE_HIT.bukkitSound()), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
 						Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 					}
 				}
@@ -1240,7 +1241,7 @@ public class MutexService implements Listener
 					if(!canBuild(e.getPlayer()))
 					{
 						e.setCancelled(true);
-						new GSound(MSound.BLAZE_HIT.bukkitSound(), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
+						new GSound(Jokester.flip(MSound.BLAZE_HIT.bukkitSound()), 1f, 1.5f + (float) (Math.random() * 0.2)).play(e.getBlock().getLocation());
 						Wormholes.fx.phaseDeny((LocalPortal) i, e.getBlock().getLocation().add(0.5, 0.5, 0.5));
 					}
 				}

@@ -126,11 +126,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<artifactId>spigot</artifactId>
-			<groupId>spiot</groupId>
-			<version>1.8.8</version>
-			<systemPath>${ct.libs}/spigot-1.8.8.jar</systemPath>
-			<scope>system</scope>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.12.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<artifactId>protocollib</artifactId>
