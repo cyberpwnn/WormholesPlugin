@@ -2,10 +2,12 @@ package com.volmit.wormholes.aperture;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.volmit.wormholes.util.VectorMath;
@@ -37,7 +39,7 @@ public class VEntity
 	private float lya;
 	private float lpi;
 	private VirtualPlayer vp;
-	
+
 	public VEntity(Player viewer, EntityType type, int id, UUID uuid, Location location, String name)
 	{
 		this.viewer = viewer;
@@ -52,7 +54,7 @@ public class VEntity
 		lpi = pit;
 		vp = type.equals(EntityType.PLAYER) ? new VirtualPlayer(viewer, uuid, id, name, name) : null;
 	}
-	
+
 	public void prelativeMove18(double x, double y, double z)
 	{
 		WrapperPlayServerRelEntityMove18 w = new WrapperPlayServerRelEntityMove18();
@@ -63,12 +65,12 @@ public class VEntity
 		w.setOnGround(true);
 		w.sendPacket(viewer);
 	}
-	
+
 	private double getCompressedDiff18(double from, double to)
 	{
 		return to - from;
 	}
-	
+
 	public void prelativeMove(double x, double y, double z)
 	{
 		if(VersionBukkit.get().equals(VersionBukkit.V8))
@@ -76,16 +78,16 @@ public class VEntity
 			prelativeMove18(x, y, z);
 			return;
 		}
-		
+
 		WrapperPlayServerRelEntityMove w = new WrapperPlayServerRelEntityMove();
-		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128));
-		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128));
-		w.setDz((int) ((((location.getBlockZ() + z) * 32) - (location.getBlockZ() * 32)) * 128));
+		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128) / 2);
+		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128) / 2);
+		w.setDz((int) ((((location.getBlockZ() + z) * 32) - (location.getBlockZ() * 32)) * 128) / 2);
 		w.setEntityID(id);
 		w.setOnGround(location.clone().add(new Vector(x, y, z)).getBlock().getType().isSolid());
 		send(w);
 	}
-	
+
 	public void prelativeMoveLook18(double x, double y, double z, float yaw, float pitch)
 	{
 		WrapperPlayServerEntityMoveLook18 w = new WrapperPlayServerEntityMoveLook18();
@@ -98,7 +100,7 @@ public class VEntity
 		w.setPitch(pitch);
 		w.sendPacket(viewer);
 	}
-	
+
 	public void prelativeMoveLook(double x, double y, double z, float yaw, float pitch)
 	{
 		if(VersionBukkit.get().equals(VersionBukkit.V8))
@@ -106,18 +108,18 @@ public class VEntity
 			prelativeMoveLook18(x, y, z, yaw, pitch);
 			return;
 		}
-		
+
 		WrapperPlayServerRelEntityMoveLook w = new WrapperPlayServerRelEntityMoveLook();
-		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128));
-		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128));
-		w.setDz((int) ((((location.getBlockZ() + z) * 32) - (location.getBlockZ() * 32)) * 128));
+		w.setDx((int) ((((location.getBlockX() + x) * 32) - (location.getBlockX() * 32)) * 128) / 2);
+		w.setDy((int) ((((location.getBlockY() + y) * 32) - (location.getBlockY() * 32)) * 128) / 2);
+		w.setDz((int) ((((location.getBlockZ() + z) * 32) - (location.getBlockZ() * 32)) * 128) / 2);
 		w.setEntityID(id);
 		w.setOnGround(location.clone().add(new Vector(x, y, z)).getBlock().getType().isSolid());
 		w.setPitch(pitch);
 		w.setYaw(yaw);
 		send(w);
 	}
-	
+
 	public void pteleport(double x, double y, double z, float ya, float pi)
 	{
 		WrapperPlayServerEntityTeleport w = new WrapperPlayServerEntityTeleport();
@@ -130,7 +132,7 @@ public class VEntity
 		w.setPitch(pi);
 		send(w);
 	}
-	
+
 	public void plook(float y, float p)
 	{
 		if(VersionBukkit.get().equals(VersionBukkit.V8))
@@ -138,19 +140,19 @@ public class VEntity
 			plook18(y, p);
 			return;
 		}
-		
+
 		WrapperPlayServerEntityLook w = new WrapperPlayServerEntityLook();
 		w.setEntityID(id);
 		w.setOnGround(true);
 		w.setPitch(p);
 		w.setYaw(y);
 		send(w);
-		
+
 		WrapperPlayServerEntityHeadRotation ww = new WrapperPlayServerEntityHeadRotation();
 		ww.setHeadYaw((byte) ((yaw * 256.0F) / 360.0F));
 		send(ww);
 	}
-	
+
 	public void plook18(float y, float p)
 	{
 		WrapperPlayServerEntityLook18 w = new WrapperPlayServerEntityLook18();
@@ -159,19 +161,19 @@ public class VEntity
 		w.setPitch(p);
 		w.setYaw(y);
 		w.sendPacket(viewer);
-		
+
 		WrapperPlayServerEntityHeadRotation18 ww = new WrapperPlayServerEntityHeadRotation18();
 		ww.setHeadYaw((byte) ((yaw * 256.0F) / 360.0F));
 		ww.sendPacket(viewer);
 	}
-	
+
 	public void despawn()
 	{
 		if(vp != null)
 		{
 			vp.despawn();
 		}
-		
+
 		else
 		{
 			WrapperPlayServerEntityDestroy w = new WrapperPlayServerEntityDestroy();
@@ -179,7 +181,7 @@ public class VEntity
 			send(w);
 		}
 	}
-	
+
 	public void spawn18()
 	{
 		WrapperPlayServerSpawnEntityLiving18 w = new WrapperPlayServerSpawnEntityLiving18();
@@ -193,14 +195,14 @@ public class VEntity
 		w.setMetadata(new WrappedDataWatcher());
 		w.sendPacket(viewer);
 	}
-	
+
 	public void spawn()
 	{
 		if(getType().equals(EntityType.PLAYER))
 		{
 			vp.spawn(location);
 		}
-		
+
 		else
 		{
 			if(VersionBukkit.get().equals(VersionBukkit.V8))
@@ -208,7 +210,7 @@ public class VEntity
 				spawn18();
 				return;
 			}
-			
+
 			WrapperPlayServerSpawnEntityLiving w = new WrapperPlayServerSpawnEntityLiving();
 			w.setEntityID(id);
 			w.setX(location.getX());
@@ -223,36 +225,36 @@ public class VEntity
 			send(w);
 		}
 	}
-	
+
 	public void send(AbstractPacket w)
 	{
 		try
 		{
 			ProtocolLibrary.getProtocolManager().sendServerPacket(viewer, w.getHandle());
 		}
-		
+
 		catch(InvocationTargetException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public EntityType getType()
 	{
 		return type;
 	}
-	
+
 	public int getId()
 	{
 		return id;
 	}
-	
+
 	public void move(double x, double y, double z, float ya, float pi)
 	{
 		location = location.clone().add(new Vector(x, y, z));
 		look(ya, pi);
 	}
-	
+
 	public void look(float y, float p)
 	{
 		location.setYaw(y);
@@ -260,13 +262,13 @@ public class VEntity
 		yaw = location.getYaw();
 		pit = location.getPitch();
 	}
-	
+
 	public void teleport(double x, double y, double z, float ya, float pi)
 	{
 		location = new Location(location.getWorld(), x, y, z);
 		look(ya, pi);
 	}
-	
+
 	public void setSneaking(boolean s)
 	{
 		if(vp != null)
@@ -274,7 +276,7 @@ public class VEntity
 			vp.animationSneaking(s);
 		}
 	}
-	
+
 	public void swingArm()
 	{
 		if(vp != null)
@@ -282,7 +284,7 @@ public class VEntity
 			vp.animationSwingMainArm();
 		}
 	}
-	
+
 	public void takeDamage()
 	{
 		if(vp != null)
@@ -290,39 +292,39 @@ public class VEntity
 			vp.animationTakeDamage();
 		}
 	}
-	
+
 	public void flush()
 	{
 		double distance = last.distance(location);
-		
+
 		if(distance > 7)
 		{
 			if(vp != null)
 			{
 				vp.teleport(location);
 			}
-			
+
 			else
 			{
 				pteleport(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 			}
 		}
-		
+
 		else
 		{
 			Vector dir = VectorMath.directionNoNormal(last, location);
-			
+
 			if(vp != null)
 			{
 				vp.move(vp.getLocation().clone().add(dir));
 			}
-			
+
 			else
 			{
 				prelativeMove(dir.getX(), dir.getY(), dir.getZ());
 			}
 		}
-		
+
 		if(yaw != lya || pit != lpi)
 		{
 			if(vp != null)
@@ -330,21 +332,21 @@ public class VEntity
 				vp.getNextLocation().setYaw(yaw);
 				vp.getNextLocation().setPitch(pit);
 			}
-			
+
 			else
 			{
 				plook(yaw, pit);
 			}
 		}
-		
+
 		last = location.clone();
-		
+
 		if(vp != null)
 		{
 			vp.tick();
 		}
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -363,7 +365,7 @@ public class VEntity
 		result = prime * result + Float.floatToIntBits(yaw);
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -461,47 +463,47 @@ public class VEntity
 		}
 		return true;
 	}
-	
+
 	public Location getLocation()
 	{
 		return location;
 	}
-	
+
 	public Location getLast()
 	{
 		return last;
 	}
-	
+
 	public Player getViewer()
 	{
 		return viewer;
 	}
-	
+
 	public UUID getUuid()
 	{
 		return uuid;
 	}
-	
+
 	public float getYaw()
 	{
 		return yaw;
 	}
-	
+
 	public float getPit()
 	{
 		return pit;
 	}
-	
+
 	public float getLya()
 	{
 		return lya;
 	}
-	
+
 	public float getLpi()
 	{
 		return lpi;
 	}
-	
+
 	public VirtualPlayer getVp()
 	{
 		return vp;

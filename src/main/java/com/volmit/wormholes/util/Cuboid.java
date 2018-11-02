@@ -1003,7 +1003,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 			sp.blocklight = s.getBlockEmittedLight(cx, cy, cz);
 			sp.skylight = s.getBlockSkyLight(cx, cy, cz);
 			sp.highest = s.getHighestBlockYAt(cx, cz);
-			sp.biome = s.getBiome(cx, cz);
+			sp.biome = l.getWorld().getBiome(baseX + x, baseZ + z);
 			sp.mb = new MaterialBlock(Material.getMaterial(s.getBlockTypeId(cx, cy, cz)), (byte) s.getBlockData(cx, cy, cz));
 			sp.l = l;
 			GList<BlockSnapshot> sg = new GList<BlockSnapshot>();

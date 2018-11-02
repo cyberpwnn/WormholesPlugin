@@ -6,7 +6,7 @@ import org.bukkit.util.Vector;
 import com.volmit.volume.lang.collections.GList;
 import com.volmit.wormholes.portal.PortalPosition;
 import com.volmit.wormholes.util.Cuboid;
-import com.volmit.wormholes.util.Cuboid.CuboidDirection;
+import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.VectorMath;
 
 public class Frustum
@@ -32,9 +32,14 @@ public class Frustum
 		poly = new GeoPolygonProc(new GeoPolygon(new GList<GeoPoint>().qadd(nGeoPoint(ptl)).qadd(nGeoPoint(ptr)).qadd(nGeoPoint(pbl)).qadd(nGeoPoint(pbr)).qadd(nGeoPoint(pp.getCornerUL())).qadd(nGeoPoint(pp.getCornerUR())).qadd(nGeoPoint(pp.getCornerDL())).qadd(nGeoPoint(pp.getCornerDR()))));
 		region = new Cuboid(ptl, pp.getCornerDR()).getBoundingCuboid(new Cuboid(pbr, pp.getCornerUL()));
 
-		for(CuboidDirection i : CuboidDirection.values())
+		for(Direction i : Direction.udnews())
 		{
-			clip = region.getFace(i);
+			region = region.expand(i.f(), 1);
+		}
+
+		for(Direction i : Direction.values())
+		{
+			clip = region.getFace(i.f());
 			if(clip.contains(pp.getCenter()))
 			{
 				break;
@@ -45,7 +50,7 @@ public class Frustum
 	public boolean contains(Location l)
 	{
 		GeoPoint p = nGeoPoint(l);
-		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
+		return poly.PointInside3DPolygon(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5);
 	}
 
 	public static GeoPoint toGeoPoint(Vector v)

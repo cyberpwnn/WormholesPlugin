@@ -7,7 +7,6 @@ import org.bukkit.util.Vector;
 import com.volmit.volume.lang.collections.Callback;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
-import com.volmit.wormholes.projection.BlockProperties;
 import com.volmit.wormholes.projection.NulledViewport;
 import com.volmit.wormholes.projection.ProjectionPlane;
 import com.volmit.wormholes.projection.Viewport;
@@ -25,7 +24,6 @@ public class RenderTask
 	private LocalPortal portal;
 	private ProjectionPlane plane;
 	private GMap<Vector, MaterialBlock> mapping;
-	private GMap<Vector, BlockProperties> metaMapping;
 	private RenderTaskMode mode;
 	private boolean hasStarted;
 	private Viewport oldPort;
@@ -64,12 +62,23 @@ public class RenderTask
 			renderlet = new Renderlet(viewport.getCuboid().getBoundingCuboid(oldPort.getCuboid()), viewport.getDirection(), portal);
 			plane = portal.getWormhole().getDestination().getProjectionPlane();
 			mapping = portal.getWormhole().getDestination().getProjectionPlane().remap(portal.getIdentity().getFront(), portal.getWormhole().getDestination().getIdentity().getFront());
-			metaMapping = portal.getWormhole().getDestination().getProjectionPlane().getRemapMetaCache(portal.getIdentity().getFront(), portal.getWormhole().getDestination().getIdentity().getFront());
+		}
+
+		else if(mode.equals(RenderTaskMode.QUEUE_ALL))
+		{
+			renderlet = new Renderlet(viewport.getCuboid().getBoundingCuboid(oldPort.getCuboid()), viewport.getDirection(), portal);
+			plane = portal.getWormhole().getDestination().getProjectionPlane();
+			mapping = portal.getWormhole().getDestination().getProjectionPlane().remap(portal.getIdentity().getFront(), portal.getWormhole().getDestination().getIdentity().getFront());
 		}
 	}
 
 	public boolean isDone()
 	{
+		if(renderlet == null)
+		{
+			return true;
+		}
+
 		return renderlet.isDone();
 	}
 
@@ -83,6 +92,11 @@ public class RenderTask
 		if(mode.equals(RenderTaskMode.QUEUE))
 		{
 			renderQueue(maxMs);
+		}
+
+		if(mode.equals(RenderTaskMode.QUEUE_ALL))
+		{
+			renderQueueAll(maxMs);
 		}
 
 		if(mode.equals(RenderTaskMode.DEQUEUE_ALL))
@@ -122,7 +136,6 @@ public class RenderTask
 					Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
 					portal.getIdentity().getFront().angle(vec, portal.getWormhole().getDestination().getIdentity().getFront());
 					MaterialBlock mb = mapping.get(vec);
-					BlockProperties bp = metaMapping.get(vec);
 
 					if(mb == null)
 					{
@@ -130,18 +143,36 @@ public class RenderTask
 					}
 
 					Wormholes.provider.getRasterer().queue(player, l, mb);
-
-					if(bp == null)
-					{
-						return;
-					}
-
-					Wormholes.provider.getRasterer().queue(player, l, bp);
 				}
 
 				if(oldPort != null && !viewport.equals(oldPort) && plane.hasContent() && oldPort.contains(l) && !viewport.contains(l))
 				{
 					Wormholes.provider.getRasterer().dequeue(player, l);
+				}
+			}
+		});
+	}
+
+	private void renderQueueAll(double maxMs)
+	{
+		renderlet.render(getMaxIterationsForMS(maxMs), new Callback<Location>()
+		{
+			@Override
+			public void run(Location l)
+			{
+				if(plane.hasContent() && viewport.contains(l))
+				{
+					Vector dir = VectorMath.directionNoNormal(portal.getPosition().getCenter(), l);
+					Vector vec = dir.clone().add(new Vector(0.5, 0.5, 0.5));
+					portal.getIdentity().getFront().angle(vec, portal.getWormhole().getDestination().getIdentity().getFront());
+					MaterialBlock mb = mapping.get(vec);
+
+					if(mb == null)
+					{
+						return;
+					}
+
+					Wormholes.provider.getRasterer().queue(player, l, mb);
 				}
 			}
 		});

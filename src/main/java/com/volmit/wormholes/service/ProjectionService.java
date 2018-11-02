@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.volmit.volume.bukkit.task.A;
+import com.volmit.volume.bukkit.task.S;
 import com.volmit.volume.lang.format.F;
 import com.volmit.volume.math.M;
 import com.volmit.wormholes.Settings;
@@ -39,6 +40,7 @@ public class ProjectionService implements Listener
 		renderTasks = new GList<RenderTask>();
 	}
 
+
 	public void flush()
 	{
 		if(!projecting && Settings.ENABLE_PROJECTIONS)
@@ -57,7 +59,7 @@ public class ProjectionService implements Listener
 						project(2000D);
 						projecting = false;
 
-						if(M.ms() - last > 50)
+						if(M.ms() - last > 15)
 						{
 							Wormholes.provider.getRasterer().flush();
 							last = M.ms();
@@ -100,47 +102,81 @@ public class ProjectionService implements Listener
 		{
 			for(Player player : ((LocalPortal) portal).getPlayers())
 			{
-				boolean queue = true;
-
-				for(RenderTask task : renderTasks.copy())
+				try
 				{
-					if(task.getPortal().equals(portal) && task.getPlayer().equals(player))
-					{
-						if(task.getMode().equals(RenderTaskMode.DEQUEUE_ALL) && !task.isDone())
-						{
-							queue = false;
-							continue;
-						}
+					boolean queue = true;
 
-						if(task.getMode().equals(RenderTaskMode.QUEUE))
+					for(RenderTask task : renderTasks.copy())
+					{
+						if(task.getPortal().equals(portal) && task.getPlayer().equals(player))
 						{
-							if(getViewport((LocalPortal) portal, player).equals(task.getViewport()))
+							if(task.getMode().equals(RenderTaskMode.DEQUEUE_ALL) && !task.isDone())
 							{
 								queue = false;
 								continue;
 							}
 
-							if(task.isDone())
+							if(task.getMode().equals(RenderTaskMode.QUEUE))
 							{
-								renderTasks.remove(task);
+								if(getViewport((LocalPortal) portal, player).equals(task.getViewport()))
+								{
+									queue = false;
+									continue;
+								}
+
+								if(task.isDone())
+								{
+									renderTasks.remove(task);
+								}
+							}
+						}
+					}
+
+					if((queue || ((LocalPortal) portal).getMask().needsProjection()) && !portal.getProjectionPlane().isBusy())
+					{
+						if(((LocalPortal) portal).getMask().needsProjection())
+						{
+							try
+							{
+								for(RenderTask task : renderTasks.copy())
+								{
+									if(task.isDone() && task.getMode().equals(RenderTaskMode.QUEUE))
+									{
+										renderTasks.remove(task);
+									}
+								}
+							}
+
+							catch(Exception e)
+							{
+
+							}
+
+							renderTasks.add(new RenderTask(player, getViewport((LocalPortal) portal, player), getLastViewport((LocalPortal) portal, player), (LocalPortal) portal, RenderTaskMode.QUEUE_ALL));
+						}
+
+						else
+						{
+							try
+							{
+								renderTasks.add(new RenderTask(player, getViewport((LocalPortal) portal, player), getLastViewport((LocalPortal) portal, player), (LocalPortal) portal, RenderTaskMode.QUEUE));
+							}
+
+							catch(Throwable e)
+							{
+
 							}
 						}
 					}
 				}
 
-				if(queue && !portal.getProjectionPlane().isBusy())
+				catch(Exception e)
 				{
-					try
-					{
-						renderTasks.add(new RenderTask(player, getViewport((LocalPortal) portal, player), getLastViewport((LocalPortal) portal, player), (LocalPortal) portal, RenderTaskMode.QUEUE));
-					}
 
-					catch(Throwable e)
-					{
-
-					}
 				}
 			}
+
+			((LocalPortal) portal).getMask().clear();
 		}
 	}
 
@@ -201,15 +237,35 @@ public class ProjectionService implements Listener
 
 	public void deproject(LocalPortal l, Player i)
 	{
-		for(RenderTask j : renderTasks.copy())
+		try
 		{
-			if(j.getPlayer().equals(i) && j.getPortal().equals(l))
+			for(RenderTask j : renderTasks.copy())
 			{
-				renderTasks.remove(j);
+				if(j == null)
+				{
+					renderTasks.remove(j);
+					continue;
+				}
+
+				if(j.getPlayer() == null || j.getPortal() == null)
+				{
+					renderTasks.remove(j);
+					continue;
+				}
+
+				if(j.getPlayer().equals(i) && j.getPortal().equals(l))
+				{
+					renderTasks.remove(j);
+				}
 			}
+
+			renderTasks.add(new RenderTask(i, l, RenderTaskMode.DEQUEUE_ALL));
 		}
 
-		renderTasks.add(new RenderTask(i, l, RenderTaskMode.DEQUEUE_ALL));
+		catch(Exception e)
+		{
+
+		}
 	}
 
 	public void removeLatches()
@@ -224,16 +280,30 @@ public class ProjectionService implements Listener
 				continue;
 			}
 
-			GList<Player> players = i.getPlayers();
-
-			for(Player j : viewports.get(i).k())
+			new S()
 			{
-				if(!players.contains(j))
+				@Override
+				public void run()
 				{
-					viewports.get(i).remove(j);
-					deproject(i, j);
+					GList<Player> players = i.getPlayers();
+
+					new A()
+					{
+						@Override
+						public void run()
+						{
+							for(Player j : viewports.get(i).k())
+							{
+								if(!players.contains(j))
+								{
+									viewports.get(i).remove(j);
+									deproject(i, j);
+								}
+							}
+						}
+					};
 				}
-			}
+			};
 		}
 	}
 
@@ -260,5 +330,10 @@ public class ProjectionService implements Listener
 		}
 
 		return viewports.get(portal).get(player);
+	}
+
+	public GMap<LocalPortal, GMap<Player, ViewportLatch>> getViewports()
+	{
+		return viewports;
 	}
 }

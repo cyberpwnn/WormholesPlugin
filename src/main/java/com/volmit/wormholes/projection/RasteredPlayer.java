@@ -7,6 +7,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.volmit.volume.bukkit.nms.adapter.AbstractChunk;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.chunk.NMSChunk10;
 import com.volmit.wormholes.chunk.NMSChunk11;
@@ -20,10 +21,11 @@ import com.volmit.wormholes.util.VersionBukkit;
 
 public class RasteredPlayer
 {
-	private GMap<Location, BlockProperties> queuedMetaLayer;
 	private GMap<Location, MaterialBlock> queuedLayer;
 	private GMap<Location, MaterialBlock> ghostLayer;
 	private GMap<Chunk, VirtualChunk> virtualChunks;
+	private GMap<Chunk, AbstractChunk> virtualGUCChunks;
+	private GMap<Chunk, Long> mapped;
 	private Player p;
 	private Queue<Runnable> q;
 
@@ -31,10 +33,11 @@ public class RasteredPlayer
 	{
 		this.p = p;
 		queuedLayer = new GMap<Location, MaterialBlock>();
-		queuedMetaLayer = new GMap<Location, BlockProperties>();
 		ghostLayer = new GMap<Location, MaterialBlock>();
 		q = new ConcurrentLinkedQueue<Runnable>();
 		virtualChunks = new GMap<Chunk, VirtualChunk>();
+		virtualGUCChunks = new GMap<Chunk, AbstractChunk>();
+		mapped = new GMap<Chunk, Long>();
 	}
 
 	public void trickLight()
@@ -50,19 +53,8 @@ public class RasteredPlayer
 		if(virtualChunks.containsKey(c.getChunk()))
 		{
 			virtualChunks.get(c.getChunk()).set(c.getBlockX() & 15, c.getBlockY(), c.getBlockZ() & 15, new MaterialBlock(c));
+			virtualGUCChunks.get(c.getChunk()).set(c.getBlockX() & 15, c.getBlockY(), c.getBlockZ() & 15, new com.volmit.volume.bukkit.util.world.MaterialBlock(c));
 		}
-	}
-
-	public void queue(Location l, BlockProperties bp)
-	{
-		q.add(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				queuedMetaLayer.put(l, bp);
-			}
-		});
 	}
 
 	public void queue(Location l, MaterialBlock mb)
@@ -138,7 +130,7 @@ public class RasteredPlayer
 
 		catch(Throwable e)
 		{
-
+			e.printStackTrace();
 		}
 	}
 
@@ -158,7 +150,6 @@ public class RasteredPlayer
 		{
 			Chunk c = i.getChunk();
 			VirtualChunk cx = null;
-
 			if(!VersionBukkit.wc() && Settings.USE_LIGHTMAPS && !virtualChunks.containsKey(c))
 			{
 				if(VersionBukkit.get().equals(VersionBukkit.V112))
@@ -187,19 +178,17 @@ public class RasteredPlayer
 				}
 			}
 
+			if(!virtualGUCChunks.containsKey(c))
+			{
+				virtualGUCChunks.put(c, new AbstractChunk(c));
+			}
+
 			if(!preparedChunks.containsKey(c))
 			{
-				preparedChunks.put(c, new RasteredChunk(c.getX(), c.getZ(), c.getWorld(), virtualChunks.get(c)));
+				preparedChunks.put(c, new RasteredChunk(c.getX(), c.getZ(), c.getWorld(), virtualChunks.get(c), virtualGUCChunks.get(c)));
 			}
 
 			preparedChunks.get(c).put(i.getBlockX(), i.getBlockY(), i.getBlockZ(), queuedLayer.get(i));
-
-			if(queuedMetaLayer.containsKey(i))
-			{
-				preparedChunks.get(c).put(i.getBlockX(), i.getBlockY(), i.getBlockZ(), queuedMetaLayer.get(i));
-				queuedMetaLayer.remove(i);
-			}
-
 			queuedLayer.remove(i);
 		}
 
@@ -208,6 +197,7 @@ public class RasteredPlayer
 		for(Chunk i : preparedChunks.k())
 		{
 			k++;
+
 			preparedChunks.get(i).projectOlder(p);
 		}
 
@@ -222,6 +212,8 @@ public class RasteredPlayer
 		{
 			queue(i, new MaterialBlock(i));
 		}
+
+		mapped.clear();
 	}
 
 	public boolean isQueued(Location l)

@@ -37,7 +37,6 @@ import org.bukkit.util.Vector;
 import com.volmit.volume.bukkit.task.A;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
-import com.volmit.wormholes.WAPI;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.aperture.EntityHider;
 import com.volmit.wormholes.aperture.EntityHider.Policy;
@@ -309,17 +308,6 @@ public class MutexService implements Listener
 		if(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ())
 		{
 			handleArrivalIntent(e.getPlayer());
-		}
-
-		for(Portal i : WAPI.getLocalPortals())
-		{
-			if(i.getPosition().getArea().contains(e.getTo()))
-			{
-				if(!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation()))
-				{
-					((LocalPortal) i).getMask().sched(e.getPlayer());
-				}
-			}
 		}
 	}
 
@@ -1216,7 +1204,9 @@ public class MutexService implements Listener
 							for(Player j : p.getWormhole().getDestination().getPosition().getArea().getPlayers())
 							{
 								Wormholes.provider.movePlayer(j);
-								((LocalPortal) p.getWormhole().getDestination()).getMask().sched(j);
+								// TODO ((LocalPortal) p.getWormhole().getDestination()).getMask().sched(j,
+								// "Block
+								// change");
 							}
 						}
 					}

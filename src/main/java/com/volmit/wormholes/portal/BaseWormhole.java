@@ -3,6 +3,7 @@ package com.volmit.wormholes.portal;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.GList;
@@ -44,7 +45,6 @@ public abstract class BaseWormhole implements Wormhole
 		for(Player i : new Area(e.getLocation(), 32).getNearbyPlayers())
 		{
 			Wormholes.aperture.hideEntity(i, e);
-			((LocalPortal) getSource()).getMask().sched(i);
 		}
 		
 		for(WormholeFilter i : getFilters())

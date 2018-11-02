@@ -82,7 +82,7 @@ public class WAPI
 	public static void updateProjection(Player p, Portal pl)
 	{
 		Wormholes.provider.movePlayer(p);
-		((LocalPortal) pl).getMask().sched(p);
+		((LocalPortal) pl).getMask().sched(p, "Update Projection Called");
 	}
 
 	public static Portal getPortalByKey(PortalKey key)

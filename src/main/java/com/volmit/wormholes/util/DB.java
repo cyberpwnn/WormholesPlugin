@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Dispatcher
- * 
+ *
  * @author cyberpwn
  */
 public class DB
@@ -19,33 +19,33 @@ public class DB
 	public static GList<String> queue;
 	public static GList<Player> globalListeners;
 	public static DB inst = null;
-	
+
 	public static void d(Object inst, String s)
 	{
-		if(!rdebug)
-		{
-			return;
-		}
-		
+		// if(!rdebug)
+		// {
+		// return;
+		// }
+
 		d(inst.getClass(), s);
 	}
-	
+
 	public static void d(Class<?> t, String s)
 	{
-		if(rdebug)
+		if(!rdebug) // TODO REMOVE !
 		{
 			if(inst == null)
 			{
 				inst = new DB("Wormholes");
 			}
-			
+
 			inst.i(C.YELLOW + t.getSimpleName() + ": " + C.WHITE + s);
 		}
 	}
-	
+
 	/**
 	 * Create a dispatcher
-	 * 
+	 *
 	 * @param name
 	 *            the tag or prefix for logged messages for this dispatcher
 	 */
@@ -54,7 +54,7 @@ public class DB
 		this.name = name;
 		listeners = new GList<Player>();
 	}
-	
+
 	public enum DispatchType
 	{
 		INFO,
@@ -64,66 +64,66 @@ public class DB
 		VERBOSE,
 		OVERBOSE
 	}
-	
+
 	protected static Boolean silent = false;
-	
+
 	/**
 	 * Get listeners
-	 * 
+	 *
 	 * @return the players listening on this dispatcher
 	 */
 	public GList<Player> getListeners()
 	{
 		return listeners;
 	}
-	
+
 	/**
 	 * Get the global listeners
-	 * 
+	 *
 	 * @return the global listeners
 	 */
 	public static GList<Player> getGlobalListeners()
 	{
 		return globalListeners;
 	}
-	
+
 	private void log(DispatchType type, String s, String... o)
 	{
 		if(silent)
 		{
 			return;
 		}
-		
+
 		String msg = "";
-		
+
 		for(String i : o)
 		{
 			msg = msg + i;
 		}
-		
+
 		msg = s + msg;
-		
+
 		String tmg = C.getLastColors(msg) + "|" + C.DARK_GRAY + name + ": " + ChatColor.WHITE + msg;
-		
+
 		if(fool)
 		{
 			tmg = StringUtils.repeat(" ", (int) (8 * Math.random())) + ChatColor.WHITE + C.getLastColors(msg) + StringUtils.reverse(C.stripColor(msg)) + ": " + C.DARK_GRAY + StringUtils.reverse(name) + C.getLastColors(msg) + "|";
 		}
-		
+
 		flush();
 		Bukkit.getServer().getConsoleSender().sendMessage(tmg);
-		
+
 		for(Player i : listeners)
 		{
 			i.sendMessage(tmg);
 		}
-		
+
 		for(Player i : globalListeners)
 		{
 			i.sendMessage(tmg);
 		}
 	}
-	
+
 	public static void flush()
 	{
 		if(!queue.isEmpty())
@@ -135,32 +135,32 @@ public class DB
 					try
 					{
 						Bukkit.getServer().getConsoleSender().sendMessage(i);
-						
+
 						for(Player j : globalListeners)
 						{
 							j.sendMessage(i);
 						}
 					}
-					
+
 					catch(Exception e)
 					{
-						
+
 					}
 				}
 			}
-			
+
 			catch(Exception e)
 			{
 				return;
 			}
-			
+
 			queue.clear();
 		}
 	}
-	
+
 	/**
 	 * Message info (white)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -168,10 +168,10 @@ public class DB
 	{
 		log(DispatchType.INFO, "" + ChatColor.WHITE, o);
 	}
-	
+
 	/**
 	 * Message info (white)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -179,10 +179,10 @@ public class DB
 	{
 		info(s);
 	}
-	
+
 	/**
 	 * Message success (green)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -190,10 +190,10 @@ public class DB
 	{
 		log(DispatchType.SUCCESS, "" + ChatColor.GREEN, o);
 	}
-	
+
 	/**
 	 * Message success (green)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -201,10 +201,10 @@ public class DB
 	{
 		success(o);
 	}
-	
+
 	/**
 	 * Message failure (red)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -212,10 +212,10 @@ public class DB
 	{
 		log(DispatchType.FAILURE, "" + ChatColor.RED, o);
 	}
-	
+
 	/**
 	 * Message failure (red)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -223,10 +223,10 @@ public class DB
 	{
 		failure(o);
 	}
-	
+
 	/**
 	 * Message warning (yellow)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -234,10 +234,10 @@ public class DB
 	{
 		log(DispatchType.WARNING, "" + ChatColor.YELLOW, o);
 	}
-	
+
 	/**
 	 * Message warning (yellow)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -245,10 +245,10 @@ public class DB
 	{
 		warning(o);
 	}
-	
+
 	/**
 	 * Message verbose (light purple)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -256,10 +256,10 @@ public class DB
 	{
 		log(DispatchType.VERBOSE, "" + ChatColor.LIGHT_PURPLE, o);
 	}
-	
+
 	/**
 	 * Message verbose (light purple)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -267,10 +267,10 @@ public class DB
 	{
 		verbose(o);
 	}
-	
+
 	/**
 	 * Message overbose (aqua)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -278,10 +278,10 @@ public class DB
 	{
 		log(DispatchType.OVERBOSE, "" + ChatColor.AQUA, o);
 	}
-	
+
 	/**
 	 * Message overbose (aqua)
-	 * 
+	 *
 	 * @param o
 	 *            strings/string
 	 */
@@ -289,20 +289,20 @@ public class DB
 	{
 		overbose(o);
 	}
-	
+
 	/**
 	 * Get the name
-	 * 
+	 *
 	 * @return the name of this dispatcher tag
 	 */
 	public String getName()
 	{
 		return name;
 	}
-	
+
 	/**
 	 * Set the name
-	 * 
+	 *
 	 * @param name
 	 *            the name of this dispatcher tag
 	 */
@@ -310,20 +310,20 @@ public class DB
 	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * Is this dispatcher silent?
-	 * 
+	 *
 	 * @return true if silenced
 	 */
 	public Boolean isSilent()
 	{
 		return silent;
 	}
-	
+
 	/**
 	 * Set the silence value of this dispatcher
-	 * 
+	 *
 	 * @param silent
 	 *            sincence
 	 */
@@ -331,13 +331,13 @@ public class DB
 	{
 		DB.silent = silent;
 	}
-	
+
 	static
 	{
 		queue = new GList<String>();
 		globalListeners = new GList<Player>();
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -346,7 +346,7 @@ public class DB
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -354,19 +354,19 @@ public class DB
 		{
 			return true;
 		}
-		
+
 		if(obj == null)
 		{
 			return false;
 		}
-		
+
 		if(getClass() != obj.getClass())
 		{
 			return false;
 		}
-		
+
 		DB other = (DB) obj;
-		
+
 		if(name == null)
 		{
 			if(other.name != null)
@@ -374,12 +374,12 @@ public class DB
 				return false;
 			}
 		}
-		
+
 		else if(!name.equals(other.name))
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 }

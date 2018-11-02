@@ -78,6 +78,7 @@ public class Wormholes extends VolumePlugin
 	@Start
 	public void onStart()
 	{
+		setTaskManager(new WTaskManager(this, "Wormhole Worker", 8));
 		DB.rdebug = new File(getDataFolder(), "debug").exists();
 		DB.d(this, "Starting Wormholes");
 		instance = this;
@@ -191,6 +192,7 @@ public class Wormholes extends VolumePlugin
 			host.flush();
 			provider.flush();
 			projector.flush();
+			TICK.tick++;
 			int s = aperture.size();
 			int mxs = Settings.APERTURE_MAX_SPEED + (s > Settings.APERTURE_SLOWDOWN_THRESHOLD ? Settings.APERTURE_SLOWDOWN_AMOUNT : 0);
 			mxs = s > Settings.APERTURE_ICE_THRESHOLD ? mxs + Settings.APERTURE_ICE_AMOUNT : mxs;
@@ -215,7 +217,7 @@ public class Wormholes extends VolumePlugin
 				Status.bgg = 0;
 			}
 
-			if(TICK.tick % 20 == 0)
+			if(TICK.tick % 60 == 0)
 			{
 				for(Player i : P.onlinePlayers())
 				{
@@ -223,7 +225,7 @@ public class Wormholes extends VolumePlugin
 
 					for(Portal j : registry.getLocalPortals())
 					{
-						((LocalPortal) j).getMask().sched(i);
+						((LocalPortal) j).getMask().sched(i, "Just On Tick");
 					}
 				}
 			}

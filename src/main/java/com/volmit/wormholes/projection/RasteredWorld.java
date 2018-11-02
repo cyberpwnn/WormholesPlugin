@@ -3,32 +3,41 @@ package com.volmit.wormholes.projection;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
 import com.volmit.wormholes.util.GMap;
 
 public class RasteredWorld
 {
 	private GMap<Chunk, RasteredChunk> chunks;
 	private World world;
-	
+
 	public RasteredWorld(World world)
 	{
 		chunks = new GMap<Chunk, RasteredChunk>();
 		this.world = world;
 	}
-	
+
 	public void flush()
 	{
-		for(Chunk j : chunks.k())
+		try
 		{
-			for(Player i : world.getPlayers())
+			for(Chunk j : chunks.k())
 			{
-				chunks.get(j).projectOlder(i);
+				for(Player i : world.getPlayers())
+				{
+					chunks.get(j).projectOlder(i);
+				}
+
+				chunks.remove(j);
 			}
-			
-			chunks.remove(j);
+		}
+
+		catch(Throwable e)
+		{
+			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean hasChunks()
 	{
 		return !chunks.isEmpty();

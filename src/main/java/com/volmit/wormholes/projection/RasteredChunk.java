@@ -5,12 +5,16 @@ import java.lang.reflect.InvocationTargetException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
 import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
+import com.volmit.volume.bukkit.U;
+import com.volmit.volume.bukkit.nms.NMSSVC;
+import com.volmit.volume.bukkit.nms.adapter.AbstractChunk;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
@@ -22,17 +26,17 @@ import com.volmit.wormholes.wrapper.WrapperPlayServerMultiBlockChange;
 
 public class RasteredChunk
 {
-	private boolean mapped;
 	private int x;
 	private int z;
 	private MultiBlockChangeInfo[][][] mbi;
 	private BlockProperties[][][] mbp;
 	private World world;
 	private VirtualChunk cx;
+	private AbstractChunk as;
 
-	public RasteredChunk(int x, int z, World world, VirtualChunk cx)
+	public RasteredChunk(int x, int z, World world, VirtualChunk cx, AbstractChunk as)
 	{
-		mapped = false;
+		this.as = as;
 		this.world = world;
 		this.x = x;
 		this.z = z;
@@ -86,6 +90,56 @@ public class RasteredChunk
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	public int projectNew(Player p)
+	{
+		try
+		{
+			as.setSky(!p.getWorld().getEnvironment().equals(Environment.NETHER));
+			as.forceSendBiomes(true);
+
+			for(int i = 0; i < 16; i++)
+			{
+				for(int k = 0; k < 16; k++)
+				{
+					for(int j = 0; j < 256; j++)
+					{
+						as.setBlockLight(i, j, k, 0);
+						as.setSkyLight(i, j, k, 15);
+						as.setBiome(i, k, cx.getChunk().getWorld().getBiome((cx.getX() * 16) + i, (cx.getZ() * 16) + k));
+
+						if(mbi[i][j][k] != null)
+						{
+							as.set(i, j, k, mbi[i][j][k].getData().getTypeId(), mbi[i][j][k].getData().getData());
+						}
+
+						if(mbp[i][j][k] != null)
+						{
+							as.setBlockLight(i, j, k, mbp[i][j][k].block);
+							as.setSkyLight(i, j, k, mbp[i][j][k].sky);
+
+							if(mbp[i][j][k].biome != null)
+							{
+								p.sendMessage(mbp[i][j][k].biome.toString());
+								as.setBiome(i, k, mbp[i][j][k].biome);
+							}
+						}
+					}
+				}
+			}
+
+			U.getService(NMSSVC.class).sendChunkMap(as, p);
+		}
+
+		catch(Exception e)
+		{
+			System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
 	public int projectOlder(Player p)
 	{
 		if(VersionBukkit.wc() || !Settings.USE_LIGHTMAPS)
@@ -106,6 +160,10 @@ public class RasteredChunk
 				{
 					for(int j = 0; j < 256; j++)
 					{
+						cx.setSkyLight(i, j, k, (byte) 15);
+						cx.setBlockLight(i, j, k, (byte) 0);
+						cx.setBiome(i, k, cx.getChunk().getWorld().getBiome((cx.getX() * 16) + i, (cx.getZ() * 16) + k));
+
 						if(mbi[i][j][k] != null)
 						{
 							cx.set(i, j, k, new MaterialBlock(mbi[i][j][k]));
@@ -115,16 +173,14 @@ public class RasteredChunk
 						{
 							cx.setBlockLight(i, j, k, mbp[i][j][k].block);
 							cx.setSkyLight(i, j, k, mbp[i][j][k].sky);
-							cx.setBiome(i, k, mbp[i][j][k].biome);
+
+							if(mbp[i][j][k].biome != null)
+							{
+								cx.setBiome(i, k, mbp[i][j][k].biome);
+							}
 						}
 					}
 				}
-			}
-
-			if(!mapped)
-			{
-				mapped = true;
-				cx.trickLight(p);
 			}
 
 			cx.send(p);

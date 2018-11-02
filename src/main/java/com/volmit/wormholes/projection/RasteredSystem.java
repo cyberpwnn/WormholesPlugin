@@ -68,24 +68,6 @@ public class RasteredSystem
 		return rasteredPlayers.get(p).isQueued(l);
 	}
 
-	public void queue(Player p, Location l, BlockProperties bp)
-	{
-		try
-		{
-			if(l == null || bp == null || p == null || !rasteredPlayers.containsKey(p))
-			{
-				return;
-			}
-
-			rasteredPlayers.get(p).queue(l, bp);
-		}
-
-		catch(Exception e)
-		{
-
-		}
-	}
-
 	public void queue(Player p, Location l, MaterialBlock mb)
 	{
 		try

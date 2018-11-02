@@ -296,6 +296,8 @@ public class LocalPortal implements Portal
 				specialUpdate();
 			}
 		}
+
+		getPosition().getBoundingBox().flush();
 	}
 
 	private void doUnlink()
@@ -749,14 +751,14 @@ public class LocalPortal implements Portal
 	{
 		for(Player i : getPosition().getArea().getPlayers())
 		{
-			mask.sched(i);
+			mask.sched(i, "Sampled 1st time");
 
 			new TaskLater(20)
 			{
 				@Override
 				public void run()
 				{
-					mask.sched(i);
+					mask.sched(i, "Sampled 1st time");
 				}
 			};
 		}

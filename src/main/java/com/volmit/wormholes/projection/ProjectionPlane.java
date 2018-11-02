@@ -31,9 +31,7 @@ public class ProjectionPlane
 {
 	private boolean busy;
 	private GMap<Vector, MaterialBlock> mapping;
-	private GMap<Vector, BlockProperties> metaMapping;
 	private GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>> remapCache;
-	private GMap<GBiset<Direction, Direction>, GMap<Vector, BlockProperties>> remapMetaCache;
 	private GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> ormapCache;
 	private double progress;
 
@@ -42,9 +40,7 @@ public class ProjectionPlane
 		progress = -1;
 		busy = false;
 		mapping = new GMap<Vector, MaterialBlock>();
-		metaMapping = new GMap<Vector, BlockProperties>();
 		remapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>>();
-		remapMetaCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, BlockProperties>>();
 		ormapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>>();
 	}
 
@@ -87,7 +83,6 @@ public class ProjectionPlane
 		if(!remapCache.containsKey(c))
 		{
 			GMap<Vector, MaterialBlock> map = new GMap<Vector, MaterialBlock>();
-			GMap<Vector, BlockProperties> metaMap = new GMap<Vector, BlockProperties>();
 			GMap<Vector, Vector> mapv = new GMap<Vector, Vector>();
 
 			for(Vector i : mapping.k())
@@ -98,22 +93,10 @@ public class ProjectionPlane
 				k.setY(k.getBlockY());
 				k.setZ(k.getBlockZ());
 				map.put(k, mapping.get(i));
-
-				try
-				{
-					metaMap.put(k, metaMapping.get(i));
-				}
-
-				catch(Exception e)
-				{
-
-				}
-
 				mapv.put(i, k);
 			}
 
 			remapCache.put(c, map);
-			remapMetaCache.put(c, metaMap);
 			ormapCache.put(c, mapv);
 		}
 
@@ -241,7 +224,6 @@ public class ProjectionPlane
 						bp.block = (byte) i.blocklight;
 						bp.biome = i.biome;
 						mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.l).clone().add(new Vector(0.5, 0.5, 0.5)), i.mb);
-						metaMapping.put(VectorMath.directionNoNormal(c.getCenter(), i.l).clone().add(new Vector(0.5, 0.5, 0.5)), bp);
 					}
 
 					did++;
@@ -266,11 +248,6 @@ public class ProjectionPlane
 	public GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> getOrmapCache()
 	{
 		return ormapCache;
-	}
-
-	public GMap<Vector, BlockProperties> getRemapMetaCache(Direction from, Direction to)
-	{
-		return remapMetaCache.get(new GBiset<Direction, Direction>(from, to));
 	}
 
 	public boolean isBusy()

@@ -405,7 +405,7 @@ public class EntityService implements Listener
 								{
 									if(!aentities.get(i).get(j).contains(k.getId()))
 									{
-										DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid());
+										DB.d(this, "Despwn Virtual Entity: " + k.getType() + " <> " + k.getUuid() + " ID " + (k.getId()));
 										k.despawn();
 										entities.get(i).get(j).remove(k);
 									}
@@ -477,8 +477,8 @@ public class EntityService implements Listener
 				id = ((RemotePlayer) ri).getUuid();
 			}
 
-			VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), id, l, ri.getName());
-			DB.d(this, "Spawn Virtual Entity: " + ve.getType() + " <> " + ve.getUuid());
+			VEntity ve = new VEntity(p, ri.getRemoteType(), ri.getRemoteId(), UUID.nameUUIDFromBytes((id.toString() + "" + +i.getIdentity().getFront().ordinal()).getBytes()), l, ri.getName());
+			DB.d(this, "Spawn Virtual Entity: " + ve.getType() + " <> " + ve.getUuid() + " ID " + (ri.getRemoteId()));
 			ve.spawn();
 			ve.flush();
 			uinv(p);
