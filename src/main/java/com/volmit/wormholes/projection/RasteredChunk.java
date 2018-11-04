@@ -15,6 +15,7 @@ import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.volmit.volume.bukkit.U;
 import com.volmit.volume.bukkit.nms.NMSSVC;
 import com.volmit.volume.bukkit.nms.adapter.AbstractChunk;
+import com.volmit.volume.bukkit.task.S;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Status;
 import com.volmit.wormholes.Wormholes;
@@ -33,9 +34,11 @@ public class RasteredChunk
 	private World world;
 	private VirtualChunk cx;
 	private AbstractChunk as;
+	private boolean mapped;
 
 	public RasteredChunk(int x, int z, World world, VirtualChunk cx, AbstractChunk as)
 	{
+		mapped = false;
 		this.as = as;
 		this.world = world;
 		this.x = x;
@@ -96,7 +99,6 @@ public class RasteredChunk
 		try
 		{
 			as.setSky(!p.getWorld().getEnvironment().equals(Environment.NETHER));
-			as.forceSendBiomes(true);
 
 			for(int i = 0; i < 16; i++)
 			{
@@ -104,23 +106,23 @@ public class RasteredChunk
 				{
 					for(int j = 0; j < 256; j++)
 					{
-						as.setBlockLight(i, j, k, 0);
-						as.setSkyLight(i, j, k, 15);
-						as.setBiome(i, k, cx.getChunk().getWorld().getBiome((cx.getX() * 16) + i, (cx.getZ() * 16) + k));
-
 						if(mbi[i][j][k] != null)
 						{
+							if(Wormholes.edgy)
+							{
+								as.setBiome(i, k, cx.getChunk().getWorld().getBiome((x * 16) + i, (z * 16) + k));
+							}
+
 							as.set(i, j, k, mbi[i][j][k].getData().getTypeId(), mbi[i][j][k].getData().getData());
 						}
 
-						if(mbp[i][j][k] != null)
+						if(mbp[i][j][k] != null && Wormholes.edgy)
 						{
 							as.setBlockLight(i, j, k, mbp[i][j][k].block);
 							as.setSkyLight(i, j, k, mbp[i][j][k].sky);
 
 							if(mbp[i][j][k].biome != null)
 							{
-								p.sendMessage(mbp[i][j][k].biome.toString());
 								as.setBiome(i, k, mbp[i][j][k].biome);
 							}
 						}
@@ -129,6 +131,67 @@ public class RasteredChunk
 			}
 
 			U.getService(NMSSVC.class).sendChunkMap(as, p);
+		}
+
+		catch(Exception e)
+		{
+			System.out.println("Failed to send chunk packet on MC " + Bukkit.getBukkitVersion() + " (" + Bukkit.getVersion() + ")");
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
+	public int projectNewFull(Player p)
+	{
+		try
+		{
+			as.setSky(!p.getWorld().getEnvironment().equals(Environment.NETHER));
+			as.forceSendBiomes(true);
+
+			for(int i = 0; i < 16; i++)
+			{
+				for(int k = 0; k < 16; k++)
+				{
+					for(int j = 0; j < 256; j++)
+					{
+						if(Wormholes.edgy)
+						{
+							as.setBlockLight(i, j, k, 0);
+							as.setSkyLight(i, j, k, 15);
+							as.setBiome(i, k, cx.getChunk().getWorld().getBiome((x * 16) + i, (z * 16) + k));
+						}
+
+						if(mbi[i][j][k] != null)
+						{
+							as.set(i, j, k, mbi[i][j][k].getData().getTypeId(), mbi[i][j][k].getData().getData());
+						}
+
+						if(mbp[i][j][k] != null && Wormholes.edgy)
+						{
+							as.setBlockLight(i, j, k, mbp[i][j][k].block);
+							as.setSkyLight(i, j, k, mbp[i][j][k].sky);
+
+							if(mbp[i][j][k].biome != null)
+							{
+								as.setBiome(i, k, mbp[i][j][k].biome);
+							}
+						}
+					}
+				}
+			}
+
+			U.getService(NMSSVC.class).sendChunkUnload(x, z, p);
+			U.getService(NMSSVC.class).sendChunkMap(as, p);
+
+			new S(1)
+			{
+				@Override
+				public void run()
+				{
+					U.getService(NMSSVC.class).sendChunkMap(as, p);
+				}
+			};
 		}
 
 		catch(Exception e)

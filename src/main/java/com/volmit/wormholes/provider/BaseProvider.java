@@ -334,7 +334,7 @@ public abstract class BaseProvider implements PortalProvider
 
 	public File portalFile(UUID did)
 	{
-		return new File(portalFolder(), did.toString() + ".json");
+		return new File(portalFolder(), did.toString() + ".yml");
 	}
 
 	public File portalFolder()
@@ -519,7 +519,7 @@ public abstract class BaseProvider implements PortalProvider
 
 		for(File i : f.listFiles())
 		{
-			if(i.isFile() && i.getName().endsWith(".json"))
+			if(i.isFile() && i.getName().endsWith(".yml") || i.getName().endsWith(".json"))
 			{
 				UUID id = UUID.fromString(i.getName().split("\\Q.\\E")[0]);
 

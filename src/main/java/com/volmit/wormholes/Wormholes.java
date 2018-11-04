@@ -59,6 +59,7 @@ import com.volmit.wormholes.util.Ticked;
 @TickHandle(TickHandler.SYNCED)
 public class Wormholes extends VolumePlugin
 {
+	public static boolean edgy = false;
 	public static Wormholes instance;
 	public static VortexBus bus;
 	public static MutexService host;

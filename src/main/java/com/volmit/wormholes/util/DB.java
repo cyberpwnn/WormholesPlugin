@@ -22,17 +22,17 @@ public class DB
 
 	public static void d(Object inst, String s)
 	{
-		// if(!rdebug)
-		// {
-		// return;
-		// }
+		if(!rdebug)
+		{
+			return;
+		}
 
 		d(inst.getClass(), s);
 	}
 
 	public static void d(Class<?> t, String s)
 	{
-		if(!rdebug) // TODO REMOVE !
+		if(rdebug)
 		{
 			if(inst == null)
 			{

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import com.volmit.volume.bukkit.VolumePlugin;
@@ -17,8 +18,10 @@ import com.volmit.volume.bukkit.task.A;
 import com.volmit.volume.lang.collections.FinalLong;
 import com.volmit.volume.lang.format.F;
 import com.volmit.volume.math.Profiler;
+import com.volmit.wormholes.portal.Portal;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Cuboid.BlockSnapshot;
+import com.volmit.wormholes.util.Cuboid.CuboidDirection;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GBiset;
 import com.volmit.wormholes.util.GList;
@@ -31,7 +34,9 @@ public class ProjectionPlane
 {
 	private boolean busy;
 	private GMap<Vector, MaterialBlock> mapping;
+	private GMap<Vector, BlockProperties> metaMapping;
 	private GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>> remapCache;
+	private GMap<GBiset<Direction, Direction>, GMap<Vector, BlockProperties>> remapMetaCache;
 	private GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> ormapCache;
 	private double progress;
 
@@ -40,7 +45,9 @@ public class ProjectionPlane
 		progress = -1;
 		busy = false;
 		mapping = new GMap<Vector, MaterialBlock>();
+		metaMapping = new GMap<Vector, BlockProperties>();
 		remapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>>();
+		remapMetaCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, BlockProperties>>();
 		ormapCache = new GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>>();
 	}
 
@@ -83,6 +90,7 @@ public class ProjectionPlane
 		if(!remapCache.containsKey(c))
 		{
 			GMap<Vector, MaterialBlock> map = new GMap<Vector, MaterialBlock>();
+			GMap<Vector, BlockProperties> mapMeta = new GMap<Vector, BlockProperties>();
 			GMap<Vector, Vector> mapv = new GMap<Vector, Vector>();
 
 			for(Vector i : mapping.k())
@@ -93,10 +101,12 @@ public class ProjectionPlane
 				k.setY(k.getBlockY());
 				k.setZ(k.getBlockZ());
 				map.put(k, mapping.get(i));
+				mapMeta.put(k, metaMapping.get(i));
 				mapv.put(i, k);
 			}
 
 			remapCache.put(c, map);
+			remapMetaCache.put(c, mapMeta);
 			ormapCache.put(c, mapv);
 		}
 
@@ -156,9 +166,34 @@ public class ProjectionPlane
 		return bytes;
 	}
 
-	public void blockChange(Vector v, MaterialBlock mb)
+	public void blockChange(Vector v, MaterialBlock mb, Location lx, Portal p)
 	{
 		mapping.put(v, mb);
+
+		if(lx != null)
+		{
+			Cuboid c = new Cuboid(lx);
+			c = c.expand(CuboidDirection.North, 8);
+			c = c.expand(CuboidDirection.South, 8);
+			c = c.expand(CuboidDirection.East, 8);
+			c = c.expand(CuboidDirection.West, 8);
+			c = c.expand(CuboidDirection.Up, 8);
+			c = c.expand(CuboidDirection.Down, 8);
+			Iterator<Block> it = c.iterator();
+
+			while(it.hasNext())
+			{
+				Block b = it.next();
+				Vector vx = VectorMath.directionNoNormal(p.getPosition().getCenter(), b.getLocation()).clone().add(new Vector(0.5, 0.5, 0.5));
+				vx = p.getIdentity().getFront().angle(vx, p.getIdentity().getFront());
+				BlockProperties bp = new BlockProperties();
+				bp.block = b.getLightFromBlocks();
+				bp.sky = b.getLightFromSky();
+				bp.biome = b.getBiome();
+				metaMapping.put(vx, bp);
+			}
+		}
+
 		remapCache.clear();
 	}
 
@@ -209,7 +244,7 @@ public class ProjectionPlane
 
 					for(BlockSnapshot j : i.nearby)
 					{
-						if(j.mb.getMaterial().isTransparent())
+						if(!j.mb.getMaterial().isOccluding())
 						{
 							f = true;
 							break;
@@ -219,13 +254,14 @@ public class ProjectionPlane
 					if(f)
 					{
 						add++;
-						BlockProperties bp = new BlockProperties();
-						bp.sky = (byte) i.skylight;
-						bp.block = (byte) i.blocklight;
-						bp.biome = i.biome;
 						mapping.put(VectorMath.directionNoNormal(c.getCenter(), i.l).clone().add(new Vector(0.5, 0.5, 0.5)), i.mb);
 					}
 
+					BlockProperties bp = new BlockProperties();
+					bp.sky = (byte) i.skylight;
+					bp.block = (byte) i.blocklight;
+					bp.biome = i.biome;
+					metaMapping.put(VectorMath.directionNoNormal(c.getCenter(), i.l).clone().add(new Vector(0.5, 0.5, 0.5)), bp);
 					did++;
 					progress = (double) did / (double) of;
 				}
@@ -243,6 +279,11 @@ public class ProjectionPlane
 	public GMap<GBiset<Direction, Direction>, GMap<Vector, MaterialBlock>> getRemapCache()
 	{
 		return remapCache;
+	}
+
+	public GMap<GBiset<Direction, Direction>, GMap<Vector, BlockProperties>> getRemapMetaCache()
+	{
+		return remapMetaCache;
 	}
 
 	public GMap<GBiset<Direction, Direction>, GMap<Vector, Vector>> getOrmapCache()

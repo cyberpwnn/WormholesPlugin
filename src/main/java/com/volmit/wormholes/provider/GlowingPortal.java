@@ -79,7 +79,6 @@ public class GlowingPortal implements Listener
 		color = ChatColor.GREEN;
 	}
 
-	@SuppressWarnings("deprecation")
 	public GlowingBlock pullEntity(Player p, Material m, Cuboid c)
 	{
 		if(!entities.isEmpty())

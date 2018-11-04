@@ -1300,4 +1300,10 @@ public class LocalPortal implements Portal
 	{
 		this.did = did;
 	}
+
+	@Override
+	public Portal getDestination()
+	{
+		return getWormhole().getDestination();
+	}
 }

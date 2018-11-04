@@ -236,4 +236,10 @@ public class RemotePortal implements Portal
 	{
 		throw new UnsupportedOperationException("Disk IDs are not supported on remote-portal REFERENCES.");
 	}
+
+	@Override
+	public Portal getDestination()
+	{
+		return getWormhole().getDestination();
+	}
 }

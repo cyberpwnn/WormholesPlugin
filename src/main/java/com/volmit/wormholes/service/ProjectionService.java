@@ -1,13 +1,12 @@
 package com.volmit.wormholes.service;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.volmit.volume.bukkit.task.A;
 import com.volmit.volume.bukkit.task.S;
-import com.volmit.volume.lang.format.F;
 import com.volmit.volume.math.M;
+import com.volmit.volume.math.Profiler;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.portal.LocalPortal;
@@ -21,7 +20,6 @@ import com.volmit.wormholes.renderer.ViewportLatch;
 import com.volmit.wormholes.util.DB;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
-import com.volmit.wormholes.util.NMSX;
 
 public class ProjectionService implements Listener
 {
@@ -30,9 +28,14 @@ public class ProjectionService implements Listener
 	private Boolean projecting;
 	private GList<RenderTask> renderTasks;
 	private long last = M.ms();
+	public static double renderTime;
+	public static double renderProgress;
+	public static double renderersActive;
+	public static double renderersTotal;
 
 	public ProjectionService()
 	{
+		renderTime = 0;
 		DB.d(this, "Starting Projection Service");
 		projecting = false;
 		viewports = new GMap<LocalPortal, GMap<Player, ViewportLatch>>();
@@ -56,10 +59,10 @@ public class ProjectionService implements Listener
 					{
 						processViewports();
 						queueProjections();
-						project(2000D);
+						renderTime = project(1500D);
 						projecting = false;
 
-						if(M.ms() - last > 15)
+						if(M.ms() - last > 50)
 						{
 							Wormholes.provider.getRasterer().flush();
 							last = M.ms();
@@ -136,22 +139,6 @@ public class ProjectionService implements Listener
 					{
 						if(((LocalPortal) portal).getMask().needsProjection())
 						{
-							try
-							{
-								for(RenderTask task : renderTasks.copy())
-								{
-									if(task.isDone() && task.getMode().equals(RenderTaskMode.QUEUE))
-									{
-										renderTasks.remove(task);
-									}
-								}
-							}
-
-							catch(Exception e)
-							{
-
-							}
-
 							renderTasks.add(new RenderTask(player, getViewport((LocalPortal) portal, player), getLastViewport((LocalPortal) portal, player), (LocalPortal) portal, RenderTaskMode.QUEUE_ALL));
 						}
 
@@ -180,10 +167,12 @@ public class ProjectionService implements Listener
 		}
 	}
 
-	private void project(double totalMs)
+	private double project(double totalMs)
 	{
 		int activeTasks = 0;
 		double pg = 0;
+		Profiler pr = new Profiler();
+		pr.begin();
 
 		for(RenderTask i : renderTasks)
 		{
@@ -196,30 +185,35 @@ public class ProjectionService implements Listener
 			pg += i.getRenderlet().getProgress();
 		}
 
-		double maxAllocPer = totalMs / (double) activeTasks;
-
-		for(Player i : Bukkit.getOnlinePlayers())
+		if(activeTasks > 0)
 		{
-			NMSX.sendActionBar(i, "Active: " + renderTasks.size() + " Progress: " + F.pc(pg / (double) activeTasks));
+			double maxAllocPer = totalMs / (double) activeTasks;
+
+			for(RenderTask i : renderTasks.copy())
+			{
+				if(i.isDone())
+				{
+					continue;
+				}
+
+				try
+				{
+					i.render(maxAllocPer);
+				}
+
+				catch(Throwable e)
+				{
+
+				}
+			}
 		}
 
-		for(RenderTask i : renderTasks.copy())
-		{
-			if(i.isDone())
-			{
-				continue;
-			}
+		renderersTotal = renderTasks.size();
+		renderProgress = pg;
+		renderersActive = activeTasks;
 
-			try
-			{
-				i.render(maxAllocPer);
-			}
-
-			catch(Throwable e)
-			{
-
-			}
-		}
+		pr.end();
+		return pr.getMilliseconds();
 	}
 
 	public GMap<PortalKey, ProjectionPlane> getRemotePlanes()

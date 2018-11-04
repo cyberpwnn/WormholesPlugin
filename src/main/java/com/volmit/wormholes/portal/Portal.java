@@ -15,6 +15,8 @@ public interface Portal
 
 	public PortalPosition getPosition();
 
+	public Portal getDestination();
+
 	public UUID getDiskID();
 
 	public void setDiskID(UUID did);

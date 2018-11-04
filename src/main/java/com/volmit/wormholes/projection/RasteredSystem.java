@@ -56,6 +56,11 @@ public class RasteredSystem
 		}
 
 		queue(p, l, new MaterialBlock(l));
+
+		if(rasteredPlayers.get(p).getGhostMetaLayer().containsKey(l))
+		{
+			queue(p, l, rasteredPlayers.get(p).getGhostMetaLayer().get(l));
+		}
 	}
 
 	public boolean isQueued(Player p, Location l)
@@ -66,6 +71,29 @@ public class RasteredSystem
 		}
 
 		return rasteredPlayers.get(p).isQueued(l);
+	}
+
+	public void queue(Player p, Location l, BlockProperties bp)
+	{
+		try
+		{
+			if(!rasteredPlayers.containsKey(p))
+			{
+				rasteredPlayers.put(p, new RasteredPlayer(p));
+			}
+
+			if(l == null || bp == null || p == null || !rasteredPlayers.containsKey(p))
+			{
+				return;
+			}
+
+			rasteredPlayers.get(p).queue(l, bp);
+		}
+
+		catch(Exception e)
+		{
+
+		}
 	}
 
 	public void queue(Player p, Location l, MaterialBlock mb)

@@ -124,6 +124,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
@@ -173,6 +174,7 @@ public class AutomagicalProvider extends BaseProvider implements Listener
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void ona(PlayerInteractEvent e)
 	{

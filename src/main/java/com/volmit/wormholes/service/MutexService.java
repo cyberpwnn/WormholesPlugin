@@ -760,7 +760,7 @@ public class MutexService implements Listener
 
 							if(target.hasWormhole() && target.isWormholeMutex())
 							{
-								target.getWormhole().getDestination().getProjectionPlane().blockChange(v, mb);
+								target.getWormhole().getDestination().getProjectionPlane().blockChange(v, mb, null, null);
 							}
 
 							break;
@@ -1193,7 +1193,7 @@ public class MutexService implements Listener
 						v = p.getIdentity().getFront().angle(v, p.getIdentity().getFront());
 
 						MaterialBlock m = new MaterialBlock(l);
-						p.getProjectionPlane().blockChange(v, m);
+						p.getProjectionPlane().blockChange(v, m, lx, p);
 
 						if(p.isWormholeMutex())
 						{

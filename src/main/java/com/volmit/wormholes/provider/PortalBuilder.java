@@ -98,8 +98,15 @@ public class PortalBuilder implements Listener
 				int che = out;
 				int height = che * 2;
 				Location point = P.targetBlock(p, 24);
+				int max = 2;
+				while(!point.getBlock().getType().isOccluding() && max > 0)
+				{
+					point = point.subtract(0, 1, 0);
+					max--;
+				}
+
 				Cuboid c = new Cuboid(point);
-				Direction d = Direction.getDirection(p.getLocation().getDirection());
+				Direction d = Direction.getDirection(p.getLocation().getDirection().normalize());
 				PortalIdentity pi = new PortalIdentity(d, new PortalKey(DyeColor.BLACK, DyeColor.BLACK, DyeColor.BLACK, DyeColor.BLACK));
 				c = c.e(pi.getUp(), height);
 				c = c.e(pi.getLeft().getAxis(), out);
@@ -323,11 +330,13 @@ public class PortalBuilder implements Listener
 
 	public boolean isHoldingWand(Player p)
 	{
+		@SuppressWarnings("deprecation")
 		ItemStack is = p.getItemInHand();
 
 		return is != null && isWand(is);
 	}
 
+	@SuppressWarnings("deprecation")
 	public int getSize(Player p)
 	{
 		if(isHoldingWand(p))
@@ -338,6 +347,7 @@ public class PortalBuilder implements Listener
 		return -1;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void giveWand(Player p, int size)
 	{
 		if(!Settings.WAND_ENABLED)
