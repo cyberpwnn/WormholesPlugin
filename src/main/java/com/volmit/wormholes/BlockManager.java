@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Keyed;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -16,16 +15,18 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.volmit.wormholes.block.PortalBlock;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
 
 public class BlockManager implements Listener
 {
-	GMap<Chunk, GSet<Location>> portalBlocks;
+	private final GMap<Chunk, GSet<PortalBlock>> blocks;
 
 	public BlockManager()
 	{
 		registerRecipes();
+		blocks = new GMap<>();
 	}
 
 	public void registerRecipes()
