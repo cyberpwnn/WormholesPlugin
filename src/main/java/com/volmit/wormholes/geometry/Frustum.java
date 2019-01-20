@@ -3,11 +3,9 @@ package com.volmit.wormholes.geometry;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.portal.PortalPosition;
+import com.volmit.wormholes.portal.shape.PortalStructure;
 import com.volmit.wormholes.util.lang.Cuboid;
-import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.GList;
-import com.volmit.wormholes.util.lang.VectorMath;
 
 public class Frustum
 {
@@ -16,35 +14,15 @@ public class Frustum
 	private Location origin;
 	private GeoPolygonProc poly;
 
-	public Frustum(Location iris, PortalPosition pp, int rr)
+	public Frustum(Location iris, PortalStructure pp, int rr)
 	{
 		origin = iris;
-		double distanceToPortal = iris.distance(pp.getCenter());
+		double distanceToPortal = iris.distance(pp.getCenter().toLocation(iris.getWorld()));
 		double range = rr + (rr / (distanceToPortal + 1));
-		Vector tl = VectorMath.direction(iris, pp.getCornerUL());
-		Vector tr = VectorMath.direction(iris, pp.getCornerUR());
-		Vector bl = VectorMath.direction(iris, pp.getCornerDL());
-		Vector br = VectorMath.direction(iris, pp.getCornerDR());
-		Location ptl = pp.getCornerUL().clone().add(tl.multiply(range));
-		Location ptr = pp.getCornerUR().clone().add(tr.multiply(range));
-		Location pbl = pp.getCornerDL().clone().add(bl.multiply(range));
-		Location pbr = pp.getCornerDR().clone().add(br.multiply(range));
-		poly = new GeoPolygonProc(new GeoPolygon(new GList<GeoPoint>().qadd(nGeoPoint(ptl)).qadd(nGeoPoint(ptr)).qadd(nGeoPoint(pbl)).qadd(nGeoPoint(pbr)).qadd(nGeoPoint(pp.getCornerUL())).qadd(nGeoPoint(pp.getCornerUR())).qadd(nGeoPoint(pp.getCornerDL())).qadd(nGeoPoint(pp.getCornerDR()))));
-		region = new Cuboid(ptl, pp.getCornerDR()).getBoundingCuboid(new Cuboid(pbr, pp.getCornerUL()));
 
-		for(Direction i : Direction.udnews())
-		{
-			region = region.expand(i.f(), 1);
-		}
+		GList<GeoPoint> points = new GList<GeoPoint>();
+		poly = new GeoPolygonProc(new GeoPolygon(points));
 
-		for(Direction i : Direction.values())
-		{
-			clip = region.getFace(i.f());
-			if(clip.contains(pp.getCenter()))
-			{
-				break;
-			}
-		}
 	}
 
 	public boolean contains(Location l)
