@@ -9,13 +9,16 @@ import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.volmit.wormholes.block.PortalBlock;
+import com.volmit.wormholes.block.PortalBlockType;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
 
@@ -27,6 +30,48 @@ public class BlockManager implements Listener
 	{
 		registerRecipes();
 		blocks = new GMap<>();
+	}
+
+	@EventHandler
+	public void on(BlockPlaceEvent e)
+	{
+		if(isSame(e.getItemInHand(), getPortalRune(1)))
+		{
+			placeBlock(new PortalBlock(PortalBlockType.PORTAL_RUNE, e.getBlock().getLocation()));
+		}
+
+		else if(isSame(e.getItemInHand(), getWormholeRune(1)))
+		{
+			placeBlock(new PortalBlock(PortalBlockType.WORMHOLE_RUNE, e.getBlock().getLocation()));
+		}
+
+		else if(isSame(e.getItemInHand(), getPortalChest()))
+		{
+			placeBlock(new PortalBlock(PortalBlockType.PORTAL_CHEST, e.getBlock().getLocation()));
+		}
+	}
+
+	public void removeBlock(PortalBlock block)
+	{
+		if(blocks.containsKey(block.getLocation().getChunk()))
+		{
+			blocks.get(block.getLocation().getChunk()).remove(block);
+
+			if(blocks.get(block.getLocation().getChunk()).isEmpty())
+			{
+				blocks.remove(block.getLocation().getChunk());
+			}
+		}
+	}
+
+	public void placeBlock(PortalBlock block)
+	{
+		if(!blocks.containsKey(block.getLocation().getChunk()))
+		{
+			blocks.put(block.getLocation().getChunk(), new GSet<>());
+		}
+
+		blocks.get(block.getLocation().getChunk()).add(block);
 	}
 
 	public void registerRecipes()
