@@ -1,6 +1,8 @@
 package com.volmit.wormholes;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,12 +10,16 @@ import org.bukkit.Chunk;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -24,6 +30,9 @@ import com.volmit.wormholes.block.PortalBlockType;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
+import com.volmit.wormholes.util.lang.S;
+import com.volmit.wormholes.util.lang.SR;
+import com.volmit.wormholes.util.lang.W;
 
 public class BlockManager implements Listener
 {
@@ -33,6 +42,84 @@ public class BlockManager implements Listener
 	{
 		registerRecipes();
 		blocks = new GMap<>();
+	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void on(PlayerInteractEvent e)
+	{
+		if(isSame(getWand(), e.getPlayer().getItemInHand()) && e.getAction().equals(Action.LEFT_CLICK_BLOCK))
+		{
+			PortalBlock b = getBlock(e.getClickedBlock());
+
+			if(b != null)
+			{
+				if(b.getType().equals(PortalBlockType.PORTAL_RUNE) || b.getType().equals(PortalBlockType.WORMHOLE_RUNE))
+				{
+					construct(e.getPlayer(), e.getClickedBlock());
+				}
+			}
+		}
+	}
+
+	private void construct(Player player, Block clickedBlock)
+	{
+		Set<Block> blocks = new HashSet<>();
+		GList<Block> search = new GList<>();
+		PortalBlock init = getBlock(clickedBlock);
+		PortalBlockType type = init.getType();
+		Block cursor = clickedBlock;
+		search.addAll(findBlocks(blocks, cursor, type));
+		blocks.addAll(search);
+
+		new SR(7)
+		{
+			@Override
+			public void run()
+			{
+				for(Block i : new GList<Block>(search))
+				{
+					if(getBlock(i) == null)
+					{
+						search.remove(i);
+					}
+				}
+
+				if(!search.isEmpty())
+				{
+					search.addAll(findBlocks(blocks, search.popRandom(), type));
+				}
+
+				else
+				{
+					Wormholes.constructionManager.constructPortal(player, blocks);
+					cancel();
+				}
+			}
+		};
+	}
+
+	public Set<Block> findBlocks(Set<Block> blocks, Block cursor, PortalBlockType type)
+	{
+		if(getBlock(cursor) != null)
+		{
+			blocks.add(cursor);
+			cursor.setType(Material.AIR);
+			Wormholes.effectManager.playPortalOpening(blocks.size(), cursor);
+			removeBlock(getBlock(cursor));
+		}
+
+		Set<Block> found = new HashSet<>();
+
+		for(Block i : W.blockFaces(cursor))
+		{
+			if(!blocks.contains(i) && isBlock(i, type))
+			{
+				found.add(i);
+			}
+		}
+
+		return found;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -100,6 +187,34 @@ public class BlockManager implements Listener
 				};
 			}
 		}
+	}
+
+	public boolean isBlock(Block block, PortalBlockType type)
+	{
+		PortalBlock b = getBlock(block);
+
+		if(b == null)
+		{
+			return false;
+		}
+
+		return b.getType().equals(type);
+	}
+
+	public PortalBlock getBlock(Block block)
+	{
+		if(blocks.containsKey(block.getLocation().getChunk()))
+		{
+			for(PortalBlock i : blocks.get(block.getLocation().getChunk()))
+			{
+				if(i.getLocation().equals(block.getLocation()))
+				{
+					return i;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public void removeBlock(PortalBlock block)
