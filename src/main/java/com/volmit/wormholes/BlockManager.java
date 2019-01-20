@@ -10,7 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -19,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.volmit.wormholes.block.PortalBlock;
 import com.volmit.wormholes.block.PortalBlockType;
+import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
 
@@ -32,7 +35,7 @@ public class BlockManager implements Listener
 		blocks = new GMap<>();
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void on(BlockPlaceEvent e)
 	{
 		if(isSame(e.getItemInHand(), getPortalRune(1)))
@@ -51,6 +54,54 @@ public class BlockManager implements Listener
 		}
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void on(BlockBreakEvent e)
+	{
+		if(blocks.containsKey(e.getBlock().getLocation().getChunk()))
+		{
+			ItemStack drop = null;
+
+			for(PortalBlock i : new GList<PortalBlock>(blocks.get(e.getBlock().getLocation().getChunk())))
+			{
+				if(i.getLocation().equals(e.getBlock().getLocation()))
+				{
+					removeBlock(i);
+					e.setDropItems(false);
+
+					switch(i.getType())
+					{
+						case PORTAL_CHEST:
+							drop = getPortalChest();
+							break;
+						case PORTAL_RUNE:
+							drop = getPortalRune(1);
+							break;
+						case WORMHOLE_RUNE:
+							drop = getPortalRune(1);
+							break;
+					}
+				}
+			}
+
+			if(drop != null)
+			{
+				ItemStack dr = drop;
+
+				new S()
+				{
+					@Override
+					public void run()
+					{
+						if(!e.isCancelled() && e.getBlock().isEmpty())
+						{
+							e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation().clone().add(0.5, 0.5, 0.5), dr);
+						}
+					}
+				};
+			}
+		}
+	}
+
 	public void removeBlock(PortalBlock block)
 	{
 		if(blocks.containsKey(block.getLocation().getChunk()))
@@ -61,6 +112,8 @@ public class BlockManager implements Listener
 			{
 				blocks.remove(block.getLocation().getChunk());
 			}
+
+			Wormholes.effectManager.playPortalBlockDestroyed(block.getLocation().getBlock());
 		}
 	}
 
@@ -72,6 +125,7 @@ public class BlockManager implements Listener
 		}
 
 		blocks.get(block.getLocation().getChunk()).add(block);
+		Wormholes.effectManager.playPortalBlockPlaced(block.getLocation().getBlock());
 	}
 
 	public void registerRecipes()
