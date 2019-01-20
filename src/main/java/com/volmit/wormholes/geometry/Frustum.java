@@ -22,7 +22,6 @@ public class Frustum
 
 		GList<GeoPoint> points = new GList<GeoPoint>();
 		poly = new GeoPolygonProc(new GeoPolygon(points));
-
 	}
 
 	public boolean contains(Location l)
