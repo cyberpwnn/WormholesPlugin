@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.math;
+package com.volmit.wormholes.util.lang;
 
 
 public class DoubleArrayUtils

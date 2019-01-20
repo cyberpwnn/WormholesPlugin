@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang.json;
+package com.volmit.wormholes.util.lang;
 
 
 /**

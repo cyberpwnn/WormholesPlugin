@@ -1,43 +1,38 @@
-package com.volmit.wormholes.util.math;
+package com.volmit.wormholes.util.lang;
 
-public class CNum
+public class CDou
 {
-	private int number;
-	private int max;
+	private double number;
+	private double max;
 
-	public int getMax()
-	{
-		return max;
-	}
-
-	public CNum(int max)
+	public CDou(double max)
 	{
 		number = 0;
 		this.max = max;
 	}
 
-	public CNum set(int n)
+	public CDou set(double n)
 	{
 		number = n;
 		circ();
 		return this;
 	}
 
-	public CNum add(int a)
+	public CDou add(double a)
 	{
 		number += a;
 		circ();
 		return this;
 	}
 
-	public CNum sub(int a)
+	public CDou sub(double a)
 	{
 		number -= a;
 		circ();
 		return this;
 	}
 
-	public int get()
+	public double get()
 	{
 		return number;
 	}

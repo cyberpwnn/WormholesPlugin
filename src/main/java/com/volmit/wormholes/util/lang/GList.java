@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.volmit.wormholes.util.lang.json.JSONArray;
-import com.volmit.wormholes.util.math.M;
-
 /**
  * GLists are Arraylists with special enhancements
  *
