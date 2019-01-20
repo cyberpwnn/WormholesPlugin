@@ -77,7 +77,7 @@ public class BlockManager implements Listener
 							drop = getPortalRune(1);
 							break;
 						case WORMHOLE_RUNE:
-							drop = getPortalRune(1);
+							drop = getWormholeRune(1);
 							break;
 					}
 				}
