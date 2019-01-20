@@ -1,9 +1,8 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.util.lang;
 
 import org.bukkit.Bukkit;
 
-import com.volmit.wormholes.util.lang.FinalInteger;
-import com.volmit.wormholes.util.lang.GList;
+import com.volmit.wormholes.Wormholes;
 
 /**
  * Job Scheduling

@@ -1,4 +1,4 @@
-package com.volmit.wormholes;
+package com.volmit.wormholes.util.lang;
 
 public abstract class SR implements Runnable, CancellableTask
 {
