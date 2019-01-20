@@ -131,11 +131,13 @@ public class BlockManager implements Listener
 
 	public ItemStack getWormholeRune(int c)
 	{
-		ItemStack is = new ItemStack(Material.PRISMARINE);
+		@SuppressWarnings("deprecation")
+		ItemStack is = new ItemStack(Material.PRISMARINE, 1, (short) 0, (byte) 2);
 		ItemMeta meta = is.getItemMeta();
 		meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
 		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Wormhole Rune");
 		is.setItemMeta(meta);
+		is.setAmount(c);
 
 		return is;
 	}
