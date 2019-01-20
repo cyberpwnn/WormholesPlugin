@@ -28,14 +28,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
-				<configuration>
-					<finalName>${project.name}</finalName>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>3.1.0</version>
 				<executions>
@@ -46,14 +38,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<relocations>
-						<relocation>
-							<pattern>com.volmit.volume</pattern>
-							<shadedPattern>com.volmit.wormholes.volume</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
