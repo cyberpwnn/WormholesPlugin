@@ -117,6 +117,10 @@
 			<id>bungeecord-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
+		<repository>
+			<id>volmit</id>
+			<url>http://nexus.volmit.com/content/repositories/volmit</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -128,8 +132,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.12.2-R0.1-SNAPSHOT</version>
+			<artifactId>spigot</artifactId>
+			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
