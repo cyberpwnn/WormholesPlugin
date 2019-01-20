@@ -9,12 +9,14 @@ public class Wormholes extends JavaPlugin implements Listener
 {
 	public static Wormholes instance;
 	public static BlockManager blockManager;
+	public static EffectManager effectManager;
 
 	@Override
 	public void onEnable()
 	{
 		registerListener(instance = this);
 		registerListener(blockManager = new BlockManager());
+		registerListener(effectManager = new EffectManager());
 	}
 
 	public static void registerListener(Listener l)
