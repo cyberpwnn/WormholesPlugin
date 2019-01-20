@@ -1,8 +1,16 @@
 package com.volmit.wormholes.util.lang;
 
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * Math
@@ -14,59 +22,22 @@ public class M
 	private static final int precision = 128;
 	private static final int modulus = 360 * precision;
 	private static final float[] sin = new float[modulus];
-	private static long TICK = 0;
-	private static long ATICK = 0;
-	private static long TIME = -1;
 
-	public static int iclip(double value, double min, double max)
+	/**
+	 * Evaluates an expression using javascript engine and returns the double
+	 *
+	 * @param expression
+	 *            the mathimatical expression
+	 * @return the double result
+	 * @throws ScriptException
+	 *             dont fuck up.
+	 */
+	public static double evaluate(String expression) throws ScriptException
 	{
-		return (int) clip(value, min, max);
-	}
+		ScriptEngineManager mgr = new ScriptEngineManager();
+		ScriptEngine scriptEngine = mgr.getEngineByName("JavaScript");
 
-	public static void initTicking()
-	{
-		TIME = new File("server.properties").lastModified();
-		TICK = ticksOnline();
-	}
-
-	public static boolean interval(int m)
-	{
-		return tick() % Math.max(1, m) == 0;
-	}
-
-	public static boolean intervalAsync(int m)
-	{
-		return tickAsync() % Math.max(1, m) == 0;
-	}
-
-	public static long tick()
-	{
-		return TICK;
-	}
-
-	public static long tickAsync()
-	{
-		return ATICK;
-	}
-
-	public static long ticksOnline()
-	{
-		return timeOnline() / 50;
-	}
-
-	public static long timeStarted()
-	{
-		return TIME;
-	}
-
-	public static long timeOnline()
-	{
-		return ms() - TIME;
-	}
-
-	public static double clip(double value, double min, double max)
-	{
-		return Math.min(max, Math.max(min, value));
+		return Double.valueOf(scriptEngine.eval(expression).toString());
 	}
 
 	/**
@@ -84,6 +55,66 @@ public class M
 		}
 
 		return Math.random() < d;
+	}
+
+	/**
+	 * Evaluates an expression using javascript engine and returns the double
+	 * result. This can take variable parameters, so you need to define them.
+	 * Parameters are defined as $[0-9]. For example evaluate("4$0/$1", 1, 2); This
+	 * makes the expression (4x1)/2 == 2. Keep note that you must use 0-9, you
+	 * cannot skip, or start at a number other than 0.
+	 *
+	 * @param expression
+	 *            the expression with variables
+	 * @param args
+	 *            the arguments/variables
+	 * @return the resulting double value
+	 * @throws ScriptException
+	 *             dont fuck up
+	 * @throws IndexOutOfBoundsException
+	 *             learn to count
+	 */
+	public static double evaluate(String expression, Double... args) throws ScriptException, IndexOutOfBoundsException
+	{
+		for(int i = 0; i < args.length; i++)
+		{
+			String current = "$" + i;
+
+			if(expression.contains(current))
+			{
+				expression = expression.replaceAll(Matcher.quoteReplacement(current), args[i] + "");
+			}
+		}
+
+		return evaluate(expression);
+	}
+
+	public static Block highestBlock(Location l, int shuf, int st)
+	{
+		int y = st;
+		Block b = null;
+
+		while(y > 0)
+		{
+			y -= shuf;
+
+			if(new Location(l.getWorld(), l.getX(), y, l.getZ()).getBlock().getType().equals(Material.AIR))
+			{
+				if(shuf > 1)
+				{
+					b = highestBlock(l, 1, y + shuf);
+					break;
+				}
+
+				else
+				{
+					b = new Location(l.getWorld(), l.getX(), y, l.getZ()).getBlock();
+					break;
+				}
+			}
+		}
+
+		return b;
 	}
 
 	/**
@@ -287,6 +318,84 @@ public class M
 	}
 
 	/**
+	 * Average a list of doubles
+	 *
+	 * @param doubles
+	 *            the doubles
+	 * @return the average
+	 */
+	public static double avg(GList<Double> doubles)
+	{
+		double a = 0.0;
+		int d = 0;
+
+		try
+		{
+			for(double i : doubles.copy())
+			{
+				a += i;
+				d++;
+			}
+
+			return a / (double) d;
+		}
+
+		catch(Exception e)
+		{
+
+		}
+
+		return a / (double) d;
+	}
+
+	/**
+	 * Cull a list of doubles
+	 *
+	 * @param doubles
+	 *            the doubles
+	 * @param limit
+	 *            the limit size
+	 */
+	public static void lim(GList<Double> doubles, int limit)
+	{
+		while(doubles.size() > limit)
+		{
+			doubles.remove(0);
+		}
+	}
+
+	/**
+	 * An alternative method of distance calculation
+	 *
+	 * @param a
+	 *            the first location
+	 * @param b
+	 *            the second
+	 * @return the distance between the two
+	 */
+	public static double distance(Location a, Location b)
+	{
+		return Double.longBitsToDouble(((Double.doubleToLongBits(a.distanceSquared(b)) - (1l << 52)) >> 1) + (1l << 61));
+	}
+
+	/**
+	 * Check if a location is within a given range of another without using sqrt
+	 * functions
+	 *
+	 * @param center
+	 *            the center (first position)
+	 * @param check
+	 *            the check location (second position)
+	 * @param radius
+	 *            the radius to check
+	 * @return true if the check is within the given range of the center position
+	 */
+	public static boolean within(Location center, Location check, Double radius)
+	{
+		return Area.within(center, check, radius);
+	}
+
+	/**
 	 * Fast sin function
 	 *
 	 * @param a
@@ -332,6 +441,21 @@ public class M
 		return max;
 	}
 
+	public static double max(double... ints)
+	{
+		double max = Double.MIN_VALUE;
+
+		for(double i : ints)
+		{
+			if(i > max)
+			{
+				max = i;
+			}
+		}
+
+		return max;
+	}
+
 	/**
 	 * Smallest number
 	 *
@@ -344,6 +468,21 @@ public class M
 		int min = Integer.MAX_VALUE;
 
 		for(int i : ints)
+		{
+			if(i < min)
+			{
+				min = i;
+			}
+		}
+
+		return min;
+	}
+
+	public static double min(double... ints)
+	{
+		double min = Double.MAX_VALUE;
+
+		for(double i : ints)
 		{
 			if(i < min)
 			{
@@ -381,30 +520,5 @@ public class M
 	private static float sinLookup(int a)
 	{
 		return a >= 0 ? sin[a % (modulus)] : -sin[-a % (modulus)];
-	}
-
-	public static double absoluteZero(double d)
-	{
-		return d < 0 ? 0 : d;
-	}
-
-	public static void uptick()
-	{
-		TICK++;
-	}
-
-	public static void uptickAsync()
-	{
-		ATICK++;
-	}
-
-	public static long epochDays()
-	{
-		return epochDays(M.ms());
-	}
-
-	private static long epochDays(long ms)
-	{
-		return ms / 1000 / 60 / 60 / 24;
 	}
 }
