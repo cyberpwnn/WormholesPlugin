@@ -5,9 +5,17 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Wormholes extends JavaPlugin
+public class Wormholes extends JavaPlugin implements Listener
 {
 	public static Wormholes instance;
+	public static BlockManager blockManager;
+
+	@Override
+	public void onEnable()
+	{
+		registerListener(instance = this);
+		registerListener(blockManager = new BlockManager());
+	}
 
 	public static void registerListener(Listener l)
 	{
