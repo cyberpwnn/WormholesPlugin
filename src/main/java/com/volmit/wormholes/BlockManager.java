@@ -30,6 +30,7 @@ import com.volmit.wormholes.block.PortalBlockType;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
+import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.S;
 import com.volmit.wormholes.util.lang.SR;
 import com.volmit.wormholes.util.lang.W;
@@ -72,28 +73,31 @@ public class BlockManager implements Listener
 		search.addAll(findBlocks(blocks, cursor, type));
 		blocks.addAll(search);
 
-		new SR(7)
+		new SR(0)
 		{
 			@Override
 			public void run()
 			{
-				for(Block i : new GList<Block>(search))
+				if(M.r(0.175))
 				{
-					if(getBlock(i) == null)
+					for(Block i : new GList<Block>(search))
 					{
-						search.remove(i);
+						if(getBlock(i) == null)
+						{
+							search.remove(i);
+						}
 					}
-				}
 
-				if(!search.isEmpty())
-				{
-					search.addAll(findBlocks(blocks, search.popRandom(), type));
-				}
+					if(!search.isEmpty())
+					{
+						search.addAll(findBlocks(blocks, search.popRandom(), type));
+					}
 
-				else
-				{
-					Wormholes.constructionManager.constructPortal(player, blocks);
-					cancel();
+					else
+					{
+						Wormholes.constructionManager.constructPortal(player, blocks);
+						cancel();
+					}
 				}
 			}
 		};
@@ -104,7 +108,7 @@ public class BlockManager implements Listener
 		if(getBlock(cursor) != null)
 		{
 			blocks.add(cursor);
-			cursor.setType(Material.AIR);
+			cursor.setType(Material.END_BRICKS);
 			Wormholes.effectManager.playPortalOpening(blocks.size(), cursor);
 			removeBlock(getBlock(cursor));
 		}
