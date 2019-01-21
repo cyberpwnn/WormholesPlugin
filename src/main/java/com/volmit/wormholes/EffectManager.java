@@ -34,6 +34,10 @@ public class EffectManager implements Listener
 	{
 		Block block = new GList<Block>(blocks).pickRandom();
 		block.getWorld().playSound(block.getLocation().clone().add(0.5, 0.5, 0.5), MSound.FRAME_SPAWN.bukkitSound(), 2.5f, 1.0f + ((float) (Math.random() * 0.1)));
+		for(Block i : blocks)
+		{
+			i.setType(Material.END_GATEWAY);
+		}
 	}
 
 	public void playPortalOpening(int size, Block cursor)
