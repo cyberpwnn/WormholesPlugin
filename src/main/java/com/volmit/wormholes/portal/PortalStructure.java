@@ -1,4 +1,4 @@
-package com.volmit.wormholes.portal.shape;
+package com.volmit.wormholes.portal;
 
 import java.util.Set;
 

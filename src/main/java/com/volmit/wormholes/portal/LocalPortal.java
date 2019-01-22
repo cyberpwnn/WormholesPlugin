@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
-import com.volmit.wormholes.portal.shape.PortalStructure;
 import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.MSound;
 import com.volmit.wormholes.util.lang.ParticleEffect;

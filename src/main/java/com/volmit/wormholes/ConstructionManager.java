@@ -10,8 +10,8 @@ import org.bukkit.event.Listener;
 
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.LocalPortal;
+import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.portal.PortalType;
-import com.volmit.wormholes.portal.shape.PortalStructure;
 import com.volmit.wormholes.util.lang.Cuboid;
 import com.volmit.wormholes.util.lang.S;
 

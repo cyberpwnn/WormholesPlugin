@@ -3,7 +3,7 @@ package com.volmit.wormholes.geometry;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.portal.shape.PortalStructure;
+import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.util.lang.Cuboid;
 
 public class Frustum
