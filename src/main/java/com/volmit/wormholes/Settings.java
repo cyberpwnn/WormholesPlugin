@@ -9,4 +9,5 @@ public class Settings
 	public static double PORTAL_OPEN_SPEED = 1;
 	public static double PORTAL_CLOSE_SPEED = 1;
 	public static boolean DEBUG_RENDERING = true;
+	public static boolean DEBUG_VIEWPORT = true;
 }
