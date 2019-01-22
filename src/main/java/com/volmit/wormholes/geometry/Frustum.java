@@ -1,33 +1,119 @@
 package com.volmit.wormholes.geometry;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.portal.PortalStructure;
-import com.volmit.wormholes.util.lang.Cuboid;
+import com.volmit.wormholes.util.lang.AxisAlignedBB;
+import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.lang.GList;
+import com.volmit.wormholes.util.lang.ParticleEffect;
+import com.volmit.wormholes.util.lang.VectorMath;
 
 public class Frustum
 {
-	private Cuboid region;
-	private Cuboid clip;
 	private Location origin;
 	private GeoPolygonProc poly;
+	private AxisAlignedBB region;
 
-	public Frustum(Location iris, PortalStructure pp, int rr)
+	public Frustum(Location iris, PortalStructure pp, Direction cubeFace, double range)
 	{
-		// origin = iris;
-		// double distanceToPortal =
-		// iris.distance(pp.getCenter().toLocation(iris.getWorld()));
-		// double range = rr + (rr / (distanceToPortal + 1));
-		//
-		// GList<GeoPoint> points = new GList<GeoPoint>();
-		// poly = new GeoPolygonProc(new GeoPolygon(points));
+		origin = iris;
+		AxisAlignedBB face = pp.getArea().getFace(cubeFace);
+		GList<Location> points = new GList<>();
+		switch(face.getThinAxis())
+		{
+			case X:
+				points.add(face.getCornerVector(cubeFace, Direction.U, Direction.S).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(cubeFace, Direction.U, Direction.N).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(cubeFace, Direction.D, Direction.S).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(cubeFace, Direction.D, Direction.N).toLocation(iris.getWorld()));
+				break;
+			case Y:
+				points.add(face.getCornerVector(Direction.E, cubeFace, Direction.S).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.E, cubeFace, Direction.N).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.W, cubeFace, Direction.S).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.W, cubeFace, Direction.N).toLocation(iris.getWorld()));
+				break;
+			case Z:
+				points.add(face.getCornerVector(Direction.E, Direction.U, cubeFace).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.E, Direction.D, cubeFace).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.W, Direction.U, cubeFace).toLocation(iris.getWorld()));
+				points.add(face.getCornerVector(Direction.W, Direction.D, cubeFace).toLocation(iris.getWorld()));
+				break;
+		}
+
+		for(Location i : points.copy())
+		{
+			points.add(i.clone().add(VectorMath.direction(iris, i).multiply(range)));
+		}
+
+		region = new AxisAlignedBB(points);
+		GList<GeoPoint> p = new GList<>();
+
+		for(Location i : points)
+		{
+			p.add(nGeoPoint(i));
+		}
+
+		poly = new GeoPolygonProc(new GeoPolygon(p));
+		dpoly(points, 0.5);
+	}
+
+	public void dpoly(GList<Location> locs, double jd)
+	{
+		Location last = locs.get(locs.last());
+
+		for(Location i : locs)
+		{
+			dline(last, i, jd);
+			last = i;
+		}
+	}
+
+	public void dline(Location start, Location finish, double jd)
+	{
+		new Raycast(start, finish, jd)
+		{
+			@Override
+			public boolean shouldContinue(Location l)
+			{
+				ParticleEffect.FLAME.display(0f, 1, l, 256);
+				return true;
+			}
+		};
+	}
+
+	public boolean ray(Location corner, GList<Block> blocks)
+	{
+		Block c = corner.getBlock();
+		Raycast r = new Raycast(origin, corner, 0.25)
+		{
+			@Override
+			public boolean shouldContinue(Location l)
+			{
+				if(blocks.contains(l.getBlock()) && !c.equals(l.getBlock()))
+				{
+					return false;
+				}
+
+				if(blocks.contains(l.getBlock()) && c.equals(l.getBlock()))
+				{
+					return finishSuccess();
+				}
+
+				return true;
+			}
+		};
+
+		return r.hadSuccess();
 	}
 
 	public boolean contains(Location l)
 	{
 		GeoPoint p = nGeoPoint(l);
-		return poly.PointInside3DPolygon(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5);
+		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
 	}
 
 	public static GeoPoint toGeoPoint(Vector v)
@@ -55,7 +141,7 @@ public class Frustum
 		return toVec4(normalize(origin, v).toVector());
 	}
 
-	public Cuboid getRegion()
+	public AxisAlignedBB getRegion()
 	{
 		return region;
 	}
