@@ -62,7 +62,7 @@ public class ConstructionManager implements Listener
 					PortalStructure s = new PortalStructure();
 					s.setWorld(c.getWorld());
 					s.setArea(c);
-					createPortal(s, type);
+					ILocalPortal portal = createPortal(s, type);
 				}
 
 				else

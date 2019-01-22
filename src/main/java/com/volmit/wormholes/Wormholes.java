@@ -11,6 +11,7 @@ public class Wormholes extends JavaPlugin implements Listener
 	public static BlockManager blockManager;
 	public static EffectManager effectManager;
 	public static ConstructionManager constructionManager;
+	public static PortalManager portalManager;
 
 	@Override
 	public void onEnable()
@@ -19,6 +20,7 @@ public class Wormholes extends JavaPlugin implements Listener
 		registerListener(blockManager = new BlockManager());
 		registerListener(effectManager = new EffectManager());
 		registerListener(constructionManager = new ConstructionManager());
+		registerListener(portalManager = new PortalManager());
 	}
 
 	public static void registerListener(Listener l)
