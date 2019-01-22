@@ -1,6 +1,6 @@
 package com.volmit.wormholes.portal;
 
-public interface ILocalPoral
+public interface ILocalPoral extends IPortal
 {
 
 }

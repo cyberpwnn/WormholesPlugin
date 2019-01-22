@@ -1,6 +1,6 @@
 package com.volmit.wormholes.portal;
 
-public interface IRemotePortal
+public interface IRemotePortal extends IPortal
 {
 
 }
