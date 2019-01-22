@@ -8,6 +8,7 @@ import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.IPortal;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;
+import com.volmit.wormholes.util.lang.J;
 
 public class PortalManager implements Listener
 {
@@ -16,6 +17,7 @@ public class PortalManager implements Listener
 	public PortalManager()
 	{
 		portals = new GMap<>();
+		J.ar(() -> updateLocalPortals(), 0);
 	}
 
 	public void updateLocalPortals()

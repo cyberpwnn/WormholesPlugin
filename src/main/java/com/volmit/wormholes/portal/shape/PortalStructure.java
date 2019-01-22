@@ -10,6 +10,7 @@ import com.volmit.wormholes.util.lang.Cuboid;
 import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
+import com.volmit.wormholes.util.lang.M;
 
 public class PortalStructure
 {
@@ -21,6 +22,20 @@ public class PortalStructure
 	public World getWorld()
 	{
 		return world;
+	}
+
+	public Location getCenter()
+	{
+		Location min = corner(Direction.W, Direction.D, Direction.N);
+		Location max = corner(Direction.E, Direction.U, Direction.S);
+		return min.clone().add(max.clone().subtract(min).toVector().multiply(0.5));
+	}
+
+	public Location randomLocation()
+	{
+		Location min = corner(Direction.W, Direction.D, Direction.N);
+		Location max = corner(Direction.E, Direction.U, Direction.S);
+		return new Location(getArea().getWorld(), M.rand(min.getX(), max.getX()), M.rand(min.getY(), max.getY()), M.rand(min.getZ(), max.getZ()));
 	}
 
 	public void setWorld(World world)
@@ -77,5 +92,10 @@ public class PortalStructure
 	{
 		faceCache.clear();
 		cornerCache = null;
+	}
+
+	public double getSize()
+	{
+		return getArea().volume();
 	}
 }

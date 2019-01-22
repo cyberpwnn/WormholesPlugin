@@ -213,6 +213,11 @@ public class M
 		return f + (int) (Math.random() * ((t - f) + 1));
 	}
 
+	public static double rand(double f, double t)
+	{
+		return f + (double) (Math.random() * ((t - f)));
+	}
+
 	/**
 	 * Get the number representation from roman numerals.
 	 *

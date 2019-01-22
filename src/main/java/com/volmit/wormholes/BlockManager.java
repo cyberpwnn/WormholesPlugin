@@ -78,7 +78,7 @@ public class BlockManager implements Listener
 			@Override
 			public void run()
 			{
-				if(M.r(0.175))
+				if(M.r(Settings.PORTAL_CONSTRUCT_SPEED))
 				{
 					for(Block i : new GList<Block>(search))
 					{
@@ -138,11 +138,6 @@ public class BlockManager implements Listener
 		{
 			placeBlock(new PortalBlock(PortalType.WORMHOLE, e.getBlock().getLocation()));
 		}
-
-		else if(isSame(e.getItemInHand(), getPortalChest()))
-		{
-			placeBlock(new PortalBlock(PortalType.CHEST, e.getBlock().getLocation()));
-		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -161,9 +156,6 @@ public class BlockManager implements Listener
 
 					switch(i.getType())
 					{
-						case CHEST:
-							drop = getPortalChest();
-							break;
 						case PORTAL:
 							drop = getPortalRune(1);
 							break;
@@ -266,12 +258,6 @@ public class BlockManager implements Listener
 				.setIngredient('d', Material.NETHER_STAR)
 				.setIngredient('b', Material.PRISMARINE_SHARD)
 				.setIngredient('p', Material.EYE_OF_ENDER));
-		registerRecipe(new ShapedRecipe(new NamespacedKey(Wormholes.instance, "portal_chest"), getPortalChest())
-				.shape(" d ", "wrw", " e ")
-				.setIngredient('d', Material.GLOWSTONE_DUST)
-				.setIngredient('w', Material.BLAZE_POWDER)
-				.setIngredient('r', Material.ENDER_CHEST)
-				.setIngredient('e', Material.EYE_OF_ENDER));
 		//@done
 	}
 
@@ -361,17 +347,6 @@ public class BlockManager implements Listener
 		return is;
 	}
 
-	public ItemStack getPortalChest()
-	{
-		ItemStack is = new ItemStack(Material.ENDER_CHEST);
-		ItemMeta meta = is.getItemMeta();
-		meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-		meta.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Portal Chest");
-		is.setItemMeta(meta);
-
-		return is;
-	}
-
 	public void refund(Set<Block> blocks, PortalType type)
 	{
 		GList<Block> refund = new GList<Block>(blocks);
@@ -388,7 +363,7 @@ public class BlockManager implements Listener
 					return;
 				}
 
-				if(M.r(0.41))
+				if(M.r(Settings.PORTAL_COLAPSE_SPEED))
 				{
 					Block b = refund.pop();
 					b.getWorld().dropItemNaturally(b.getLocation().clone().add(0.5, 0.5, 0.5), is);
