@@ -1,5 +1,6 @@
 package com.volmit.wormholes.util.lang;
 
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 public class AxisAlignedBB
@@ -24,6 +25,16 @@ public class AxisAlignedBB
 	public AxisAlignedBB(AlignedPoint a, AlignedPoint b)
 	{
 		this(a.getX(), b.getX(), a.getY(), b.getY(), a.getZ(), b.getZ());
+	}
+
+	public Cuboid toCuboid(World world)
+	{
+		return new Cuboid(min().toLocation(world), max().toLocation(world));
+	}
+
+	public Vector random()
+	{
+		return new Vector(M.rand(xa, xb), M.rand(ya, yb), M.rand(za, zb));
 	}
 
 	public Vector center()

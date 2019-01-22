@@ -25,7 +25,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.volmit.wormholes.block.PortalBlock;
+import com.volmit.wormholes.portal.PortalBlock;
 import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;

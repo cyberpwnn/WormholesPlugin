@@ -1,8 +1,6 @@
-package com.volmit.wormholes.block;
+package com.volmit.wormholes.portal;
 
 import org.bukkit.Location;
-
-import com.volmit.wormholes.portal.PortalType;
 
 public class PortalBlock
 {
