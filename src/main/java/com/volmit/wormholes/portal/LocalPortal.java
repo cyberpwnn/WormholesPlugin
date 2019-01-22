@@ -2,16 +2,21 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
-import com.volmit.wormholes.portal.shape.PortalStructure;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 
-public class LocalPortal extends Portal implements ILocalPortal
+import com.volmit.wormholes.portal.shape.PortalStructure;
+import com.volmit.wormholes.util.lang.M;
+import com.volmit.wormholes.util.lang.MSound;
+import com.volmit.wormholes.util.lang.ParticleEffect;
+
+public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
 {
 	private final PortalStructure structure;
 	private final PortalType type;
-	private boolean openCurrent;
 	private boolean open;
-	private double stateProgress;
-	private String state;
+	private boolean progressing;
+	private String progress;
 
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
@@ -19,9 +24,8 @@ public class LocalPortal extends Portal implements ILocalPortal
 		this.type = type;
 		this.structure = structure;
 		open = false;
-		openCurrent = false;
-		stateProgress = 0;
-		state = "Idle";
+		progressing = false;
+		progress = "Idle";
 	}
 
 	@Override
@@ -39,26 +43,14 @@ public class LocalPortal extends Portal implements ILocalPortal
 	@Override
 	public void update()
 	{
-		if(isOpening())
+		if(isOpen())
 		{
-			stateProgress += 0.003;
-
-			if(getStateProgress() >= 1)
-			{
-				stateProgress = 0;
-				openCurrent = true;
-			}
+			playEffect(PortalEffect.AMBIENT_OPEN);
 		}
 
-		else if(isClosing())
+		else
 		{
-			stateProgress += 0.007;
-
-			if(getStateProgress() >= 1)
-			{
-				stateProgress = 0;
-				openCurrent = false;
-			}
+			playEffect(PortalEffect.AMBIENT_CLOSED);
 		}
 	}
 
@@ -71,7 +63,7 @@ public class LocalPortal extends Portal implements ILocalPortal
 	@Override
 	public boolean isOpen()
 	{
-		return openCurrent;
+		return open;
 	}
 
 	@Override
@@ -84,36 +76,76 @@ public class LocalPortal extends Portal implements ILocalPortal
 	public void setOpen(boolean open)
 	{
 		this.open = open;
-		stateProgress = 0;
 	}
 
 	@Override
-	public boolean isClosing()
+	public void playEffect(PortalEffect effect, Location location)
 	{
-		return openCurrent && !open;
+		switch(effect)
+		{
+			case AMBIENT_CLOSED:
+				for(int i = 0; i < 4; i++)
+				{
+					ParticleEffect.TOWN_AURA.display(0f, 1, getStructure().randomLocation(), 16);
+				}
+
+				break;
+			case AMBIENT_OPEN:
+				for(int i = 0; i < 12; i++)
+				{
+					ParticleEffect.TOWN_AURA.display(0f, 1, getStructure().randomLocation(), 16);
+				}
+
+				if(M.r(0.01))
+				{
+					getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), Sound.BLOCK_LAVA_AMBIENT, 0.25f, 0.025f);
+				}
+
+				if(M.r(0.01))
+				{
+					getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.PORTAL.bukkitSound(), 0.25f, 0.025f);
+				}
+
+				break;
+			case CLOSE:
+				break;
+			case OPEN:
+				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 0.1f);
+				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 1.6f);
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
-	public boolean isOpening()
+	public void playEffect(PortalEffect effect)
 	{
-		return !openCurrent && open;
+		playEffect(effect, null);
 	}
 
 	@Override
-	public double getStateProgress()
+	public void showProgress(String text)
 	{
-		return stateProgress;
+		progressing = true;
+		progress = text;
 	}
 
 	@Override
-	public String getState()
+	public void hideProgress()
 	{
-		return state;
+		progressing = false;
 	}
 
 	@Override
 	public boolean isShowingProgress()
 	{
-		return isOpen() || isClosing();
+		return progressing;
+	}
+
+	@Override
+	public String getCurrentProgress()
+	{
+		return progress;
 	}
 }
