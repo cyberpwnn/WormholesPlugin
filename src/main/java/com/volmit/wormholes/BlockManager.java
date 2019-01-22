@@ -103,7 +103,6 @@ public class BlockManager implements Listener
 		};
 	}
 
-	@SuppressWarnings("deprecation")
 	public Set<Block> findBlocks(Set<Block> blocks, Block cursor, PortalBlockType type)
 	{
 		if(getBlock(cursor) != null)
