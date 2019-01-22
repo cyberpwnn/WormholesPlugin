@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.volmit.wormholes.portal.shape.PortalStructure;
 
-public class LocalPortal extends Portal implements ILocalPoral
+public class LocalPortal extends Portal implements ILocalPortal
 {
 	private final PortalStructure structure;
 	private final PortalType type;

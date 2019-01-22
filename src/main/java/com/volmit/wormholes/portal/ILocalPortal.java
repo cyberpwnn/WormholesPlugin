@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 import com.volmit.wormholes.portal.shape.PortalStructure;
 
-public interface ILocalPoral extends IPortal
+public interface ILocalPortal extends IPortal
 {
 	public PortalStructure getStructure();
 
