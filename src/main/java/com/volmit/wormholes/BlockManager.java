@@ -26,7 +26,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.volmit.wormholes.block.PortalBlock;
-import com.volmit.wormholes.block.PortalBlockType;
+import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
@@ -55,7 +55,7 @@ public class BlockManager implements Listener
 
 			if(b != null)
 			{
-				if(b.getType().equals(PortalBlockType.PORTAL_RUNE) || b.getType().equals(PortalBlockType.WORMHOLE_RUNE))
+				if(b.getType().equals(PortalType.PORTAL) || b.getType().equals(PortalType.WORMHOLE))
 				{
 					construct(e.getPlayer(), e.getClickedBlock());
 				}
@@ -68,7 +68,7 @@ public class BlockManager implements Listener
 		Set<Block> blocks = new HashSet<>();
 		GList<Block> search = new GList<>();
 		PortalBlock init = getBlock(clickedBlock);
-		PortalBlockType type = init.getType();
+		PortalType type = init.getType();
 		Block cursor = clickedBlock;
 		search.addAll(findBlocks(blocks, cursor, type));
 		blocks.addAll(search);
@@ -103,7 +103,7 @@ public class BlockManager implements Listener
 		};
 	}
 
-	public Set<Block> findBlocks(Set<Block> blocks, Block cursor, PortalBlockType type)
+	public Set<Block> findBlocks(Set<Block> blocks, Block cursor, PortalType type)
 	{
 		if(getBlock(cursor) != null)
 		{
@@ -131,17 +131,17 @@ public class BlockManager implements Listener
 	{
 		if(isSame(e.getItemInHand(), getPortalRune(1)))
 		{
-			placeBlock(new PortalBlock(PortalBlockType.PORTAL_RUNE, e.getBlock().getLocation()));
+			placeBlock(new PortalBlock(PortalType.PORTAL, e.getBlock().getLocation()));
 		}
 
 		else if(isSame(e.getItemInHand(), getWormholeRune(1)))
 		{
-			placeBlock(new PortalBlock(PortalBlockType.WORMHOLE_RUNE, e.getBlock().getLocation()));
+			placeBlock(new PortalBlock(PortalType.WORMHOLE, e.getBlock().getLocation()));
 		}
 
 		else if(isSame(e.getItemInHand(), getPortalChest()))
 		{
-			placeBlock(new PortalBlock(PortalBlockType.PORTAL_CHEST, e.getBlock().getLocation()));
+			placeBlock(new PortalBlock(PortalType.CHEST, e.getBlock().getLocation()));
 		}
 	}
 
@@ -161,13 +161,13 @@ public class BlockManager implements Listener
 
 					switch(i.getType())
 					{
-						case PORTAL_CHEST:
+						case CHEST:
 							drop = getPortalChest();
 							break;
-						case PORTAL_RUNE:
+						case PORTAL:
 							drop = getPortalRune(1);
 							break;
-						case WORMHOLE_RUNE:
+						case WORMHOLE:
 							drop = getWormholeRune(1);
 							break;
 					}
@@ -193,7 +193,7 @@ public class BlockManager implements Listener
 		}
 	}
 
-	public boolean isBlock(Block block, PortalBlockType type)
+	public boolean isBlock(Block block, PortalType type)
 	{
 		PortalBlock b = getBlock(block);
 
@@ -372,10 +372,10 @@ public class BlockManager implements Listener
 		return is;
 	}
 
-	public void refund(Set<Block> blocks, PortalBlockType type)
+	public void refund(Set<Block> blocks, PortalType type)
 	{
 		GList<Block> refund = new GList<Block>(blocks);
-		ItemStack is = type.equals(PortalBlockType.PORTAL_RUNE) ? getPortalRune(1) : getWormholeRune(1);
+		ItemStack is = type.equals(PortalType.PORTAL) ? getPortalRune(1) : getWormholeRune(1);
 
 		new SR(0)
 		{

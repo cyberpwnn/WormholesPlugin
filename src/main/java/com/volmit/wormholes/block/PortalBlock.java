@@ -2,18 +2,20 @@ package com.volmit.wormholes.block;
 
 import org.bukkit.Location;
 
+import com.volmit.wormholes.portal.PortalType;
+
 public class PortalBlock
 {
-	private final PortalBlockType type;
+	private final PortalType type;
 	private final Location location;
 
-	public PortalBlock(PortalBlockType type, Location location)
+	public PortalBlock(PortalType type, Location location)
 	{
 		this.type = type;
 		this.location = location.clone();
 	}
 
-	public PortalBlockType getType()
+	public PortalType getType()
 	{
 		return type;
 	}
