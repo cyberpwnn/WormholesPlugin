@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
-public interface Portal
+public interface IPortal
 {
 	public UUID getId();
 
