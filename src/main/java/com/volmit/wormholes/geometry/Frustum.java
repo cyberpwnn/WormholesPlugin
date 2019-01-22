@@ -5,7 +5,6 @@ import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.portal.shape.PortalStructure;
 import com.volmit.wormholes.util.lang.Cuboid;
-import com.volmit.wormholes.util.lang.GList;
 
 public class Frustum
 {
@@ -16,12 +15,13 @@ public class Frustum
 
 	public Frustum(Location iris, PortalStructure pp, int rr)
 	{
-		origin = iris;
-		double distanceToPortal = iris.distance(pp.getCenter().toLocation(iris.getWorld()));
-		double range = rr + (rr / (distanceToPortal + 1));
-
-		GList<GeoPoint> points = new GList<GeoPoint>();
-		poly = new GeoPolygonProc(new GeoPolygon(points));
+		// origin = iris;
+		// double distanceToPortal =
+		// iris.distance(pp.getCenter().toLocation(iris.getWorld()));
+		// double range = rr + (rr / (distanceToPortal + 1));
+		//
+		// GList<GeoPoint> points = new GList<GeoPoint>();
+		// poly = new GeoPolygonProc(new GeoPolygon(points));
 	}
 
 	public boolean contains(Location l)
