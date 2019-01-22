@@ -1,7 +1,10 @@
 package com.volmit.wormholes.util.lang;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+
+import com.volmit.wormholes.geometry.GeoPolygonProc;
 
 public class AxisAlignedBB
 {
@@ -30,6 +33,79 @@ public class AxisAlignedBB
 	public AxisAlignedBB(AlignedPoint a, AlignedPoint b)
 	{
 		this(a.getX(), b.getX(), a.getY(), b.getY(), a.getZ(), b.getZ());
+	}
+
+	public AxisAlignedBB(GeoPolygonProc poly)
+	{
+		this(poly.getX0(), poly.getX1(), poly.getY0(), poly.getY1(), poly.getZ0(), poly.getZ1());
+	}
+
+	public AxisAlignedBB(GList<Location> rPoints)
+	{
+		this(new AlignedPoint(rPoints.get(0).toVector()), new AlignedPoint(rPoints.get(0).toVector()));
+
+		for(Location i : rPoints)
+		{
+			xa = i.getX() < xa ? i.getX() : xa;
+			ya = i.getY() < ya ? i.getY() : ya;
+			za = i.getZ() < za ? i.getZ() : za;
+			xb = i.getX() > xb ? i.getX() : xb;
+			yb = i.getY() > yb ? i.getY() : yb;
+			zb = i.getZ() > zb ? i.getZ() : zb;
+		}
+	}
+
+	public Axis getThinAxis()
+	{
+		if(sizeX() < sizeZ() && sizeX() < sizeY())
+		{
+			return Axis.X;
+		}
+
+		if(sizeY() < sizeZ() && sizeY() < sizeX())
+		{
+			return Axis.Y;
+		}
+
+		if(sizeZ() < sizeX() && sizeZ() < sizeY())
+		{
+			return Axis.Z;
+		}
+
+		return null;
+	}
+
+	public AxisAlignedBB(Location location)
+	{
+		this(location.toVector(), location.toVector());
+	}
+
+	public AxisAlignedBB(AxisAlignedBB region)
+	{
+		this(region.min(), region.max());
+	}
+
+	public AxisAlignedBB(Vector min, Vector max)
+	{
+		this(new AlignedPoint(min), new AlignedPoint(max));
+	}
+
+	public void encapsulate(AxisAlignedBB b)
+	{
+		encapsulate(new GList<Vector>().qadd(b.min()).qadd(b.max()));
+	}
+
+	public void encapsulate(GList<Vector> b)
+	{
+		for(Vector i : b)
+		{
+			xa = i.getX() < xa ? i.getX() : xa;
+			ya = i.getY() < ya ? i.getY() : ya;
+			za = i.getZ() < za ? i.getZ() : za;
+			xb = i.getX() > xb ? i.getX() : xb;
+			yb = i.getY() > yb ? i.getY() : yb;
+			zb = i.getZ() > zb ? i.getZ() : zb;
+		}
 	}
 
 	public Vector getCornerVector(Direction x, Direction y, Direction z)
@@ -72,23 +148,27 @@ public class AxisAlignedBB
 
 	public AxisAlignedBB getFace(Direction d, double depth)
 	{
-		switch(d)
+		switch(d.getAxis())
 		{
-			case D:
-				return new AxisAlignedBB(xa, ya, za, xb, ya + depth, zb);
-			case U:
-				return new AxisAlignedBB(xa, yb - depth, za, xb, yb, zb);
-			case N:
-				return new AxisAlignedBB(xa, ya, za, xb, yb, za + depth);
-			case S:
-				return new AxisAlignedBB(xa, ya, zb - depth, xb, yb, zb);
-			case E:
-				return new AxisAlignedBB(xb, ya, za, xb - depth, yb, zb);
-			case W:
-				return new AxisAlignedBB(xa, ya, za, xa + depth, yb, zb);
+			case X:
+				return new AxisAlignedBB(d.x() == 1 ? xb : xa, d.x() == 1 ? xb : xa, ya, yb, za, zb);
+			case Y:
+				return new AxisAlignedBB(xa, xb, d.y() == 1 ? yb : ya, d.y() == 1 ? yb : ya, za, zb);
+			case Z:
+				return new AxisAlignedBB(xa, xb, ya, yb, d.z() == 1 ? zb : za, d.z() == 1 ? zb : za);
 		}
 
 		return this;
+	}
+
+	public boolean contains(Location p)
+	{
+		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getZ() <= yb && p.getZ() >= za && p.getZ() <= zb;
+	}
+
+	public boolean contains(Vector p)
+	{
+		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getZ() <= yb && p.getZ() >= za && p.getZ() <= zb;
 	}
 
 	public boolean contains(AlignedPoint p)
