@@ -21,4 +21,10 @@ public interface ILocalPortal extends IPortal
 	public boolean isClosing();
 
 	public boolean isOpening();
+
+	public double getStateProgress();
+
+	public String getState();
+
+	public boolean isShowingProgress();
 }

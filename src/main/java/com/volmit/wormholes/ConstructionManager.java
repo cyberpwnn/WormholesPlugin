@@ -63,6 +63,7 @@ public class ConstructionManager implements Listener
 					s.setWorld(c.getWorld());
 					s.setArea(c);
 					ILocalPortal portal = createPortal(s, type);
+					Wormholes.portalManager.addLocalPortal(portal);
 				}
 
 				else
