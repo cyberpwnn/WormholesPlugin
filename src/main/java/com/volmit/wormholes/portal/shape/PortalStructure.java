@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.util.lang.AxisAlignedBB;
 import com.volmit.wormholes.util.lang.Cuboid;
 import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.GMap;
@@ -15,6 +16,7 @@ import com.volmit.wormholes.util.lang.M;
 public class PortalStructure
 {
 	private Cuboid area;
+	private AxisAlignedBB box;
 	private World world;
 	private GMap<Direction, Cuboid> faceCache = new GMap<>();
 	private GSet<Location> cornerCache;
@@ -22,6 +24,18 @@ public class PortalStructure
 	public World getWorld()
 	{
 		return world;
+	}
+
+	public AxisAlignedBB getBox()
+	{
+		if(box == null)
+		{
+			Location min = corner(Direction.W, Direction.D, Direction.N);
+			Location max = corner(Direction.E, Direction.U, Direction.S);
+			box = new AxisAlignedBB(min.getX(), max.getX(), min.getY(), max.getY(), min.getZ(), max.getZ());
+		}
+
+		return box;
 	}
 
 	public Location getCenter()

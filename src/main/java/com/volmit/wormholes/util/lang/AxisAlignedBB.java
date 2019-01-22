@@ -1,5 +1,7 @@
 package com.volmit.wormholes.util.lang;
 
+import org.bukkit.util.Vector;
+
 public class AxisAlignedBB
 {
 	private double xa;
@@ -11,17 +13,53 @@ public class AxisAlignedBB
 
 	public AxisAlignedBB(double xa, double xb, double ya, double yb, double za, double zb)
 	{
-		this.xa = xa;
-		this.xb = xb;
-		this.ya = ya;
-		this.yb = yb;
-		this.za = za;
-		this.zb = zb;
+		this.xa = M.min(xa, xb);
+		this.xb = M.max(xa, xb);
+		this.ya = M.min(ya, yb);
+		this.yb = M.max(ya, yb);
+		this.za = M.min(za, zb);
+		this.zb = M.max(za, zb);
 	}
 
 	public AxisAlignedBB(AlignedPoint a, AlignedPoint b)
 	{
 		this(a.getX(), b.getX(), a.getY(), b.getY(), a.getZ(), b.getZ());
+	}
+
+	public Vector center()
+	{
+		return max().subtract(min());
+	}
+
+	public Vector max()
+	{
+		return new Vector(xb, yb, zb);
+	}
+
+	public Vector min()
+	{
+		return new Vector(xa, ya, za);
+	}
+
+	public AxisAlignedBB getFace(Direction d)
+	{
+		switch(d)
+		{
+			case D:
+				return new AxisAlignedBB(xa, ya, za, xb, ya, zb);
+			case U:
+				return new AxisAlignedBB(xa, yb, za, xb, yb, zb);
+			case N:
+				return new AxisAlignedBB(xa, ya, za, xb, yb, za);
+			case S:
+				return new AxisAlignedBB(xa, ya, zb, xb, yb, zb);
+			case E:
+				return new AxisAlignedBB(xb, ya, za, xb, yb, zb);
+			case W:
+				return new AxisAlignedBB(xa, ya, za, xa, yb, zb);
+		}
+
+		return this;
 	}
 
 	public boolean contains(AlignedPoint p)
