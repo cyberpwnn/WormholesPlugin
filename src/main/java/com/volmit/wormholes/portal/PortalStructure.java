@@ -11,14 +11,13 @@ import com.volmit.wormholes.util.lang.Cuboid;
 import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.GMap;
 import com.volmit.wormholes.util.lang.GSet;
-import com.volmit.wormholes.util.lang.M;
 
 public class PortalStructure
 {
-	private Cuboid area;
+	private AxisAlignedBB area;
 	private AxisAlignedBB box;
 	private World world;
-	private GMap<Direction, Cuboid> faceCache = new GMap<>();
+	private GMap<Direction, AxisAlignedBB> faceCache = new GMap<>();
 	private GSet<Location> cornerCache;
 
 	public World getWorld()
@@ -47,9 +46,7 @@ public class PortalStructure
 
 	public Location randomLocation()
 	{
-		Location min = corner(Direction.W, Direction.D, Direction.N);
-		Location max = corner(Direction.E, Direction.U, Direction.S);
-		return new Location(getArea().getWorld(), M.rand(min.getX(), max.getX()), M.rand(min.getY(), max.getY()), M.rand(min.getZ(), max.getZ()));
+		return getArea().random().toLocation(getWorld());
 	}
 
 	public void setWorld(World world)
@@ -78,27 +75,27 @@ public class PortalStructure
 	private Location corner(Direction x, Direction y, Direction z)
 	{
 		Vector v = getArea().getCornerVector(x, y, z);
-		return new Location(getArea().getWorld(), v.getX(), v.getY(), v.getZ());
+		return new Location(getWorld(), v.getX(), v.getY(), v.getZ());
 	}
 
-	public Cuboid getFace(Direction face)
+	public AxisAlignedBB getFace(Direction face)
 	{
 		if(!faceCache.containsKey(face))
 		{
-			faceCache.put(face, getArea().getFace(face.f()));
+			faceCache.put(face, getArea().getFace(face));
 		}
 
 		return faceCache.get(face);
 	}
 
-	public Cuboid getArea()
+	public AxisAlignedBB getArea()
 	{
 		return area;
 	}
 
 	public void setArea(Cuboid area)
 	{
-		this.area = area;
+		this.area = new AxisAlignedBB(area);
 		invalidateCache();
 	}
 

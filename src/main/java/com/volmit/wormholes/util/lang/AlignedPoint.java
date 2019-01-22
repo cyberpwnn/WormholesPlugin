@@ -1,5 +1,7 @@
 package com.volmit.wormholes.util.lang;
 
+import org.bukkit.util.Vector;
+
 public class AlignedPoint
 {
 	private double x;
@@ -11,6 +13,11 @@ public class AlignedPoint
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public AlignedPoint(Vector v)
+	{
+		this(v.getX(), v.getY(), v.getZ());
 	}
 
 	public double getX()

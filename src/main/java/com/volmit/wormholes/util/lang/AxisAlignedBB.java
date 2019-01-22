@@ -22,9 +22,22 @@ public class AxisAlignedBB
 		this.zb = M.max(za, zb);
 	}
 
+	public AxisAlignedBB(Cuboid c)
+	{
+		this(new AlignedPoint(c.getCornerVector(Direction.W, Direction.D, Direction.N)), new AlignedPoint(c.getCornerVector(Direction.E, Direction.U, Direction.S)));
+	}
+
 	public AxisAlignedBB(AlignedPoint a, AlignedPoint b)
 	{
 		this(a.getX(), b.getX(), a.getY(), b.getY(), a.getZ(), b.getZ());
+	}
+
+	public Vector getCornerVector(Direction x, Direction y, Direction z)
+	{
+		assert x.getAxis().equals(Axis.X) : " X direction must be on the X axis.";
+		assert x.getAxis().equals(Axis.Y) : " Y direction must be on the Y axis.";
+		assert x.getAxis().equals(Axis.Z) : " Z direction must be on the Z axis.";
+		return new Vector(x.x() == 1 ? xb : xa, y.y() == 1 ? yb : ya, z.z() == 1 ? zb : za);
 	}
 
 	public Cuboid toCuboid(World world)
@@ -54,20 +67,25 @@ public class AxisAlignedBB
 
 	public AxisAlignedBB getFace(Direction d)
 	{
+		return getFace(d, 0);
+	}
+
+	public AxisAlignedBB getFace(Direction d, double depth)
+	{
 		switch(d)
 		{
 			case D:
-				return new AxisAlignedBB(xa, ya, za, xb, ya, zb);
+				return new AxisAlignedBB(xa, ya, za, xb, ya + depth, zb);
 			case U:
-				return new AxisAlignedBB(xa, yb, za, xb, yb, zb);
+				return new AxisAlignedBB(xa, yb - depth, za, xb, yb, zb);
 			case N:
-				return new AxisAlignedBB(xa, ya, za, xb, yb, za);
+				return new AxisAlignedBB(xa, ya, za, xb, yb, za + depth);
 			case S:
-				return new AxisAlignedBB(xa, ya, zb, xb, yb, zb);
+				return new AxisAlignedBB(xa, ya, zb - depth, xb, yb, zb);
 			case E:
-				return new AxisAlignedBB(xb, ya, za, xb, yb, zb);
+				return new AxisAlignedBB(xb, ya, za, xb - depth, yb, zb);
 			case W:
-				return new AxisAlignedBB(xa, ya, za, xa, yb, zb);
+				return new AxisAlignedBB(xa, ya, za, xa + depth, yb, zb);
 		}
 
 		return this;
@@ -81,5 +99,25 @@ public class AxisAlignedBB
 	public boolean intersects(AxisAlignedBB s)
 	{
 		return this.xb >= s.xa && this.yb >= s.ya && this.zb >= s.za && s.xb >= this.xa && s.yb >= this.ya && s.zb >= this.za;
+	}
+
+	public double sizeX()
+	{
+		return xb - xa;
+	}
+
+	public double sizeY()
+	{
+		return yb - ya;
+	}
+
+	public double sizeZ()
+	{
+		return zb - za;
+	}
+
+	public double volume()
+	{
+		return sizeX() * sizeY() * sizeZ();
 	}
 }
