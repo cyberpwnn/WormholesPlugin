@@ -50,6 +50,26 @@ public enum Direction
 		return s;
 	}
 
+	public static Direction closest(Vector v, GList<Direction> d)
+	{
+		double m = Double.MAX_VALUE;
+		Direction s = null;
+
+		for(Direction i : d)
+		{
+			Vector x = i.toVector();
+			double g = x.distance(v);
+
+			if(g < m)
+			{
+				m = g;
+				s = i;
+			}
+		}
+
+		return s;
+	}
+
 	public Vector toVector()
 	{
 		return new Vector(x, y, z);
@@ -162,13 +182,13 @@ public enum Direction
 	}
 
 	/**
-	 * Get the directional value from the given byte from common directional
-	 * blocks (MUST BE BETWEEN 0 and 5 INCLUSIVE)
+	 * Get the directional value from the given byte from common directional blocks
+	 * (MUST BE BETWEEN 0 and 5 INCLUSIVE)
 	 *
 	 * @param b
 	 *            the byte
-	 * @return the direction or null if the byte is outside of the inclusive
-	 *         range 0-5
+	 * @return the direction or null if the byte is outside of the inclusive range
+	 *         0-5
 	 */
 	public static Direction fromByte(byte b)
 	{
