@@ -58,7 +58,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
 	public Vector getCornerVector(Direction x, Direction y, Direction z)
 	{
-		double s = 1;
+		double s = 0.999;
 		assert x.getAxis().equals(Axis.X) : " X direction must be on the X axis.";
 		assert x.getAxis().equals(Axis.Y) : " Y direction must be on the Y axis.";
 		assert x.getAxis().equals(Axis.Z) : " Z direction must be on the Z axis.";
