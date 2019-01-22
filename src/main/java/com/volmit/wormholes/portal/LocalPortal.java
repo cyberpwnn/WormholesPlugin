@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.MSound;
 import com.volmit.wormholes.util.lang.ParticleEffect;
@@ -50,6 +51,11 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		else
 		{
 			playEffect(PortalEffect.AMBIENT_CLOSED);
+		}
+
+		if(Settings.DEBUG_RENDERING)
+		{
+			playEffect(PortalEffect.AMBIENT_DEBUG);
 		}
 	}
 
@@ -111,6 +117,18 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			case OPEN:
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 0.1f);
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 1.6f);
+				break;
+			case AMBIENT_DEBUG:
+				for(Location i : getStructure().getCorners())
+				{
+					ParticleEffect.FLAME.display(0f, 1, i, 32);
+				}
+
+				for(int i = 0; i < getStructure().getArea().volume() / 7; i++)
+				{
+					ParticleEffect.BARRIER.display(0f, 1, getStructure().randomLocation().getBlock().getLocation().clone().add(0.5, 0.5, 0.5), 32);
+				}
+
 				break;
 			default:
 				break;

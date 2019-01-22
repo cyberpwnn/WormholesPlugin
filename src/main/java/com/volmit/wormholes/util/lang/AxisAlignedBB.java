@@ -14,12 +14,12 @@ public class AxisAlignedBB
 
 	public AxisAlignedBB(double xa, double xb, double ya, double yb, double za, double zb)
 	{
-		this.xa = M.min(xa, xb);
-		this.xb = M.max(xa, xb);
-		this.ya = M.min(ya, yb);
-		this.yb = M.max(ya, yb);
-		this.za = M.min(za, zb);
-		this.zb = M.max(za, zb);
+		this.xa = Math.min(xa, xb);
+		this.xb = Math.max(xa, xb);
+		this.ya = Math.min(ya, yb);
+		this.yb = Math.max(ya, yb);
+		this.za = Math.min(za, zb);
+		this.zb = Math.max(za, zb);
 	}
 
 	public AxisAlignedBB(Cuboid c)
