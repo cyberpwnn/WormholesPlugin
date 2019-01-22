@@ -95,7 +95,7 @@ public class BlockManager implements Listener
 
 					else
 					{
-						Wormholes.constructionManager.constructPortal(player, blocks);
+						Wormholes.constructionManager.constructPortal(player, blocks, type);
 						cancel();
 					}
 				}
@@ -103,12 +103,13 @@ public class BlockManager implements Listener
 		};
 	}
 
+	@SuppressWarnings("deprecation")
 	public Set<Block> findBlocks(Set<Block> blocks, Block cursor, PortalBlockType type)
 	{
 		if(getBlock(cursor) != null)
 		{
 			blocks.add(cursor);
-			cursor.setType(Material.END_BRICKS);
+			cursor.setType(Material.AIR);
 			Wormholes.effectManager.playPortalOpening(blocks.size(), cursor);
 			removeBlock(getBlock(cursor));
 		}
@@ -370,5 +371,31 @@ public class BlockManager implements Listener
 		is.setItemMeta(meta);
 
 		return is;
+	}
+
+	public void refund(Set<Block> blocks, PortalBlockType type)
+	{
+		GList<Block> refund = new GList<Block>(blocks);
+		ItemStack is = type.equals(PortalBlockType.PORTAL_RUNE) ? getPortalRune(1) : getWormholeRune(1);
+
+		new SR(0)
+		{
+			@Override
+			public void run()
+			{
+				if(refund.isEmpty())
+				{
+					cancel();
+					return;
+				}
+
+				if(M.r(0.41))
+				{
+					Block b = refund.pop();
+					b.getWorld().dropItemNaturally(b.getLocation().clone().add(0.5, 0.5, 0.5), is);
+					Wormholes.effectManager.playPortalFailRefund(b);
+				}
+			}
+		};
 	}
 }

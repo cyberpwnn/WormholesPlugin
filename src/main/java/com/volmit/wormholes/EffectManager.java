@@ -34,10 +34,23 @@ public class EffectManager implements Listener
 	{
 		Block block = new GList<Block>(blocks).pickRandom();
 		block.getWorld().playSound(block.getLocation().clone().add(0.5, 0.5, 0.5), MSound.FRAME_SPAWN.bukkitSound(), 2.5f, 1.0f + ((float) (Math.random() * 0.1)));
-		for(Block i : blocks)
+	}
+
+	public void playPortalFailOpen(Set<Block> blocks)
+	{
+		Block block = new GList<Block>(blocks).pickRandom();
+
+		for(int i = 0; i < 4; i++)
 		{
-			i.setType(Material.END_GATEWAY);
+			block.getWorld().playSound(block.getLocation().clone().add(0.5, 0.5, 0.5), MSound.AMBIENCE_CAVE.bukkitSound(), 2.5f, 0.5f + ((float) (Math.random() * 1.45)));
 		}
+	}
+
+	public void playPortalFailRefund(Block block)
+	{
+		ParticleEffect.EXPLOSION_LARGE.display(0f, 1, block.getLocation().clone().add(0.5, 0.5, 0.5), 32);
+		block.getWorld().playSound(block.getLocation().clone().add(0.5, 0.5, 0.5), MSound.EXPLODE.bukkitSound(), 0.7f, (float) (1.6 + ((float) (Math.random() * 0.35))));
+		block.getWorld().playSound(block.getLocation().clone().add(0.5, 0.5, 0.5), MSound.GLASS.bukkitSound(), 1.2f, (float) (0.25 + ((float) (Math.random() * 0.95))));
 	}
 
 	public void playPortalOpening(int size, Block cursor)
