@@ -2,18 +2,18 @@ package com.volmit.wormholes;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import com.volmit.wormholes.block.PortalBlockType;
+import com.volmit.wormholes.portal.ILocalPortal;
+import com.volmit.wormholes.portal.LocalPortal;
+import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.portal.shape.PortalStructure;
 import com.volmit.wormholes.util.lang.Cuboid;
-import com.volmit.wormholes.util.lang.ParticleEffect;
 import com.volmit.wormholes.util.lang.S;
-import com.volmit.wormholes.util.lang.SR;
 
 public class ConstructionManager implements Listener
 {
@@ -22,7 +22,7 @@ public class ConstructionManager implements Listener
 
 	}
 
-	public void constructPortal(Player player, Set<Block> blocks, PortalBlockType type)
+	public void constructPortal(Player player, Set<Block> blocks, PortalType type)
 	{
 		new S(25)
 		{
@@ -62,18 +62,7 @@ public class ConstructionManager implements Listener
 					PortalStructure s = new PortalStructure();
 					s.setWorld(c.getWorld());
 					s.setArea(c);
-
-					new SR(5)
-					{
-						@Override
-						public void run()
-						{
-							for(Location i : s.getCorners())
-							{
-								ParticleEffect.FLAME.display(0f, 1, i, 69);
-							}
-						}
-					};
+					createPortal(s, type);
 				}
 
 				else
@@ -83,5 +72,10 @@ public class ConstructionManager implements Listener
 				}
 			}
 		};
+	}
+
+	private ILocalPortal createPortal(PortalStructure s, PortalType type)
+	{
+		return new LocalPortal(UUID.randomUUID(), type, s);
 	}
 }
