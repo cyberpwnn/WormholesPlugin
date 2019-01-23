@@ -12,6 +12,7 @@ public class Portal implements IPortal
 	{
 		this.id = id;
 		destination = NO_DESTINATION;
+		name = "Portal " + id.toString().substring(0, 4);
 	}
 
 	@Override

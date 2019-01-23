@@ -13,6 +13,7 @@ import org.bukkit.util.Vector;
 
 import com.volmit.catalyst.api.FrameType;
 import com.volmit.catalyst.api.NMP;
+import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.util.lang.AR;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.MSound;
@@ -24,12 +25,19 @@ public class EffectManager implements Listener
 	{
 		new AR()
 		{
+			@SuppressWarnings("deprecation")
 			@Override
 			public void run()
 			{
 				for(Player i : Bukkit.getOnlinePlayers())
 				{
-
+					for(ILocalPortal j : Wormholes.portalManager.getLocalPortals())
+					{
+						if(j.isLookingAt(i))
+						{
+							j.onLooking(i, Wormholes.blockManager.isSame(i.getItemInHand(), Wormholes.blockManager.getWand()));
+						}
+					}
 				}
 			}
 		};

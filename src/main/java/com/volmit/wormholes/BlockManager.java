@@ -303,6 +303,16 @@ public class BlockManager implements Listener
 
 	public boolean isSame(ItemStack is, ItemStack ib)
 	{
+		if(is == null && ib == null)
+		{
+			return true;
+		}
+
+		if(is == null || ib == null)
+		{
+			return false;
+		}
+
 		ItemStack a = is.clone();
 		ItemStack b = ib.clone();
 		a.setAmount(1);

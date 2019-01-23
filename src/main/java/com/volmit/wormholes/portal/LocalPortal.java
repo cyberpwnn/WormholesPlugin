@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.geometry.Raycast;
 import com.volmit.wormholes.util.lang.C;
+import com.volmit.wormholes.util.lang.FinalBoolean;
 import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.MSound;
 import com.volmit.wormholes.util.lang.ParticleEffect;
@@ -26,7 +28,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
 		super(id);
-		spinner = new PhantomSpinner(C.YELLOW, C.GOLD, C.BLACK);
+		spinner = new PhantomSpinner(C.YELLOW, C.GOLD, C.RED);
 		this.type = type;
 		this.structure = structure;
 		open = false;
@@ -102,7 +104,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 
 				break;
 			case AMBIENT_OPEN:
-				for(int i = 0; i < 12; i++)
+				for(int i = 0; i < 4; i++)
 				{
 					ParticleEffect.TOWN_AURA.display(0f, 1, getStructure().randomLocation(), 16);
 				}
@@ -125,15 +127,17 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 1.6f);
 				break;
 			case AMBIENT_INSPECTING:
-				for(Location i : getStructure().getCorners())
+				if(M.r(0.325))
 				{
-					ParticleEffect.FLAME.display(0f, 1, i, 32);
+					for(Location i : getStructure().getCorners())
+					{
+						ParticleEffect.FLAME.display(0f, 1, i, 32);
+					}
 				}
+
+				ParticleEffect.ENCHANTMENT_TABLE.display(0f, 1, getStructure().randomLocation(), 32);
+
 			case AMBIENT_DEBUG:
-				for(Location i : getStructure().getCorners())
-				{
-					ParticleEffect.FLAME.display(0f, 1, i, 32);
-				}
 
 				break;
 			default:
@@ -177,8 +181,17 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	{
 		if(holdingWand)
 		{
-			NMP.MESSAGE.title(p, "", spinner.toString() + C.RESET + C.GRAY + C.BOLD + progress, 0, 3, 7);
 			playEffect(PortalEffect.AMBIENT_INSPECTING);
+
+			if(isShowingProgress())
+			{
+				NMP.MESSAGE.title(p, "", C.GRAY + "" + C.BOLD + "" + getName() + " " + spinner.toString() + C.RESET + C.GRAY + progress, 0, 2, 3);
+			}
+
+			else
+			{
+				NMP.MESSAGE.title(p, "", C.GRAY + "" + C.BOLD + "" + getName(), 0, 2, 3);
+			}
 		}
 	}
 
@@ -191,6 +204,31 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public boolean isLookingAt(Player p)
 	{
+		if(p.getWorld().equals(getStructure().getWorld()))
+		{
+			if(p.getLocation().distanceSquared(getStructure().getCenter()) < 64)
+			{
+				FinalBoolean hit = new FinalBoolean(false);
+
+				new Raycast(p.getEyeLocation(), p.getEyeLocation().clone().add(p.getLocation().getDirection().clone().multiply(16)), 0.9)
+				{
+					@Override
+					public boolean shouldContinue(Location l)
+					{
+						if(getStructure().getArea().contains(l))
+						{
+							hit.set(true);
+							return false;
+						}
+
+						return true;
+					}
+				};
+
+				return hit.get();
+			}
+		}
+
 		return false;
 	}
 }

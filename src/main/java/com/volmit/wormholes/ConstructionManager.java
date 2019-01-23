@@ -81,7 +81,6 @@ public class ConstructionManager implements Listener
 	private ILocalPortal createPortal(PortalStructure s, PortalType type)
 	{
 		ILocalPortal p = new LocalPortal(UUID.randomUUID(), type, s);
-		p.open();
 
 		return p;
 	}
