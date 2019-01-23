@@ -10,4 +10,5 @@ public class Settings
 	public static double PORTAL_CLOSE_SPEED = 1;
 	public static boolean DEBUG_RENDERING = true;
 	public static boolean DEBUG_VIEWPORT = true;
+	public static double FRUSTUM_CULLING_RATIO = 0.2;
 }
