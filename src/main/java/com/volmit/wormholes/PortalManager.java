@@ -65,4 +65,9 @@ public class PortalManager implements Listener
 	{
 		removeLocalPortal(portal.getId());
 	}
+
+	public int getTotalPortalCount()
+	{
+		return getLocalPortals().size();
+	}
 }
