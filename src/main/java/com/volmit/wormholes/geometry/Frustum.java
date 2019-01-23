@@ -128,6 +128,11 @@ public class Frustum
 
 	public boolean contains(Location l)
 	{
+		if(!getRegion().contains(l))
+		{
+			return false;
+		}
+
 		GeoPoint p = nGeoPoint(l);
 		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
 	}
