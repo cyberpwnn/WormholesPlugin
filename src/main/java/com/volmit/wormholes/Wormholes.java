@@ -17,7 +17,7 @@ public class Wormholes extends JavaPlugin implements Listener
 
 	@Override
 	public void onEnable()
-	{
+	{//
 		Direction.calculatePermutations();
 		registerListener(instance = this);
 		registerListener(blockManager = new BlockManager());
