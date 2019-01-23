@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

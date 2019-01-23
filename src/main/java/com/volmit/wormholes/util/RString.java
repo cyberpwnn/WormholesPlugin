@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 public abstract class RString
 {

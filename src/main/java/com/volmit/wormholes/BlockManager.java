@@ -27,13 +27,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.volmit.wormholes.portal.PortalBlock;
 import com.volmit.wormholes.portal.PortalType;
-import com.volmit.wormholes.util.lang.GList;
-import com.volmit.wormholes.util.lang.GMap;
-import com.volmit.wormholes.util.lang.GSet;
-import com.volmit.wormholes.util.lang.M;
-import com.volmit.wormholes.util.lang.S;
-import com.volmit.wormholes.util.lang.SR;
-import com.volmit.wormholes.util.lang.W;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.S;
+import com.volmit.wormholes.util.SR;
+import com.volmit.wormholes.util.W;
 
 public class BlockManager implements Listener
 {

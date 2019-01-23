@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 /**
  * Represents a number that can be finalized and be changed

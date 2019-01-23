@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

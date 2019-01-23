@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 /**
  * A progress spinner. Calling toString will not only return the next state, but

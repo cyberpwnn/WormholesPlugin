@@ -14,10 +14,10 @@ import org.bukkit.util.Vector;
 import com.volmit.catalyst.api.FrameType;
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.portal.ILocalPortal;
-import com.volmit.wormholes.util.lang.AR;
-import com.volmit.wormholes.util.lang.GList;
-import com.volmit.wormholes.util.lang.MSound;
-import com.volmit.wormholes.util.lang.ParticleEffect;
+import com.volmit.wormholes.util.AR;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.MSound;
+import com.volmit.wormholes.util.ParticleEffect;
 
 public class EffectManager implements Listener
 {

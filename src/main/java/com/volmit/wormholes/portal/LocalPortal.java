@@ -11,14 +11,14 @@ import org.bukkit.util.Vector;
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.geometry.Raycast;
-import com.volmit.wormholes.util.lang.AxisAlignedBB;
-import com.volmit.wormholes.util.lang.C;
-import com.volmit.wormholes.util.lang.Direction;
-import com.volmit.wormholes.util.lang.FinalBoolean;
-import com.volmit.wormholes.util.lang.M;
-import com.volmit.wormholes.util.lang.MSound;
-import com.volmit.wormholes.util.lang.ParticleEffect;
-import com.volmit.wormholes.util.lang.PhantomSpinner;
+import com.volmit.wormholes.util.AxisAlignedBB;
+import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.FinalBoolean;
+import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.MSound;
+import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.PhantomSpinner;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
 {

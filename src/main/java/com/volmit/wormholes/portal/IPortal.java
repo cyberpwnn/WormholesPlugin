@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
-import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.Direction;
 
 public interface IPortal
 {

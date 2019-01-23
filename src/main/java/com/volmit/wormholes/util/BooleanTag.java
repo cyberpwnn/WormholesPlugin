@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 /**
  * The <code>TAG_Boolean</code> tag.

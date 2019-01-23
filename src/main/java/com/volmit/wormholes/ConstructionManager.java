@@ -13,9 +13,9 @@ import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.portal.PortalType;
-import com.volmit.wormholes.util.lang.Cuboid;
-import com.volmit.wormholes.util.lang.Direction;
-import com.volmit.wormholes.util.lang.S;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.S;
 
 public class ConstructionManager implements Listener
 {

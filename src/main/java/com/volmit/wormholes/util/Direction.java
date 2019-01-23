@@ -1,8 +1,8 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.util.lang.Cuboid.CuboidDirection;
+import com.volmit.wormholes.util.Cuboid.CuboidDirection;
 
 /**
  * Directions

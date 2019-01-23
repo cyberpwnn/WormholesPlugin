@@ -5,7 +5,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.Direction;
 
 public class Wormholes extends JavaPlugin implements Listener
 {

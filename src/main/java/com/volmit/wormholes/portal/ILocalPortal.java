@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 import org.bukkit.entity.Player;
 
-import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.Direction;
 
 public interface ILocalPortal extends IPortal
 {

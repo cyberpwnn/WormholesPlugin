@@ -3,7 +3,7 @@ package com.volmit.wormholes.geometry;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.util.lang.VectorMath;
+import com.volmit.wormholes.util.VectorMath;
 
 public abstract class Raycast
 {

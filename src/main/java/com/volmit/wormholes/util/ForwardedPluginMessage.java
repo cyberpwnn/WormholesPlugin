@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import java.io.ByteArrayOutputStream;
 import org.bukkit.plugin.Plugin;

@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

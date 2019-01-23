@@ -5,12 +5,12 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.portal.PortalStructure;
-import com.volmit.wormholes.util.lang.AxisAlignedBB;
-import com.volmit.wormholes.util.lang.Direction;
-import com.volmit.wormholes.util.lang.GBiset;
-import com.volmit.wormholes.util.lang.GList;
-import com.volmit.wormholes.util.lang.ParticleEffect;
-import com.volmit.wormholes.util.lang.VectorMath;
+import com.volmit.wormholes.util.AxisAlignedBB;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GBiset;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.ParticleEffect;
+import com.volmit.wormholes.util.VectorMath;
 
 public class Frustum
 {

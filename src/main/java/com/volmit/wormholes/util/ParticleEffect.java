@@ -1,4 +1,4 @@
-package com.volmit.wormholes.util.lang;
+package com.volmit.wormholes.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.Settings;
-import com.volmit.wormholes.util.lang.ParticleEffect.ParticleData;
+import com.volmit.wormholes.util.ParticleEffect.ParticleData;
 
 /**
  * <b>ParticleEffect Library</b>

@@ -6,9 +6,9 @@ import org.bukkit.event.Listener;
 
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.IPortal;
-import com.volmit.wormholes.util.lang.GList;
-import com.volmit.wormholes.util.lang.GMap;
-import com.volmit.wormholes.util.lang.J;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.J;
 
 public class PortalManager implements Listener
 {

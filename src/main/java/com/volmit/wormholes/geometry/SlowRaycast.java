@@ -3,9 +3,9 @@ package com.volmit.wormholes.geometry;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.util.lang.FinalBoolean;
-import com.volmit.wormholes.util.lang.J;
-import com.volmit.wormholes.util.lang.VectorMath;
+import com.volmit.wormholes.util.FinalBoolean;
+import com.volmit.wormholes.util.J;
+import com.volmit.wormholes.util.VectorMath;
 
 public abstract class SlowRaycast
 {

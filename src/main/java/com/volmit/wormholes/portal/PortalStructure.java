@@ -6,11 +6,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.util.lang.AxisAlignedBB;
-import com.volmit.wormholes.util.lang.Cuboid;
-import com.volmit.wormholes.util.lang.Direction;
-import com.volmit.wormholes.util.lang.GMap;
-import com.volmit.wormholes.util.lang.GSet;
+import com.volmit.wormholes.util.AxisAlignedBB;
+import com.volmit.wormholes.util.Cuboid;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GMap;
+import com.volmit.wormholes.util.GSet;
 
 public class PortalStructure
 {

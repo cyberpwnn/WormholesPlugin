@@ -4,8 +4,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.volmit.wormholes.util.lang.Direction;
-import com.volmit.wormholes.util.lang.VectorMath;
+import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.VectorMath;
 
 public class Traversive
 {
