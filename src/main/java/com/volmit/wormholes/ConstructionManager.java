@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -58,6 +59,7 @@ public class ConstructionManager implements Listener
 
 				if(success)
 				{
+					Wormholes.effectManager.playNotificationSuccess(ChatColor.GREEN + "Right Click the Portal to Configure it.", player);
 					Wormholes.effectManager.playPortalOpen(blocks);
 					PortalStructure s = new PortalStructure();
 					s.setWorld(c.getWorld());
@@ -68,6 +70,7 @@ public class ConstructionManager implements Listener
 
 				else
 				{
+					Wormholes.effectManager.playNotificationFail(ChatColor.RED + "Portal shape must be rectangular or square.", player);
 					Wormholes.effectManager.playPortalFailOpen(blocks);
 					Wormholes.blockManager.refund(blocks, type);
 				}
