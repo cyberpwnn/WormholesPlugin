@@ -1,21 +1,38 @@
 package com.volmit.wormholes.util;
 
-public class ObjectCache<T>
+import java.util.function.Supplier;
+
+public class ObjectCache<O>
 {
-	private GSet<T> cache;
-	
-	public ObjectCache()
+	private boolean valid;
+	private O o;
+	private Supplier<O> s;
+
+	public ObjectCache(Supplier<O> s)
 	{
-		cache = new GSet<T>();
+		valid = false;
+		o = null;
+		this.s = s;
 	}
-	
-	public void cache(T t)
+
+	public boolean isValid()
 	{
-		cache.add(t);
+		return valid && o != null;
 	}
-	
-	public void destroy(T t)
+
+	public void invalidate()
 	{
-		cache.remove(t);
+		valid = false;
+	}
+
+	public <PORN> O get()
+	{
+		if(o == null || !valid)
+		{
+			o = s.get();
+			valid = true;
+		}
+
+		return (O) o;
 	}
 }

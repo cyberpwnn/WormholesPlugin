@@ -1,9 +1,5 @@
 package com.volmit.wormholes.util;
 
-import org.bukkit.Location;
-import org.bukkit.util.Vector;
-import com.volmit.wormholes.portal.PortalPosition;
-
 public class Intersection
 {
 	static class MVector3
@@ -64,16 +60,5 @@ public class Intersection
 		float v = dMS1.dot(dS31);
 		
 		return (u >= 0.0f && u <= dS21.dot(dS21) && v >= 0.0f && v <= dS31.dot(dS31));
-	}
-	
-	public static boolean intersects(PortalPosition p, Location l, Vector v)
-	{
-		MVector3 mx = new MVector3(p.getCornerUL().getBlockX(), p.getCornerUL().getBlockY(), p.getCornerUL().getBlockZ());
-		MVector3 my = new MVector3(p.getCornerUR().getBlockX(), p.getCornerUR().getBlockY(), p.getCornerUR().getBlockZ());
-		MVector3 mz = new MVector3(p.getCornerDL().getBlockX(), p.getCornerDL().getBlockY(), p.getCornerDL().getBlockZ());
-		MVector3 ra = new MVector3(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-		MVector3 rb = new MVector3(l.clone().add(v).getBlockX(), l.clone().add(v).getBlockY(), l.clone().add(v).getBlockZ());
-		
-		return intersectRayWithSquare(ra, rb, mx, my, mz);
 	}
 }

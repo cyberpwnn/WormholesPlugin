@@ -3,11 +3,10 @@ package com.volmit.wormholes.util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 
 /**
  * Material blocks
- * 
+ *
  * @author cyberpwn
  */
 @SuppressWarnings("deprecation")
@@ -15,10 +14,10 @@ public class MaterialBlock
 {
 	private Material material;
 	private Byte data;
-	
+
 	/**
 	 * Create a materialblock
-	 * 
+	 *
 	 * @param material
 	 *            the material
 	 * @param data
@@ -29,52 +28,46 @@ public class MaterialBlock
 		this.material = material;
 		this.data = data;
 	}
-	
+
 	public MaterialBlock(Material material)
 	{
 		this.material = material;
 		data = 0;
 	}
-	
+
 	public MaterialBlock(Location location)
 	{
 		Block b = location.getBlock();
 		material = b.getType();
 		data = b.getData();
 	}
-	
+
 	public MaterialBlock()
 	{
 		material = Material.AIR;
 		data = 0;
 	}
-	
-	public MaterialBlock(MultiBlockChangeInfo multiBlockChangeInfo)
-	{
-		material = multiBlockChangeInfo.getData().getType();
-		data = (byte) multiBlockChangeInfo.getData().getData();
-	}
-	
+
 	public Material getMaterial()
 	{
 		return material;
 	}
-	
+
 	public void setMaterial(Material material)
 	{
 		this.material = material;
 	}
-	
+
 	public Byte getData()
 	{
 		return data;
 	}
-	
+
 	public void setData(Byte data)
 	{
 		this.data = data;
 	}
-	
+
 	public static MaterialBlock of(String s)
 	{
 		try
@@ -83,16 +76,16 @@ public class MaterialBlock
 			{
 				return new MaterialBlock(Material.valueOf(s.split(":")[0]), Integer.valueOf(s.split(":")[1]).byteValue());
 			}
-			
+
 			return new MaterialBlock(Material.valueOf(s));
 		}
-		
+
 		catch(Exception e)
 		{
 			return new MaterialBlock(Material.AIR);
 		}
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -100,10 +93,10 @@ public class MaterialBlock
 		{
 			return getMaterial().toString();
 		}
-		
+
 		return getMaterial().toString() + ":" + getData();
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -113,7 +106,7 @@ public class MaterialBlock
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{

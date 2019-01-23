@@ -1,5 +1,6 @@
 package com.volmit.wormholes.util;
 
+
 /**
  * Represents a string that can be changed even if final
  * 

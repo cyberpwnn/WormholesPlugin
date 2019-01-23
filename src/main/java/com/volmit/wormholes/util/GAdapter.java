@@ -1,8 +1,9 @@
 package com.volmit.wormholes.util;
 
+
 /**
  * A GAdapter for adapting objects to other objects
- * 
+ *
  * @author cyberpwn
  * @param <FROM>
  *            the from object
@@ -16,7 +17,7 @@ public abstract class GAdapter<FROM, TO> implements Adapter<FROM, TO>
 	{
 		return onAdapt(from);
 	}
-	
+
 	@Override
 	public abstract TO onAdapt(FROM from);
 }

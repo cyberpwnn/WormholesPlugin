@@ -1,40 +1,27 @@
 package com.volmit.wormholes.util;
 
-public abstract class SR<T>
+public abstract class SR implements Runnable, CancellableTask
 {
-	private T t = null;
-	private boolean f = false;
-	
+	private int id = 0;
+
 	public SR()
 	{
-		Wraith.poolManager.syncQueue(new Execution()
-		{
-			@Override
-			public void run()
-			{
-				t = sync();
-				f = true;
-			}
-		});
-		
-		while(!f)
-		{
-			try
-			{
-				Thread.sleep(5);
-			}
-			
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		this(0);
 	}
-	
-	public T get()
+
+	public SR(int interval)
 	{
-		return t;
+		id = J.sr(this, interval);
 	}
-	
-	public abstract T sync();
+
+	@Override
+	public void cancel()
+	{
+		J.csr(id);
+	}
+
+	public int getId()
+	{
+		return id;
+	}
 }

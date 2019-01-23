@@ -40,6 +40,16 @@ public class M
 		return Double.valueOf(scriptEngine.eval(expression).toString());
 	}
 
+	public static int iclip(double value, double min, double max)
+	{
+		return (int) clip(value, min, max);
+	}
+
+	public static double clip(double value, double min, double max)
+	{
+		return Math.min(max, Math.max(min, value));
+	}
+
 	/**
 	 * Get true or false based on random percent
 	 *
@@ -60,9 +70,9 @@ public class M
 	/**
 	 * Evaluates an expression using javascript engine and returns the double
 	 * result. This can take variable parameters, so you need to define them.
-	 * Parameters are defined as $[0-9]. For example evaluate("4$0/$1", 1, 2);
-	 * This makes the expression (4x1)/2 == 2. Keep note that you must use 0-9,
-	 * you cannot skip, or start at a number other than 0.
+	 * Parameters are defined as $[0-9]. For example evaluate("4$0/$1", 1, 2); This
+	 * makes the expression (4x1)/2 == 2. Keep note that you must use 0-9, you
+	 * cannot skip, or start at a number other than 0.
 	 *
 	 * @param expression
 	 *            the expression with variables
@@ -118,8 +128,8 @@ public class M
 	}
 
 	/**
-	 * Get the ticks per second from a time in nanoseconds, the rad can be used
-	 * for multiple ticks
+	 * Get the ticks per second from a time in nanoseconds, the rad can be used for
+	 * multiple ticks
 	 *
 	 * @param ns
 	 *            the time in nanoseconds
@@ -211,6 +221,11 @@ public class M
 	public static int rand(int f, int t)
 	{
 		return f + (int) (Math.random() * ((t - f) + 1));
+	}
+
+	public static double rand(double f, double t)
+	{
+		return f + (double) (Math.random() * ((t - f)));
 	}
 
 	/**
@@ -388,8 +403,7 @@ public class M
 	 *            the check location (second position)
 	 * @param radius
 	 *            the radius to check
-	 * @return true if the check is within the given range of the center
-	 *         position
+	 * @return true if the check is within the given range of the center position
 	 */
 	public static boolean within(Location center, Location check, Double radius)
 	{

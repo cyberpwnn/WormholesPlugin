@@ -18,6 +18,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
 
 /**
  * Cuboids
@@ -53,6 +54,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 		x2 = Math.max(l1.getBlockX(), l2.getBlockX());
 		y2 = Math.max(l1.getBlockY(), l2.getBlockY());
 		z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
+	}
+
+	public Vector getCornerVector(Direction x, Direction y, Direction z)
+	{
+		double s = 0.999;
+		assert x.getAxis().equals(Axis.X) : " X direction must be on the X axis.";
+		assert x.getAxis().equals(Axis.Y) : " Y direction must be on the Y axis.";
+		assert x.getAxis().equals(Axis.Z) : " Z direction must be on the Z axis.";
+		return new Vector(x.x() == 1 ? (x2 + s) : x1, y.y() == 1 ? (y2 + s) : y1, z.z() == 1 ? (z2 + s) : z1);
 	}
 
 	public Location randomLocation()

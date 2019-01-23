@@ -1,6 +1,7 @@
 package com.volmit.wormholes.util;
 
 import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -16,14 +17,14 @@ import org.bukkit.util.Vector;
 
 /**
  * Player utils
- * 
+ *
  * @author cyberpwn
  */
 public class P
 {
 	/**
 	 * Is the given player online?
-	 * 
+	 *
 	 * @param player
 	 *            the player
 	 * @return true if the player is
@@ -32,10 +33,10 @@ public class P
 	{
 		return getPlayer(player) != null;
 	}
-	
+
 	/**
 	 * Get the given player
-	 * 
+	 *
 	 * @param player
 	 *            the player name
 	 * @return the player or null
@@ -44,30 +45,30 @@ public class P
 	{
 		return Bukkit.getPlayer(player);
 	}
-	
+
 	/**
 	 * Get literally any player
-	 * 
+	 *
 	 * @return any player or null if no players online
 	 */
 	public static Player getAnyPlayer()
 	{
 		return onlinePlayers().isEmpty() ? null : onlinePlayers().pickRandom();
 	}
-	
+
 	/**
 	 * Is there any player online?
-	 * 
+	 *
 	 * @return true if at least one player is online
 	 */
 	public static boolean isAnyOnline()
 	{
 		return !Bukkit.getOnlinePlayers().isEmpty();
 	}
-	
+
 	/**
 	 * Get all players in the given world
-	 * 
+	 *
 	 * @param world
 	 *            the world
 	 * @return the players
@@ -76,10 +77,10 @@ public class P
 	{
 		return new GList<Player>(world.getPlayers());
 	}
-	
+
 	/**
 	 * Get all players in the given chunk
-	 * 
+	 *
 	 * @param chunk
 	 *            the chunk
 	 * @return the list of players
@@ -95,15 +96,15 @@ public class P
 				{
 					return (Player) from;
 				}
-				
+
 				return null;
 			}
 		}.adapt(new GList<Entity>(chunk.getEntities())));
 	}
-	
+
 	/**
 	 * Get all players in the given area
-	 * 
+	 *
 	 * @param l
 	 *            the center location
 	 * @param radius
@@ -114,10 +115,10 @@ public class P
 	{
 		return new GList<Player>(new Area(l, radius).getNearbyPlayers());
 	}
-	
+
 	/**
 	 * Get all players in the given area
-	 * 
+	 *
 	 * @param l
 	 *            the center location
 	 * @param radius
@@ -128,10 +129,10 @@ public class P
 	{
 		return new GList<Player>(new Area(l, radius).getNearbyPlayers());
 	}
-	
+
 	/**
 	 * Disable the player's ability to see
-	 * 
+	 *
 	 * @param p
 	 *            the player to disable
 	 */
@@ -139,10 +140,10 @@ public class P
 	{
 		PE.BLINDNESS.a(500).d(1024).c(p);
 	}
-	
+
 	/**
 	 * Remove disabled effect
-	 * 
+	 *
 	 * @param p
 	 *            the player to remove it from
 	 */
@@ -150,10 +151,10 @@ public class P
 	{
 		PE.BLINDNESS.a(500).d(20).rm(p);
 	}
-	
+
 	/**
 	 * Get the target block
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param distance
@@ -164,10 +165,10 @@ public class P
 	{
 		return p.getTargetBlock((Set<Material>) null, distance).getLocation().clone().add(0.5, 0.5, 0.5);
 	}
-	
+
 	/**
 	 * Get the target entity the player is looking at
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param distance
@@ -178,10 +179,10 @@ public class P
 	{
 		return getEntityLookingAt(p, distance, 1);
 	}
-	
+
 	/**
 	 * Does the player have an inventory open
-	 * 
+	 *
 	 * @param player
 	 *            the player
 	 * @return true if the player does
@@ -191,10 +192,10 @@ public class P
 		final InventoryView view = player.getOpenInventory();
 		return view != null && view.getType() != InventoryType.CRAFTING;
 	}
-	
+
 	/**
 	 * Get the target entity of the player
-	 * 
+	 *
 	 * @param e
 	 *            the player
 	 * @param range
@@ -209,22 +210,22 @@ public class P
 		{
 			off = 1;
 		}
-		
+
 		if(range < 1)
 		{
 			range = 1;
 		}
-		
+
 		final Double doff = off;
 		final Entity[] result = new Entity[1];
-		
+
 		new RayTrace(e.getLocation().clone().add(0.5, 1.5, 0.5), e.getLocation().getDirection(), range, (double) 1)
 		{
 			@Override
 			public void onTrace(Location l)
 			{
 				Area a = new Area(l, doff);
-				
+
 				for(Entity i : a.getNearbyEntities())
 				{
 					if(!e.equals(i))
@@ -236,13 +237,13 @@ public class P
 				}
 			}
 		}.trace();
-		
+
 		return result[0];
 	}
-	
+
 	/**
 	 * Get total experience
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @return the total xp
@@ -254,18 +255,18 @@ public class P
 			Class<?> sef = Class.forName("com.earth2me.essentials.craftbukkit.SetExpFix");
 			return (int) sef.getMethod("getTotalExperience", Player.class).invoke(null, p);
 		}
-		
+
 		catch(Exception e)
 		{
-			
+
 		}
-		
+
 		return -1;
 	}
-	
+
 	/**
 	 * Set total experience
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param xp
@@ -278,16 +279,16 @@ public class P
 			Class<?> sef = Class.forName("com.earth2me.essentials.craftbukkit.SetExpFix");
 			sef.getMethod("setTotalExperience", Player.class, int.class).invoke(null, p, xp);
 		}
-		
+
 		catch(Exception e)
 		{
-			
+
 		}
 	}
-	
+
 	/**
 	 * Can you find a player with the search?
-	 * 
+	 *
 	 * @param search
 	 *            the search
 	 * @return true if a player can be found
@@ -296,10 +297,10 @@ public class P
 	{
 		return findPlayer(search) == null ? false : true;
 	}
-	
+
 	/**
 	 * Find a player
-	 * 
+	 *
 	 * @param search
 	 *            the search
 	 * @return the player or null
@@ -313,7 +314,7 @@ public class P
 				return i;
 			}
 		}
-		
+
 		for(Player i : onlinePlayers())
 		{
 			if(i.getName().toLowerCase().contains(search.toLowerCase()))
@@ -321,30 +322,30 @@ public class P
 				return i;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get online players
-	 * 
+	 *
 	 * @return the players
 	 */
 	public static GList<Player> onlinePlayers()
 	{
 		GList<Player> px = new GList<Player>();
-		
+
 		for(Player i : Bukkit.getOnlinePlayers())
 		{
 			px.add(i);
 		}
-		
+
 		return px;
 	}
-	
+
 	/**
 	 * Get the location of the player's crotch (it's needed sometimes)
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @return playerjunk
@@ -353,10 +354,10 @@ public class P
 	{
 		return p.getLocation().add(0, 0.899, 0).add(p.getLocation().getDirection().setY(0).multiply(0.1));
 	}
-	
+
 	/**
 	 * Clear maxhealth, potion effects, speed and more
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 */
@@ -366,10 +367,10 @@ public class P
 		resetHunger(p);
 		heal(p);
 	}
-	
+
 	/**
 	 * Clear player potion effects
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 */
@@ -380,23 +381,24 @@ public class P
 			p.removePotionEffect(i.getType());
 		}
 	}
-	
+
 	/**
 	 * Heal the player an amount
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param health
 	 *            the health
 	 */
+	@SuppressWarnings("deprecation")
 	public static void heal(Player p, double health)
 	{
 		p.setHealth(p.getHealth() + health > p.getMaxHealth() ? p.getMaxHealth() : p.getHealth() + health);
 	}
-	
+
 	/**
 	 * Heal the player to max health
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 */
@@ -404,21 +406,22 @@ public class P
 	{
 		p.setHealth(p.getHealth());
 	}
-	
+
 	/**
 	 * Reset the player max health
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 */
+	@SuppressWarnings("deprecation")
 	public static void resetMaxHeath(Player p)
 	{
 		p.setMaxHealth(20);
 	}
-	
+
 	/**
 	 * Resets the player hunger
-	 * 
+	 *
 	 * @param p
 	 *            the hunger
 	 */
@@ -426,10 +429,10 @@ public class P
 	{
 		p.setFoodLevel(20);
 	}
-	
+
 	/**
 	 * Kill the player
-	 * 
+	 *
 	 * @param p
 	 *            the player p
 	 */
@@ -437,10 +440,10 @@ public class P
 	{
 		p.setHealth(0);
 	}
-	
+
 	/**
 	 * Get the area of the player in the form of a shape
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @return the shape
@@ -449,10 +452,10 @@ public class P
 	{
 		return new Shape(P.getCrotchLocation(p), new Vector(0.7, 1.8, 0.7));
 	}
-	
+
 	/**
 	 * Get the 1st person hand.
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @return the estimate location of their hand
@@ -461,10 +464,10 @@ public class P
 	{
 		return getHand(p, 0f, 0f);
 	}
-	
+
 	/**
 	 * Get the 1st person hand.
-	 * 
+	 *
 	 * @param p
 	 *            the player
 	 * @param yawShift
@@ -479,11 +482,11 @@ public class P
 		Location mode = p.getEyeLocation();
 		Float yaw = p.getLocation().getYaw() + 50 + yawShift;
 		Float pitch = p.getLocation().getPitch() + pitchShift;
-		
+
 		mode.setYaw(yaw);
 		mode.setPitch(pitch);
 		base.add(mode.getDirection());
-		
+
 		return base;
 	}
 }

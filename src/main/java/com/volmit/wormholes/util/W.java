@@ -330,28 +330,6 @@ public class W
 	}
 
 	/**
-	 * Get a list of chunklets from the given chunks (always 16)
-	 *
-	 * @param c
-	 *            the chunk
-	 * @return the 4x4 chunklets
-	 */
-	public static GList<Chunklet> getChunklets(Chunk c)
-	{
-		GList<Chunklet> cx = new GList<Chunklet>();
-
-		for(int i = 0; i < 16; i += 4)
-		{
-			for(int j = 0; j < 16; j += 4)
-			{
-				cx.add(new Chunklet(c.getBlock(i, 0, j).getLocation()));
-			}
-		}
-
-		return cx;
-	}
-
-	/**
 	 * Get a sync world from a possible async world
 	 *
 	 * @param world
@@ -361,25 +339,6 @@ public class W
 	public static World getSyncWorld(World world)
 	{
 		return Bukkit.getWorld(world.getName());
-	}
-
-	/**
-	 * Get a list of chunklets from a list of chunks
-	 *
-	 * @param c
-	 *            the list of chunks
-	 * @return the list of chunklets with the size of (16 * c.size())
-	 */
-	public static GList<Chunklet> getChunklets(GList<Chunk> c)
-	{
-		GList<Chunklet> cx = new GList<Chunklet>();
-
-		for(Chunk i : c)
-		{
-			cx.add(getChunklets(i));
-		}
-
-		return cx;
 	}
 
 	/**

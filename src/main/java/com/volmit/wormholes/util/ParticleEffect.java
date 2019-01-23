@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.util.ParticleEffect.ParticleData;
 
@@ -2185,30 +2185,5 @@ public enum ParticleEffect
 				super(message, cause);
 			}
 		}
-	}
-	
-	public static void phantom(Location l, int intervals)
-	{
-		int[] in = new int[] {intervals};
-		
-		new Task(0)
-		{
-			@Override
-			public void run()
-			{
-				in[0]--;
-				
-				if(in[0] >= 0)
-				{
-					LivingEntity e = (LivingEntity) l.getWorld().spawnEntity(l, EntityType.ENDER_DRAGON);
-					e.setHealth(0.0);
-				}
-				
-				else
-				{
-					cancel();
-				}
-			}
-		};
 	}
 }

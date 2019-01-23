@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.UUID;
-import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 
 public class SkinProperties
 {
@@ -64,11 +63,6 @@ public class SkinProperties
 		}
 		
 		return new JSONObject(k);
-	}
-	
-	public WrappedSignedProperty sign()
-	{
-		return new WrappedSignedProperty("textures", value, signature);
 	}
 	
 	public String getUvd()
