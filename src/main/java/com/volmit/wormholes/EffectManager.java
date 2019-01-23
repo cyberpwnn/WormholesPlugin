@@ -3,11 +3,15 @@ package com.volmit.wormholes;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -15,6 +19,7 @@ import com.volmit.catalyst.api.FrameType;
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.util.AR;
+import com.volmit.wormholes.util.Area;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.ParticleEffect;
@@ -43,9 +48,40 @@ public class EffectManager implements Listener
 		};
 	}
 
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void on(PlayerInteractEvent e)
+	{
+		for(ILocalPortal j : Wormholes.portalManager.getLocalPortals())
+		{
+			if(Wormholes.blockManager.isSame(e.getPlayer().getItemInHand(), Wormholes.blockManager.getWand()) && j.isLookingAt(e.getPlayer()))
+			{
+				j.onWanded(e.getPlayer());
+				e.setCancelled(true);
+				return;
+			}
+		}
+	}
+
 	public void playNotificationFail(String message, Player p)
 	{
 		NMP.MESSAGE.advance(p, new ItemStack(Material.BARRIER), message, FrameType.TASK);
+	}
+
+	public void playNotificationFail(String message, Location l)
+	{
+		for(Player i : new Area(l, 24).getNearbyPlayers())
+		{
+			playNotificationFail(message, i);
+		}
+	}
+
+	public void playNotificationSuccess(String message, Location l)
+	{
+		for(Player i : new Area(l, 24).getNearbyPlayers())
+		{
+			playNotificationSuccess(message, i);
+		}
 	}
 
 	public void playNotificationSuccess(String message, Player p)
