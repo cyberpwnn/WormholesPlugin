@@ -3,6 +3,7 @@ package com.volmit.wormholes.portal;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -10,15 +11,27 @@ import org.bukkit.util.Vector;
 
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.geometry.Raycast;
+import com.volmit.wormholes.inventory.AnvilText;
+import com.volmit.wormholes.inventory.MaterialBlock;
+import com.volmit.wormholes.inventory.UIElement;
+import com.volmit.wormholes.inventory.UIPaneDecorator;
+import com.volmit.wormholes.inventory.UIWindow;
+import com.volmit.wormholes.inventory.Window;
+import com.volmit.wormholes.inventory.WindowResolution;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.FinalBoolean;
+import com.volmit.wormholes.util.FinalInteger;
+import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PhantomSpinner;
+import com.volmit.wormholes.util.RString;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
 {
@@ -60,11 +73,22 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		if(isOpen())
 		{
 			playEffect(PortalEffect.AMBIENT_OPEN);
+
+			if(hasTunnel() && !getTunnel().isValid())
+			{
+				tunnel = null;
+				close();
+			}
 		}
 
 		else
 		{
 			playEffect(PortalEffect.AMBIENT_CLOSED);
+
+			if(hasTunnel())
+			{
+				open();
+			}
 		}
 
 		if(Settings.DEBUG_RENDERING)
@@ -94,6 +118,19 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public void setOpen(boolean open)
 	{
+		if(this.open != open)
+		{
+			if(open)
+			{
+				playEffect(PortalEffect.OPEN);
+			}
+
+			else
+			{
+				playEffect(PortalEffect.CLOSE);
+			}
+		}
+
 		this.open = open;
 	}
 
@@ -127,6 +164,8 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 
 				break;
 			case CLOSE:
+				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.ECHEST_CLOSE.bukkitSound(), 2.25f, 0.1f);
+				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.ECHEST_CLOSE.bukkitSound(), 2.25f, 1.7f);
 				break;
 			case OPEN:
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 0.1f);
@@ -191,12 +230,12 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 
 			if(isShowingProgress())
 			{
-				NMP.MESSAGE.title(p, "", C.GRAY + "" + C.BOLD + "" + getName() + " " + spinner.toString() + C.RESET + C.GRAY + progress, 0, 2, 3);
+				NMP.MESSAGE.title(p, "", spinner.toString() + C.RESET + C.GRAY + progress, 0, 2, 3);
 			}
 
 			else
 			{
-				NMP.MESSAGE.title(p, "", C.GRAY + "" + C.BOLD + "" + getName(), 0, 2, 3);
+				NMP.MESSAGE.title(p, "", getRouter(false), 0, 2, 3);
 			}
 		}
 	}
@@ -204,7 +243,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public void onWanded(Player p)
 	{
-
+		openPortalMenu(p);
 	}
 
 	@Override
@@ -297,8 +336,172 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	}
 
 	@Override
+	public void destroy()
+	{
+		FinalInteger f = new FinalInteger(100);
+		tunnel = null;
+
+		J.sr(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				f.sub(1);
+
+				if(f.get() > 0)
+				{
+					showProgress("Destroying " + getName() + " in " + C.RED + " " + F.time(50 * f.get(), 0));
+				}
+
+				else if(f.get() == 0)
+				{
+					Wormholes.portalManager.removeLocalPortal(LocalPortal.this);
+					Wormholes.constructionManager.destroy(LocalPortal.this);
+				}
+			}
+		}, 0, 105);
+	}
+
+	@Override
 	public boolean hasTunnel()
 	{
 		return getTunnel() != null;
+	}
+
+	@Override
+	public void openPortalMenu(Player p)
+	{
+		Window w = createPortalMenu(p);
+		w.setVisible(true);
+	}
+
+	@Override
+	public Window createPortalMenu(Player p)
+	{
+		//@builder
+		Window window = new UIWindow(p)
+				.setTitle(getRouter(true))
+				.setResolution(WindowResolution.W3_H3)
+				.setViewportHeight(3);
+		window.setElement(0, 1, new UIElement("set-destination")
+				.setName(C.GOLD + "" + C.BOLD + "Set Focus")
+				.addLore(C.GRAY + "Choose a portal destination for")
+				.addLore(C.GRAY + "this portal.")
+				.setMaterial(new MaterialBlock(Material.EYE_OF_ENDER))
+				.setCount(Wormholes.portalManager.getTotalPortalCount() - 1)
+				.onLeftClick((e) -> chooseDestination(p)))
+		.setElement(0, 0, new UIElement("set-name")
+				.setName(C.GREEN + "" + C.BOLD + "Set Name")
+				.addLore(C.GRAY + "Change the portal name ")
+				.setMaterial(new MaterialBlock(Material.NAME_TAG))
+				.onShiftLeftClick((e) -> changeName(p)))
+		.setElement(1, 2, new UIElement("destroy")
+				.setName(C.RED + "" + C.BOLD + "Destroy Portal")
+				.addLore(C.GRAY + "Destroys the portal and ")
+				.addLore(C.GRAY + "drops its portal blocks.")
+				.addLore(C.GRAY + " ")
+				.addLore(C.RED + "" + C.UNDERLINE + "Shift + Left Click")
+				.setMaterial(new MaterialBlock(Material.SULPHUR))
+				.onShiftLeftClick((e) ->
+				{
+					window.close();
+					destroy();
+				}))
+		.setDecorator(new UIPaneDecorator(C.DARK_GRAY));
+		//@done
+
+		return window;
+	}
+
+	@Override
+	public void chooseDestination(Player p)
+	{
+		//@builder
+		Window window = new UIWindow(p)
+				.setTitle(getRouter(true))
+				.setResolution(WindowResolution.W9_H6)
+				.setDecorator(new UIPaneDecorator(C.DARK_GRAY))
+				.onClosed((w) -> J.s(() -> {
+					openPortalMenu(p);
+				}));
+		//@done
+		int pos = 0;
+
+		for(ILocalPortal i : Wormholes.portalManager.getLocalPortals())
+		{
+			if(i.getId().equals(getId()))
+			{
+				continue;
+			}
+			//@builder
+			window.setElement(window.getPosition(pos), window.getRow(pos), new UIElement("portal-" + pos)
+					.setMaterial(new MaterialBlock(Material.ENDER_PEARL))
+					.setEnchanted(hasTunnel() && getTunnel().getDestination().getId().equals(i.getId()))
+					.setName(i.getRouter(false, this))
+					.addLore(C.GRAY + "in " + i.getStructure().getWorld().getName())
+					.addLore(C.GRAY + "at " + i.getStructure().getCenter().getBlockX() + ", " + i.getStructure().getCenter().getBlockY() + ", " + i.getStructure().getCenter().getBlockZ())
+					.addLore(C.GRAY + "facing " + i.getDirection().toString())
+					.onLeftClick((e) -> J.s(() -> {
+						window.close();
+
+						if(hasTunnel() && getTunnel().getDestination().getId().equals(i.getId()))
+						{
+							tunnel = null;
+						}
+
+						else
+						{
+							setDestination(i);
+						}
+
+						window.close();
+					})));
+			//@done
+			pos++;
+		}
+
+		window.setVisible(true);
+	}
+
+	@Override
+	public void changeName(Player p)
+	{
+		AnvilText.getText(p, C.stripColor(getName()), new RString()
+		{
+			@Override
+			public void onComplete(String text)
+			{
+				setName(text);
+				openPortalMenu(p);
+			}
+		});
+	}
+
+	@Override
+	public String getRouter(boolean dark)
+	{
+		return getRouter(dark, null);
+	}
+
+	@Override
+	public String getRouter(boolean dark, IPortal source)
+	{
+		String str = "";
+
+		if(source != null)
+		{
+			str += (dark ? C.GRAY : C.YELLOW) + "" + C.BOLD + source.getName();
+			str += C.GRAY + " -> ";
+		}
+
+		str += (dark ? C.BLACK : C.GOLD) + "" + C.BOLD + C.UNDERLINE + getName();
+
+		if(hasTunnel())
+		{
+			str += C.GRAY + " -> ";
+			str += (dark ? C.GRAY : C.RED) + "" + C.BOLD + getTunnel().getDestination().getName();
+		}
+
+		return str;
 	}
 }
