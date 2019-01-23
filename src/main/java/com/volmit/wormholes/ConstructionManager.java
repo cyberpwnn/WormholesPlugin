@@ -15,6 +15,8 @@ import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.GSet;
 import com.volmit.wormholes.util.S;
 
 public class ConstructionManager implements Listener
@@ -60,7 +62,7 @@ public class ConstructionManager implements Listener
 
 				if(success)
 				{
-					Wormholes.effectManager.playNotificationSuccess(ChatColor.GREEN + "Right Click the Portal to Configure it.", player);
+					Wormholes.effectManager.playNotificationSuccess(ChatColor.GREEN + "Right Click the Portal to Configure it.", c.getCenter());
 					Wormholes.effectManager.playPortalOpen(blocks);
 					PortalStructure s = new PortalStructure();
 					s.setWorld(c.getWorld());
@@ -72,7 +74,7 @@ public class ConstructionManager implements Listener
 
 				else
 				{
-					Wormholes.effectManager.playNotificationFail(ChatColor.RED + "Portal shape must be rectangular or square.", player);
+					Wormholes.effectManager.playNotificationFail(ChatColor.RED + "Portal shape must be rectangular or square.", new GList<Block>(blocks).pickRandom().getLocation());
 					Wormholes.effectManager.playPortalFailOpen(blocks);
 					Wormholes.blockManager.refund(blocks, type);
 				}
@@ -85,5 +87,13 @@ public class ConstructionManager implements Listener
 		ILocalPortal p = new LocalPortal(UUID.randomUUID(), type, s);
 
 		return p;
+	}
+
+	public void destroy(ILocalPortal localPortal)
+	{
+		GSet<Block> blocks = localPortal.getStructure().toBlocks();
+		Wormholes.effectManager.playNotificationFail(ChatColor.RED + localPortal.getName() + " Destroyed", localPortal.getStructure().getCenter());
+		Wormholes.effectManager.playPortalFailOpen(blocks);
+		Wormholes.blockManager.refund(blocks, localPortal.getType());
 	}
 }
