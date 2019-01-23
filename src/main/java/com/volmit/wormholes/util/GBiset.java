@@ -13,6 +13,7 @@ import java.io.Serializable;
  * @param <B>
  *            the second object type
  */
+@SuppressWarnings("hiding")
 public class GBiset<A, B> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
