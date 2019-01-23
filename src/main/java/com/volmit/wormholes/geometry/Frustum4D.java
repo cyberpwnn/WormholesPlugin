@@ -1,8 +1,6 @@
 package com.volmit.wormholes.geometry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.Settings;
@@ -23,7 +21,6 @@ public class Frustum4D
 		double distanceToPortal = iris.distance(structure.getCenter());
 		double range = rr + (rr / (distanceToPortal + 1));
 		Vector direction = VectorMath.reverse(VectorMath.direction(iris, structure.getCenter()));
-		GList<Direction> d = new GList<>();
 
 		for(Direction i : Direction.values())
 		{
@@ -56,11 +53,6 @@ public class Frustum4D
 			{
 				frustums.add(new Frustum(iris, structure, i, range));
 			}
-		}
-
-		for(Player j : Bukkit.getServer().getOnlinePlayers())
-		{
-			j.sendMessage("CullFace: " + d.toString(", ") + " (" + direction + ")");
 		}
 
 		region = new AxisAlignedBB(frustums.get(0).getRegion());
