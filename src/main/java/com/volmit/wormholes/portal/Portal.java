@@ -2,56 +2,63 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
-import com.volmit.wormholes.aperture.AperturePlane;
-import com.volmit.wormholes.projection.ProjectionPlane;
-import com.volmit.wormholes.service.MutexService;
-import com.volmit.wormholes.util.DataCluster;
-
-public interface Portal
+public class Portal implements IPortal
 {
-	public void update();
+	private final UUID id;
+	private UUID destination;
+	private String name;
 
-	public PortalIdentity getIdentity();
+	public Portal(UUID id)
+	{
+		this.id = id;
+		destination = NO_DESTINATION;
+	}
 
-	public PortalPosition getPosition();
+	@Override
+	public UUID getId()
+	{
+		return id;
+	}
 
-	public Portal getDestination();
+	@Override
+	public UUID getDestination()
+	{
+		return destination;
+	}
 
-	public UUID getDiskID();
+	@Override
+	public void setDestination(UUID destination)
+	{
+		if(destination == null)
+		{
+			clearDestination();
+			return;
+		}
 
-	public void setDiskID(UUID did);
+		this.destination = destination;
+	}
 
-	public boolean hasValidKey();
+	@Override
+	public String getName()
+	{
+		return name;
+	}
 
-	public PortalKey getKey();
+	@Override
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-	public boolean hasWormhole();
+	@Override
+	public void clearDestination()
+	{
+		setDestination(NO_DESTINATION);
+	}
 
-	public boolean isWormholeMutex();
-
-	public Wormhole getWormhole();
-
-	public MutexService getService();
-
-	public DataCluster toData();
-
-	public void fromData(DataCluster cc);
-
-	public String getServer();
-
-	public ProjectionPlane getProjectionPlane();
-
-	public AperturePlane getApature();
-
-	public Boolean getSided();
-
-	public void setSided(Boolean sided);
-
-	public String getDisplayName();
-
-	public void updateDisplayName(String n);
-
-	public boolean hasDisplayName();
-
-	public void save();
+	@Override
+	public boolean hasDestination()
+	{
+		return !getDestination().equals(NO_DESTINATION);
+	}
 }
