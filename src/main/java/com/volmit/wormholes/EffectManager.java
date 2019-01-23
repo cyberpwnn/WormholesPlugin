@@ -2,12 +2,18 @@ package com.volmit.wormholes;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.volmit.catalyst.api.FrameType;
+import com.volmit.catalyst.api.NMP;
+import com.volmit.wormholes.util.lang.AR;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.MSound;
 import com.volmit.wormholes.util.lang.ParticleEffect;
@@ -16,7 +22,32 @@ public class EffectManager implements Listener
 {
 	public EffectManager()
 	{
+		new AR()
+		{
+			@Override
+			public void run()
+			{
+				for(Player i : Bukkit.getOnlinePlayers())
+				{
 
+				}
+			}
+		};
+	}
+
+	public void playNotificationFail(String message, Player p)
+	{
+		NMP.MESSAGE.advance(p, new ItemStack(Material.BARRIER), message, FrameType.TASK);
+	}
+
+	public void playNotificationSuccess(String message, Player p)
+	{
+		NMP.MESSAGE.advance(p, new ItemStack(Material.EMERALD), message, FrameType.TASK);
+	}
+
+	public void playNotification(ItemStack is, String message, Player p)
+	{
+		NMP.MESSAGE.advance(p, is, message, FrameType.TASK);
 	}
 
 	public void playPortalBlockPlaced(Block block)
