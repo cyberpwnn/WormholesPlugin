@@ -25,6 +25,28 @@ public enum Direction
 	private int z;
 	private CuboidDirection f;
 
+	@Override
+	public String toString()
+	{
+		switch(this)
+		{
+			case D:
+				return "Down";
+			case E:
+				return "East";
+			case N:
+				return "North";
+			case S:
+				return "South";
+			case U:
+				return "Up";
+			case W:
+				return "West";
+		}
+
+		return "?";
+	}
+
 	public boolean isVertical()
 	{
 		return equals(D) || equals(U);

@@ -394,7 +394,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				.setName(C.GREEN + "" + C.BOLD + "Set Name")
 				.addLore(C.GRAY + "Change the portal name ")
 				.setMaterial(new MaterialBlock(Material.NAME_TAG))
-				.onShiftLeftClick((e) -> changeName(p)))
+				.onLeftClick((e) -> changeName(p)))
 		.setElement(1, 2, new UIElement("destroy")
 				.setName(C.RED + "" + C.BOLD + "Destroy Portal")
 				.addLore(C.GRAY + "Destroys the portal and ")
@@ -437,10 +437,8 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			window.setElement(window.getPosition(pos), window.getRow(pos), new UIElement("portal-" + pos)
 					.setMaterial(new MaterialBlock(Material.ENDER_PEARL))
 					.setEnchanted(hasTunnel() && getTunnel().getDestination().getId().equals(i.getId()))
-					.setName(i.getRouter(false, this))
-					.addLore(C.GRAY + "in " + i.getStructure().getWorld().getName())
-					.addLore(C.GRAY + "at " + i.getStructure().getCenter().getBlockX() + ", " + i.getStructure().getCenter().getBlockY() + ", " + i.getStructure().getCenter().getBlockZ())
-					.addLore(C.GRAY + "facing " + i.getDirection().toString())
+					.setName(C.GOLD + "" + i.getName())
+					.addLore(C.GRAY + "at " + i.getStructure().getCenter().getBlockX() + ", " + i.getStructure().getCenter().getBlockY() + ", " + i.getStructure().getCenter().getBlockZ() + " in " + i.getStructure().getWorld().getName() + " Facing " + i.getDirection().toString())
 					.onLeftClick((e) -> J.s(() -> {
 						window.close();
 
@@ -494,12 +492,12 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			str += C.GRAY + " -> ";
 		}
 
-		str += (dark ? C.BLACK : C.GOLD) + "" + C.BOLD + C.UNDERLINE + getName();
+		str += (dark ? C.BLACK : C.GOLD) + "" + C.BOLD + getName();
 
 		if(hasTunnel())
 		{
 			str += C.GRAY + " -> ";
-			str += (dark ? C.GRAY : C.RED) + "" + C.BOLD + getTunnel().getDestination().getName();
+			str += (dark ? C.GRAY : C.GRAY) + "" + C.BOLD + getTunnel().getDestination().getName();
 		}
 
 		return str;
