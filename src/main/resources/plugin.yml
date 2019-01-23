@@ -2,5 +2,113 @@ name: ${project.name}
 version: ${project.version}
 main: com.volmit.wormholes.Wormholes
 description: Wormholes is a portal plugin which allows servers to show the other side of the portal while looking through them. Blocks and entities will show up as they are on the other side.
-depend: [Catalyst]
+depend: [ProtocolLib]
 author: Volmit Software
+commands:
+  wormhole:
+    aliases: [w, worm, whole, wormh, wormholes, portal, portals, wh]
+permissions:
+  wormholes.*:
+    description: Gives access to all Wormholes permissions
+    default: op
+    children:
+      wormholes.reload: true
+      wormholes.list: true
+      wormholes.create: true
+      wormholes.destroy: true
+      wormholes.build: true
+      wormholes.configure: true
+      wormholes.use: true
+  wormholes.reload:
+    description: Gives access to reload
+    default: op
+  wormholes.list:
+    description: Gives access to list
+    default: op
+  wormholes.create:
+    description: Gives access to create
+    default: op
+  wormholes.destroy:
+    description: Gives access to destroy
+    default: op
+  wormholes.build:
+    description: Gives access to build
+    default: op
+  wormholes.configure:
+    description: Gives access to configure
+    default: op
+  wormholes.use:
+    description: Gives access to use
+    default: true
+    children:
+      wormholes.use.white: true
+      wormholes.use.orange: true
+      wormholes.use.magenta: true
+      wormholes.use.lightblue: true
+      wormholes.use.yellow: true
+      wormholes.use.lime: true
+      wormholes.use.pink: true
+      wormholes.use.gray: true
+      wormholes.use.lightgray: true
+      wormholes.use.cyan: true
+      wormholes.use.purple: true
+      wormholes.use.blue: true
+      wormholes.use.brown: true
+      wormholes.use.green: true
+      wormholes.use.red: true
+      wormholes.use.black: true
+  wormholes.use.white:
+    description: Gives access to use white
+    default: true
+  wormholes.use.orange:
+    description: Gives access to use orange
+    default: true
+  wormholes.use.magenta:
+    description: Gives access to use magenta
+    default: true
+  wormholes.use.lightblue:
+    description: Gives access to use lightblue
+    default: true
+  wormholes.use.yellow:
+    description: Gives access to use yellow
+    default: true
+  wormholes.use.lime:
+    description: Gives access to use lime
+    default: true
+  wormholes.use.pink:
+    description: Gives access to use pink
+    default: true
+  wormholes.use.gray:
+    description: Gives access to use gray
+    default: true
+  wormholes.use.lightgray:
+    description: Gives access to use lightgray
+    default: true
+  wormholes.use.cyan:
+    description: Gives access to use cyan
+    default: true
+  wormholes.use.purple:
+    description: Gives access to use purple
+    default: true
+  wormholes.use.blue:
+    description: Gives access to use blue
+    default: true
+  wormholes.use.brown:
+    description: Gives access to use brown
+    default: true
+  wormholes.use.green:
+    description: Gives access to use green
+    default: true
+  wormholes.use.red:
+    description: Gives access to use red
+    default: true
+  wormholes.use.black:
+    description: Gives access to use black
+    default: true
+
+# Projections are now 8-10 TIMES faster
+# Projections are created iterativley, allowing for much larger projection ranges
+# Projections update much faster now, making it smoother during transitions
+# Projections are lit (no seriously we added lighting)
+# Portal particles are now processed async
+# Portal sampling is now processed async
