@@ -12,4 +12,11 @@ public class UniversalTunnel extends Tunnel
 	{
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public boolean isValid()
+	{
+		// TODO bungee!
+		return false;
+	}
 }

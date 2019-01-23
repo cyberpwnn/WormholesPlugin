@@ -7,4 +7,6 @@ public interface ITunnel
 	public TunnelType getTunnelType();
 
 	public void push(Traversive t);
+
+	public boolean isValid();
 }
