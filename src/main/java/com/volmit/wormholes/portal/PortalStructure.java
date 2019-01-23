@@ -4,11 +4,13 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
 
@@ -23,6 +25,11 @@ public class PortalStructure
 	public World getWorld()
 	{
 		return world;
+	}
+
+	public GSet<Block> toBlocks()
+	{
+		return new GSet<>(new GList<>(getArea().toCuboid(getWorld()).iterator()));
 	}
 
 	public AxisAlignedBB getBox()
