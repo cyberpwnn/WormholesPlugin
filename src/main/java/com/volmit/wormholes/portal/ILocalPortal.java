@@ -1,5 +1,7 @@
 package com.volmit.wormholes.portal;
 
+import org.bukkit.entity.Player;
+
 public interface ILocalPortal extends IPortal
 {
 	public PortalStructure getStructure();
@@ -15,4 +17,10 @@ public interface ILocalPortal extends IPortal
 	public void open();
 
 	public void setOpen(boolean open);
+
+	public void onLooking(Player p, boolean holdingWand);
+
+	public void onWanded(Player p);
+
+	public boolean isLookingAt(Player p);
 }
