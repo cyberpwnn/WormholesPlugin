@@ -35,6 +35,11 @@ public class Frustum4D
 
 	public boolean contains(Location p)
 	{
+		if(!getRegion().contains(p))
+		{
+			return false;
+		}
+
 		for(Frustum i : frustums)
 		{
 			if(i.contains(p))

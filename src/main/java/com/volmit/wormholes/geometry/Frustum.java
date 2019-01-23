@@ -7,6 +7,7 @@ import org.bukkit.util.Vector;
 import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.util.lang.AxisAlignedBB;
 import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.lang.GBiset;
 import com.volmit.wormholes.util.lang.GList;
 import com.volmit.wormholes.util.lang.ParticleEffect;
 import com.volmit.wormholes.util.lang.VectorMath;
@@ -22,6 +23,7 @@ public class Frustum
 		origin = iris;
 		AxisAlignedBB face = pp.getArea().getFace(cubeFace);
 		GList<Location> points = new GList<>();
+		GList<Location> farPoints = new GList<>();
 		switch(face.getThinAxis())
 		{
 			case X:
@@ -44,11 +46,12 @@ public class Frustum
 				break;
 		}
 
-		for(Location i : points.copy())
+		for(Location i : points)
 		{
-			points.add(i.clone().add(VectorMath.direction(iris, i).multiply(range)));
+			farPoints.add(i.clone().add(VectorMath.direction(iris, i).multiply(range)));
 		}
 
+		points.addAll(farPoints);
 		region = new AxisAlignedBB(points);
 		GList<GeoPoint> p = new GList<>();
 
@@ -58,17 +61,30 @@ public class Frustum
 		}
 
 		poly = new GeoPolygonProc(new GeoPolygon(p));
-		dpoly(points, 0.5);
+		dpoly(farPoints, 1);
 	}
 
 	public void dpoly(GList<Location> locs, double jd)
 	{
-		Location last = locs.get(locs.last());
+		GList<GBiset<Location, Location>> ignore = new GList<>();
 
 		for(Location i : locs)
 		{
-			dline(last, i, jd);
-			last = i;
+			for(Location j : locs)
+			{
+				if(i.equals(j))
+				{
+					continue;
+				}
+
+				if(ignore.contains(new GBiset<Location, Location>(i, j)) || ignore.contains(new GBiset<Location, Location>(j, i)))
+				{
+					continue;
+				}
+
+				dline(i, j, jd);
+				ignore.add(new GBiset<Location, Location>(i, j));
+			}
 		}
 	}
 
@@ -79,7 +95,7 @@ public class Frustum
 			@Override
 			public boolean shouldContinue(Location l)
 			{
-				ParticleEffect.FLAME.display(0f, 1, l, 256);
+				ParticleEffect.FLAME.display(0f, 1, l, 120);
 				return true;
 			}
 		};
