@@ -3,8 +3,11 @@ package com.volmit.wormholes.portal;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.geometry.Frustum4D;
@@ -126,11 +129,34 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 					ParticleEffect.FLAME.display(0f, 1, i, 32);
 				}
 
-				for(Player i : getStructure().getWorld().getPlayers())
+				for(Entity i : getStructure().getWorld().getEntities())
 				{
-					if(i.getLocation().distanceSquared(getStructure().getCenter()) < 16 * 16)
+					try
 					{
-						Frustum4D frustum = new Frustum4D(i.getEyeLocation(), getStructure(), 20);
+						if(i.getType().equals(EntityType.DROPPED_ITEM) && ((Item) i).getItemStack().getType().equals(Material.NETHER_STAR) && i.getLocation().distanceSquared(getStructure().getCenter()) < 32 * 32)
+						{
+							Frustum4D frustum = new Frustum4D(i.getLocation(), getStructure(), 32);
+
+							for(int j = 0; j < 8; j++)
+							{
+								Location l = frustum.getRegion().random().toLocation(getStructure().getWorld());
+
+								if(frustum.contains(l))
+								{
+									ParticleEffect.HEART.display(0f, 1, l, 32);
+								}
+
+								else
+								{
+									ParticleEffect.VILLAGER_ANGRY.display(0f, 1, l, 32);
+								}
+							}
+						}
+					}
+
+					catch(Throwable e)
+					{
+						e.printStackTrace();
 					}
 				}
 
