@@ -163,17 +163,17 @@ public class AxisAlignedBB
 
 	public boolean contains(Location p)
 	{
-		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getZ() <= yb && p.getZ() >= za && p.getZ() <= zb;
+		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getY() <= yb && p.getZ() >= za && p.getZ() <= zb;
 	}
 
 	public boolean contains(Vector p)
 	{
-		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getZ() <= yb && p.getZ() >= za && p.getZ() <= zb;
+		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getY() <= yb && p.getZ() >= za && p.getZ() <= zb;
 	}
 
 	public boolean contains(AlignedPoint p)
 	{
-		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getZ() <= yb && p.getZ() >= za && p.getZ() <= zb;
+		return p.getX() >= xa && p.getX() <= xb && p.getY() >= ya && p.getY() <= yb && p.getZ() >= za && p.getZ() <= zb;
 	}
 
 	public boolean intersects(AxisAlignedBB s)
