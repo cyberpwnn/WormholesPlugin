@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.util.lang.Direction;
+import com.volmit.wormholes.util.lang.VectorMath;
 
 public class Traversive
 {
@@ -13,24 +14,26 @@ public class Traversive
 	private final Direction inDirection;
 	private final Vector inVelocity;
 	private final Vector inLook;
+	private final Vector inPlane;
 
-	public Traversive(Object o, TraversableType type, Direction inDirection, Vector inVelocity, Vector inLook)
+	public Traversive(Object o, TraversableType type, Direction inDirection, Vector inVelocity, Vector inLook, Vector inPlane)
 	{
 		this.object = o;
 		this.type = type;
 		this.inDirection = inDirection;
 		this.inVelocity = inVelocity;
 		this.inLook = inLook;
+		this.inPlane = inPlane;
 	}
 
-	public Traversive(Player player, Direction inDirection, Vector inVelocity, Vector inLook)
+	public Traversive(Player player, Direction inDirection, Vector inVelocity, Vector inLook, Vector inPlane)
 	{
-		this(player, TraversableType.PLAYER, inDirection, inVelocity, inLook);
+		this(player, TraversableType.PLAYER, inDirection, inVelocity, inLook, inPlane);
 	}
 
-	public Traversive(Entity entity, Direction inDirection, Vector inVelocity, Vector inLook)
+	public Traversive(Entity entity, Direction inDirection, Vector inVelocity, Vector inLook, Vector inPlane)
 	{
-		this(entity, TraversableType.ENTITY, inDirection, inVelocity, inLook);
+		this(entity, TraversableType.ENTITY, inDirection, inVelocity, inLook, inPlane);
 	}
 
 	public Vector getOutVelocity(Direction outDirection)
@@ -41,6 +44,11 @@ public class Traversive
 	public Vector getOutLook(Direction outDirection)
 	{
 		return getInDirection().angle(getInLook(), outDirection);
+	}
+
+	public Vector getOutPlane(Direction outDirection)
+	{
+		return getInDirection().angle(getInPlane(), outDirection);
 	}
 
 	public Direction getInDirection()
@@ -56,6 +64,11 @@ public class Traversive
 	public Vector getInLook()
 	{
 		return inLook;
+	}
+
+	public Vector getInPlane()
+	{
+		return VectorMath.reverse(inPlane);
 	}
 
 	public Object getObject()

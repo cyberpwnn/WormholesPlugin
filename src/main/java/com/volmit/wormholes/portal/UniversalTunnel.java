@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 public class UniversalTunnel extends Tunnel
 {
-	public UniversalTunnel(RemotePortal portal)
+	public UniversalTunnel(IRemotePortal portal)
 	{
 		super(portal, TunnelType.UNIVERSAL);
 	}

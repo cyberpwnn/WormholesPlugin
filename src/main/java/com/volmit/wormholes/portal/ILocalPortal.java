@@ -29,4 +29,10 @@ public interface ILocalPortal extends IPortal
 	public void receive(Traversive t);
 
 	public void setDirection(Direction d);
+
+	public ITunnel getTunnel();
+
+	public boolean hasTunnel();
+
+	public void setDestination(IPortal portal);
 }

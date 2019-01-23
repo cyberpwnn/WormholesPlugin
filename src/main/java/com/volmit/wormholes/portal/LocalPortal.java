@@ -4,11 +4,14 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.geometry.Raycast;
+import com.volmit.wormholes.util.lang.AxisAlignedBB;
 import com.volmit.wormholes.util.lang.C;
 import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.FinalBoolean;
@@ -22,6 +25,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	private final PhantomSpinner spinner;
 	private final PortalStructure structure;
 	private final PortalType type;
+	private ITunnel tunnel;
 	private boolean open;
 	private boolean progressing;
 	private String progress;
@@ -35,6 +39,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		open = false;
 		progressing = false;
 		progress = "Idle";
+		tunnel = null;
 	}
 
 	@Override
@@ -242,7 +247,58 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public void receive(Traversive t)
 	{
-		// TODO Auto-generated method stub
+		if(t.getType().equals(TraversableType.PLAYER) || t.getType().equals(TraversableType.ENTITY))
+		{
+			Entity p = (Entity) t.getObject();
+			Vector outVelocity = t.getOutVelocity(getDirection());
+			Vector outLook = t.getOutLook(getDirection());
+			Vector outPlane = t.getOutPlane(getDirection());
+			AxisAlignedBB face = getStructure().getFace(Direction.closest(outVelocity));
+			Location exit = face.center().toLocation(getStructure().getWorld()).add(outPlane);
+			exit.setDirection(outLook);
+			p.teleport(exit);
+			p.setVelocity(outVelocity);
+		}
+	}
 
+	@Override
+	public ITunnel getTunnel()
+	{
+		return tunnel;
+	}
+
+	@Override
+	public void setDestination(IPortal portal)
+	{
+		if(portal instanceof ILocalPortal)
+		{
+			ILocalPortal p = (ILocalPortal) portal;
+
+			if(p.getStructure().getWorld().equals(getStructure().getWorld()))
+			{
+				tunnel = new LocalTunnel(p);
+			}
+
+			else
+			{
+				tunnel = new DimensionalTunnel(p);
+			}
+		}
+
+		else if(portal instanceof IRemotePortal)
+		{
+			tunnel = new UniversalTunnel((IRemotePortal) portal);
+		}
+
+		else
+		{
+			throw new RuntimeException("Unable to determine identity of new destination!");
+		}
+	}
+
+	@Override
+	public boolean hasTunnel()
+	{
+		return getTunnel() != null;
 	}
 }

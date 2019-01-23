@@ -2,7 +2,7 @@ package com.volmit.wormholes.portal;
 
 public class DimensionalTunnel extends Tunnel
 {
-	public DimensionalTunnel(LocalPortal portal)
+	public DimensionalTunnel(ILocalPortal portal)
 	{
 		super(portal, TunnelType.DIMENSIONAL);
 	}
