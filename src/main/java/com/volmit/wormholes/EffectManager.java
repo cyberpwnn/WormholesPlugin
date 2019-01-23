@@ -9,7 +9,6 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,7 +48,7 @@ public class EffectManager implements Listener
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler
 	public void on(PlayerInteractEvent e)
 	{
 		for(ILocalPortal j : Wormholes.portalManager.getLocalPortals())
@@ -57,8 +56,6 @@ public class EffectManager implements Listener
 			if(Wormholes.blockManager.isSame(e.getPlayer().getItemInHand(), Wormholes.blockManager.getWand()) && j.isLookingAt(e.getPlayer()))
 			{
 				j.onWanded(e.getPlayer());
-				e.setCancelled(true);
-				return;
 			}
 		}
 	}
