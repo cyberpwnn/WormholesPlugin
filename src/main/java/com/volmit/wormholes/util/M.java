@@ -40,6 +40,16 @@ public class M
 		return Double.valueOf(scriptEngine.eval(expression).toString());
 	}
 
+	public static int iclip(double value, double min, double max)
+	{
+		return (int) clip(value, min, max);
+	}
+
+	public static double clip(double value, double min, double max)
+	{
+		return Math.min(max, Math.max(min, value));
+	}
+
 	/**
 	 * Get true or false based on random percent
 	 *
