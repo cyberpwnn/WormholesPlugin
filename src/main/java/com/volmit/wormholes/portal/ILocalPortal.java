@@ -2,6 +2,7 @@ package com.volmit.wormholes.portal;
 
 import org.bukkit.entity.Player;
 
+import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.util.Direction;
 
 public interface ILocalPortal extends IPortal
@@ -35,4 +36,18 @@ public interface ILocalPortal extends IPortal
 	public boolean hasTunnel();
 
 	public void setDestination(IPortal portal);
+
+	public void openPortalMenu(Player p);
+
+	public Window createPortalMenu(Player p);
+
+	public void chooseDestination(Player p);
+
+	public void destroy();
+
+	public void changeName(Player p);
+
+	public String getRouter(boolean dark);
+
+	public String getRouter(boolean dark, IPortal source);
 }
