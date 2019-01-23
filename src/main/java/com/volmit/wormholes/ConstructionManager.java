@@ -14,6 +14,7 @@ import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.lang.Cuboid;
+import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.S;
 
 public class ConstructionManager implements Listener
@@ -65,6 +66,7 @@ public class ConstructionManager implements Listener
 					s.setWorld(c.getWorld());
 					s.setArea(c);
 					ILocalPortal portal = createPortal(s, type);
+					portal.setDirection(Direction.closest(player.getLocation().getDirection()));
 					Wormholes.portalManager.addLocalPortal(portal);
 				}
 

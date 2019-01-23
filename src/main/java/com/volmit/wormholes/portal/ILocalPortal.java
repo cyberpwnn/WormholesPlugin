@@ -2,6 +2,8 @@ package com.volmit.wormholes.portal;
 
 import org.bukkit.entity.Player;
 
+import com.volmit.wormholes.util.lang.Direction;
+
 public interface ILocalPortal extends IPortal
 {
 	public PortalStructure getStructure();
@@ -23,4 +25,8 @@ public interface ILocalPortal extends IPortal
 	public void onWanded(Player p);
 
 	public boolean isLookingAt(Player p);
+
+	public void receive(Traversive t);
+
+	public void setDirection(Direction d);
 }

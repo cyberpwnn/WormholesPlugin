@@ -2,16 +2,18 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
+import com.volmit.wormholes.util.lang.Direction;
+
 public class Portal implements IPortal
 {
+	protected Direction direction;
 	private final UUID id;
-	private UUID destination;
 	private String name;
 
 	public Portal(UUID id)
 	{
 		this.id = id;
-		destination = NO_DESTINATION;
+		direction = Direction.N;
 		name = "Portal " + id.toString().substring(0, 4);
 	}
 
@@ -19,24 +21,6 @@ public class Portal implements IPortal
 	public UUID getId()
 	{
 		return id;
-	}
-
-	@Override
-	public UUID getDestination()
-	{
-		return destination;
-	}
-
-	@Override
-	public void setDestination(UUID destination)
-	{
-		if(destination == null)
-		{
-			clearDestination();
-			return;
-		}
-
-		this.destination = destination;
 	}
 
 	@Override
@@ -52,14 +36,8 @@ public class Portal implements IPortal
 	}
 
 	@Override
-	public void clearDestination()
+	public Direction getDirection()
 	{
-		setDestination(NO_DESTINATION);
-	}
-
-	@Override
-	public boolean hasDestination()
-	{
-		return !getDestination().equals(NO_DESTINATION);
+		return direction;
 	}
 }

@@ -10,6 +10,7 @@ import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.geometry.Raycast;
 import com.volmit.wormholes.util.lang.C;
+import com.volmit.wormholes.util.lang.Direction;
 import com.volmit.wormholes.util.lang.FinalBoolean;
 import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.MSound;
@@ -230,5 +231,18 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		}
 
 		return false;
+	}
+
+	@Override
+	public void setDirection(Direction d)
+	{
+		this.direction = d;
+	}
+
+	@Override
+	public void receive(Traversive t)
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

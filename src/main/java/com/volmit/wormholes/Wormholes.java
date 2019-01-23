@@ -5,6 +5,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.volmit.wormholes.util.lang.Direction;
+
 public class Wormholes extends JavaPlugin implements Listener
 {
 	public static Wormholes instance;
@@ -16,6 +18,7 @@ public class Wormholes extends JavaPlugin implements Listener
 	@Override
 	public void onEnable()
 	{
+		Direction.calculatePermutations();
 		registerListener(instance = this);
 		registerListener(blockManager = new BlockManager());
 		registerListener(effectManager = new EffectManager());

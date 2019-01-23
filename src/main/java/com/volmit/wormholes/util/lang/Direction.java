@@ -30,6 +30,26 @@ public enum Direction
 		return equals(D) || equals(U);
 	}
 
+	public static Direction closest(Vector v)
+	{
+		double m = Double.MAX_VALUE;
+		Direction s = null;
+
+		for(Direction i : values())
+		{
+			Vector x = i.toVector();
+			double g = x.distance(v);
+
+			if(g < m)
+			{
+				m = g;
+				s = i;
+			}
+		}
+
+		return s;
+	}
+
 	public static Direction closest(Vector v, Direction... d)
 	{
 		double m = Double.MAX_VALUE;
@@ -263,8 +283,6 @@ public enum Direction
 			return;
 		}
 
-		DB.d(Direction.class, "Calculating Permutations for Accelerated rotation");
-
 		permute = new GMap<GBiset<Direction, Direction>, DOP>();
 
 		for(Direction i : udnews())
@@ -395,8 +413,6 @@ public enum Direction
 						}
 					});
 				}
-
-				DB.d(Direction.class, "Permutation: " + i + " -> " + j + " = " + permute.get(b).getType());
 			}
 		}
 	}
