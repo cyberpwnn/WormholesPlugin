@@ -6,14 +6,17 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
-import com.volmit.wormholes.geometry.Frustum4D;
+import com.volmit.wormholes.util.lang.C;
 import com.volmit.wormholes.util.lang.M;
 import com.volmit.wormholes.util.lang.MSound;
 import com.volmit.wormholes.util.lang.ParticleEffect;
+import com.volmit.wormholes.util.lang.PhantomSpinner;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
 {
+	private final PhantomSpinner spinner;
 	private final PortalStructure structure;
 	private final PortalType type;
 	private boolean open;
@@ -23,6 +26,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
 		super(id);
+		spinner = new PhantomSpinner(C.YELLOW, C.GOLD, C.BLACK);
 		this.type = type;
 		this.structure = structure;
 		open = false;
@@ -120,18 +124,15 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 0.1f);
 				getStructure().getCenter().getWorld().playSound(getStructure().getCenter(), MSound.FRAME_SPAWN.bukkitSound(), 2.25f, 1.6f);
 				break;
-			case AMBIENT_DEBUG:
+			case AMBIENT_INSPECTING:
 				for(Location i : getStructure().getCorners())
 				{
 					ParticleEffect.FLAME.display(0f, 1, i, 32);
 				}
-
-				for(Player i : getStructure().getWorld().getPlayers())
+			case AMBIENT_DEBUG:
+				for(Location i : getStructure().getCorners())
 				{
-					if(i.getLocation().distanceSquared(getStructure().getCenter()) < 24 * 24)
-					{
-						Frustum4D frustum = new Frustum4D(i.getEyeLocation(), getStructure(), 24);
-					}
+					ParticleEffect.FLAME.display(0f, 1, i, 32);
 				}
 
 				break;
@@ -169,5 +170,27 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public String getCurrentProgress()
 	{
 		return progress;
+	}
+
+	@Override
+	public void onLooking(Player p, boolean holdingWand)
+	{
+		if(holdingWand)
+		{
+			NMP.MESSAGE.title(p, "", spinner.toString() + C.RESET + C.GRAY + C.BOLD + progress, 0, 3, 7);
+			playEffect(PortalEffect.AMBIENT_INSPECTING);
+		}
+	}
+
+	@Override
+	public void onWanded(Player p)
+	{
+
+	}
+
+	@Override
+	public boolean isLookingAt(Player p)
+	{
+		return false;
 	}
 }
