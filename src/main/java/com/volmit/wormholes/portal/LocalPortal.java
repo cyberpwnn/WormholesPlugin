@@ -126,13 +126,6 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 					ParticleEffect.FLAME.display(0f, 1, i, 32);
 				}
 
-				for(int i = 0; i < getStructure().getArea().volume() / 7; i++)
-				{
-					// ParticleEffect.BARRIER.display(0f, 1,
-					// getStructure().randomLocation().getBlock().getLocation().clone().add(0.5,
-					// 0.5, 0.5), 32);
-				}
-
 				for(Player i : getStructure().getWorld().getPlayers())
 				{
 					if(i.getLocation().distanceSquared(getStructure().getCenter()) < 16 * 16)
