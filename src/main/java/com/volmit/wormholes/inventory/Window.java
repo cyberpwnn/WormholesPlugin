@@ -27,8 +27,6 @@ public interface Window
 
 	public Window setVisible(boolean visible);
 
-	public ItemStack[] getPlayerCachedItems();
-
 	public ItemStack computeItemStack(int viewportSlot);
 
 	public int getLayoutRow(int viewportSlottedPosition);

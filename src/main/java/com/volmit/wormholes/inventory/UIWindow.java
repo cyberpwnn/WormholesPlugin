@@ -33,7 +33,6 @@ public class UIWindow implements Window, Listener
 	private Inventory inventory;
 	private int clickcheck;
 	private boolean doubleclicked;
-	private ItemStack[] cachedItems;
 
 	public UIWindow(Player viewer)
 	{
@@ -288,7 +287,6 @@ public class UIWindow implements Window, Listener
 				inventory = Bukkit.createInventory(null, getResolution().getType(), getTitle());
 			}
 
-			cacheItems();
 			viewer.openInventory(inventory);
 			this.visible = visible;
 			updateInventory();
@@ -299,37 +297,10 @@ public class UIWindow implements Window, Listener
 			this.visible = visible;
 			HandlerList.unregisterAll(this);
 			viewer.closeInventory();
-			restoreItems();
 		}
 
 		this.visible = visible;
 		return this;
-	}
-
-	private void restoreItems()
-	{
-		for(int i = 0; i < viewer.getInventory().getSize(); i++)
-		{
-			viewer.getInventory().clear(i);
-			ItemStack iv = cachedItems[i];
-
-			if(iv != null)
-			{
-				viewer.getInventory().setItem(i, iv);
-			}
-		}
-	}
-
-	private void cacheItems()
-	{
-		cachedItems = new ItemStack[viewer.getInventory().getSize()];
-
-		for(int i = 0; i < viewer.getInventory().getSize(); i++)
-		{
-			ItemStack iv = viewer.getInventory().getItem(i);
-			cachedItems[i] = iv != null ? iv.clone() : iv;
-			viewer.getInventory().clear(i);
-		}
 	}
 
 	@Override
@@ -549,13 +520,6 @@ public class UIWindow implements Window, Listener
 					inventory.setItem(i, isx);
 				}
 			}
-
-			viewer.getInventory().clear();
-
-			for(ItemStack i : isf)
-			{
-				viewer.getInventory().addItem(i);
-			}
 		}
 
 		return this;
@@ -580,11 +544,5 @@ public class UIWindow implements Window, Listener
 	public Window reopen()
 	{
 		return this.close().open();
-	}
-
-	@Override
-	public ItemStack[] getPlayerCachedItems()
-	{
-		return cachedItems;
 	}
 }
