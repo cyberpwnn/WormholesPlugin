@@ -120,12 +120,6 @@
 			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.volmit</groupId>
-			<artifactId>CatalystAPI</artifactId>
-			<version>1.0.3</version>
-			<scope>provided</scope>
-		</dependency>
 		<!-- Craftbukkit Versions -->
 		<dependency>
 			<groupId>org.bukkit</groupId>

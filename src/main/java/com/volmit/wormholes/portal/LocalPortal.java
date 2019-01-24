@@ -9,7 +9,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.volmit.catalyst.api.NMP;
 import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.geometry.Raycast;
@@ -20,6 +19,7 @@ import com.volmit.wormholes.inventory.UIPaneDecorator;
 import com.volmit.wormholes.inventory.UIWindow;
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.inventory.WindowResolution;
+import com.volmit.wormholes.nms.NMP;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;

@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.volmit.catalyst.api.FrameType;
-import com.volmit.catalyst.api.NMP;
+import com.volmit.wormholes.nms.FrameType;
+import com.volmit.wormholes.nms.NMP;
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.util.AR;
 import com.volmit.wormholes.util.Area;
