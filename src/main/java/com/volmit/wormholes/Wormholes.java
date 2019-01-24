@@ -9,10 +9,12 @@ import com.volmit.wormholes.nms.Catalyst;
 import com.volmit.wormholes.nms.CatalystPlugin;
 import com.volmit.wormholes.nms.NMP;
 import com.volmit.wormholes.nms.NMSVersion;
+import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
 
 public class Wormholes extends JavaPlugin implements Listener
 {
+	public static String tag;
 	public static Wormholes instance;
 	public static TraversableManager traversableManager;
 	public static BlockManager blockManager;
@@ -23,6 +25,7 @@ public class Wormholes extends JavaPlugin implements Listener
 	@Override
 	public void onEnable()
 	{
+		tag = C.DARK_GRAY + "[" + C.GOLD + C.BOLD + "Wormholes" + C.RESET + C.DARK_GRAY + "]: " + C.GRAY;
 		handleNMS();
 		Direction.calculatePermutations();
 		registerListener(instance = this);

@@ -53,11 +53,17 @@ public class PortalManager implements Listener
 		if(!hasLocalPortal(portal))
 		{
 			portals.put(portal.getId(), portal);
+			Wormholes.registerListener(portal);
 		}
 	}
 
 	public void removeLocalPortal(UUID portal)
 	{
+		if(portals.containsKey(portal))
+		{
+			Wormholes.unregisterListener(portals.get(portal));
+		}
+
 		portals.remove(portal);
 	}
 

@@ -1,11 +1,12 @@
 package com.volmit.wormholes.portal;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.util.Direction;
 
-public interface ILocalPortal extends IPortal
+public interface ILocalPortal extends IPortal, Listener
 {
 	public PortalStructure getStructure();
 
@@ -37,17 +38,23 @@ public interface ILocalPortal extends IPortal
 
 	public void setDestination(IPortal portal);
 
-	public void openPortalMenu(Player p);
-
-	public Window createPortalMenu(Player p);
-
-	public void chooseDestination(Player p);
-
 	public void destroy();
-
-	public void changeName(Player p);
 
 	public String getRouter(boolean dark);
 
 	public String getRouter(boolean dark, IPortal source);
+
+	public void uiOpenPortalMenu(Player p);
+
+	public Window uiCreatePortalMenu(Player p);
+
+	public void uiChooseDestination(Player p);
+
+	public void uiChangeName(Player p);
+
+	public void uiChangeDirection(Player p);
+
+	public boolean isGateway();
+
+	public boolean supportsProjections();
 }

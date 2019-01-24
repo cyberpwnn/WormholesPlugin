@@ -7,6 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.Settings;
@@ -20,6 +24,7 @@ import com.volmit.wormholes.inventory.UIWindow;
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.inventory.WindowResolution;
 import com.volmit.wormholes.nms.NMP;
+import com.volmit.wormholes.util.AR;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;
@@ -36,19 +41,23 @@ import com.volmit.wormholes.util.PhantomSpinner;
 import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.VectorMath;
 
-public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
+public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal, IOwnablePortal, Listener
 {
 	private final PhantomSpinner spinner;
 	private final PortalStructure structure;
 	private final PortalType type;
+	private UUID owner;
 	private ITunnel tunnel;
 	private boolean open;
 	private boolean progressing;
 	private String progress;
+	private Player directionChanger;
+	private Direction chosenDirection;
 
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
 		super(id);
+		this.owner = id;
 		spinner = new PhantomSpinner(C.YELLOW, C.GOLD, C.RED);
 		this.type = type;
 		this.structure = structure;
@@ -56,6 +65,8 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		progressing = false;
 		progress = "Idle";
 		tunnel = null;
+		directionChanger = null;
+		chosenDirection = null;
 	}
 
 	@Override
@@ -352,12 +363,17 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public void onWanded(Player p)
 	{
-		openPortalMenu(p);
+		uiOpenPortalMenu(p);
 	}
 
 	@Override
 	public boolean isLookingAt(Player p)
 	{
+		if(directionChanger != null && p.equals(directionChanger))
+		{
+			return false;
+		}
+
 		if(p.getWorld().equals(getStructure().getWorld()))
 		{
 			if(p.getLocation().distanceSquared(getStructure().getCenter()) < 64)
@@ -492,14 +508,14 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	}
 
 	@Override
-	public void openPortalMenu(Player p)
+	public void uiOpenPortalMenu(Player p)
 	{
-		Window w = createPortalMenu(p);
+		Window w = uiCreatePortalMenu(p);
 		w.setVisible(true);
 	}
 
 	@Override
-	public Window createPortalMenu(Player p)
+	public Window uiCreatePortalMenu(Player p)
 	{
 		//@builder
 		Window window = new UIWindow(p)
@@ -512,12 +528,22 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				.addLore(C.GRAY + "this portal.")
 				.setMaterial(new MaterialBlock(Material.EYE_OF_ENDER))
 				.setCount(Wormholes.portalManager.getTotalPortalCount() - 1)
-				.onLeftClick((e) -> chooseDestination(p)))
+				.onLeftClick((e) -> uiChooseDestination(p)))
 		.setElement(0, 0, new UIElement("set-name")
 				.setName(C.GREEN + "" + C.BOLD + "Set Name")
 				.addLore(C.GRAY + "Change the portal name ")
 				.setMaterial(new MaterialBlock(Material.NAME_TAG))
-				.onLeftClick((e) -> changeName(p)))
+				.onLeftClick((e) -> uiChangeName(p)))
+		.setElement(1, 1, new UIElement("set-direction")
+				.setName(C.BLUE + "" + C.BOLD + "Change Direction")
+				.addLore(C.GRAY + "Change the portal facing direction")
+				.addLore(C.GRAY + "Currently Facing " + C.BLUE + "" + C.BOLD + getDirection().toString())
+				.setMaterial(new MaterialBlock(Material.COMPASS))
+				.onLeftClick((e) ->
+				{
+					uiChangeDirection(p);
+					window.close();
+				}))
 		.setElement(1, 2, new UIElement("destroy")
 				.setName(C.RED + "" + C.BOLD + "Destroy Portal")
 				.addLore(C.GRAY + "Destroys the portal and ")
@@ -537,7 +563,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	}
 
 	@Override
-	public void chooseDestination(Player p)
+	public void uiChooseDestination(Player p)
 	{
 		//@builder
 		Window window = new UIWindow(p)
@@ -545,7 +571,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				.setResolution(WindowResolution.W9_H6)
 				.setDecorator(new UIPaneDecorator(C.DARK_GRAY))
 				.onClosed((w) -> J.s(() -> {
-					openPortalMenu(p);
+					uiOpenPortalMenu(p);
 				}));
 		//@done
 		int pos = 0;
@@ -556,6 +582,12 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			{
 				continue;
 			}
+
+			if(i.isGateway() != isGateway())
+			{
+				continue;
+			}
+
 			//@builder
 			window.setElement(window.getPosition(pos), window.getRow(pos), new UIElement("portal-" + pos)
 					.setMaterial(new MaterialBlock(Material.ENDER_PEARL))
@@ -585,7 +617,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	}
 
 	@Override
-	public void changeName(Player p)
+	public void uiChangeName(Player p)
 	{
 		AnvilText.getText(p, C.stripColor(getName()), new RString()
 		{
@@ -593,7 +625,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			public void onComplete(String text)
 			{
 				setName(text);
-				openPortalMenu(p);
+				uiOpenPortalMenu(p);
 			}
 		});
 	}
@@ -624,5 +656,92 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		}
 
 		return str;
+	}
+
+	@Override
+	public void uiChangeDirection(Player p)
+	{
+		p.sendMessage(Wormholes.tag + "Look in a direction then left click to apply.");
+		p.sendMessage(Wormholes.tag + "Shift-Left click to cancel.");
+		directionChanger = p;
+
+		new AR()
+		{
+			@Override
+			public void run()
+			{
+				if(directionChanger == null)
+				{
+					cancel();
+					return;
+				}
+
+				chosenDirection = Direction.getDirection(p.getLocation().getDirection());
+				NMP.MESSAGE.title(p, "", C.GRAY + "" + C.BOLD + chosenDirection.toString(), 0, 3, 3);
+			}
+		};
+	}
+
+	@EventHandler
+	public void on(PlayerInteractEvent e)
+	{
+		if(directionChanger == null)
+		{
+			return;
+		}
+
+		if(directionChanger.equals(e.getPlayer()))
+		{
+			if(e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))
+			{
+				e.setCancelled(true);
+
+				if(!e.getPlayer().isSneaking())
+				{
+					setDirection(chosenDirection);
+					Wormholes.effectManager.playNotificationSuccess(C.GREEN + getName() + "'s direction changed to " + getDirection().toString() + ".", getStructure().getCenter());
+				}
+
+				directionChanger = null;
+				chosenDirection = null;
+				e.getPlayer().sendMessage(Wormholes.tag + "Cancelled");
+			}
+		}
+	}
+
+	@Override
+	public boolean isGateway()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsProjections()
+	{
+		return false;
+	}
+
+	@Override
+	public UUID getOwner()
+	{
+		return owner;
+	}
+
+	@Override
+	public void setOwner(UUID owner)
+	{
+		this.owner = owner;
+	}
+
+	@Override
+	public boolean isSelfOwned()
+	{
+		return getOwner().equals(getId());
+	}
+
+	@Override
+	public void setSelfOwned()
+	{
+		setOwner(getId());
 	}
 }

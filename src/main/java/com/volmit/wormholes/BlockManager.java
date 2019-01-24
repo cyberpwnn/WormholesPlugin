@@ -56,7 +56,7 @@ public class BlockManager implements Listener
 
 			if(b != null)
 			{
-				if(b.getType().equals(PortalType.PORTAL) || b.getType().equals(PortalType.WORMHOLE))
+				if(b.getType().equals(PortalType.PORTAL) || b.getType().equals(PortalType.GATEWAY) || b.getType().equals(PortalType.WORMHOLE))
 				{
 					construct(e.getPlayer(), e.getClickedBlock());
 				}
@@ -140,6 +140,11 @@ public class BlockManager implements Listener
 		{
 			placeBlock(new PortalBlock(PortalType.WORMHOLE, e.getBlock().getLocation()));
 		}
+
+		else if(isSame(e.getItemInHand(), getGatewayRune(1)))
+		{
+			placeBlock(new PortalBlock(PortalType.GATEWAY, e.getBlock().getLocation()));
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -163,6 +168,9 @@ public class BlockManager implements Listener
 							break;
 						case WORMHOLE:
 							drop = getWormholeRune(1);
+							break;
+						case GATEWAY:
+							drop = getGatewayRune(1);
 							break;
 					}
 				}
@@ -353,6 +361,19 @@ public class BlockManager implements Listener
 		ItemMeta meta = is.getItemMeta();
 		meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
 		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Wormhole Rune");
+		is.setItemMeta(meta);
+		is.setAmount(c);
+
+		return is;
+	}
+
+	public ItemStack getGatewayRune(int c)
+	{
+		@SuppressWarnings("deprecation")
+		ItemStack is = new ItemStack(Material.STAINED_GLASS, 1, (short) 0, (byte) 15);
+		ItemMeta meta = is.getItemMeta();
+		meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+		meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Gateway Rune");
 		is.setItemMeta(meta);
 		is.setAmount(c);
 
