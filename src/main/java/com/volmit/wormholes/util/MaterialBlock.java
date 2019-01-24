@@ -48,6 +48,12 @@ public class MaterialBlock
 		data = 0;
 	}
 
+	public MaterialBlock(Block block)
+	{
+		material = block.getType();
+		data = block.getData();
+	}
+
 	public Material getMaterial()
 	{
 		return material;

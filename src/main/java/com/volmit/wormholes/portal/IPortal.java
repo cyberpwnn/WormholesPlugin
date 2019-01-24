@@ -2,6 +2,8 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
+import org.bukkit.util.Vector;
+
 import com.volmit.wormholes.util.Direction;
 
 public interface IPortal
@@ -13,4 +15,8 @@ public interface IPortal
 	public String getName();
 
 	public void setName(String name);
+
+	public boolean isRemote();
+
+	public Vector getOrigin();
 }

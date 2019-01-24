@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,6 @@ import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.geometry.Raycast;
 import com.volmit.wormholes.inventory.AnvilText;
-import com.volmit.wormholes.inventory.MaterialBlock;
 import com.volmit.wormholes.inventory.UIElement;
 import com.volmit.wormholes.inventory.UIPaneDecorator;
 import com.volmit.wormholes.inventory.UIWindow;
@@ -36,6 +36,7 @@ import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
+import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PhantomSpinner;
 import com.volmit.wormholes.util.RString;
@@ -56,7 +57,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
-		super(id);
+		super(id, structure.getCenter().toVector());
 		this.owner = id;
 		spinner = new PhantomSpinner(C.YELLOW, C.GOLD, C.RED);
 		this.type = type;
@@ -744,5 +745,29 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public void setSelfOwned()
 	{
 		setOwner(getId());
+	}
+
+	@Override
+	public boolean isRemote()
+	{
+		return false;
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return getStructure().getWorld();
+	}
+
+	@Override
+	public Location getCenter()
+	{
+		return getStructure().getCenter();
+	}
+
+	@Override
+	public AxisAlignedBB getArea()
+	{
+		return getStructure().getArea();
 	}
 }

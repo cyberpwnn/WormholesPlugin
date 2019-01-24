@@ -13,4 +13,5 @@ public class Settings
 	public static boolean DEBUG_TRAVERSABLES = true;
 	public static double FRUSTUM_CULLING_RATIO = 0.2;
 	public static double CAPTURE_ZONE_RADIUS = 8;
+	public static double PROJECTION_RANGE = 128;
 }

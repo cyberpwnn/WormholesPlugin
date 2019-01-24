@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.volmit.wormholes.util.Callback;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.M;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public class UIElement implements Element
 {

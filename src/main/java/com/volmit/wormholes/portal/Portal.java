@@ -2,19 +2,29 @@ package com.volmit.wormholes.portal;
 
 import java.util.UUID;
 
+import org.bukkit.util.Vector;
+
 import com.volmit.wormholes.util.Direction;
 
-public class Portal implements IPortal
+public abstract class Portal implements IPortal
 {
 	protected Direction direction;
 	private final UUID id;
+	private final Vector origin;
 	private String name;
 
-	public Portal(UUID id)
+	public Portal(UUID id, Vector origin)
 	{
 		this.id = id;
+		this.origin = origin;
 		direction = Direction.N;
 		name = "Portal " + id.toString().substring(0, 4);
+	}
+
+	@Override
+	public Vector getOrigin()
+	{
+		return origin;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.volmit.wormholes.util.Callback;
 import com.volmit.wormholes.util.GList;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public interface Element
 {

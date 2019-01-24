@@ -6,10 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.volmit.wormholes.inventory.Element;
-import com.volmit.wormholes.inventory.MaterialBlock;
 import com.volmit.wormholes.inventory.UIElement;
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.MaterialBlock;
 
 public class WormholePortal extends LocalPortal implements IWormholePortal
 {

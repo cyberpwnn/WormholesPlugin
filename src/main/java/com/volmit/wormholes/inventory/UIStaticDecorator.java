@@ -2,6 +2,8 @@ package com.volmit.wormholes.inventory;
 
 import org.bukkit.Material;
 
+import com.volmit.wormholes.util.MaterialBlock;
+
 public class UIStaticDecorator implements WindowDecorator
 {
 	private Element element;

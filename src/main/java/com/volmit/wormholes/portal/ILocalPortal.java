@@ -1,9 +1,12 @@
 package com.volmit.wormholes.portal;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.volmit.wormholes.inventory.Window;
+import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.Direction;
 
 public interface ILocalPortal extends IPortal, Listener
@@ -57,4 +60,10 @@ public interface ILocalPortal extends IPortal, Listener
 	public boolean isGateway();
 
 	public boolean supportsProjections();
+
+	public World getWorld();
+
+	public Location getCenter();
+
+	public AxisAlignedBB getArea();
 }
