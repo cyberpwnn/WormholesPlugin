@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -333,6 +334,8 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public void onLooking(Player p, boolean holdingWand)
 	{
+		p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(0);
+
 		if(holdingWand)
 		{
 			playEffect(PortalEffect.AMBIENT_INSPECTING);
