@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.project.ProjectionMatrix;
 import com.volmit.wormholes.util.Direction;
 
 public interface IPortal
@@ -19,4 +20,6 @@ public interface IPortal
 	public boolean isRemote();
 
 	public Vector getOrigin();
+
+	public ProjectionMatrix getMatrix();
 }

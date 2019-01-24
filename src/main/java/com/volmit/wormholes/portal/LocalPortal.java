@@ -24,6 +24,7 @@ import com.volmit.wormholes.inventory.UIWindow;
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.inventory.WindowResolution;
 import com.volmit.wormholes.nms.NMP;
+import com.volmit.wormholes.project.ProjectionMatrix;
 import com.volmit.wormholes.util.AR;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.AxisAlignedBB;
@@ -46,6 +47,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 {
 	private final PhantomSpinner spinner;
 	private final PortalStructure structure;
+	private final ProjectionMatrix matrix;
 	private final PortalType type;
 	private UUID owner;
 	private ITunnel tunnel;
@@ -69,6 +71,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		directionChanger = null;
 		chosenDirection = null;
 		setName(F.capitalize(getType().name().toLowerCase()) + " " + id.toString().substring(0, 4));
+		matrix = new ProjectionMatrix(this);
 	}
 
 	@Override
@@ -769,5 +772,11 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public AxisAlignedBB getArea()
 	{
 		return getStructure().getArea();
+	}
+
+	@Override
+	public ProjectionMatrix getMatrix()
+	{
+		return matrix;
 	}
 }
