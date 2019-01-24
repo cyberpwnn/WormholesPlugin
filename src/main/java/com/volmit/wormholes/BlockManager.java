@@ -27,6 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.volmit.wormholes.portal.PortalBlock;
 import com.volmit.wormholes.portal.PortalType;
+import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
@@ -72,6 +73,7 @@ public class BlockManager implements Listener
 		Block cursor = clickedBlock;
 		search.addAll(findBlocks(blocks, cursor, type));
 		blocks.addAll(search);
+		Direction d = Direction.closest(player.getLocation().getDirection());
 
 		new SR(0)
 		{
@@ -95,7 +97,7 @@ public class BlockManager implements Listener
 
 					else
 					{
-						Wormholes.constructionManager.constructPortal(player, blocks, type);
+						Wormholes.constructionManager.constructPortal(player, blocks, type, d);
 						cancel();
 					}
 				}

@@ -12,7 +12,10 @@ public class DimensionalTunnel extends Tunnel
 	@Override
 	public void push(Traversive t)
 	{
-		// TODO Auto-generated method stub
+		if(t != null)
+		{
+			((LocalPortal) getDestination()).receive(t);
+		}
 	}
 
 	@Override

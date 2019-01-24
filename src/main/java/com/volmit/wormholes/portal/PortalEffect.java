@@ -7,5 +7,6 @@ public enum PortalEffect
 	AMBIENT_CLOSED,
 	AMBIENT_INSPECTING,
 	OPEN,
+	PUSH,
 	CLOSE;
 }

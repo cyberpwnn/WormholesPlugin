@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.Settings;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
@@ -16,6 +17,7 @@ import com.volmit.wormholes.util.GSet;
 
 public class PortalStructure
 {
+	private AxisAlignedBB captureZone;
 	private AxisAlignedBB area;
 	private AxisAlignedBB box;
 	private World world;
@@ -103,6 +105,7 @@ public class PortalStructure
 	public void setArea(Cuboid area)
 	{
 		this.area = new AxisAlignedBB(area);
+		captureZone = new AxisAlignedBB(getArea().min().add(new Vector(-Settings.CAPTURE_ZONE_RADIUS, -Settings.CAPTURE_ZONE_RADIUS, -Settings.CAPTURE_ZONE_RADIUS)), getArea().max().add(new Vector(Settings.CAPTURE_ZONE_RADIUS, Settings.CAPTURE_ZONE_RADIUS, Settings.CAPTURE_ZONE_RADIUS)));
 		invalidateCache();
 	}
 
@@ -115,5 +118,10 @@ public class PortalStructure
 	public double getSize()
 	{
 		return getArea().volume();
+	}
+
+	public AxisAlignedBB getCaptureZone()
+	{
+		return captureZone;
 	}
 }

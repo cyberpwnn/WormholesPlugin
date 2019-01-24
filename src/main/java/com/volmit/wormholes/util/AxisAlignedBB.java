@@ -1,7 +1,10 @@
 package com.volmit.wormholes.util;
 
+import java.util.Collection;
+
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.geometry.GeoPolygonProc;
@@ -95,6 +98,11 @@ public class AxisAlignedBB
 		encapsulate(new GList<Vector>().qadd(b.min()).qadd(b.max()));
 	}
 
+	public Collection<Entity> getEntities(World w)
+	{
+		return w.getNearbyEntities(center().toLocation(w), sizeX() / 2D, sizeZ() / 2D, sizeZ() / 2D);
+	}
+
 	public void encapsulate(GList<Vector> b)
 	{
 		for(Vector i : b)
@@ -128,7 +136,7 @@ public class AxisAlignedBB
 
 	public Vector center()
 	{
-		return max().subtract(min());
+		return min().add(max().subtract(min()).multiply(0.5));
 	}
 
 	public Vector max()

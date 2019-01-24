@@ -10,5 +10,7 @@ public class Settings
 	public static double PORTAL_CLOSE_SPEED = 1;
 	public static boolean DEBUG_RENDERING = false;
 	public static boolean DEBUG_VIEWPORT = false;
+	public static boolean DEBUG_TRAVERSABLES = true;
 	public static double FRUSTUM_CULLING_RATIO = 0.2;
+	public static double CAPTURE_ZONE_RADIUS = 8;
 }

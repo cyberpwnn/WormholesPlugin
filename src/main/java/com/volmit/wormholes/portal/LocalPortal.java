@@ -20,18 +20,21 @@ import com.volmit.wormholes.inventory.UIPaneDecorator;
 import com.volmit.wormholes.inventory.UIWindow;
 import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.inventory.WindowResolution;
+import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.FinalBoolean;
 import com.volmit.wormholes.util.FinalInteger;
+import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PhantomSpinner;
 import com.volmit.wormholes.util.RString;
+import com.volmit.wormholes.util.VectorMath;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal
 {
@@ -73,6 +76,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		if(isOpen())
 		{
 			playEffect(PortalEffect.AMBIENT_OPEN);
+			updateCaptures();
 
 			if(hasTunnel() && !getTunnel().isValid())
 			{
@@ -95,6 +99,45 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		{
 			playEffect(PortalEffect.AMBIENT_DEBUG);
 		}
+	}
+
+	private void updateCaptures()
+	{
+		if(!isOpen() || !hasTunnel())
+		{
+			return;
+		}
+
+		for(Entity i : getStructure().getCaptureZone().getEntities(getStructure().getWorld()))
+		{
+			getTunnel().push(rayTeleport(i));
+		}
+	}
+
+	private Traversive rayTeleport(Entity i)
+	{
+		Vector velocity = Wormholes.traversableManager.getVelocity(i);
+		Location start = i.getLocation();
+		Location end = start.clone().add(velocity);
+		Direction inFace = Direction.getDirection(velocity);
+		Traversive[] f = new Traversive[1];
+
+		new Raycast(start, end, 0.09)
+		{
+			@Override
+			public boolean shouldContinue(Location l)
+			{
+				if(getStructure().getArea().contains(l))
+				{
+					playEffect(PortalEffect.PUSH, l);
+					f[0] = new Traversive(i, getDirection(), velocity, i.getLocation().getDirection(), VectorMath.directionNoNormal(getStructure().getArea().getFace(inFace).center().toLocation(getStructure().getWorld()), l));
+					return false;
+				}
+
+				return true;
+			}
+		};
+		return f[0];
 	}
 
 	@Override
@@ -134,13 +177,79 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		this.open = open;
 	}
 
+	public void phase(Axis a, ParticleEffect e, Location l, float scale)
+	{
+		GList<Vector> vxz = new GList<Vector>();
+
+		for(Direction i : Direction.values())
+		{
+			if(i.getAxis().equals(a))
+			{
+				continue;
+			}
+
+			vxz.add(i.toVector());
+		}
+
+		int k = 1;
+
+		if(M.r(0.7))
+		{
+			k++;
+
+			if(M.r(0.4))
+			{
+				k++;
+
+				if(M.r(0.2))
+				{
+					k++;
+				}
+			}
+		}
+
+		for(int i = 0; i < 64; i++)
+		{
+			Vector vx = new Vector(0, 0, 0);
+
+			for(int j = 0; j < 18; j++)
+			{
+				vx.add(vxz.pickRandom());
+			}
+
+			e.display(vx.clone().normalize(), 0.5f * scale, l, 32);
+
+			if(k > 1)
+			{
+				e.display(vx.clone().normalize(), 1f * scale, l, 32);
+
+				if(k > 2)
+				{
+					e.display(vx.clone().normalize(), 1.5f * scale, l, 32);
+
+					if(k > 3)
+					{
+						e.display(vx.clone().normalize(), 2.0f * scale, l, 32);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void playEffect(PortalEffect effect, Location location)
 	{
 		switch(effect)
 		{
+			case PUSH:
+				phase(Direction.getDirection(location.getDirection()).getAxis(), ParticleEffect.WATER_WAKE, location, 0.125f);
+				location.getWorld().playSound(location, MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.7f + (float) (Math.random() * 0.2));
+				location.getWorld().playSound(location, MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.5f + (float) (Math.random() * 0.2));
+				location.getWorld().playSound(location, MSound.ENDERMAN_TELEPORT.bukkitSound(), 0.5f, 1.3f + (float) (Math.random() * 0.2));
+
+				break;
 			case AMBIENT_CLOSED:
-				for(int i = 0; i < 4; i++)
+				for(int i = 0; i < 1; i++)
 				{
 					ParticleEffect.TOWN_AURA.display(0f, 1, getStructure().randomLocation(), 16);
 				}
@@ -292,11 +401,25 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			Vector outVelocity = t.getOutVelocity(getDirection());
 			Vector outLook = t.getOutLook(getDirection());
 			Vector outPlane = t.getOutPlane(getDirection());
-			AxisAlignedBB face = getStructure().getFace(Direction.closest(outVelocity));
-			Location exit = face.center().toLocation(getStructure().getWorld()).add(outPlane);
+			Direction dx = Direction.closest(outVelocity);
+			AxisAlignedBB face = getStructure().getFace(dx);
+			Location exit = face.center().toLocation(getStructure().getWorld()).subtract(outPlane);
 			exit.setDirection(outLook);
-			p.teleport(exit);
+			p.teleport(exit.clone().add(dx.toVector().normalize().multiply(1.25)));
 			p.setVelocity(outVelocity);
+			playEffect(PortalEffect.PUSH, exit);
+
+			if(Settings.DEBUG_TRAVERSABLES)
+			{
+				p.sendMessage("     ");
+				p.sendMessage("     ");
+				p.sendMessage("ANG: " + t.getInDirection().toString() + " -> " + getDirection().toString());
+				p.sendMessage("FCE: " + Direction.getDirection(t.getInVelocity()).reverse().toString() + " -> " + Direction.closest(outVelocity).toString());
+				p.sendMessage("MOV: " + Direction.getDirection(t.getInVelocity()).toString() + " -> " + Direction.getDirection(outVelocity).toString());
+				p.sendMessage("LOK: " + Direction.getDirection(t.getInLook()).toString() + " -> " + Direction.getDirection(outLook).toString());
+				p.sendMessage("PFL: " + "(" + F.f(t.getInPlane().getX(), 1) + ", " + F.f(t.getInPlane().getY(), 1) + ", " + F.f(t.getInPlane().getZ(), 1) + ") -> (" + F.f(outPlane.getX(), 1) + ", " + F.f(outPlane.getY(), 1) + ", " + F.f(outPlane.getZ(), 1) + ")");
+				p.sendMessage("MOT: " + "(" + F.f(t.getInVelocity().getX(), 1) + ", " + F.f(t.getInVelocity().getY(), 1) + ", " + F.f(t.getInVelocity().getZ(), 1) + ") -> (" + F.f(outVelocity.getX(), 1) + ", " + F.f(outVelocity.getY(), 1) + ", " + F.f(outVelocity.getZ(), 1) + ")");
+			}
 		}
 	}
 

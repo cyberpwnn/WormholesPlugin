@@ -10,6 +10,7 @@ import com.volmit.wormholes.util.Direction;
 public class Wormholes extends JavaPlugin implements Listener
 {
 	public static Wormholes instance;
+	public static TraversableManager traversableManager;
 	public static BlockManager blockManager;
 	public static EffectManager effectManager;
 	public static ConstructionManager constructionManager;
@@ -24,6 +25,7 @@ public class Wormholes extends JavaPlugin implements Listener
 		registerListener(effectManager = new EffectManager());
 		registerListener(constructionManager = new ConstructionManager());
 		registerListener(portalManager = new PortalManager());
+		registerListener(traversableManager = new TraversableManager());
 	}
 
 	public static void registerListener(Listener l)
