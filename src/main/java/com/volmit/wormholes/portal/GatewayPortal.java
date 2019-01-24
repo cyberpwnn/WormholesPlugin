@@ -8,10 +8,4 @@ public class GatewayPortal extends WormholePortal implements IGatewayPortal
 	{
 		super(id, PortalType.GATEWAY, structure);
 	}
-
-	@Override
-	public boolean isGateway()
-	{
-		return false;
-	}
 }

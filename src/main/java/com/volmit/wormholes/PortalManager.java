@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.IPortal;
+import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.J;
@@ -75,5 +76,30 @@ public class PortalManager implements Listener
 	public int getTotalPortalCount()
 	{
 		return getLocalPortals().size();
+	}
+
+	public int getAccessableCount(PortalType t)
+	{
+		if(t.equals(PortalType.GATEWAY))
+		{
+			return getGatewayCount();
+		}
+
+		return getTotalPortalCount() - getGatewayCount();
+	}
+
+	public int getGatewayCount()
+	{
+		int g = 0;
+
+		for(ILocalPortal i : portals.v())
+		{
+			if(i.isGateway())
+			{
+				g++;
+			}
+		}
+
+		return g;
 	}
 }

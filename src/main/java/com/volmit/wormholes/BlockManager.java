@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,6 +21,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -28,9 +30,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.volmit.wormholes.portal.PortalBlock;
 import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.GChunk;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.S;
 import com.volmit.wormholes.util.SR;
@@ -38,12 +42,89 @@ import com.volmit.wormholes.util.W;
 
 public class BlockManager implements Listener
 {
-	private final GMap<Chunk, GSet<PortalBlock>> blocks;
+	private final GMap<GChunk, GSet<PortalBlock>> blocks;
 
 	public BlockManager()
 	{
 		registerRecipes();
 		blocks = new GMap<>();
+		J.ar(() -> updatePlacedBlocks(), 9);
+	}
+
+	public void destroyAll()
+	{
+		for(GChunk i : blocks.k())
+		{
+			try
+			{
+				destroyAll(i);
+			}
+
+			catch(Throwable e)
+			{
+
+			}
+		}
+
+		blocks.clear();
+	}
+
+	@EventHandler
+	public void on(ChunkLoadEvent e)
+	{
+		try
+		{
+			if(blocks.containsKey(new GChunk(e.getChunk())))
+			{
+				destroyAll(new GChunk(e.getChunk()));
+				J.s(() -> e.getChunk().unload());
+			}
+		}
+
+		catch(Throwable ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	private void destroyAll(GChunk c)
+	{
+		for(PortalBlock i : blocks.get(c))
+		{
+			i.getLocation().getBlock().setType(Material.AIR);
+			ItemStack is = get(i.getType(), 1);
+			i.getLocation().getWorld().dropItemNaturally(i.getLocation().clone().add(0.5, 0.5, 0.5), is);
+		}
+
+		blocks.remove(c);
+	}
+
+	private void updatePlacedBlocks()
+	{
+		for(Player i : Bukkit.getOnlinePlayers())
+		{
+			try
+			{
+				for(Chunk j : W.chunkRadius(i.getLocation().getChunk(), 2))
+				{
+					if(blocks.containsKey(new GChunk(j)))
+					{
+						for(PortalBlock k : blocks.get(new GChunk(j)))
+						{
+							if(M.r(0.35))
+							{
+								k.animate(i);
+							}
+						}
+					}
+				}
+			}
+
+			catch(Throwable e)
+			{
+
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -150,28 +231,31 @@ public class BlockManager implements Listener
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void on(BlockBreakEvent e)
 	{
-		if(blocks.containsKey(e.getBlock().getLocation().getChunk()))
+		if(blocks.containsKey(new GChunk(e.getBlock().getLocation().getChunk())))
 		{
 			ItemStack drop = null;
 
-			for(PortalBlock i : new GList<PortalBlock>(blocks.get(e.getBlock().getLocation().getChunk())))
+			for(PortalBlock i : new GList<PortalBlock>(blocks.get(new GChunk(e.getBlock().getLocation().getChunk()))))
 			{
 				if(i.getLocation().equals(e.getBlock().getLocation()))
 				{
 					removeBlock(i);
 					e.setDropItems(false);
 
-					switch(i.getType())
+					if(e.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
 					{
-						case PORTAL:
-							drop = getPortalRune(1);
-							break;
-						case WORMHOLE:
-							drop = getWormholeRune(1);
-							break;
-						case GATEWAY:
-							drop = getGatewayRune(1);
-							break;
+						switch(i.getType())
+						{
+							case PORTAL:
+								drop = getPortalRune(1);
+								break;
+							case WORMHOLE:
+								drop = getWormholeRune(1);
+								break;
+							case GATEWAY:
+								drop = getGatewayRune(1);
+								break;
+						}
 					}
 				}
 			}
@@ -209,9 +293,9 @@ public class BlockManager implements Listener
 
 	public PortalBlock getBlock(Block block)
 	{
-		if(blocks.containsKey(block.getLocation().getChunk()))
+		if(blocks.containsKey(new GChunk(block.getLocation().getChunk())))
 		{
-			for(PortalBlock i : blocks.get(block.getLocation().getChunk()))
+			for(PortalBlock i : blocks.get(new GChunk(block.getLocation().getChunk())))
 			{
 				if(i.getLocation().equals(block.getLocation()))
 				{
@@ -225,13 +309,13 @@ public class BlockManager implements Listener
 
 	public void removeBlock(PortalBlock block)
 	{
-		if(blocks.containsKey(block.getLocation().getChunk()))
+		if(blocks.containsKey(new GChunk(block.getLocation().getChunk())))
 		{
-			blocks.get(block.getLocation().getChunk()).remove(block);
+			blocks.get(new GChunk(block.getLocation().getChunk())).remove(block);
 
-			if(blocks.get(block.getLocation().getChunk()).isEmpty())
+			if(blocks.get(new GChunk(block.getLocation().getChunk())).isEmpty())
 			{
-				blocks.remove(block.getLocation().getChunk());
+				blocks.remove(new GChunk(block.getLocation().getChunk()));
 			}
 
 			Wormholes.effectManager.playPortalBlockDestroyed(block.getLocation().getBlock());
@@ -240,12 +324,12 @@ public class BlockManager implements Listener
 
 	public void placeBlock(PortalBlock block)
 	{
-		if(!blocks.containsKey(block.getLocation().getChunk()))
+		if(!blocks.containsKey(new GChunk(block.getLocation().getChunk())))
 		{
-			blocks.put(block.getLocation().getChunk(), new GSet<>());
+			blocks.put(new GChunk(block.getLocation().getChunk()), new GSet<>());
 		}
 
-		blocks.get(block.getLocation().getChunk()).add(block);
+		blocks.get(new GChunk(block.getLocation().getChunk())).add(block);
 		Wormholes.effectManager.playPortalBlockPlaced(block.getLocation().getBlock());
 	}
 
@@ -383,7 +467,7 @@ public class BlockManager implements Listener
 	public void refund(Set<Block> blocks, PortalType type)
 	{
 		GList<Block> refund = new GList<Block>(blocks);
-		ItemStack is = type.equals(PortalType.PORTAL) ? getPortalRune(1) : getWormholeRune(1);
+		ItemStack is = get(type, 1);
 
 		new SR(0)
 		{
@@ -404,5 +488,22 @@ public class BlockManager implements Listener
 				}
 			}
 		};
+	}
+
+	public ItemStack get(PortalType t, int stack)
+	{
+		switch(t)
+		{
+			case GATEWAY:
+				return getGatewayRune(stack);
+			case PORTAL:
+				return getPortalRune(stack);
+			case WORMHOLE:
+				return getWormholeRune(stack);
+			default:
+				break;
+		}
+
+		return null;
 	}
 }

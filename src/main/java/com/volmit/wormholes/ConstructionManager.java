@@ -9,10 +9,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import com.volmit.wormholes.portal.GatewayPortal;
 import com.volmit.wormholes.portal.ILocalPortal;
 import com.volmit.wormholes.portal.LocalPortal;
 import com.volmit.wormholes.portal.PortalStructure;
 import com.volmit.wormholes.portal.PortalType;
+import com.volmit.wormholes.portal.WormholePortal;
 import com.volmit.wormholes.util.Cuboid;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
@@ -84,9 +86,19 @@ public class ConstructionManager implements Listener
 
 	private ILocalPortal createPortal(PortalStructure s, PortalType type)
 	{
-		ILocalPortal p = new LocalPortal(UUID.randomUUID(), type, s);
+		switch(type)
+		{
+			case GATEWAY:
+				return new GatewayPortal(UUID.randomUUID(), s);
+			case PORTAL:
+				return new LocalPortal(UUID.randomUUID(), type, s);
+			case WORMHOLE:
+				return new WormholePortal(UUID.randomUUID(), type, s);
+			default:
+				break;
+		}
 
-		return p;
+		return null;
 	}
 
 	public void destroy(ILocalPortal localPortal)

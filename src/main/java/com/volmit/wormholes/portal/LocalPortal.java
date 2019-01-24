@@ -67,6 +67,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		tunnel = null;
 		directionChanger = null;
 		chosenDirection = null;
+		setName(F.capitalize(getType().name().toLowerCase()) + " " + id.toString().substring(0, 4));
 	}
 
 	@Override
@@ -527,7 +528,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				.addLore(C.GRAY + "Choose a portal destination for")
 				.addLore(C.GRAY + "this portal.")
 				.setMaterial(new MaterialBlock(Material.EYE_OF_ENDER))
-				.setCount(Wormholes.portalManager.getTotalPortalCount() - 1)
+				.setCount(Wormholes.portalManager.getAccessableCount(getType()) - 1)
 				.onLeftClick((e) -> uiChooseDestination(p)))
 		.setElement(0, 0, new UIElement("set-name")
 				.setName(C.GREEN + "" + C.BOLD + "Set Name")
@@ -712,13 +713,13 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	@Override
 	public boolean isGateway()
 	{
-		return false;
+		return getType().equals(PortalType.GATEWAY);
 	}
 
 	@Override
 	public boolean supportsProjections()
 	{
-		return false;
+		return getType().equals(PortalType.GATEWAY) || getType().equals(PortalType.WORMHOLE);
 	}
 
 	@Override

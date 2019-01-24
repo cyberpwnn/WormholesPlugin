@@ -1,6 +1,10 @@
 package com.volmit.wormholes.portal;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+
+import com.volmit.wormholes.util.ParticleEffect;
 
 public class PortalBlock
 {
@@ -65,5 +69,10 @@ public class PortalBlock
 			return false;
 		}
 		return true;
+	}
+
+	public void animate(Player i)
+	{
+		ParticleEffect.PORTAL.display(1.25f, 1, getLocation().clone().add(Vector.getRandom()), i);
 	}
 }

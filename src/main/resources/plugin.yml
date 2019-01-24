@@ -7,7 +7,7 @@ author: Volmit Software
 prefix: Wormholes
 commands:
   wormholes:
-    aliases: [wh, wormhole, worm, whole, portal]
+    aliases: [wh, wormhole, worm, whole, portal, w]
 permissions:
   wormholes.*:
     description: Gives access to all Wormholes permissions
@@ -21,6 +21,9 @@ permissions:
       wormholes.admin.reload: true
   wormholes.admin.reload:
     description: Gives access to reload wormholes.
+    default: op
+  wormholes.admin.items:
+    description: Gives access to spawn in wormholes items.
     default: op
   wormholes.gateway:
     description: Gives access to create, and modify gateway portals (server portals)
