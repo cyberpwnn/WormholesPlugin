@@ -20,18 +20,33 @@ public class ProjectionMatrix
 
 	public MaterialBlock getBlock(int x, int y, int z, ILocalPortal context)
 	{
+		if(context.getDirection().equals(portal.getDirection()))
+		{
+			return access.getBlock(x, y, z);
+		}
+
 		Vector angle = portal.getDirection().angle(new Vector(x, y, z), context.getDirection()).add(portal.getOrigin());
 		return access.getBlock(angle.getBlockX(), angle.getBlockY(), angle.getBlockZ());
 	}
 
 	public byte getSkyLight(int x, int y, int z, ILocalPortal context)
 	{
+		if(context.getDirection().equals(portal.getDirection()))
+		{
+			return access.getSkyLight(x, y, z);
+		}
+
 		Vector angle = portal.getDirection().angle(new Vector(x, y, z), context.getDirection()).add(portal.getOrigin());
 		return access.getSkyLight(angle.getBlockX(), angle.getBlockY(), angle.getBlockZ());
 	}
 
 	public byte getBlockLight(int x, int y, int z, ILocalPortal context)
 	{
+		if(context.getDirection().equals(portal.getDirection()))
+		{
+			return access.getBlockLight(x, y, z);
+		}
+
 		Vector angle = portal.getDirection().angle(new Vector(x, y, z), context.getDirection()).add(portal.getOrigin());
 		return access.getBlockLight(angle.getBlockX(), angle.getBlockY(), angle.getBlockZ());
 	}

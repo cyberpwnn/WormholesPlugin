@@ -146,4 +146,9 @@ public class MaterialBlock
 		}
 		return true;
 	}
+
+	public int getId()
+	{
+		return getMaterial().getId();
+	}
 }

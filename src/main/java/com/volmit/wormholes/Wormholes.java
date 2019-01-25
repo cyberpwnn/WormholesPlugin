@@ -28,6 +28,8 @@ public class Wormholes extends JavaPlugin implements Listener
 	public static EffectManager effectManager;
 	public static ConstructionManager constructionManager;
 	public static PortalManager portalManager;
+	public static NetworkManager networkManager;
+	public static ProjectionManager projectionManager;
 
 	@Override
 	public void onEnable()
@@ -41,6 +43,8 @@ public class Wormholes extends JavaPlugin implements Listener
 		registerListener(constructionManager = new ConstructionManager());
 		registerListener(portalManager = new PortalManager());
 		registerListener(traversableManager = new TraversableManager());
+		registerListener(networkManager = new NetworkManager());
+		registerListener(projectionManager = new ProjectionManager());
 	}
 
 	private void handleNMS()

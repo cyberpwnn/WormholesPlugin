@@ -14,10 +14,13 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.util.GList;
+
 public class ShadowQueue
 {
 	public final Map<Chunk, ShadowChunk> chunks;
 	public final List<Vector> modifiedQueue;
+	public final List<Vector> desyncedQueue;
 	private final Player p;
 	private final World world;
 
@@ -26,6 +29,7 @@ public class ShadowQueue
 		this.p = p;
 		this.world = world;
 		chunks = new HashMap<>();
+		desyncedQueue = new ArrayList<>();
 		modifiedQueue = new ArrayList<>();
 	}
 
@@ -52,14 +56,22 @@ public class ShadowQueue
 
 		for(Vector i : modifiedQueue)
 		{
-			ShadowChunk c = getChunk(i.getBlockX(), i.getBlockZ());
-
-			if(c.isFullModification())
+			try
 			{
-				fullChunks.add(new Vector(i.getBlockX(), 0, i.getBlockZ()));
+				ShadowChunk c = getChunk(i.getBlockX(), i.getBlockZ());
+
+				if(c.isFullModification())
+				{
+					fullChunks.add(new Vector(i.getBlockX(), 0, i.getBlockZ()));
+				}
+
+				priority.put(i, (int) (3 * i.distanceSquared(section)));
 			}
 
-			priority.put(i, (int) (3 * i.distanceSquared(section)));
+			catch(Throwable e)
+			{
+
+			}
 		}
 
 		List<Integer> values = new ArrayList<>(priority.values());
@@ -106,6 +118,26 @@ public class ShadowQueue
 	public void modifySection(int x, int y, int z)
 	{
 		modifiedQueue.add(new Vector(x, y, z));
+		desyncedQueue.add(new Vector(x, y, z));
+	}
+
+	public void rebaseAll()
+	{
+		GList<Vector> g = new GList<Vector>(desyncedQueue);
+		for(Vector i : g)
+		{
+			try
+			{
+				rebaseSection(i.getBlockX(), i.getBlockY(), i.getBlockZ());
+			}
+
+			catch(Throwable e)
+			{
+
+			}
+		}
+
+		desyncedQueue.clear();
 	}
 
 	public void rebaseSection(int x, int y, int z)

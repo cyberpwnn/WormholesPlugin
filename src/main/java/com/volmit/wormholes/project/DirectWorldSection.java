@@ -1,6 +1,7 @@
 package com.volmit.wormholes.project;
 
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 
 import com.volmit.wormholes.nms.ShadowQueue;
@@ -60,6 +61,22 @@ public class DirectWorldSection implements IWorldSection
 	@Override
 	public MaterialBlock getType(int x, int y, int z)
 	{
-		return new MaterialBlock(c.getBlock(x, (this.y >> 4) + y, z));
+		try
+		{
+			return new MaterialBlock(c.getBlock(x, (this.y >> 4) + y, z));
+		}
+
+		catch(Throwable e)
+		{
+			try
+			{
+				return new MaterialBlock(c.getBlock(x, (this.y >> 4) + y, z));
+			}
+
+			catch(Throwable ex)
+			{
+				return new MaterialBlock(Material.STONE);
+			}
+		}
 	}
 }

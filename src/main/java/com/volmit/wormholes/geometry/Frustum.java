@@ -137,6 +137,17 @@ public class Frustum
 		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
 	}
 
+	public boolean contains(Vector l)
+	{
+		if(!getRegion().contains(l))
+		{
+			return false;
+		}
+
+		GeoPoint p = nGeoPoint(l);
+		return poly.PointInside3DPolygon(p.getX(), p.getY(), p.getZ());
+	}
+
 	public static GeoPoint toGeoPoint(Vector v)
 	{
 		return new GeoPoint(v.getX(), v.getY(), v.getZ());
@@ -147,6 +158,11 @@ public class Frustum
 		return loc.clone().subtract(origin);
 	}
 
+	public static Vector normalize(Location origin, Vector loc)
+	{
+		return loc.clone().subtract(origin.toVector());
+	}
+
 	public static Vec4 toVec4(Vector v)
 	{
 		return Vec4.fromArray3(new double[] {v.getX(), v.getY(), v.getZ()}, 0);
@@ -155,6 +171,11 @@ public class Frustum
 	public GeoPoint nGeoPoint(Location v)
 	{
 		return toGeoPoint(normalize(origin, v).toVector());
+	}
+
+	public GeoPoint nGeoPoint(Vector v)
+	{
+		return toGeoPoint(normalize(origin, v));
 	}
 
 	public Vec4 nVec4(Location v)

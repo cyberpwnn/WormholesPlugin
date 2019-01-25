@@ -4,21 +4,35 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.Settings;
+import com.volmit.wormholes.geometry.Frustum4D;
 import com.volmit.wormholes.inventory.Element;
 import com.volmit.wormholes.inventory.UIElement;
 import com.volmit.wormholes.inventory.Window;
+import com.volmit.wormholes.project.BoundingBoxTracker;
+import com.volmit.wormholes.project.IBoundingBoxTracker;
+import com.volmit.wormholes.project.IProjectionTracker;
+import com.volmit.wormholes.project.ProjectionTracker;
+import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.MaterialBlock;
 
 public class WormholePortal extends LocalPortal implements IWormholePortal
 {
 	private boolean projecting;
+	private IProjectionTracker tracker;
+	private IBoundingBoxTracker<Player> ptracker;
+	private AxisAlignedBB view;
 
 	public WormholePortal(UUID id, PortalType type, PortalStructure structure)
 	{
 		super(id, type, structure);
 		projecting = false;
+		tracker = new ProjectionTracker(this);
+		view = new AxisAlignedBB(getStructure().getArea().min().add(new Vector(-Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE)), getStructure().getArea().max().add(new Vector(Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE)));
+		ptracker = new BoundingBoxTracker(getView(), getWorld());
 	}
 
 	@Override
@@ -34,7 +48,22 @@ public class WormholePortal extends LocalPortal implements IWormholePortal
 
 	private void flushProjections()
 	{
-		// TODO mhm
+		ptracker.update();
+
+		for(Player i : getPlayerTracker().getEntering())
+		{
+			getTracker().startTracking(i);
+		}
+
+		for(Player i : getPlayerTracker().getExiting())
+		{
+			getTracker().stopTracking(i);
+		}
+
+		for(Player i : getPlayerTracker().getInside())
+		{
+			getTracker().getTrackedProjectors().get(i).swapBuffers(new Frustum4D(i.getEyeLocation(), getStructure(), (int) Settings.PROJECTION_RANGE));
+		}
 	}
 
 	@Override
@@ -72,5 +101,23 @@ public class WormholePortal extends LocalPortal implements IWormholePortal
 	public void setProjecting(boolean projecting)
 	{
 		this.projecting = projecting;
+	}
+
+	@Override
+	public IProjectionTracker getTracker()
+	{
+		return tracker;
+	}
+
+	@Override
+	public AxisAlignedBB getView()
+	{
+		return view;
+	}
+
+	@Override
+	public IBoundingBoxTracker<Player> getPlayerTracker()
+	{
+		return ptracker;
 	}
 }

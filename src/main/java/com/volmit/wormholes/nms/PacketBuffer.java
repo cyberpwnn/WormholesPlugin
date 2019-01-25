@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.volmit.wormholes.util.A;
+
 public class PacketBuffer
 {
 	private final List<Object> packets;
@@ -20,6 +22,18 @@ public class PacketBuffer
 	{
 		packets.add(o);
 		return this;
+	}
+
+	public boolean hasNext()
+	{
+		return !packets.isEmpty();
+	}
+
+	public Object next()
+	{
+		Object o = packets.get(0);
+		packets.remove(0);
+		return o;
 	}
 
 	public PacketBuffer q(List<Object> o)
@@ -64,12 +78,34 @@ public class PacketBuffer
 		return this;
 	}
 
+	public List<Object> get()
+	{
+		return packets;
+	}
+
 	public PacketBuffer flush(Player p)
 	{
 		for(Object i : packets)
 		{
 			NMP.host.sendPacket(p, i);
 		}
+
+		return this;
+	}
+
+	public PacketBuffer flushAsync(Player p)
+	{
+		new A()
+		{
+			@Override
+			public void run()
+			{
+				for(Object i : packets)
+				{
+					NMP.host.sendPacket(p, i);
+				}
+			}
+		};
 
 		return this;
 	}

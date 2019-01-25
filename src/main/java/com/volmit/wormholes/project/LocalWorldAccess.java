@@ -14,7 +14,7 @@ public class LocalWorldAccess extends WorldAccess
 	@Override
 	public IWorldSection cacheSection(int x, int y, int z)
 	{
-		return new DirectWorldSection(world.getChunkAt(x, z), y);
+		return new DirectWorldSection(ChunkWait.getChunk(world, x, z), y);
 	}
 
 	@Override

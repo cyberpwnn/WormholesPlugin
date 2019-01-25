@@ -70,7 +70,6 @@ public abstract class DirectionalIterator
 
 	public void computeNextSection()
 	{
-		va = -1;
 		while(!done && va >> 4 == (va >> 4) << 4)
 		{
 			computeNextLayer();
@@ -109,6 +108,11 @@ public abstract class DirectionalIterator
 		{
 			done = true;
 		}
+	}
+
+	public boolean isDone()
+	{
+		return done;
 	}
 
 	public abstract void process(int x, int y, int z);

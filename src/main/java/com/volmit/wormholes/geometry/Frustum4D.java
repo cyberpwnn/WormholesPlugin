@@ -14,13 +14,17 @@ public class Frustum4D
 {
 	private GList<Frustum> frustums;
 	private AxisAlignedBB region;
+	private Location iris;
+	private Direction d;
 
 	public Frustum4D(Location iris, PortalStructure structure, int rr)
 	{
 		frustums = new GList<>();
+		this.iris = iris;
 		double distanceToPortal = iris.distance(structure.getCenter());
 		double range = rr + (rr / (distanceToPortal + 1));
 		Vector direction = VectorMath.reverse(VectorMath.direction(iris, structure.getCenter()));
+		d = Direction.closest(direction);
 
 		for(Direction i : Direction.values())
 		{
@@ -63,6 +67,24 @@ public class Frustum4D
 		}
 	}
 
+	public boolean contains(Vector p)
+	{
+		if(!getRegion().contains(p))
+		{
+			return false;
+		}
+
+		for(Frustum i : frustums)
+		{
+			if(i.contains(p))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public boolean contains(Location p)
 	{
 		if(!getRegion().contains(p))
@@ -84,5 +106,15 @@ public class Frustum4D
 	public AxisAlignedBB getRegion()
 	{
 		return region;
+	}
+
+	public Direction getDirection()
+	{
+		return d;
+	}
+
+	public Location getIris()
+	{
+		return iris;
 	}
 }
