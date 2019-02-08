@@ -7,7 +7,7 @@ import org.bukkit.util.Vector;
 import com.volmit.wormholes.project.ProjectionMatrix;
 import com.volmit.wormholes.util.Direction;
 
-public interface IPortal
+public interface IPortal extends IWritable
 {
 	public Direction getDirection();
 

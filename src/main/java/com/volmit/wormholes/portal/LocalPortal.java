@@ -1,5 +1,7 @@
 package com.volmit.wormholes.portal;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -35,20 +37,22 @@ import com.volmit.wormholes.util.FinalBoolean;
 import com.volmit.wormholes.util.FinalInteger;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.J;
+import com.volmit.wormholes.util.JSONObject;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 import com.volmit.wormholes.util.MaterialBlock;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.PhantomSpinner;
 import com.volmit.wormholes.util.RString;
+import com.volmit.wormholes.util.VIO;
 import com.volmit.wormholes.util.VectorMath;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal, IOwnablePortal, Listener
 {
-	private final PhantomSpinner spinner;
-	private final PortalStructure structure;
-	private final ProjectionMatrix matrix;
-	private final PortalType type;
+	private PhantomSpinner spinner;
+	private PortalStructure structure;
+	private ProjectionMatrix matrix;
+	private PortalType type;
 	private UUID owner;
 	private ITunnel tunnel;
 	private boolean open;
@@ -56,6 +60,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	private String progress;
 	private Player directionChanger;
 	private Direction chosenDirection;
+	private boolean needsSaving;
 
 	public LocalPortal(UUID id, PortalType type, PortalStructure structure)
 	{
@@ -72,6 +77,37 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		chosenDirection = null;
 		setName(F.capitalize(getType().name().toLowerCase()) + " " + id.toString().substring(0, 4));
 		matrix = new ProjectionMatrix(this);
+		needsSaving = false;
+	}
+
+	@Override
+	public void saveJSON(JSONObject j)
+	{
+		super.saveJSON(j);
+		j.put("structure", getStructure().toJSON());
+		j.put("type", type.name());
+		j.put("owner", getOwner().toString());
+		j.put("tunnel", getTunnel().toJSON());
+	}
+
+	@Override
+	public void loadJSON(JSONObject j)
+	{
+		super.loadJSON(j);
+		structure = new PortalStructure();
+		structure.loadJSON(j.getJSONObject("structure"));
+		type = PortalType.valueOf(j.getString("type"));
+		owner = UUID.fromString(j.getString("owner"));
+		tunnel = ITunnel.createTunnel(j.getJSONObject("tunnel"));
+	}
+
+	@Override
+	public JSONObject toJSON()
+	{
+		JSONObject o = new JSONObject();
+		saveJSON(o);
+
+		return o;
 	}
 
 	@Override
@@ -778,5 +814,31 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public ProjectionMatrix getMatrix()
 	{
 		return matrix;
+	}
+
+	@Override
+	public void save()
+	{
+		needsSaving = true;
+	}
+
+	@Override
+	public boolean needsSaving()
+	{
+		return needsSaving;
+	}
+
+	@Override
+	public void saveNow() throws IOException
+	{
+		doSave();
+		needsSaving = false;
+	}
+
+	private void doSave() throws IOException
+	{
+		File f = Wormholes.portalManager.getSaveFile(getId());
+		f.getParentFile().mkdirs();
+		VIO.writeAll(f, toJSON());
 	}
 }

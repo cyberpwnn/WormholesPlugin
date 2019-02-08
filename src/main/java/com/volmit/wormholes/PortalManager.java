@@ -1,5 +1,6 @@
 package com.volmit.wormholes;
 
+import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.event.Listener;
@@ -101,5 +102,10 @@ public class PortalManager implements Listener
 		}
 
 		return g;
+	}
+
+	public File getSaveFile(UUID id)
+	{
+		return new File(new File(new File(new File(Wormholes.instance.getDataFolder(), "portals"), id.toString().split("-")[1]), id.toString().split("-")[0]), id.toString());
 	}
 }

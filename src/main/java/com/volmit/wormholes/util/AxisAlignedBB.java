@@ -8,8 +8,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.volmit.wormholes.geometry.GeoPolygonProc;
+import com.volmit.wormholes.portal.IWritable;
 
-public class AxisAlignedBB
+public class AxisAlignedBB implements IWritable
 {
 	private double xa;
 	private double xb;
@@ -17,6 +18,37 @@ public class AxisAlignedBB
 	private double yb;
 	private double za;
 	private double zb;
+
+	@Override
+	public JSONObject toJSON()
+	{
+		JSONObject o = new JSONObject();
+		saveJSON(o);
+
+		return o;
+	}
+
+	@Override
+	public void loadJSON(JSONObject j)
+	{
+		xa = j.getDouble("xa");
+		xb = j.getDouble("xb");
+		ya = j.getDouble("ya");
+		yb = j.getDouble("yb");
+		za = j.getDouble("za");
+		zb = j.getDouble("zb");
+	}
+
+	@Override
+	public void saveJSON(JSONObject j)
+	{
+		j.put("xa", xa);
+		j.put("xb", xb);
+		j.put("ya", ya);
+		j.put("yb", yb);
+		j.put("za", za);
+		j.put("zb", zb);
+	}
 
 	public AxisAlignedBB(double xa, double xb, double ya, double yb, double za, double zb)
 	{

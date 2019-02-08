@@ -9,7 +9,7 @@ import com.volmit.wormholes.inventory.Window;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.Direction;
 
-public interface ILocalPortal extends IPortal, Listener
+public interface ILocalPortal extends IPortal, IPersistant, Listener
 {
 	public PortalStructure getStructure();
 

@@ -17,6 +17,7 @@ import com.volmit.wormholes.project.IProjectionTracker;
 import com.volmit.wormholes.project.ProjectionTracker;
 import com.volmit.wormholes.util.AxisAlignedBB;
 import com.volmit.wormholes.util.C;
+import com.volmit.wormholes.util.JSONObject;
 import com.volmit.wormholes.util.MaterialBlock;
 
 public class WormholePortal extends LocalPortal implements IWormholePortal
@@ -33,6 +34,31 @@ public class WormholePortal extends LocalPortal implements IWormholePortal
 		tracker = new ProjectionTracker(this);
 		view = new AxisAlignedBB(getStructure().getArea().min().add(new Vector(-Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE)), getStructure().getArea().max().add(new Vector(Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE)));
 		ptracker = new BoundingBoxTracker(getView(), getWorld());
+	}
+
+	@Override
+	public void saveJSON(JSONObject j)
+	{
+		super.saveJSON(j);
+		j.put("projecting", projecting);
+	}
+
+	@Override
+	public void loadJSON(JSONObject j)
+	{
+		super.loadJSON(j);
+		projecting = j.getBoolean("projecting");
+		view = new AxisAlignedBB(getStructure().getArea().min().add(new Vector(-Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE, -Settings.PROJECTION_RANGE)), getStructure().getArea().max().add(new Vector(Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE, Settings.PROJECTION_RANGE)));
+		ptracker = new BoundingBoxTracker(getView(), getWorld());
+	}
+
+	@Override
+	public JSONObject toJSON()
+	{
+		JSONObject o = new JSONObject();
+		saveJSON(o);
+
+		return o;
 	}
 
 	@Override

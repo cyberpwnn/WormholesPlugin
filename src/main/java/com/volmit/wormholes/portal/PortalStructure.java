@@ -2,6 +2,7 @@ package com.volmit.wormholes.portal;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -14,8 +15,9 @@ import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.GMap;
 import com.volmit.wormholes.util.GSet;
+import com.volmit.wormholes.util.JSONObject;
 
-public class PortalStructure
+public class PortalStructure implements IWritable
 {
 	private AxisAlignedBB captureZone;
 	private AxisAlignedBB area;
@@ -23,6 +25,32 @@ public class PortalStructure
 	private World world;
 	private GMap<Direction, AxisAlignedBB> faceCache = new GMap<>();
 	private GSet<Location> cornerCache;
+
+	@Override
+	public void saveJSON(JSONObject j)
+	{
+		j.put("world", world.getName());
+		j.put("area", area.toJSON());
+	}
+
+	@Override
+	public void loadJSON(JSONObject j)
+	{
+		area = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+		area.loadJSON(j.getJSONObject("area"));
+		setWorld(Bukkit.getWorld(j.getString("world")));
+		captureZone = new AxisAlignedBB(getArea().min().add(new Vector(-Settings.CAPTURE_ZONE_RADIUS, -Settings.CAPTURE_ZONE_RADIUS, -Settings.CAPTURE_ZONE_RADIUS)), getArea().max().add(new Vector(Settings.CAPTURE_ZONE_RADIUS, Settings.CAPTURE_ZONE_RADIUS, Settings.CAPTURE_ZONE_RADIUS)));
+		invalidateCache();
+	}
+
+	@Override
+	public JSONObject toJSON()
+	{
+		JSONObject o = new JSONObject();
+		saveJSON(o);
+
+		return o;
+	}
 
 	public World getWorld()
 	{
