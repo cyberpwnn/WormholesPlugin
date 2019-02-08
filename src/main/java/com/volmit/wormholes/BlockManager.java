@@ -46,6 +46,7 @@ public class BlockManager implements Listener
 
 	public BlockManager()
 	{
+		Wormholes.v("Starting Block Manager");
 		registerRecipes();
 		blocks = new GMap<>();
 		J.ar(() -> updatePlacedBlocks(), 9);
@@ -53,6 +54,7 @@ public class BlockManager implements Listener
 
 	public void destroyAll()
 	{
+		Wormholes.v("Destroying portal blocks in " + blocks.k() + " chunks containing portal blocks.");
 		for(GChunk i : blocks.k())
 		{
 			try
@@ -89,6 +91,8 @@ public class BlockManager implements Listener
 
 	private void destroyAll(GChunk c)
 	{
+		Wormholes.v("Destroying " + blocks.get(c).size() + " portal blocks in chunk " + c.getX() + ", " + c.getZ());
+
 		for(PortalBlock i : blocks.get(c))
 		{
 			i.getLocation().getBlock().setType(Material.AIR);

@@ -16,6 +16,7 @@ public class TraversableManager implements Listener
 
 	public TraversableManager()
 	{
+		Wormholes.v("Starting Traversable Manager");
 		velocities = new GMap<>();
 	}
 

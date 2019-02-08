@@ -127,6 +127,7 @@ public class WormholePortal extends LocalPortal implements IWormholePortal
 	public void setProjecting(boolean projecting)
 	{
 		this.projecting = projecting;
+		save();
 	}
 
 	@Override

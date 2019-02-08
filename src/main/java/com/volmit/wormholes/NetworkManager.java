@@ -14,6 +14,7 @@ public class NetworkManager implements Listener
 
 	public NetworkManager()
 	{
+		Wormholes.v("Starting Network Manager");
 		buffers = new GMap<>();
 		J.ar(() -> flush(), 0);
 	}

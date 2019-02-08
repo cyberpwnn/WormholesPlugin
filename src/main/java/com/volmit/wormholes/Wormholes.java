@@ -16,6 +16,7 @@ import com.volmit.wormholes.nms.NMSVersion;
 import com.volmit.wormholes.portal.PortalType;
 import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
+import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 
@@ -34,10 +35,11 @@ public class Wormholes extends JavaPlugin implements Listener
 	@Override
 	public void onEnable()
 	{
+		instance = this;
 		tag = C.DARK_GRAY + "[" + C.GOLD + C.BOLD + "W" + C.RESET + C.DARK_GRAY + "]: " + C.GRAY;
 		handleNMS();
 		Direction.calculatePermutations();
-		registerListener(instance = this);
+		registerListener(instance);
 		registerListener(blockManager = new BlockManager());
 		registerListener(effectManager = new EffectManager());
 		registerListener(constructionManager = new ConstructionManager());
@@ -49,19 +51,21 @@ public class Wormholes extends JavaPlugin implements Listener
 
 	private void handleNMS()
 	{
+		v("Init NMS");
 		CatalystPlugin.plugin = this;
 		Catalyst.host.start();
+		v("Catalyst Started for NMS");
 		NMP.host = Catalyst.host;
 		NMSVersion v = NMSVersion.current();
 
 		if(v != null)
 		{
-			getLogger().info("Selected " + NMSVersion.current().name());
+			v("Selected " + NMSVersion.current().name());
 		}
 
 		else
 		{
-			getLogger().info("Could not find a suitable binder for this server version!");
+			w("Could not find a suitable binder for this server version!");
 		}
 	}
 
@@ -72,12 +76,51 @@ public class Wormholes extends JavaPlugin implements Listener
 		{
 			blockManager.destroyAll();
 			Catalyst.host.stop();
+			portalManager.shutDown();
 		}
 
 		catch(Throwable e)
 		{
-
+			e.printStackTrace();
 		}
+	}
+
+	public void log(String s)
+	{
+		if(Bukkit.isPrimaryThread())
+		{
+			Bukkit.getConsoleSender().sendMessage(C.GOLD + "[Wormholes] " + C.GRAY + s);
+		}
+
+		else
+		{
+			J.s(() -> log(s));
+		}
+	}
+
+	public static void l(String s)
+	{
+		instance.log(s);
+	}
+
+	public static void v(String s)
+	{
+		if(!Settings.DEBUG)
+		{
+			return;
+		}
+
+		instance.log(C.DARK_AQUA + s);
+	}
+
+	public static void w(String s)
+	{
+		instance.log(C.YELLOW + s);
+	}
+
+	public static void f(String s)
+	{
+		instance.log(C.RED + s);
 	}
 
 	public static void registerListener(Listener l)

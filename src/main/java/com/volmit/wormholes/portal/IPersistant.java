@@ -8,5 +8,7 @@ public interface IPersistant
 
 	public boolean needsSaving();
 
+	public void willSave();
+
 	public void saveNow() throws IOException;
 }

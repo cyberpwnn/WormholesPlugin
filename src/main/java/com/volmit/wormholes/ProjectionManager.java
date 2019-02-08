@@ -14,6 +14,7 @@ public class ProjectionManager implements Listener
 
 	public ProjectionManager()
 	{
+		Wormholes.v("Starting Projection Manager");
 		projectors = new GList<>();
 		J.ar(() -> flush(), 0);
 	}

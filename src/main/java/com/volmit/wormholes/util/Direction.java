@@ -2,6 +2,7 @@ package com.volmit.wormholes.util;
 
 import org.bukkit.util.Vector;
 
+import com.volmit.wormholes.Wormholes;
 import com.volmit.wormholes.util.Cuboid.CuboidDirection;
 
 /**
@@ -300,6 +301,8 @@ public enum Direction
 
 	public static void calculatePermutations()
 	{
+		Profiler px = new Profiler();
+		px.begin();
 		if(permute != null)
 		{
 			return;
@@ -437,6 +440,9 @@ public enum Direction
 				}
 			}
 		}
+
+		px.end();
+		Wormholes.v("Precalculated " + F.f(permute.size()) + " permutations in " + F.time(px.getMilliseconds(), 1));
 	}
 
 	public Axis getAxis()

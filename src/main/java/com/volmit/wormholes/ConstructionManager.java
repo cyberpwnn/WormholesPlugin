@@ -25,7 +25,7 @@ public class ConstructionManager implements Listener
 {
 	public ConstructionManager()
 	{
-
+		Wormholes.v("Starting Construction Manager");
 	}
 
 	public void constructPortal(Player player, Set<Block> blocks, PortalType type, Direction d)
@@ -71,6 +71,7 @@ public class ConstructionManager implements Listener
 					s.setArea(c);
 					ILocalPortal portal = createPortal(s, type);
 					portal.setDirection(d);
+					portal.save();
 					Wormholes.portalManager.addLocalPortal(portal);
 				}
 

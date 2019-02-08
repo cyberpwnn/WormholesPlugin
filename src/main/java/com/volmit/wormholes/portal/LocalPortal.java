@@ -87,7 +87,11 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		j.put("structure", getStructure().toJSON());
 		j.put("type", type.name());
 		j.put("owner", getOwner().toString());
-		j.put("tunnel", getTunnel().toJSON());
+
+		if(tunnel != null)
+		{
+			j.put("tunnel", getTunnel().toJSON());
+		}
 	}
 
 	@Override
@@ -98,7 +102,11 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 		structure.loadJSON(j.getJSONObject("structure"));
 		type = PortalType.valueOf(j.getString("type"));
 		owner = UUID.fromString(j.getString("owner"));
-		tunnel = ITunnel.createTunnel(j.getJSONObject("tunnel"));
+
+		if(j.has("tunnel"))
+		{
+			tunnel = ITunnel.createTunnel(j.getJSONObject("tunnel"));
+		}
 	}
 
 	@Override
@@ -447,6 +455,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	public void setDirection(Direction d)
 	{
 		this.direction = d;
+		save();
 	}
 
 	@Override
@@ -496,17 +505,20 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 			if(p.getStructure().getWorld().equals(getStructure().getWorld()))
 			{
 				tunnel = new LocalTunnel(p);
+				save();
 			}
 
 			else
 			{
 				tunnel = new DimensionalTunnel(p);
+				save();
 			}
 		}
 
 		else if(portal instanceof IRemotePortal)
 		{
 			tunnel = new UniversalTunnel((IRemotePortal) portal);
+			save();
 		}
 
 		else
@@ -837,8 +849,23 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 
 	private void doSave() throws IOException
 	{
+		willSave();
 		File f = Wormholes.portalManager.getSaveFile(getId());
 		f.getParentFile().mkdirs();
-		VIO.writeAll(f, toJSON());
+		VIO.writeAll(f, toJSON().toString(2));
+		Wormholes.v("Saved Portal " + getId().toString() + " (" + getName() + ")");
+	}
+
+	@Override
+	public void willSave()
+	{
+		needsSaving = false;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		super.setName(name);
+		save();
 	}
 }

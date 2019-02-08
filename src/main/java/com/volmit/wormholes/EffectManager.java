@@ -27,6 +27,8 @@ public class EffectManager implements Listener
 {
 	public EffectManager()
 	{
+		Wormholes.v("Starting Effect Manager");
+
 		new AR()
 		{
 			@SuppressWarnings("deprecation")

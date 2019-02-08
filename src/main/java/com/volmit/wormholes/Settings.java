@@ -15,4 +15,5 @@ public class Settings
 	public static double CAPTURE_ZONE_RADIUS = 8;
 	public static double PROJECTION_RANGE = 16;
 	public static double PROJECTION_FLUSH_TIME = 750;
+	public static boolean DEBUG = true;
 }
