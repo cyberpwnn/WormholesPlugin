@@ -11,4 +11,6 @@ public interface IPersistant
 	public void willSave();
 
 	public void saveNow() throws IOException;
+
+	public void deleteData();
 }

@@ -549,6 +549,7 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 				{
 					Wormholes.portalManager.removeLocalPortal(LocalPortal.this);
 					Wormholes.constructionManager.destroy(LocalPortal.this);
+					deleteData();
 				}
 			}
 		}, 0, 105);
@@ -867,5 +868,22 @@ public class LocalPortal extends Portal implements ILocalPortal, IProgressivePor
 	{
 		super.setName(name);
 		save();
+	}
+
+	@Override
+	public void deleteData()
+	{
+		File f = Wormholes.portalManager.getSaveFile(getId());
+		f.delete();
+
+		if(f.getParentFile().listFiles().length == 0)
+		{
+			f.getParentFile().delete();
+		}
+
+		if(f.getParentFile().getParentFile().listFiles().length == 0)
+		{
+			f.getParentFile().getParentFile().delete();
+		}
 	}
 }
