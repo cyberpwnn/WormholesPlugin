@@ -2,7 +2,7 @@ name: ${project.name}
 version: ${project.version}
 main: com.volmit.wormholes.Wormholes
 description: Wormholes is a portal plugin which allows servers to show the other side of the portal while looking through them. Blocks and entities will show up as they are on the other side.
-depend: [ProtocolLib]
+depend: [Mortar]
 author: Volmit Software
 prefix: Wormholes
 commands:

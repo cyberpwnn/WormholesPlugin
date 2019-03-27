@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.volmit.wormholes.nms.Catalyst;
 import com.volmit.wormholes.nms.CatalystPlugin;
@@ -20,7 +19,10 @@ import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 
-public class Wormholes extends JavaPlugin implements Listener
+import mortar.bukkit.plugin.MortarPlugin;
+import mortar.util.text.TXT;
+
+public class Wormholes extends MortarPlugin implements Listener
 {
 	public static String tag;
 	public static Wormholes instance;
@@ -33,7 +35,7 @@ public class Wormholes extends JavaPlugin implements Listener
 	public static ProjectionManager projectionManager;
 
 	@Override
-	public void onEnable()
+	public void start()
 	{
 		instance = this;
 		tag = C.DARK_GRAY + "[" + C.GOLD + C.BOLD + "W" + C.RESET + C.DARK_GRAY + "]: " + C.GRAY;
@@ -70,7 +72,7 @@ public class Wormholes extends JavaPlugin implements Listener
 	}
 
 	@Override
-	public void onDisable()
+	public void stop()
 	{
 		try
 		{
@@ -226,5 +228,11 @@ public class Wormholes extends JavaPlugin implements Listener
 
 		s.sendMessage(tag + "Ingame only command.");
 		return false;
+	}
+
+	@Override
+	public String getTag(String subTag)
+	{
+		return TXT.makeTag(C.GOLD, C.DARK_GRAY, C.GRAY, "Wormholes");
 	}
 }
