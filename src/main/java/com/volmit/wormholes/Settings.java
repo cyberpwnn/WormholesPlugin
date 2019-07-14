@@ -3,6 +3,8 @@ package com.volmit.wormholes;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import com.comphenix.protocol.PacketType;
+import com.volmit.wormholes.aperture.EntityHider;
 import org.bukkit.entity.EntityType;
 
 import com.volmit.wormholes.config.CMax;
@@ -14,6 +16,8 @@ import com.volmit.wormholes.util.DataCluster;
 import com.volmit.wormholes.util.GList;
 import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.ParticleEffect.ParticleProperty;
+
+import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 public class Settings
 {
@@ -324,6 +328,10 @@ public class Settings
 	@Comment("Particle Effect used for making deny ripples\nParticle Types: https://volmit.com/docs/directional-particle-types/")
 	public static String PARTICLE_TYPE_DENY_RIPPLE = "CRIT";
 
+	@CName("APERTURE_ENTITY_PACKETS")
+	@Comment("List of entity packet types for the aperture to intercept")
+	public static ArrayList<String> APERATURE_ENTITY_PACKETS = new ArrayList<String>();
+
 	public static ParticleEffect getLightningParticle()
 	{
 		try
@@ -561,6 +569,24 @@ public class Settings
 
 			ALLOW_ENTITIY_TYPES.add(i.toString());
 		}
+
+		String[] ENTITY_PACKETS = {"ENTITY_EQUIPMENT", "BED", "ANIMATION", "NAMED_ENTITY_SPAWN", "COLLECT", "SPAWN_ENTITY", "SPAWN_ENTITY_LIVING", "SPAWN_ENTITY_PAINTING", "SPAWN_ENTITY_EXPERIENCE_ORB", "ENTITY_VELOCITY", "REL_ENTITY_MOVE", "ENTITY_LOOK", "ENTITY_MOVE_LOOK", "ENTITY_MOVE_LOOK", "ENTITY_TELEPORT", "ENTITY_HEAD_ROTATION", "ENTITY_STATUS", "ATTACH_ENTITY", "ENTITY_METADATA", "ENTITY_EFFECT", "REMOVE_ENTITY_EFFECT", "BLOCK_BREAK_ANIMATION"};
+		for (String pt : ENTITY_PACKETS) {
+			APERATURE_ENTITY_PACKETS.add(pt);
+		}
+
+		ArrayList<PacketType> types = new ArrayList<>();
+
+		for (String s : APERATURE_ENTITY_PACKETS) {
+			try {
+				types.addAll(PacketType.fromName(s));
+			} catch (Exception ex) {
+				System.out.println("Cannot parse packet type: " + s);
+				ex.printStackTrace();
+			}
+		}
+
+		EntityHider.ENTITY_PACKETS = types.toArray(new PacketType[0]);
 	}
 
 	public static DataCluster getExperimentalConfig()
