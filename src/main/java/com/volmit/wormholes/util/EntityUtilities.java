@@ -4,12 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.comphenix.protocol.injector.BukkitUnwrapper;
 import org.bukkit.World;
@@ -79,11 +74,14 @@ public class EntityUtilities {
 			}
 
 			// Phew, finally there.
-			Collection<?> trackedPlayers = (Collection<?>) FieldUtils.readField(trackedPlayersField, trackerEntry, false);
+			Object trackedPlayers = FieldUtils.readField(trackedPlayersField, trackerEntry, false);
 			List<Object> nmsPlayers = unwrapBukkit(observers);
 
 			// trackEntity.trackedPlayers.clear();
-			trackedPlayers.removeAll(nmsPlayers);
+			if (trackedPlayers instanceof Collection)
+				((Collection<?>) trackedPlayers).removeAll(nmsPlayers);
+			else ((Map<?, ?>) trackedPlayers).keySet().removeAll(nmsPlayers);
+
 
 			// We have to rely on a NAME once again. Damn it.
 			if (scanPlayersMethod == null) {
