@@ -157,7 +157,7 @@ public class NMSChunk19 extends NMSChunk implements VirtualChunk
 		}
 
 		byteArray.write(0, boas.toByteArray());
-		packet.getModifier().withType(Collection.class, BukkitConverters.getListConverter(MinecraftReflection.getNBTBaseClass(), BukkitConverters.getNbtConverter())).write(0, new ArrayList<>());
+		packet.getModifier().withType(Collection.class, BukkitConverters.getListConverter(BukkitConverters.getNbtConverter())).write(0, new ArrayList<>());
 		nm.close();
 	}
 

@@ -113,7 +113,7 @@ public class RasteredChunk
 								as.setBiome(i, k, cx.getChunk().getWorld().getBiome((x * 16) + i, (z * 16) + k));
 							}
 
-							as.set(i, j, k, mbi[i][j][k].getData().getTypeId(), mbi[i][j][k].getData().getData());
+							as.set(i, j, k, mbi[i][j][k].getData().getType().getId(), mbi[i][j][k].getData().getData());
 						}
 
 						if(mbp[i][j][k] != null && Wormholes.edgy)
@@ -164,7 +164,7 @@ public class RasteredChunk
 
 						if(mbi[i][j][k] != null)
 						{
-							as.set(i, j, k, mbi[i][j][k].getData().getTypeId(), mbi[i][j][k].getData().getData());
+							as.set(i, j, k, mbi[i][j][k].getData().getType().getId(), mbi[i][j][k].getData().getData());
 						}
 
 						if(mbp[i][j][k] != null && Wormholes.edgy)

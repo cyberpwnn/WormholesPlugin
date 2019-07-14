@@ -70,8 +70,9 @@ public class GlowingBlock
 	{
 		WrapperPlayServerEntityMetadata w = new WrapperPlayServerEntityMetadata();
 		GList<WrappedWatchableObject> watch = new GList<WrappedWatchableObject>();
-		watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (glowing ? 0x40 : 0)));
-		watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class)), (boolean) (true)));
+		//watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (glowing ? 0x40 : 0)));
+		//watch.add(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class)), (boolean) (true)));
+
 		w.setEntityID(id);
 		w.setMetadata(watch);
 		w.sendPacket(getPlayer());

@@ -77,7 +77,7 @@ public class WrapperPlayServerSetCooldown extends AbstractPacket {
 		}
 
 		@Override
-		public Object getGeneric(Class<?> genericType, Material specific) {
+		public Object getGeneric(Material specific) {
 			if (getItem == null) {
 				getItem =
 						Accessors.getMethodAccessor(MinecraftReflection
