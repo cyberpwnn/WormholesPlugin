@@ -1,9 +1,14 @@
 package com.volmit.wormholes.aperture;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
+
+import com.volmit.wormholes.util.EntityUtilities;
+import com.volmit.wormholes.util.LegacyFixes;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -295,10 +300,10 @@ public class EntityHider implements Listener
 	{
 		validate(observer, entity);
 		boolean hiddenBefore = !setVisibility(observer, entity.getEntityId(), true);
-		
+
 		if(manager != null && hiddenBefore)
 		{
-			manager.updateEntity(entity, Arrays.asList(observer));
+			EntityUtilities.updateEntity(entity, Arrays.asList(observer));
 		}
 		
 		return hiddenBefore;
