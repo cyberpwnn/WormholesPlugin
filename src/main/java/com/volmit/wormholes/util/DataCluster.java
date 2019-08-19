@@ -383,7 +383,8 @@ public class DataCluster
 				
 				if(isString(key))
 				{
-					return k + 8 * (int) ((((getString(key).length()) * 2) + 45) / 8);
+					final String s = getString(key);
+					return s == null ? 0 : k + 8 * (int) ((((s.length()) * 2) + 45) / 8);
 				}
 				
 				if(isStringList(key))
