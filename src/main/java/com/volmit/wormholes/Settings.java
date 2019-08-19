@@ -3,16 +3,14 @@ package com.volmit.wormholes;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import com.volmit.wormholes.util.*;
+import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 
 import com.volmit.wormholes.config.CMax;
 import com.volmit.wormholes.config.CMin;
 import com.volmit.wormholes.config.CName;
 import com.volmit.wormholes.config.Experimental;
-import com.volmit.wormholes.util.Comment;
-import com.volmit.wormholes.util.DataCluster;
-import com.volmit.wormholes.util.GList;
-import com.volmit.wormholes.util.ParticleEffect;
 import com.volmit.wormholes.util.ParticleEffect.ParticleProperty;
 
 public class Settings
@@ -324,90 +322,41 @@ public class Settings
 	@Comment("Particle Effect used for making deny ripples\nParticle Types: https://volmit.com/docs/directional-particle-types/")
 	public static String PARTICLE_TYPE_DENY_RIPPLE = "CRIT";
 
-	public static ParticleEffect getLightningParticle()
-	{
-		try
-		{
-			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_LIGHTNING);
+	private static GMap<String, ParticleEffect> particleCache = new GMap<>();
 
-			if(p != null)
-			{
-				return p;
+	public static ParticleEffect getParticle(String id, String k, ParticleEffect d, boolean di)
+	{
+		if (particleCache.contains(id)) return particleCache.get(id);
+		ParticleEffect p = d;
+		try {
+			final ParticleEffect e = ParticleEffect.valueOf(k);
+			if(e != null && (!di || di && e.hasProperty(ParticleProperty.DIRECTIONAL))) {
+				p = e;
 			}
 		}
+		catch(Exception e) {}
+		particleCache.put(id, p);
+		return p;
+	}
 
-		catch(Exception e)
-		{
-
-		}
-
-		return ParticleEffect.CRIT_MAGIC;
+	public static ParticleEffect getLightningParticle()
+	{
+		return getParticle("lightning", PARTICLE_TYPE_LIGHTNING, ParticleEffect.CRIT_MAGIC, false);
 	}
 
 	public static ParticleEffect getAmbientParticle()
 	{
-		try
-		{
-			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_AMBIENT);
-
-			if(p != null)
-			{
-				return p;
-			}
-		}
-
-		catch(Exception e)
-		{
-
-		}
-
-		return ParticleEffect.SUSPENDED_DEPTH;
+		return getParticle("ambient", PARTICLE_TYPE_AMBIENT, ParticleEffect.SUSPENDED_DEPTH, false);
 	}
 
 	public static ParticleEffect getRippleParticle()
 	{
-		try
-		{
-			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_RIPPLE);
-
-			if(p != null)
-			{
-				if(p.hasProperty(ParticleProperty.DIRECTIONAL))
-				{
-					return p;
-				}
-			}
-		}
-
-		catch(Exception e)
-		{
-
-		}
-
-		return ParticleEffect.CRIT_MAGIC;
+		return getParticle("ripple", PARTICLE_TYPE_RIPPLE, ParticleEffect.CRIT_MAGIC, true);
 	}
 
 	public static ParticleEffect getRippleDenyParticle()
 	{
-		try
-		{
-			ParticleEffect p = ParticleEffect.valueOf(PARTICLE_TYPE_DENY_RIPPLE);
-
-			if(p != null)
-			{
-				if(p.hasProperty(ParticleProperty.DIRECTIONAL))
-				{
-					return p;
-				}
-			}
-		}
-
-		catch(Exception e)
-		{
-
-		}
-
-		return ParticleEffect.CRIT;
+		return getParticle("ripple", PARTICLE_TYPE_DENY_RIPPLE, ParticleEffect.CRIT, true);
 	}
 
 	public static DataCluster getConfig()
