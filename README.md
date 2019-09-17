@@ -1,2 +1,2 @@
 # Wormholes
-See on the other side
+Now, you can see the other side.
