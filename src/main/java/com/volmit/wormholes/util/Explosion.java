@@ -37,7 +37,7 @@ public class Explosion implements Listener
 
 		if(pushBlocks)
 		{
-			Wormholes.registerListener(this);
+			Wormholes.instance.registerListener(this);
 		}
 	}
 
@@ -45,6 +45,6 @@ public class Explosion implements Listener
 	public void on(EntityExplodeEvent e)
 	{
 		e.setCancelled(true);
-		Wormholes.unregisterListener(this);
+		Wormholes.instance.unregisterListener(this);
 	}
 }

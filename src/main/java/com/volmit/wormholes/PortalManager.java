@@ -186,7 +186,7 @@ public class PortalManager implements Listener
 		if(!hasLocalPortal(portal))
 		{
 			portals.put(portal.getId(), portal);
-			Wormholes.registerListener(portal);
+			Wormholes.instance.registerListener(portal);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class PortalManager implements Listener
 	{
 		if(portals.containsKey(portal))
 		{
-			Wormholes.unregisterListener(portals.get(portal));
+			Wormholes.instance.unregisterListener(portals.get(portal));
 		}
 
 		portals.remove(portal);

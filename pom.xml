@@ -102,8 +102,8 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
 		<repository>
-			<id>volmit</id>
-			<url>http://nexus.volmit.com/content/repositories/volmit</url>
+			<id>bcn</id>
+			<url>http://bytecode.ninja/repository/bcn/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -114,59 +114,66 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
+			<artifactId>spigot-full</artifactId>
 			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Craftbukkit Versions -->
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit13</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.15.1</artifactId>
+			<version>1.15.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.14.4</artifactId>
+			<version>1.14.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.13.2</artifactId>
 			<version>1.13.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit12</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.12.2</artifactId>
 			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit11</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.11.2</artifactId>
 			<version>1.11.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit10</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.10.2</artifactId>
 			<version>1.10.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit94</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.9.4</artifactId>
 			<version>1.9.4</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit92</artifactId>
-			<version>1.9.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit18</artifactId>
+			<groupId>org.bukkit.craftbukkit</groupId>
+			<artifactId>cb-1.8.8</artifactId>
 			<version>1.8.8</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.volmit</groupId>
 			<artifactId>Mortar</artifactId>
-			<version>1.0.40</version>
+			<version>1.0.75</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

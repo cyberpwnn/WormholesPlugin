@@ -1,5 +1,7 @@
 package com.volmit.wormholes.util;
 
+import mortar.util.text.C;
+
 /**
  * Represents a colored String
  * 

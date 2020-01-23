@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,13 +12,13 @@ import com.volmit.wormholes.nms.CatalystPlugin;
 import com.volmit.wormholes.nms.NMP;
 import com.volmit.wormholes.nms.NMSVersion;
 import com.volmit.wormholes.portal.PortalType;
-import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.J;
 import com.volmit.wormholes.util.M;
 import com.volmit.wormholes.util.MSound;
 
 import mortar.bukkit.plugin.MortarPlugin;
+import mortar.util.text.C;
 import mortar.util.text.TXT;
 
 public class Wormholes extends MortarPlugin implements Listener
@@ -123,16 +122,6 @@ public class Wormholes extends MortarPlugin implements Listener
 	public static void f(String s)
 	{
 		instance.log(C.RED + s);
-	}
-
-	public static void registerListener(Listener l)
-	{
-		Bukkit.getPluginManager().registerEvents(l, instance);
-	}
-
-	public static void unregisterListener(Listener l)
-	{
-		HandlerList.unregisterAll(l);
 	}
 
 	@Override

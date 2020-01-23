@@ -16,9 +16,10 @@ import com.volmit.wormholes.project.IBoundingBoxTracker;
 import com.volmit.wormholes.project.IProjectionTracker;
 import com.volmit.wormholes.project.ProjectionTracker;
 import com.volmit.wormholes.util.AxisAlignedBB;
-import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.JSONObject;
 import com.volmit.wormholes.util.MaterialBlock;
+
+import mortar.util.text.C;
 
 public class WormholePortal extends LocalPortal implements IWormholePortal
 {

@@ -30,7 +30,6 @@ import com.volmit.wormholes.project.ProjectionMatrix;
 import com.volmit.wormholes.util.AR;
 import com.volmit.wormholes.util.Axis;
 import com.volmit.wormholes.util.AxisAlignedBB;
-import com.volmit.wormholes.util.C;
 import com.volmit.wormholes.util.Direction;
 import com.volmit.wormholes.util.F;
 import com.volmit.wormholes.util.FinalBoolean;
@@ -46,6 +45,8 @@ import com.volmit.wormholes.util.PhantomSpinner;
 import com.volmit.wormholes.util.RString;
 import com.volmit.wormholes.util.VIO;
 import com.volmit.wormholes.util.VectorMath;
+
+import mortar.util.text.C;
 
 public class LocalPortal extends Portal implements ILocalPortal, IProgressivePortal, IFXPortal, IOwnablePortal, Listener
 {

@@ -2,6 +2,8 @@ package com.volmit.wormholes.util;
 
 import org.apache.commons.lang.WordUtils;
 
+import mortar.util.text.C;
+
 /**
  * Textual Utilities
  * 
